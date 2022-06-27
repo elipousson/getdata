@@ -1,0 +1,63 @@
+
+#' Get a data frame or simple feature data from a Google Sheet
+#'
+#' @name get_gsheet_data
+#' @inheritParams googlesheets4::read_sheet
+#' @inheritParams overedge::df_to_sf
+#' @inheritParams get_location_data
+#' @param ask If `TRUE`, ask for the name of the Google Sheet to read if ss is
+#'   not provided to [overedge::read_sf_gsheet].
+#' @export
+#' @importFrom rlang is_missing
+get_gsheet_data <- function(url,
+                            sheet = NULL,
+                            ss = NULL,
+                            ask = FALSE,
+                            geometry = FALSE,
+                            location = NULL,
+                            dist = getOption("getdata.dist"),
+                            diag_ratio = getOption("getdata.diag_ratio"),
+                            unit = getOption("getdata.unit", "meter"),
+                            asp = getOption("getdata.asp"),
+                            coords = getOption("getdata.coords", c("lon", "lat")),
+                            remove_coords = TRUE,
+                            address = getOption("getdata.address", "address"),
+                            geo = FALSE,
+                            from_crs = 4326,
+                            clean_names = TRUE,
+                            ...) {
+  is_pkg_installed("googlesheets4")
+
+
+  if (is.null(ss)) {
+    if (!rlang::is_missing(url)) {
+      ss <- url
+    } else if (ask) {
+      ss <-
+        googlesheets4::gs4_find(cli_ask("What is the name of the Google Sheet to return?"))
+    }
+  }
+
+  data <- googlesheets4::read_sheet(ss = ss, sheet = sheet, ...)
+
+  if (!geometry) {
+    data <- format_data(data, clean_names = clean_names)
+
+    return(data)
+  }
+
+    get_location_data(
+      location = location,
+      dist = dist,
+      diag_ratio = diag_ratio,
+      unit = unit,
+      asp = asp,
+      data = data,
+      coords = coords,
+      remove_coords = remove_coords,
+      from_crs = from_crs,
+      address = address,
+      geo = geo,
+      crs = crs
+    )
+}

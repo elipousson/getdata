@@ -1,0 +1,42 @@
+Type: Package
+Package: getdata
+Title: Get Easy Access to Tabular and Spatial Data
+Version: 0.1.0
+Author: Who wrote it
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line) Use four
+    spaces when indenting paragraphs within the Description.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Suggests: 
+    esri2sf,
+    FlickrAPI (>= 0.1.0.1),
+    googlesheets4,
+    knitr,
+    labelled,
+    naniar,
+    osmdata,
+    rappdirs,
+    RSocrata,
+    testthat (>= 3.0.0),
+    tidyr,
+    tigris,
+    units
+Config/testthat/edition: 3
+Imports: 
+    cli,
+    dplyr,
+    glue,
+    httr2,
+    janitor,
+    overedge (>= 0.0.0.9001),
+    purrr,
+    rlang,
+    sf,
+    tibble,
+    utils
+Remotes:  
+    elipousson/overedge,
+    elipousson/FlickrAPI
+RoxygenNote: 7.2.0.9000
