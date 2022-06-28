@@ -50,6 +50,6 @@ is_gmap_url <- function(x) {
 #' Is this a unit class object?
 #'
 #' @noRd
-is_unit <- function(x) {
-  is_class(x, classes = "unit")
+is_unit <- function(x, null.ok = FALSE) {
+  is_class(x, classes = "unit", null.ok)
 }
