@@ -1,12 +1,12 @@
-baltimore_md <-
+dc <-
   get_tigris_data(
-    state = "MD",
-    type = "counties",
-    name = "Baltimore city",
-    cb = TRUE
-  )
+  type = "census places",
+  state = "District of Columbia",
+)
 
 get_wiki_data(
-  location = baltimore_md,
+  location = dc,
+  radius = 0.1,
+  unit = "mi",
   limit = 5
 )
