@@ -4,6 +4,9 @@
 #' See <https://www.mediawiki.org/wiki/Extension:GeoData> for more information.
 #' Only returns Wikipedia articles with coordinates.
 #'
+#' For this function, `location` can be either an `sf`, `sfc`, or `bbox` object
+#' or the title of a Wikipedia article with a related location.
+#'
 #' @inheritParams overedge::st_bbox_ext
 #' @inheritParams get_location_data
 #' @param radius If `TRUE`, use dist as a buffer around the center of the
@@ -43,14 +46,41 @@ get_wiki_data <- function(location,
 
   check_required(location)
 
-  if (radius) {
-    gscoord <- st_gscoord(location)
-    gsradius <- dist # FIXME: gsradius should be based on dist and/or diag_ratio and must take unit into account
-    gsbbox <- NULL
+  gsbbox <- NULL
+  gscoord <- NULL
+  gsradius <- NULL
+  gspage <- NULL
+
+  if (is_sf(location, ext = TRUE)) {
+    if (is.numeric(radius)) {
+      dist <- radius
+      cli_inform(
+        "Using {.arg radius} value of {.value dist} for {.arg dist}.",
+        "v" = "Setting {.arg radius} to TRUE."
+      )
+      radius <- TRUE
+    }
+
+    if (radius) {
+      gscoord <- st_gscoord(location)
+
+      # FIXME: This should be pulled out of st_buffer_ext into a separate helper function
+      if (is.null(dist) && !is.null(diag_ratio)) {
+        dist <- overedge::sf_bbox_diagdist(bbox = overedge::as_bbox(x), drop = TRUE) * diag_ratio
+      }
+
+      gsradius <- as.integer(round(overedge::convert_dist_units(dist, from = unit, to = "meter")))
+
+      cli_abort_ifnot(
+        "radius {.arg dist} must be greater than 0.",
+        condition = (gsradius >= 1)
+      )
+    } else {
+      gsbbox <- st_gsbbox(location, dist = dist, diag_ratio = diag_ratio, asp = asp, unit = unit)
+    }
   } else {
-    gsbbox <- st_gsbbox(location, dist = dist, diag_ratio = diag_ratio, asp = asp, unit = unit)
-    gscoord <- NULL
-    gsradius <- NULL
+    check_character(location)
+    gspage <- location
   }
 
   req <-
@@ -59,6 +89,7 @@ get_wiki_data <- function(location,
       gsbbox = gsbbox,
       gscoord = gscoord,
       gsradius = gsradius,
+      gspage = gspage,
       primary = primary,
       list = list,
       details = details,
@@ -88,6 +119,7 @@ req_wiki_query <- function(lang = NULL,
                            gsbbox = NULL,
                            gscoord = NULL,
                            gsradius = NULL,
+                           gspage = NULL,
                            primary = NULL,
                            list = "geosearch",
                            details = NULL,
@@ -101,7 +133,7 @@ req_wiki_query <- function(lang = NULL,
     httr2::request(glue("https://{lang}.wikipedia.org/w/api.php"))
 
   cli_abort_ifnot(
-    condition = (check_null(gsbbox, null.ok = TRUE) | check_null(gscoord, null.ok = TRUE))
+    condition = any(!is.null(c(gsbbox, gscoord, gspage)))
   )
 
   req <-
@@ -111,32 +143,34 @@ req_wiki_query <- function(lang = NULL,
       list = list,
       gsbbox = gsbbox,
       gscoord = gscoord,
-      gsradius = gsradius
+      gsradius = gsradius,
+      gspage = gspage
     )
 
   primary <- match.arg(primary, c("primary", "all", "secondary"))
 
-    req <-
-      httr2::req_url_query(
-        req,
-        gsprimary = paste0(primary, collapse = "|")
-      )
+  req <-
+    httr2::req_url_query(
+      req,
+      gsprimary = paste0(primary, collapse = "|")
+    )
 
   if (!is.null(details)) {
     details <-
-      match.arg(details, c("type", "name", "country", "region"), several.ok = TRUE)
+      match.arg(details, c("name", "type", "dim", "scale", "region", "country", "globe"), several.ok = TRUE)
 
     req <-
       httr2::req_url_query(
         req,
-        details = details
+        gsprop = details
       )
   }
 
   if (limit > 500) {
     cli_warn(
       c("{.arg limit} can't be greater than {.val 500}.",
-      "v" = "Resetting provided {.val {limit}} limit value to max.")
+        "v" = "Resetting provided {.val {limit}} limit value to max."
+      )
     )
 
     limit <- 500
@@ -165,6 +199,12 @@ resp_wiki_query <- function(req,
       resp = resp,
       simplifyVector = TRUE
     )
+
+  if ("error" %in% names(resp)) {
+    cli_abort(
+      'Wikipedia {.arg {list}} query can\'t be completed due to an error: {resp[["error"]][["info"]]}.'
+    )
+  }
 
   list <- match.arg(list, c("resp", "geosearch"))
 
