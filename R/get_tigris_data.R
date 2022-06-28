@@ -31,6 +31,7 @@ get_tigris_data <- function(type = NULL,
                             state = getOption("getdata.state"),
                             name = NULL,
                             crs = getOption("getdata.crs", default = 3857),
+                            cb = TRUE,
                             clean_names = TRUE,
                             ...) {
   if (!is.null(type)) {
@@ -52,22 +53,22 @@ get_tigris_data <- function(type = NULL,
 
   data <-
     switch(type,
-      "counties" = tigris::counties(state = state, ...),
-      "census places" = tigris::places(state = state, ...),
-      "congressional districts" = tigris::congressional_districts(state = state, ...),
-      "legislative districts" = tigris::state_legislative_districts(state = state, house = "lower", ...),
-      "senate districts" = tigris::state_legislative_districts(state = state, house = "upper", ...),
-      "county subdivisions" = tigris::county_subdivisions(state = state, ...),
-      "block groups" = tigris::block_groups(state = state, ...),
-      "blocks" = tigris::blocks(state = state, ...),
-      "pumas" = tigris::pumas(state = state, ...),
-      "voting districts" = tigris::voting_districts(state = state, ...),
-      "roads" = tigris::roads(state = state, ...),
-      "primary secondary roads" = tigris::primary_secondary_roads(state = state, ...),
-      "area water" = tigris::area_water(state = state, ...),
-      "linear water" = tigris::linear_water(state = state, ...),
-      "landmarks" = tigris::landmarks(state = state, ...),
-      "zctas" = tigris::zctas(state = state, ...)
+      "counties" = tigris::counties(state = state, cb = cb, ...),
+      "census places" = tigris::places(state = state, cb = cb, ...),
+      "congressional districts" = tigris::congressional_districts(state = state, cb = cb, ...),
+      "legislative districts" = tigris::state_legislative_districts(state = state, house = "lower", cb = cb, ...),
+      "senate districts" = tigris::state_legislative_districts(state = state, house = "upper", cb = cb, ...),
+      "county subdivisions" = tigris::county_subdivisions(state = state, cb = cb, ...),
+      "block groups" = tigris::block_groups(state = state, cb = cb, ...),
+      "blocks" = tigris::blocks(state = state, cb = cb, ...),
+      "pumas" = tigris::pumas(state = state, cb = cb, ...),
+      "voting districts" = tigris::voting_districts(state = state, cb = cb, ...),
+      "roads" = tigris::roads(state = state, cb = cb, ...),
+      "primary secondary roads" = tigris::primary_secondary_roads(state = state, cb = cb, ...),
+      "area water" = tigris::area_water(state = state, cb = cb, ...),
+      "linear water" = tigris::linear_water(state = state, cb = cb, ...),
+      "landmarks" = tigris::landmarks(state = state, cb = cb, ...),
+      "zctas" = tigris::zctas(state = state, cb = cb, ...)
     )
 
   data <-
