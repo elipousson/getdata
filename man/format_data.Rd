@@ -5,12 +5,8 @@
 \alias{rename_with_xwalk}
 \alias{label_with_xwalk}
 \alias{fix_date}
-\alias{relocate_sf_col}
-\alias{rename_sf_col}
 \alias{bind_address_col}
 \alias{bind_block_col}
-\alias{bind_boundary_col}
-\alias{bind_units_col}
 \title{Format data frames and simple features using common approaches}
 \usage{
 format_data(
@@ -22,7 +18,8 @@ format_data(
   replace_empty_char_with_na = TRUE,
   fix_date = TRUE,
   label = FALSE,
-  sf_col = NULL
+  format_sf = FALSE,
+  ...
 )
 
 label_with_xwalk(x, xwalk)
@@ -30,10 +27,6 @@ label_with_xwalk(x, xwalk)
 rename_with_xwalk(x, xwalk = NULL, label = FALSE)
 
 fix_date(x)
-
-relocate_sf_col(x, .after = dplyr::everything())
-
-rename_sf_col(x, sf_col = "geometry")
 
 bind_address_col(x, city = NULL, county = NULL, state = NULL)
 
@@ -44,10 +37,6 @@ bind_block_col(
   street_name = "street_name",
   street_suffix = "street_type"
 )
-
-bind_boundary_col(x, boundary = NULL, join = NULL, ...)
-
-bind_units_col(x, y, units = NULL, drop = FALSE, keep_all = TRUE, .id = NULL)
 }
 \arguments{
 \item{x}{A tibble or data frame object}
@@ -70,39 +59,14 @@ defaults to `NULL`.}
 \item{fix_date}{If `TRUE`, fix UNIX dates (common issue with dates from
 FeatureServer and MapServer sources) , Default: `TRUE`}
 
-\item{sf_col}{Name to use for the sf column after renaming; defaults to "geometry".}
+\item{...}{Additional parameters passed to [format_sf_data]}
 
 \item{xwalk}{a data frame with two columns using the first column as name and
 the second column as value; or a named list. The existing names of x must
 be the values and the new names must be the names.}
 
-\item{.after}{The location to place sf column after; defaults to
-[dplyr::everything].}
-
 \item{city, county, state}{City, county, and state to bind to data frame or
 `sf` object.}
-
-\item{boundary}{An sf object with a column named "name" or a list of sf
-objects where all items in the list have a "name" column.}
-
-\item{join}{geometry predicate function; defaults to `NULL`, set to
-[sf::st_intersects] if key_list contains only POLYGON or MULTIPOLYGON objects
-or [sf::st_nearest_feature] if key_list contains other types.}
-
-\item{y}{Vector of numeric or units values to bind to x.}
-
-\item{units}{Units to use for y (if numeric) or convert to (if y is units
-class); defaults to `NULL`.}
-
-\item{drop}{If `TRUE`, apply the [units::drop_units] function to the column
-with units class values and return numeric values instead; defaults to
-`FALSE`.}
-
-\item{keep_all}{If `FALSE`, keep all columns. If `FALSE`, return only the
-named .id column.}
-
-\item{.id}{Name to use for vector of units provided to "y" parameter, when
-"y" is bound to the "x" data frame or tibble as a new column.}
 }
 \value{
 The input data frame or simple feature object with formatting functions applied.
@@ -117,7 +81,7 @@ columns ([str_trim_squish])
 - Optionally corrects UNIX formatted dates with 1970-01-01 origins
 - Optionally renames variables by passing a named list of variables
 
-Bind columns:
+Bind columns to address data:
 
  - [bind_address_col] bind a provided value for city, county, and state to a
  data frame (to supplement address data with consistent values for these
@@ -127,17 +91,4 @@ Bind columns:
 values for whether a building is on the even or odd side of a block and
 create a block number (street segment), and block face (street segment side)
 identifier.
- - [bind_boundary_col] uses [sf::st_join] to assign simple feature data to an
- enclosing polygon.
-
-
-Simple feature only functions:
-
-If `"sf_col"` is not `NULL` for [format_data], the function calls
-[rename_sf_col] and [relocate_sf_col]
-
-- [rename_sf_col]: Rename sf column.
-- [relocate_sf_col]: Relocate sf column after everything (default) or specified column.
-
-[bind_boundary_col] is also only able to work with simple feature objects.
 }

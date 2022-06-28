@@ -9,6 +9,7 @@ get_tigris_data(
   state = getOption("getdata.state"),
   name = NULL,
   crs = getOption("getdata.crs", default = 3857),
+  cb = TRUE,
   clean_names = TRUE,
   ...
 )

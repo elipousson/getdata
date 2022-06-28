@@ -65,3 +65,7 @@ Use the Wikipedia API geosearch API to get Wikipedia articles for a location.
 See <https://www.mediawiki.org/wiki/Extension:GeoData> for more information.
 Only returns Wikipedia articles with coordinates.
 }
+\details{
+For this function, `location` can be either an `sf`, `sfc`, or `bbox` object
+or the title of a Wikipedia article with a related location.
+}
