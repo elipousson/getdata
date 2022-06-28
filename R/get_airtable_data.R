@@ -18,6 +18,7 @@ get_airtable_data <- function(base,
                               token = NULL,
                               list = "records",
                               geometry = TRUE,
+                              location = NULL,
                               dist = getOption("getdata.dist"),
                               diag_ratio = getOption("getdata.diag_ratio"),
                               unit = getOption("getdata.unit", "meter"),
@@ -30,8 +31,6 @@ get_airtable_data <- function(base,
                               geo = FALSE,
                               clean_names = TRUE,
                               label = TRUE) {
-
-
   req <-
     req_airtable(
       base = base,
@@ -50,7 +49,7 @@ get_airtable_data <- function(base,
       fields_by_id = fields_by_id,
       offset = offset,
       token = token
-      )
+    )
 
   data <-
     resp_airtable(req, list = list)
@@ -69,14 +68,26 @@ get_airtable_data <- function(base,
   data <-
     format_data(
       dplyr::as_tibble(data),
+      fix_date = FALSE,
       clean_names = clean_names,
-      label = label,
-      labels = labels
+      label = label # ,
+      # labels = labels
     )
 
   if (!geometry) {
     return(data)
   }
+
+  data <-
+    overedge::df_to_sf(
+      data,
+      coords = coords,
+      remove_coords = remove_coords,
+      from_crs = from_crs,
+      address = address,
+      geo = geo,
+      crs = crs
+    )
 
   get_location_data(
     location = location,
@@ -84,15 +95,8 @@ get_airtable_data <- function(base,
     dist = dist,
     diag_ratio = diag_ratio,
     asp = asp,
-    unit = unit,
-    coords = coords,
-    remove_coords = remove_coords,
-    from_crs = from_crs,
-    address = address,
-    geo = geo,
-    crs = crs
+    unit = unit
   )
-
 }
 
 
@@ -103,7 +107,18 @@ req_airtable <- function(base,
                          table,
                          record = NULL,
                          view = NULL,
-                         sort = NULL, max_records = NULL, per_page = NULL, tz = NULL, locale = NULL, token = NULL, fields_by_id = FALSE) {
+                         sort = NULL,
+                         max_records = NULL,
+                         per_page = NULL,
+                         tz = NULL,
+                         locale = NULL,
+                         token = NULL,
+                         fields_by_id = FALSE,
+                         fields = NULL,
+                         filter = NULL,
+                         desc = FALSE,
+                         cell_format = NULL,
+                         offset = NULL) {
   req <-
     httr2::request(
       "https://api.airtable.com/v0/"
@@ -181,7 +196,6 @@ req_airtable <- function(base,
 #'
 #' @noRd
 req_auth_airtable <- function(req, token = NULL, type = "AIRTABLE_API_KEY", realm = NULL) {
-
   req <-
     httr2::req_throttle(
       req = req,
@@ -198,23 +212,22 @@ req_auth_airtable <- function(req, token = NULL, type = "AIRTABLE_API_KEY", real
 #' Perform request and get data based on list
 #' @noRd
 resp_airtable <- function(req, simplifyVector = TRUE, list = "records") {
-
   list <- match.arg(list, c("resp", "fields", "records"))
 
   resp <-
     httr2::resp_body_json(
       resp = httr2::req_perform(req),
       simplifyVector = simplifyVector
-      )
+    )
 
   if (list == "record") {
     is_pkg_installed("tidyr")
   }
 
   # Add offset checks
-  switch (list,
-          "resp" = resp,
-          "record" = tidyr::pivot_wider(tibble::enframe(resp[[list]])),
-          "records" = tibble::as_tibble(resp[[list]][["fields"]])
+  switch(list,
+    "resp" = resp,
+    "record" = tidyr::pivot_wider(tibble::enframe(resp[[list]])),
+    "records" = tibble::as_tibble(resp[[list]][["fields"]])
   )
 }
