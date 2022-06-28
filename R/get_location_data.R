@@ -104,11 +104,11 @@ get_location_data <- function(location = NULL,
 
     data <-
       switch(type,
-             "df" = overedge::df_to_sf(x = data, ...),
-             "bbox" = overedge::as_sf(data, ...),
-             "url" = overedge::read_sf_url(url = data, bbox = bbox, ...),
-             "path" = overedge::read_sf_path(path = data, bbox = bbox, ...),
-             "pkg" = overedge::read_sf_pkg(data = data, bbox = bbox, package = package, filetype = filetype, ...)
+        "df" = overedge::df_to_sf(x = data, ...),
+        "bbox" = overedge::as_sf(data, ...),
+        "url" = overedge::read_sf_url(url = data, bbox = bbox, ...),
+        "path" = overedge::read_sf_path(path = data, bbox = bbox, ...),
+        "pkg" = overedge::read_sf_pkg(data = data, bbox = bbox, package = package, filetype = filetype, ...)
       )
   }
 

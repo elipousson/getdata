@@ -100,7 +100,6 @@ get_location <- function(type,
         rows = 1
       )
     }
-
   } else {
     location <-
       overedge::location_filter(data = type, location = location, trim = FALSE, crop = FALSE)

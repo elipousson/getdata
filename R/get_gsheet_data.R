@@ -46,18 +46,18 @@ get_gsheet_data <- function(url,
     return(data)
   }
 
-    get_location_data(
-      location = location,
-      dist = dist,
-      diag_ratio = diag_ratio,
-      unit = unit,
-      asp = asp,
-      data = data,
-      coords = coords,
-      remove_coords = remove_coords,
-      from_crs = from_crs,
-      address = address,
-      geo = geo,
-      crs = crs
-    )
+  get_location_data(
+    location = location,
+    dist = dist,
+    diag_ratio = diag_ratio,
+    unit = unit,
+    asp = asp,
+    data = data,
+    coords = coords,
+    remove_coords = remove_coords,
+    from_crs = from_crs,
+    address = address,
+    geo = geo,
+    crs = crs
+  )
 }

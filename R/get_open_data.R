@@ -56,14 +56,13 @@ get_open_data <- function(data = NULL,
                           from_crs = 4326,
                           crs = NULL,
                           clean_names = TRUE) {
-
   cli_abort_ifnot(
-      c("{.arg source_type} must be {.val socarata}.",
-        "i" = "Socrata is currently the only supported open data source for this function.
+    c("{.arg source_type} must be {.val socarata}.",
+      "i" = "Socrata is currently the only supported open data source for this function.
         Other open data access options (e.g. CKAN, Flat Data) may be added in the future.",
-      ),
-      condition = (source_type == "socrata")
-    )
+    ),
+    condition = (source_type == "socrata")
+  )
 
   is_pkg_installed("RSocrata")
 
@@ -91,11 +90,12 @@ get_open_data <- function(data = NULL,
   )
 
   cli_abort_ifnot(
-    c("{.arg source_url} must be a URL.",
+    c(
+      "{.arg source_url} must be a URL.",
       "The provided {.arg source_url} is not valid: {.url {source_url}}"
     ),
     condition = is_url(source_url)
-    )
+  )
 
   url <-
     make_socrata_url(

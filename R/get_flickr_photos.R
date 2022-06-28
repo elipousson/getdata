@@ -158,7 +158,6 @@ get_flickr_photos <- function(location = NULL,
 #' @importFrom dplyr rename mutate case_when
 get_flickr_photos_orientation <- function(photos,
                                           orientation = NULL) {
-
   photos <-
     dplyr::mutate(
       photos,
@@ -173,12 +172,12 @@ get_flickr_photos_orientation <- function(photos,
     return(photos)
   }
 
-    orientation <-
-      match.arg(
-        orientation,
-        c("landscape", "portrait", "square"),
-        several.ok = TRUE
-      )
+  orientation <-
+    match.arg(
+      orientation,
+      c("landscape", "portrait", "square"),
+      several.ok = TRUE
+    )
 
-    photos[photos[["img_orientation"]] %in% orientation,]
+  photos[photos[["img_orientation"]] %in% orientation, ]
 }
