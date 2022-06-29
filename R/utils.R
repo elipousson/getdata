@@ -3,7 +3,7 @@
 
   utils::data(
     list = c(
-      "us_counties", "us_states"
+      "osm_building_tags", "us_counties", "us_states"
     ),
     package = pkg,
     envir = parent.env(environment())
