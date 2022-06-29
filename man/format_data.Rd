@@ -16,7 +16,7 @@ format_data(
   replace_na_with = NULL,
   replace_with_na = NULL,
   replace_empty_char_with_na = TRUE,
-  fix_date = TRUE,
+  fix_date = FALSE,
   label = FALSE,
   format_sf = FALSE,
   ...

@@ -50,26 +50,29 @@
 #' @importFrom sf st_is_valid st_make_valid st_transform st_simplify
 format_sf_data <- function(x,
                            crs = getOption("getdata.crs", default = 3857),
-                           erase = FALSE,
                            erase_data = NULL,
                            dTolerance = NULL,
                            smooth = FALSE,
-                           sf_col = "geometry",
+                           sf_col = NULL,
                            sf_req = TRUE,
                            ...) {
   if (!sf_req) {
     x <- as_sf(x)
   }
 
-  check_sf(x)
+  check_sf(x, ext = TRUE)
 
-  if (!sf::st_is_valid(x)) {
+  if (!all(sf::st_is_valid(x))) {
     x <- sf::st_make_valid(x)
   }
 
-  x <- format_data(x, ...)
+  x <- overedge::st_transform_ext(x, crs = crs)
 
-  if (erase && is_sf(erase_data)) {
+  if (is.data.frame(x)) {
+    x <- format_data(x, ...)
+  }
+
+  if (!is.null(erase_data) && is_sf(erase_data)) {
     x <- overedge::st_erase(x, erase_data)
   }
 
@@ -95,7 +98,7 @@ format_sf_data <- function(x,
 #'   [dplyr::everything].
 #' @export
 #' @importFrom dplyr everything relocate all_of
-relocate_sf_col <- function(x, .after = dplyr::everything()) {
+relocate_sf_col <- function(x, .after = dplyr::everything(), ...) {
   dplyr::relocate(
     x,
     dplyr::all_of(attributes(x)$sf_column),
@@ -169,12 +172,11 @@ bind_boundary_col <- function(x, boundary = NULL, join = NULL, col = "name", ...
 #'   named .id column.
 #' @param .id Name to use for vector of units provided to "y" parameter, when
 #'   "y" is bound to the "x" data frame or tibble as a new column.
+#' @param ... passed to [relocate_sf_col]
 #' @export
 #' @importFrom dplyr bind_cols
-bind_units_col <- function(x, y, units = NULL, drop = FALSE, keep_all = TRUE, .id = NULL) {
+bind_units_col <- function(x, y, units = NULL, drop = FALSE, keep_all = TRUE, .id = NULL, ...) {
   is_pkg_installed("units")
-
-  x <- has_same_name_col(x, col = .id)
 
   if (!is.null(units)) {
     y <-
@@ -183,6 +185,8 @@ bind_units_col <- function(x, y, units = NULL, drop = FALSE, keep_all = TRUE, .i
         from = get_dist_units(y),
         to = units
       )
+  } else {
+    units <- get_dist_units(y)
   }
 
   if (drop) {
@@ -193,6 +197,12 @@ bind_units_col <- function(x, y, units = NULL, drop = FALSE, keep_all = TRUE, .i
     return(y)
   }
 
+  if (is.null(.id)) {
+    .id <- janitor::make_clean_names(units)
+  }
+
+  x <- has_same_name_col(x, col = .id)
+
   x <-
     dplyr::bind_cols(
       x,
@@ -200,7 +210,7 @@ bind_units_col <- function(x, y, units = NULL, drop = FALSE, keep_all = TRUE, .i
     )
 
   if (is_sf(x)) {
-    x <- relocate_sf_col(x)
+    x <- relocate_sf_col(x, ...)
   }
 
   x

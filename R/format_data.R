@@ -44,7 +44,7 @@ format_data <- function(x,
                         replace_na_with = NULL,
                         replace_with_na = NULL,
                         replace_empty_char_with_na = TRUE,
-                        fix_date = TRUE,
+                        fix_date = FALSE,
                         label = FALSE,
                         format_sf = FALSE,
                         ...) {
@@ -97,6 +97,7 @@ format_data <- function(x,
   x
 }
 
+#' @noRd
 make_xwalk_list <- function(xwalk) {
   if (is.data.frame(xwalk) && (ncol(xwalk) == 2)) {
     return(as.list(tibble::deframe(xwalk)))
@@ -115,7 +116,7 @@ make_xwalk_list <- function(xwalk) {
 label_with_xwalk <- function(x, xwalk) {
   is_pkg_installed("labelled")
 
-  labelled::set_variable_labels(x, .labels = make_label_list(xwalk))
+  labelled::set_variable_labels(x, .labels = make_xwalk_list(xwalk))
 }
 
 #' @name rename_with_xwalk
@@ -130,7 +131,7 @@ rename_with_xwalk <- function(x, xwalk = NULL, label = FALSE) {
 
   # From https://twitter.com/PipingHotData/status/1497014703473704965
   # https://stackoverflow.com/questions/20987295/rename-multiple-columns-by-names/41343022#41343022
-  xwalk <- make_label_list(xwalk)
+  xwalk <- make_xwalk_list(xwalk)
 
   cli_abort_ifnot(
     condition = all(xwalk %in% colnames(x)),

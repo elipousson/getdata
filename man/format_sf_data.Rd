@@ -11,31 +11,35 @@
 format_sf_data(
   x,
   crs = getOption("getdata.crs", default = 3857),
-  erase = FALSE,
   erase_data = NULL,
   dTolerance = NULL,
   smooth = FALSE,
-  sf_col = "geometry",
+  sf_col = NULL,
   sf_req = TRUE,
   ...
 )
 
-relocate_sf_col(x, .after = dplyr::everything())
+relocate_sf_col(x, .after = dplyr::everything(), ...)
 
 rename_sf_col(x, sf_col = "geometry")
 
 bind_boundary_col(x, boundary = NULL, join = NULL, col = "name", ...)
 
-bind_units_col(x, y, units = NULL, drop = FALSE, keep_all = TRUE, .id = NULL)
+bind_units_col(
+  x,
+  y,
+  units = NULL,
+  drop = FALSE,
+  keep_all = TRUE,
+  .id = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{object of class \code{sfg}, \code{sfc} or \code{sf}}
 
 \item{crs}{Coordinate reference system for returned data, Default: getOption("getdata.crs", default =
 3857)}
-
-\item{erase}{If TRUE, pass `data` and `erase_data` to [overedge::st_erase],
-Default: `FALSE`}
 
 \item{erase_data}{A `sf`, `sfc`, or `bbox` object with the geometry to erase
 from data, Default: `NULL`}
@@ -54,7 +58,7 @@ method and parameters, Default: `FALSE`.}
 \item{sf_req}{If `TRUE`, data must be a `sf` object. If `FALSE`, data is
 passed to [overedge::as_sf] to convert data to an `sf` object.}
 
-\item{...}{Additional parameters passed to `format_data`}
+\item{...}{passed to [relocate_sf_col]}
 
 \item{.after}{The location to place sf column after; defaults to
 [dplyr::everything].}
@@ -83,6 +87,9 @@ named .id column.}
 
 \item{data}{A `sf` object or, if `sf_req` is `FALSE`, any object that can be
 converted to an `sf` object with [overedge::as_sf].}
+
+\item{erase}{If TRUE, pass `data` and `erase_data` to [overedge::st_erase],
+Default: `FALSE`}
 }
 \value{
 A `sf` object with columns and geometry modified based parameters.
@@ -115,4 +122,34 @@ Additional formatting functions for `sf` objects:
  enclosing polygon. This function with other join functions to add columns
  based on other spatial relationships, e.g. bind a column for the nearest
  point feature.
+}
+\examples{
+library(sf)
+
+nc <- read_sf(system.file("shape/nc.shp", package = "sf"))
+nc_county <- nc[2,]
+
+# Transform coordinate reference system
+st_crs(nc)$epsg
+st_crs(format_sf_data(nc, crs = 3857))$epsg
+
+# Simplify and smooth geometry
+plot(nc_county, max.plot = 1)
+nc_county_simple <- format_sf_data(nc_county, dTolerance = 5000, smooth = TRUE)
+plot(nc_county_simple, max.plot = 1)
+
+# Erase data
+nc_co_water <- get_tigris_data(type = "area water", state = "NC", county = nc_county$NAME)
+plot(format_sf_data(nc_county, erase_data = nc_co_water), max.plot = 1)
+
+# Relocate sf column with a helper function function
+relocate_sf_col(nc, .after = contains("AREA"))[,c(1, 2, 6)]
+
+# If sf_req is set to FALSE, use any object that can be converted with sfext::as_sf
+nc_bbox <- st_bbox(nc)
+plot(format_sf_data(nc_bbox, erase_data = nc_county_simple, sf_req = FALSE))
+
+# Bind area units (converting square meters to square miles)
+bind_units_col(nc, st_area(nc), units = "mi^2")[,c(1,5,15)]
+
 }
