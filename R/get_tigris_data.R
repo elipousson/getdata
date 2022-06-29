@@ -60,22 +60,22 @@ get_tigris_data <- function(type = NULL,
       "senate districts" = tigris::state_legislative_districts(state = state, house = "upper", cb = cb, ...),
       "county subdivisions" = tigris::county_subdivisions(state = state, cb = cb, ...),
       "block groups" = tigris::block_groups(state = state, cb = cb, ...),
-      "blocks" = tigris::blocks(state = state, cb = cb, ...),
+      "blocks" = tigris::blocks(state = state, ...),
       "pumas" = tigris::pumas(state = state, cb = cb, ...),
       "voting districts" = tigris::voting_districts(state = state, cb = cb, ...),
-      "roads" = tigris::roads(state = state, cb = cb, ...),
-      "primary secondary roads" = tigris::primary_secondary_roads(state = state, cb = cb, ...),
-      "area water" = tigris::area_water(state = state, cb = cb, ...),
-      "linear water" = tigris::linear_water(state = state, cb = cb, ...),
-      "landmarks" = tigris::landmarks(state = state, cb = cb, ...),
-      "zctas" = tigris::zctas(state = state, cb = cb, ...)
+      "roads" = tigris::roads(state = state, ...),
+      "primary secondary roads" = tigris::primary_secondary_roads(state = state, ...),
+      "area water" = tigris::area_water(state = state, ...),
+      "linear water" = tigris::linear_water(state = state, ...),
+      "landmarks" = tigris::landmarks(state = state, ...),
+      "zctas" = tigris::zctas(state = state, ...)
     )
 
   data <-
-    format_data(
+    format_sf_data(
       data,
       # FIXME: incorporate functionality from mapmaryland::format_sf_data
-      # crs = crs,
+      crs = crs,
       clean_names = clean_names
     )
 
