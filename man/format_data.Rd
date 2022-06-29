@@ -41,32 +41,32 @@ bind_block_col(
 \arguments{
 \item{x}{A tibble or data frame object}
 
-\item{var_names}{A named list following the format, `list("New var name" = old_var_name)`, or a two column data frame with the first column being the
+\item{var_names}{A named list following the format, \code{list("New var name" = old_var_name)}, or a two column data frame with the first column being the
 new variable names and the second column being the old variable names;
-defaults to `NULL`.}
+defaults to \code{NULL}.}
 
-\item{clean_names}{If `TRUE`, pass data frame to [janitor::clean_names]; defaults to `TRUE`.}
+\item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names}; defaults to \code{TRUE}.}
 
-\item{replace_na_with}{A named list to pass to [tidyr::replace_na]; defaults to
-`NULL`.}
+\item{replace_na_with}{A named list to pass to \link[tidyr:replace_na]{tidyr::replace_na}; defaults to
+\code{NULL}.}
 
-\item{replace_with_na}{A named list to pass to [naniar::replace_with_na];
-defaults to `NULL`.}
+\item{replace_with_na}{A named list to pass to \link[naniar:replace_with_na]{naniar::replace_with_na};
+defaults to \code{NULL}.}
 
-\item{replace_empty_char_with_na}{If `TRUE`, replace "" with `NA` using
-[naniar::replace_with_na_if], Default: `TRUE`}
+\item{replace_empty_char_with_na}{If \code{TRUE}, replace "" with \code{NA} using
+\link[naniar:replace_with_na_if]{naniar::replace_with_na_if}, Default: \code{TRUE}}
 
-\item{fix_date}{If `TRUE`, fix UNIX dates (common issue with dates from
-FeatureServer and MapServer sources) , Default: `TRUE`}
+\item{fix_date}{If \code{TRUE}, fix UNIX dates (common issue with dates from
+FeatureServer and MapServer sources) , Default: \code{TRUE}}
 
-\item{...}{Additional parameters passed to [format_sf_data]}
+\item{...}{Additional parameters passed to \link{format_sf_data}}
 
 \item{xwalk}{a data frame with two columns using the first column as name and
 the second column as value; or a named list. The existing names of x must
 be the values and the new names must be the names.}
 
 \item{city, county, state}{City, county, and state to bind to data frame or
-`sf` object.}
+\code{sf} object.}
 }
 \value{
 The input data frame or simple feature object with formatting functions applied.
@@ -75,20 +75,23 @@ The input data frame or simple feature object with formatting functions applied.
 This function can apply the following common data cleaning tasks:
 }
 \details{
-- Applies [stringr::str_squish] and [stringr::str_trim] to all character
-columns ([str_trim_squish])
-- Optionally replaces all character values of "" with `NA` values
-- Optionally corrects UNIX formatted dates with 1970-01-01 origins
-- Optionally renames variables by passing a named list of variables
+\itemize{
+\item Applies \link[stringr:str_trim]{stringr::str_squish} and \link[stringr:str_trim]{stringr::str_trim} to all character
+columns (\link{str_trim_squish})
+\item Optionally replaces all character values of "" with \code{NA} values
+\item Optionally corrects UNIX formatted dates with 1970-01-01 origins
+\item Optionally renames variables by passing a named list of variables
+}
 
 Bind columns to address data:
-
- - [bind_address_col] bind a provided value for city, county, and state to a
- data frame (to supplement address data with consistent values for these
- variables)
-- [bind_block_col] requires a data frame with columns named "bldg_num",
+\itemize{
+\item \link{bind_address_col} bind a provided value for city, county, and state to a
+data frame (to supplement address data with consistent values for these
+variables)
+\item \link{bind_block_col} requires a data frame with columns named "bldg_num",
 "street_dir_prefix", "street_name", and "street_type" and binds derived
 values for whether a building is on the even or odd side of a block and
 create a block number (street segment), and block face (street segment side)
 identifier.
+}
 }

@@ -15,16 +15,16 @@ get_tigris_data(
 )
 }
 \arguments{
-\item{type}{Type of data to return, Default: `NULL`; See details for
+\item{type}{Type of data to return, Default: \code{NULL}; See details for
 supported options.}
 
 \item{state}{State name, abbreviation, or GeoID. Required. Defaults to
 getOption("getdata.state").}
 
 \item{name}{Name matching a value in the namelsad, namelsad, or geoid
-columns. Default: `NULL`}
+columns. Default: \code{NULL}}
 
-\item{clean_names}{If `TRUE`, pass data frame to [janitor::clean_names]; defaults to `TRUE`.}
+\item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names}; defaults to \code{TRUE}.}
 
 \item{...}{Additional parameters passed on to {tigris} functions.}
 }
@@ -38,14 +38,14 @@ Bureau API and filter by name or GeoID.
 \details{
 Supported data types:
 
- Different type values corresponded to different tigris functions for
- downloading from the U.S. Census Bureau API include. Supported options
- include: "counties", "census places", "congressional districts",
- "legislative districts", "senate district", "tracts", "block groups",
- "blocks", "pumas", "voting districts", "zctas", "roads", "primary secondary
- roads", "area water",  "linear water", and "landmarks".
+Different type values corresponded to different tigris functions for
+downloading from the U.S. Census Bureau API include. Supported options
+include: "counties", "census places", "congressional districts",
+"legislative districts", "senate district", "tracts", "block groups",
+"blocks", "pumas", "voting districts", "zctas", "roads", "primary secondary
+roads", "area water",  "linear water", and "landmarks".
 
-  tigris functions that do not use a "state" parameter (e.g.
-  [tigris::coastline] or [tigris::rails])  are not supported by this
-  function.
+tigris functions that do not use a "state" parameter (e.g.
+\link[tigris:coastline]{tigris::coastline} or \link[tigris:rails]{tigris::rails})  are not supported by this
+function.
 }

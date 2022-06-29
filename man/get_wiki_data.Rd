@@ -25,22 +25,22 @@ get_wiki_data(
 }
 \arguments{
 \item{location}{sf object. If multiple areas are provided, they are unioned
-into a single sf object using [sf::st_union]}
+into a single sf object using \link[sf:geos_combine]{sf::st_union}}
 
-\item{radius}{If `TRUE`, use dist as a buffer around the center of the
-location; defaults to `FALSE`}
+\item{radius}{If \code{TRUE}, use dist as a buffer around the center of the
+location; defaults to \code{FALSE}}
 
-\item{primary}{If `NULL`, search for primary coordinates. Set primary to "all"
+\item{primary}{If \code{NULL}, search for primary coordinates. Set primary to "all"
 or "secondary" to search other coordinate types.}
 
 \item{details}{Additional detailed to return with results. Options include
-"type", "name", "country", "region"; defaults to `NULL`.}
+"type", "name", "country", "region"; defaults to \code{NULL}.}
 
 \item{limit}{Number of pages to return (max 500); defaults to 50}
 
 \item{lang}{Language to search on Wikipedia; defaults to "en".}
 
-\item{geometry}{If `TRUE`, return sf object. If `FALSE`, return data frame. Defaults to `FALSE`.}
+\item{geometry}{If \code{TRUE}, return sf object. If \code{FALSE}, return data frame. Defaults to \code{FALSE}.}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -62,10 +62,10 @@ without modification.}
 }
 \description{
 Use the Wikipedia API geosearch API to get Wikipedia articles for a location.
-See <https://www.mediawiki.org/wiki/Extension:GeoData> for more information.
+See \url{https://www.mediawiki.org/wiki/Extension:GeoData} for more information.
 Only returns Wikipedia articles with coordinates.
 }
 \details{
-For this function, `location` can be either an `sf`, `sfc`, or `bbox` object
+For this function, \code{location} can be either an \code{sf}, \code{sfc}, or \code{bbox} object
 or the title of a Wikipedia article with a related location.
 }

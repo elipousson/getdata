@@ -49,7 +49,7 @@ map_location_data(
 }
 \arguments{
 \item{location}{sf object. If multiple areas are provided, they are unioned
-into a single sf object using [sf::st_union]}
+into a single sf object using \link[sf:geos_combine]{sf::st_union}}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -68,12 +68,12 @@ character (e.g. "1:3"). If numeric, \code{\link[overedge:get_asp]{get_asp()}} re
 without modification.}
 
 \item{data}{Character string (e.g. url, file path, or name of data from
-package), a `sf`, `sfc`, or `bbox`  object including data in area.}
+package), a \code{sf}, \code{sfc}, or \code{bbox}  object including data in area.}
 
 \item{package}{Name of the package to search for data.}
 
-\item{filetype}{File type to use if passing parameters to [overedge::read_sf_download]
-or [overedge::read_sf_pkg] (required for extdata and cached data).}
+\item{filetype}{File type to use if passing parameters to \link[overedge:read_sf_ext]{overedge::read_sf_download}
+or \link[overedge:read_sf_ext]{overedge::read_sf_pkg} (required for extdata and cached data).}
 
 \item{fn}{Function to apply to data after filtering by location but before
 returning from function.}
@@ -93,40 +93,40 @@ the source data.}
 
 \item{class}{Class of object to return.}
 
-\item{label}{label is optionally used by [map_location_data] to name the data
+\item{label}{label is optionally used by \link{map_location_data} to name the data
 objects in the list returned by the function.}
 
 \item{index}{A list of possible location, data, and (optionally) package
 values. List must be named and include a value named package and package
-must be `NULL`, to set package based on index. If list is not `NULL` and
+must be \code{NULL}, to set package based on index. If list is not \code{NULL} and
 location and/or data as character or numeric values, the location and data
 are assumed to be index values for the index list. The index parameter
-supports nested lists created by [make_location_data_list] (using only the
+supports nested lists created by \link{make_location_data_list} (using only the
 default key names of "location" and "data"). This feature has not be fully
 tested and may result in errors or unexpected results.}
 
-\item{...}{additional parameters passed to [overedge::read_sf_path], [overedge::read_sf_url], or
-[overedge::read_sf_pkg] and [overedge::location_filter]}
+\item{...}{additional parameters passed to \link[overedge:read_sf_ext]{overedge::read_sf_path}, \link[overedge:read_sf_ext]{overedge::read_sf_url}, or
+\link[overedge:read_sf_ext]{overedge::read_sf_pkg} and \link[overedge:location_filter]{overedge::location_filter}}
 
-\item{load}{If `TRUE` and class is "list", load data to local environment;
-defaults `FALSE`.}
+\item{load}{If \code{TRUE} and class is "list", load data to local environment;
+defaults \code{FALSE}.}
 }
 \description{
 Returns data for a selected location or a list of locations (for
-[map_location_data]). If data is a character string, the parameter is passed
-to [overedge::read_sf_url], [overedge::read_sf_path], or [overedge::read_sf_pkg]. This function uses
-[overedge::location_filter()] to filter (using [sf::st_intersects]), crop, or trim data
+\link{map_location_data}). If data is a character string, the parameter is passed
+to \link[overedge:read_sf_ext]{overedge::read_sf_url}, \link[overedge:read_sf_ext]{overedge::read_sf_path}, or \link[overedge:read_sf_ext]{overedge::read_sf_pkg}. This function uses
+\code{\link[overedge:location_filter]{overedge::location_filter()}} to filter (using \link[sf:geos_binary_pred]{sf::st_intersects}), crop, or trim data
 to the provided location. location can also be an an address, county GeoID,
 state name, abbreviation, or GeoID.
 }
 \details{
 Working with sf lists for data and locations:
 
-  [map_location_data] makes it easier to work with `sf` lists. It supports data
-  as a character vector, data as an `sf` list when location is a single object,
-  location as a character vector or `sf` list (including lists of `bbox` or `sfc`
-  objects), or when both data and location are lists (such as a list created
-  by [make_location_data_list]).
+\link{map_location_data} makes it easier to work with \code{sf} lists. It supports data
+as a character vector, data as an \code{sf} list when location is a single object,
+location as a character vector or \code{sf} list (including lists of \code{bbox} or \code{sfc}
+objects), or when both data and location are lists (such as a list created
+by \link{make_location_data_list}).
 }
 \examples{
 map_location_data(

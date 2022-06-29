@@ -60,13 +60,13 @@ for the open data portal.}
 the only supported option.}
 
 \item{select}{SODA $select parameter. Set of columns to be returned, similar
-to a SELECT in SQL. <https://dev.socrata.com/docs/queries/select.html>}
+to a SELECT in SQL. \url{https://dev.socrata.com/docs/queries/select.html}}
 
 \item{where}{SODA $where parameter. Filters the rows to be returned, similar
-to WHERE. <https://dev.socrata.com/docs/queries/where.html>}
+to WHERE. \url{https://dev.socrata.com/docs/queries/where.html}}
 
 \item{query}{SODA $query parameter. A full SoQL query string, all as one
-parameter. <https://dev.socrata.com/docs/queries/query.html>}
+parameter. \url{https://dev.socrata.com/docs/queries/query.html}}
 
 \item{location}{sf or bbox obkect}
 
@@ -94,8 +94,8 @@ location names (e.g. County)}
 \item{coords}{Name(s) of column with coordinate data, Default: c("longitude",
 "latitude")}
 
-\item{geometry}{If `TRUE` and latitude/longitude columns available, return a
-[sf()] object. Default `FALSE`.}
+\item{geometry}{If \code{TRUE} and latitude/longitude columns available, return a
+\code{\link[=sf]{sf()}} object. Default \code{FALSE}.}
 
 \item{token}{Access token or API Key; required to access data from Socrata.}
 
@@ -111,7 +111,7 @@ get_socrata_data is get_open_data with source_type set to "socrata" (the only
 currently supported option). get_open_data can return a selected dataset
 using Socrata Query Language (SoQL) parameters as a tibble or sf object.
 Details on SoQL queries are found in the Socrata API documentation
-<https://dev.socrata.com/docs/queries/>.
+\url{https://dev.socrata.com/docs/queries/}.
 }
 \examples{
 ## Get Q2 2020 vehicle crash data for Cecil County, Maryland

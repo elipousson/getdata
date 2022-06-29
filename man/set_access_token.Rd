@@ -10,17 +10,17 @@ set_access_token(token, overwrite = FALSE, install = FALSE, type = NULL)
 get_access_token(token = NULL, type = NULL)
 }
 \arguments{
-\item{token}{An access token or API key; required for [set_access_token()].
-If token is not provided; type is required for [get_access_token()].}
+\item{token}{An access token or API key; required for \code{\link[=set_access_token]{set_access_token()}}.
+If token is not provided; type is required for \code{\link[=get_access_token]{get_access_token()}}.}
 
-\item{overwrite}{If `TRUE`, overwrite existing token; Default: `FALSE`}
+\item{overwrite}{If \code{TRUE}, overwrite existing token; Default: \code{FALSE}}
 
-\item{install}{If `TRUE`, install token for use in future sessions; Default:
-`FALSE`}
+\item{install}{If \code{TRUE}, install token for use in future sessions; Default:
+\code{FALSE}}
 
-\item{type}{Name of token; defaults to `NULL`.}
+\item{type}{Name of token; defaults to \code{NULL}.}
 }
 \description{
-Based on the [mapboxapi::mb_access_token] function from the {mapboxapi}
+Based on the \link[mapboxapi:mb_access_token]{mapboxapi::mb_access_token} function from the {mapboxapi}
 package by Kyle Walker.
 }

@@ -11,10 +11,10 @@ A character vector with length of 84
 osm_building_tags
 }
 \description{
-Used by [get_osm_data] if key = "building".
+Used by \link{get_osm_data} if key = "building".
 }
 \details{
 More information on the building key
-<https://wiki.openstreetmap.org/wiki/Key:building>
+\url{https://wiki.openstreetmap.org/wiki/Key:building}
 }
 \keyword{datasets}

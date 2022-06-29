@@ -28,8 +28,8 @@ get_counties(
 )
 }
 \arguments{
-\item{location}{A `sf`, `sfc`, or `bbox` object or a character string that
-matches a geoid, name, abb, or statefp for [us_states] or [us_counties].}
+\item{location}{A \code{sf}, \code{sfc}, or \code{bbox} object or a character string that
+matches a geoid, name, abb, or statefp for \link{us_states} or \link{us_counties}.}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -52,8 +52,8 @@ without modification.}
 \item{...}{Additional parameters including geoid, name, state, or county.}
 }
 \description{
-Get U.S. states and counties from packaged [us_counties] or [us_states] data.
-See [get_tigris_data()] for more options.
+Get U.S. states and counties from packaged \link{us_counties} or \link{us_states} data.
+See \code{\link[=get_tigris_data]{get_tigris_data()}} for more options.
 }
 \examples{
 get_states(

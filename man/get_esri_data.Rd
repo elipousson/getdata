@@ -28,12 +28,12 @@ get_esri_layers(location = NULL, layers, service_url = NULL, nm = NULL, ...)
 get_esri_metadata(url, meta = "name", clean = TRUE)
 }
 \arguments{
-\item{location}{`sf`, `sfc`, or `bbox` object (or other object convertible with
-[as_bbox()]. Optional.}
+\item{location}{\code{sf}, \code{sfc}, or \code{bbox} object (or other object convertible with
+\code{\link[=as_bbox]{as_bbox()}}. Optional.}
 
 \item{url}{FeatureServer or MapServer url to retrieve data from. Passed to
-`url` parameter of [esri2sf::esri2sf] or
-[esri2sf::esri2df] functions.}
+\code{url} parameter of \link[esri2sf:esri2sf]{esri2sf::esri2sf} or
+\link[esri2sf:esri2sf]{esri2sf::esri2df} functions.}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -53,7 +53,7 @@ without modification.}
 
 \item{crs}{coordinate reference system to use for query; default 4326}
 
-\item{where}{where query string passed to esri2sf, Default: `NULL`}
+\item{where}{where query string passed to esri2sf, Default: \code{NULL}}
 
 \item{coords_col}{coordinate columns, e.g. c("longitude", "latitude")}
 
@@ -62,27 +62,27 @@ location names for features}
 
 \item{name}{location name}
 
-\item{...}{Additional arguments passed to [esri2sf::esri2df] or
-[esri2sf::esri2sf]}
+\item{...}{Additional arguments passed to \link[esri2sf:esri2sf]{esri2sf::esri2df} or
+\link[esri2sf:esri2sf]{esri2sf::esri2sf}}
 
 \item{layers}{Either a vector with URLs, a named list of urls, or a numeric
 vector.}
 
 \item{service_url}{Base service URL with layers are located.}
 
-\item{nm}{Name or vector of names to add to the layers; defaults to `NULL`.}
+\item{nm}{Name or vector of names to add to the layers; defaults to \code{NULL}.}
 
-\item{meta}{Name of metadata list value to return from [esri2sf::esrimeta].}
+\item{meta}{Name of metadata list value to return from \link[esri2sf:esri2sf]{esri2sf::esrimeta}.}
 
 \item{clean}{If TRUE, use janitor::make_clean_names on the returned metadata
 value (typically used for name values).}
 }
 \description{
-Wraps the [esri2sf::esri2sf] and [esri2sf::esri2df] function to download an
+Wraps the \link[esri2sf:esri2sf]{esri2sf::esri2sf} and \link[esri2sf:esri2sf]{esri2sf::esri2df} function to download an
 ArcGIS FeatureServer or MapServer. Supports spatial filtering with bounding
 box based on location and filtering by location name (if location name column
 is provided).
 }
 \seealso{
-[esri2sf::esri2sf()]
+\code{\link[esri2sf:esri2sf]{esri2sf::esri2sf()}}
 }

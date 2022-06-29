@@ -36,7 +36,7 @@ get_osm_boundaries(
 )
 }
 \arguments{
-\item{location}{A `sf`, `sfc`, or `bbox` object.}
+\item{location}{A \code{sf}, \code{sfc}, or \code{bbox} object.}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -57,29 +57,28 @@ without modification.}
 \item{key}{Feature key for overpass API query.}
 
 \item{value}{Value of the feature key; can be negated with an initial
-exclamation mark, `value = "!this"`, and can also be a vector, `value =
-c("this", "that")`. If `value = "all"` or if `key = "building"` the values
+exclamation mark, \code{value = "!this"}, and can also be a vector, \code{value = c("this", "that")}. If \code{value = "all"} or if \code{key = "building"} the values
 passed to the osmdata package are from a preset list extracted from
-[osmdata::available_tags()].}
+\code{\link[osmdata:available_tags]{osmdata::available_tags()}}.}
 
 \item{features}{Character vector of key-value pairs with keys and values
 enclosed in escape-formatted quotations (see examples).}
 
-\item{crs}{Coordinate reference system for output data; if `NULL`, the data
+\item{crs}{Coordinate reference system for output data; if \code{NULL}, the data
 remains in the Open Street Map coordinate reference system 4326. Default:
-`NULL`.}
+\code{NULL}.}
 
 \item{geometry}{Geometry type to output ("polygons", "points", "lines",
 "multilines", or "multipolygons"); if multiple geometry types are needed
-set osmdata to `TRUE.` Default `NULL`.}
+set osmdata to \code{TRUE.} Default \code{NULL}.}
 
-\item{osmdata}{If `TRUE` return a `osmdata` class object that includes the
+\item{osmdata}{If \code{TRUE} return a \code{osmdata} class object that includes the
 overpass API call, metadata including timestamp and version numbers, and
-all available geometry types; defaults to `FALSE`.}
+all available geometry types; defaults to \code{FALSE}.}
 
 \item{enclosing}{If enclosing is "relation" or "way", use the
-[osmdata::opq_enclosing()] function to query the OSM data (instead of
-[osmdata::add_osm_feature()]. Defaults to `NULL`. When using enclosing, the
+\code{\link[osmdata:opq_enclosing]{osmdata::opq_enclosing()}} function to query the OSM data (instead of
+\code{\link[osmdata:add_osm_feature]{osmdata::add_osm_feature()}}. Defaults to \code{NULL}. When using enclosing, the
 dist, diag_ratio, asp, and unit parameters are ignored and the center of
 the provided location is used for the query. geometry is set automatically
 based enclosing with "relation" using "multipolygon" and "way" using
@@ -100,21 +99,21 @@ because the server may time out before all data are delivered.}
 \item{type}{type of feature with id; "node", "way", or "relation"}
 
 \item{level}{administrative level (admin_level) of boundary to return;
-defaults to `NULL`. See <https://wiki.openstreetmap.org/wiki/Key:admin_level>
-for more information. Only used for [get_osm_boundaries].}
+defaults to \code{NULL}. See \url{https://wiki.openstreetmap.org/wiki/Key:admin_level}
+for more information. Only used for \link{get_osm_boundaries}.}
 
 \item{lang}{Language for boundary names to include in resulting data frame
 (e.g. "en" for English or "es" for Spanish). Default language names should
 always be included in results. Defaults to "en". See
-<https://wiki.openstreetmap.org/wiki/Multilingual_names> for more
+\url{https://wiki.openstreetmap.org/wiki/Multilingual_names} for more
 information.}
 }
 \value{
 A simple feature object with features using selected geometry type or
-  an `osmdata` object with features from all geometry types.
+an \code{osmdata} object with features from all geometry types.
 }
 \description{
-Wraps `osmdata` functions to query OSM data by adjusted bounding box or
+Wraps \code{osmdata} functions to query OSM data by adjusted bounding box or
 by enclosing ways/relations around the center of a location. timeout and
 nodes_only parameters are not fully supported currently.
 }

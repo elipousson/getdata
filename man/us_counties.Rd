@@ -7,22 +7,22 @@
 \format{
 A data frame with 3,220 rows and 7 variables:
 \describe{
-  \item{`name`}{County name (tidycensus)}
-  \item{`name_short`}{County name without state (tigris)}
-  \item{`geoid`}{County GeoID (labelled)}
-  \item{`abb_state`}{State abbreviation (USPS)}
-  \item{`est_pop`}{Estimated county population (B01001_001), American Community Survey 5 year, 2015-2019}
-  \item{`countyfp`}{County FIPS}
-  \item{`statefp`}{State FIPS}
-  \item{`bbox`}{Bounding box}
-  \item{`wkt`}{Well known text (labelled)}
+\item{\code{name}}{County name (tidycensus)}
+\item{\code{name_short}}{County name without state (tigris)}
+\item{\code{geoid}}{County GeoID (labelled)}
+\item{\code{abb_state}}{State abbreviation (USPS)}
+\item{\code{est_pop}}{Estimated county population (B01001_001), American Community Survey 5 year, 2015-2019}
+\item{\code{countyfp}}{County FIPS}
+\item{\code{statefp}}{State FIPS}
+\item{\code{bbox}}{Bounding box}
+\item{\code{wkt}}{Well known text (labelled)}
 }
 }
 \usage{
 us_counties
 }
 \description{
-U.S. County boundaries data downloaded with [tigris::counties].
+U.S. County boundaries data downloaded with \link[tigris:counties]{tigris::counties}.
 }
 \details{
 The geoid and wkt columns are labelled with a combination of an abbreviated

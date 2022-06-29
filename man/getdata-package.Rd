@@ -8,4 +8,17 @@
 \description{
 More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/elipousson/getdata}
+  \item \url{https://elipousson.github.io/getdata/}
+  \item Report bugs at \url{https://github.com/elipousson/getdata/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Eli Pousson \email{eli.pousson@gmail.com} (\href{https://orcid.org/0000-0001-8280-1706}{ORCID}) [copyright holder]
+
+}
 \keyword{internal}

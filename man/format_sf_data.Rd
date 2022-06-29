@@ -41,8 +41,8 @@ bind_units_col(
 \item{crs}{Coordinate reference system for returned data, Default: getOption("getdata.crs", default =
 3857)}
 
-\item{erase_data}{A `sf`, `sfc`, or `bbox` object with the geometry to erase
-from data, Default: `NULL`}
+\item{erase_data}{A \code{sf}, \code{sfc}, or \code{bbox} object with the geometry to erase
+from data, Default: \code{NULL}}
 
 \item{dTolerance}{numeric; tolerance parameter, specified for all or for each
 feature geometry. If you run \code{st_simplify}, the input data is
@@ -50,78 +50,81 @@ specified with long-lat coordinates and \code{sf_use_s2()} returns
 \code{TRUE}, then the value of \code{dTolerance} must be specified in
 meters.}
 
-\item{smooth}{If `TRUE`, smooth data with [smoothr::smooth] using default
-method and parameters, Default: `FALSE`.}
+\item{smooth}{If \code{TRUE}, smooth data with \link[smoothr:smooth]{smoothr::smooth} using default
+method and parameters, Default: \code{FALSE}.}
 
 \item{sf_col}{Name to use for the sf column after renaming; defaults to "geometry".}
 
-\item{sf_req}{If `TRUE`, data must be a `sf` object. If `FALSE`, data is
-passed to [overedge::as_sf] to convert data to an `sf` object.}
+\item{sf_req}{If \code{TRUE}, data must be a \code{sf} object. If \code{FALSE}, data is
+passed to \link[overedge:as_sf]{overedge::as_sf} to convert data to an \code{sf} object.}
 
-\item{...}{passed to [relocate_sf_col]}
+\item{...}{passed to \link{relocate_sf_col}}
 
 \item{.after}{The location to place sf column after; defaults to
-[dplyr::everything].}
+\link[dplyr:reexports]{dplyr::everything}.}
 
 \item{boundary}{An sf object with a column named "name" or a list of sf
 objects where all items in the list have a "name" column.}
 
-\item{join}{geometry predicate function; defaults to `NULL`, set to
-[sf::st_intersects] if key_list contains only POLYGON or MULTIPOLYGON objects
-or [sf::st_nearest_feature] if key_list contains other types.}
+\item{join}{geometry predicate function; defaults to \code{NULL}, set to
+\link[sf:geos_binary_pred]{sf::st_intersects} if key_list contains only POLYGON or MULTIPOLYGON objects
+or \link[sf:st_nearest_feature]{sf::st_nearest_feature} if key_list contains other types.}
 
 \item{y}{Vector of numeric or units values to bind to x.}
 
 \item{units}{Units to use for y (if numeric) or convert to (if y is units
-class); defaults to `NULL`.}
+class); defaults to \code{NULL}.}
 
-\item{drop}{If `TRUE`, apply the [units::drop_units] function to the column
+\item{drop}{If \code{TRUE}, apply the \link[units:drop_units]{units::drop_units} function to the column
 with units class values and return numeric values instead; defaults to
-`FALSE`.}
+\code{FALSE}.}
 
-\item{keep_all}{If `FALSE`, keep all columns. If `FALSE`, return only the
+\item{keep_all}{If \code{FALSE}, keep all columns. If \code{FALSE}, return only the
 named .id column.}
 
 \item{.id}{Name to use for vector of units provided to "y" parameter, when
 "y" is bound to the "x" data frame or tibble as a new column.}
 
-\item{data}{A `sf` object or, if `sf_req` is `FALSE`, any object that can be
-converted to an `sf` object with [overedge::as_sf].}
+\item{data}{A \code{sf} object or, if \code{sf_req} is \code{FALSE}, any object that can be
+converted to an \code{sf} object with \link[overedge:as_sf]{overedge::as_sf}.}
 
-\item{erase}{If TRUE, pass `data` and `erase_data` to [overedge::st_erase],
-Default: `FALSE`}
+\item{erase}{If TRUE, pass \code{data} and \code{erase_data} to \link[overedge:st_erase]{overedge::st_erase},
+Default: \code{FALSE}}
 }
 \value{
-A `sf` object with columns and geometry modified based parameters.
+A \code{sf} object with columns and geometry modified based parameters.
 }
 \description{
-The main [format_sf_data] function is a wrapper for the following common
-steps in transforming an `sf` object and preparing for mapping or analysis:
+The main \link{format_sf_data} function is a wrapper for the following common
+steps in transforming an \code{sf} object and preparing for mapping or analysis:
 }
 \details{
-- Convert data to an `sf` object with [overedge::as_sf] if `sf_req` is `FALSE`
- - Make data valid with [sf::st_make_valid] if needed
- - Format data with [format_data] using the ... parameters
- - Erase any data overlapping with `erase_data` (suggested for use with water or open space)
- - Simplify geometry with [sf::st_simplify] if `dTolerance` is provided
- - Smooth geometry with [smoothr::smooth] if `smooth` is `TRUE`
- - Rename the sf column to match `sf_col` (defaults to "geometry")
+\itemize{
+\item Convert data to an \code{sf} object with \link[overedge:as_sf]{overedge::as_sf} if \code{sf_req} is \code{FALSE}
+\item Make data valid with \link[sf:valid]{sf::st_make_valid} if needed
+\item Format data with \link{format_data} using the ... parameters
+\item Erase any data overlapping with \code{erase_data} (suggested for use with water or open space)
+\item Simplify geometry with \link[sf:geos_unary]{sf::st_simplify} if \code{dTolerance} is provided
+\item Smooth geometry with \link[smoothr:smooth]{smoothr::smooth} if \code{smooth} is \code{TRUE}
+\item Rename the sf column to match \code{sf_col} (defaults to "geometry")
+}
 
- The helper functions for format_sf_data and additional formatting functions
- for `sf` data are described in the details.
+The helper functions for format_sf_data and additional formatting functions
+for \code{sf} data are described in the details.
 
-Helper functions for [format_sf_data]:
+Helper functions for \link{format_sf_data}:
+\itemize{
+\item \link{rename_sf_col}: Rename \code{sf} column.
+\item \link{relocate_sf_col}: Relocate \code{sf} column after selected columns (defaults to \code{\link[=everything]{everything()}}).
+}
 
-- [rename_sf_col]: Rename `sf` column.
-- [relocate_sf_col]: Relocate `sf` column after selected columns (defaults to [everything()]).
-
-
-Additional formatting functions for `sf` objects:
-
- - [bind_boundary_col] uses [sf::st_join] to assign simple feature data to an
- enclosing polygon. This function with other join functions to add columns
- based on other spatial relationships, e.g. bind a column for the nearest
- point feature.
+Additional formatting functions for \code{sf} objects:
+\itemize{
+\item \link{bind_boundary_col} uses \link[sf:st_join]{sf::st_join} to assign simple feature data to an
+enclosing polygon. This function with other join functions to add columns
+based on other spatial relationships, e.g. bind a column for the nearest
+point feature.
+}
 }
 \examples{
 library(sf)

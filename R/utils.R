@@ -11,10 +11,7 @@
 }
 
 utils::globalVariables(
-  c( # Variables for format_md_crash_data
-    "acc_date", "acc_time", "crash_date", "dotw",
-    "harm_event_desc1", "harm_event_desc2", "report_type", "year"
-  )
+  c("admin_level", "bldg_num_even_odd", "block_num", "crs", "name", "nm", "street", "x")
 )
 
 #' Add default user agent to request

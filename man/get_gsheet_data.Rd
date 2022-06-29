@@ -39,14 +39,14 @@ returns
 
 Processed through \code{\link[googlesheets4:as_sheets_id]{as_sheets_id()}}.}
 
-\item{ask}{If `TRUE`, ask for the name of the Google Sheet to read if ss is
-not provided to [overedge::read_sf_gsheet].}
+\item{ask}{If \code{TRUE}, ask for the name of the Google Sheet to read if ss is
+not provided to \link[overedge:read_sf_ext]{overedge::read_sf_gsheet}.}
 
 \item{geometry}{Type of geometry to include in data frame. options include
 "drop", "wkt", "centroid", "point", Default: 'centroid'.}
 
 \item{location}{sf object. If multiple areas are provided, they are unioned
-into a single sf object using [sf::st_union]}
+into a single sf object using \link[sf:geos_combine]{sf::st_union}}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -79,8 +79,8 @@ to \code{FALSE}.}
 \item{from_crs}{For \link[overedge]{df_to_sf}, coordinate reference system used by
 coordinates or well known text in data frame.}
 
-\item{...}{additional parameters passed to [overedge::read_sf_path], [overedge::read_sf_url], or
-[overedge::read_sf_pkg] and [overedge::location_filter]}
+\item{...}{additional parameters passed to \link[overedge:read_sf_ext]{overedge::read_sf_path}, \link[overedge:read_sf_ext]{overedge::read_sf_url}, or
+\link[overedge:read_sf_ext]{overedge::read_sf_pkg} and \link[overedge:location_filter]{overedge::location_filter}}
 }
 \description{
 Get a data frame or simple feature data from a Google Sheet

@@ -26,7 +26,7 @@ get_flickr_photos(
 )
 }
 \arguments{
-\item{location}{A `sf` or `bbox` object to use in creating bounding box for
+\item{location}{A \code{sf} or \code{bbox} object to use in creating bounding box for
 getting photos from Flickr.}
 
 \item{dist}{buffer distance in units. Optional.}
@@ -56,7 +56,7 @@ Flickr API method flickr.photos.licenses.getInfo). See details for more informat
 \item{sort}{Supported options include "date-posted","date-taken",
 "interestingness", or "relevance"}
 
-\item{desc}{If `TRUE` return images in descending sort order, if `FALSE`,
+\item{desc}{If \code{TRUE} return images in descending sort order, if \code{FALSE},
 return in ascending sort order. Ignored if sort is set to "relevance".}
 
 \item{img_size}{Defaults to "s" (small). Options ranging from smallest to
@@ -68,46 +68,47 @@ largest include "sq", "t", "s", "q", "m", "n", "z", "c", "l", and "o"}
 250 if location is provided or 500 otherwise.}
 
 \item{page}{If page is greater than length 1, the function uses
-`purrr::map_dfr()` to return results for all pages but this may cause
+\code{purrr::map_dfr()} to return results for all pages but this may cause
 issues with API access if a large page range is provided. Default: 1}
 
 \item{orientation}{If img_size is length 1, photos are filtered to one or
 more of the supported orientations ("portrait", "landscape", and "square");
-defaults to `NULL`.}
+defaults to \code{NULL}.}
 
-\item{geometry}{If `TRUE`, include "geo" in extras and convert photos data
-frame to `sf` object.}
+\item{geometry}{If \code{TRUE}, include "geo" in extras and convert photos data
+frame to \code{sf} object.}
 
-\item{crs}{Coordinate reference system of `sf` object to return if geometry
-is `TRUE`.}
+\item{crs}{Coordinate reference system of \code{sf} object to return if geometry
+is \code{TRUE}.}
 }
 \value{
-A data frame with photo information or `sf` object with geometry
-  based on latitude and longitude of geocoded photos.
+A data frame with photo information or \code{sf} object with geometry
+based on latitude and longitude of geocoded photos.
 }
 \description{
-Set API key using `FlickrAPI::set_flickr_api_key()` or pass to the api_key
+Set API key using \code{FlickrAPI::set_flickr_api_key()} or pass to the api_key
 parameter. Currently relies on fork of package at
-<https://github.com/elipousson/FlickrAPI>
+\url{https://github.com/elipousson/FlickrAPI}
 }
 \details{
 License id options:
 
 license_id can be an integer from 0 to 10 or a corresponding license code
 including:
-
-- "c" (All Rights Reserved),
-- "by-bc-sa" (Attribution-NonCommercial-ShareAlike),
-- "by-nc" (Attribution-NonCommercial),
-- "by-nc-nd" (Attribution-NonCommercial-NoDerivs),
-- "by" (Attribution),
-- "by-sa" (Attribution-ShareAlike),
-- "by-nd" (Attribution-NoDerivs),
-- "nkc" (No known copyright restrictions),
-- "pd-us" (United States Government Work),
-- "cc0" (Public Domain Dedication),
-- or "pd" (Public Domain Mark).
+\itemize{
+\item "c" (All Rights Reserved),
+\item "by-bc-sa" (Attribution-NonCommercial-ShareAlike),
+\item "by-nc" (Attribution-NonCommercial),
+\item "by-nc-nd" (Attribution-NonCommercial-NoDerivs),
+\item "by" (Attribution),
+\item "by-sa" (Attribution-ShareAlike),
+\item "by-nd" (Attribution-NoDerivs),
+\item "nkc" (No known copyright restrictions),
+\item "pd-us" (United States Government Work),
+\item "cc0" (Public Domain Dedication),
+\item or "pd" (Public Domain Mark).
+}
 }
 \seealso{
-[FlickrAPI::getPhotoSearch()]
+\code{\link[FlickrAPI:getPhotoSearch]{FlickrAPI::getPhotoSearch()}}
 }
