@@ -1,23 +1,27 @@
-check_null <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, null.req = FALSE, ...) {
+check_null <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, null.req = FALSE, call = caller_env(), ...) {
   if (null.req) {
     null.ok <- null.req
   }
 
-  if (is.null(x) && !null.ok) {
-    cli_abort("{.arg {arg}} must not be NULL.", ...)
+  if (is_null(x) && !null.ok) {
+    cli_abort("{.arg {arg}} must not be NULL.",
+      call = call, ...
+    )
   }
 
-  if (!is.null(x) && null.req) {
-    cli_abort("{.arg {arg}} must be NULL.", ...)
+  if (!is_null(x) && null.req) {
+    cli_abort("{.arg {arg}} must be NULL.",
+      call = call, ...
+    )
   }
 
   invisible(return(TRUE))
 }
 
-check_character <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, ...) {
-  check_null(x, arg, null.ok)
+check_character <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = NULL, call = caller_env(), ...) {
+  check_null(x, arg, null.ok, FALSE, call)
 
-  if (is.character(x)) {
+  if (is_character(x, n = n)) {
     invisible(return(TRUE))
   }
 
@@ -25,27 +29,51 @@ check_character <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, ...)
     c("{.arg {arg}} must be a character vector.",
       "i" = "You've supplied a {class(x)} object."
     ),
+    call = call,
     ...
   )
 }
 
-check_len <- function(x = NULL, len = 1, arg = caller_arg(x), null.ok = FALSE, ...) {
-  check_null(x, arg, null.ok)
+check_logical <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = NULL, call = caller_env(), ...) {
+  check_null(x, arg, null.ok, FALSE, call)
 
-  if (length(x) == len) {
+  if (is_logical(x, n = n)) {
     invisible(return(TRUE))
   }
 
   cli_abort(
-    c("{.arg {arg}} must be length {len}.",
-      "i" = "You've supplied a length {length(x)} object."
+    c("{.arg {arg}} must be a character vector.",
+      "i" = "You've supplied a {class(x)} object."
     ),
+    call = call,
+    ...
+  )
+}
+
+check_len <- function(x = NULL, len = 1, arg = caller_arg(x), null.ok = FALSE, call = caller_env(), ...) {
+  check_null(x, arg, null.ok, FALSE, call)
+
+  if ((length(x) >= min(len)) && (length(x) <= max(len))) {
+    invisible(return(TRUE))
+  }
+
+  if (length(len) > 1) {
+    len <- glue("have a length between {min(len)} and {max(len)}")
+  } else {
+    len <- glue("be length {len}")
+  }
+
+  cli_abort(
+    c("{.arg {arg}} must {len}.",
+      "i" = "You've supplied a length {length(x)} vector."
+    ),
+    call = call,
     ...
   )
 }
 
 check_grepl <- function(x = NULL, pattern = NULL, arg = caller_arg(x), null.ok = FALSE, ignore.case = FALSE, perl = FALSE, message = NULL, ...) {
-  check_null(x, arg, null.ok)
+  check_null(x, arg, null.ok, FALSE, call)
 
   if (grepl(pattern, x, ignore.case = ignore.case, perl = perl)) {
     invisible(return(TRUE))
