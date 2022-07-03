@@ -42,16 +42,16 @@ instead of "kilometer") are also supported. Distance in units is converted
 to units matching GDAL units for x; defaults to "meter"}
 
 \item{asp}{Aspect ratio of width to height as a numeric value (e.g. 0.33) or
-character (e.g. "1:3"). If numeric, \code{\link[overedge:get_asp]{get_asp()}} returns the same value
+character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} returns the same value
 without modification.}
 
-\item{user_id}{The NSID of the user who's photo to search. If this parameter
-isn't passed then everybody's public photos will be searched.}
+\item{user_id}{The NSID of the user with photos to search. If this parameter
+is NULL passed then all public photos will be searched.}
 
-\item{tags}{A vector of tags you wish to search for.}
+\item{tags}{A vector of tags to search for.}
 
-\item{license_id}{The license id for photos (for possible values see the
-Flickr API method flickr.photos.licenses.getInfo). See details for more information.}
+\item{license_id}{The license id for photos. For possible values see the
+Flickr API method flickr.photos.licenses.getInfo or see details for more information.}
 
 \item{sort}{Supported options include "date-posted","date-taken",
 "interestingness", or "relevance"}
@@ -80,6 +80,10 @@ frame to \code{sf} object.}
 
 \item{crs}{Coordinate reference system of \code{sf} object to return if geometry
 is \code{TRUE}.}
+
+\item{key}{Flickr API key. If api_key is 'NULL', the \link[FlickrAPI:getPhotoSearch]{FlickrAPI::getPhotoSearch} uses
+\code{\link[FlickrAPI:setFlickrAPIKey]{FlickrAPI::getFlickrAPIKey()}} to use the environment variable "FLICKR_API_KEY" as the
+key. Use \code{\link[=set_access_token]{set_access_token()}} w/ \code{type = "FLICKR_API_KEY"} or \code{\link[FlickrAPI:setFlickrAPIKey]{FlickrAPI::setFlickrAPIKey()}}}
 }
 \value{
 A data frame with photo information or \code{sf} object with geometry

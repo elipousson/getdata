@@ -6,8 +6,10 @@
 #' @param location A `sf`, `sfc`, or `bbox` object or a character string that
 #'   matches a geoid, name, abb, or statefp for [us_states] or [us_counties].
 #' @param class Class of data to return, "df" (default), "sf", "bbox", or "sfc"
-#' @inheritParams overedge::st_bbox_ext
+#' @inheritParams get_location_data
+#' @inheritParams rlang::abort
 #' @param ... Additional parameters including geoid, name, state, or county.
+#'   These additional identifier parameters are only used if location is `NULL`.
 #' @name get_admin_data
 #' @example examples/get_admin_data.R
 NULL
@@ -24,9 +26,8 @@ get_states <- function(location = NULL,
                        class = "df",
                        call = caller_env(),
                        ...) {
-  if (is.null(location)) {
-    location <- us_admin_dots_to_location(...)
-  }
+
+  location <- location %||% us_admin_dots_to_location(...)
 
   if (!is_sf(location, ext = TRUE)) {
     lookup <-
@@ -113,8 +114,14 @@ us_admin_dots_to_location <- function(...) {
       !is.null(params$geoid) ~ "geoid",
       !is.null(params$name) ~ "name",
       !is.null(params$state) ~ "state",
-      !is.null(params$county) ~ "county"
+      !is.null(params$county) ~ "county",
+      TRUE ~ "none"
     )
+
+  cli_abort_ifnot(
+    "A {.arg location}, {.arg geoid}, {.arg name}, {.arg state}, or {.arg county} parameter must be provided.",
+    condition = (location != "none")
+  )
 
   switch(location,
     "geoid" = params$geoid,

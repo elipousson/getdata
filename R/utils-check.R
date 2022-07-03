@@ -158,23 +158,28 @@ check_df_paper <- function(x, cols = c("width", "height", "orientation", "units"
 }
 
 #' @noRd
-check_sf <- function(x, arg = caller_arg(x), null.ok = FALSE, ext = FALSE, ...) {
+check_sf <- function(x, arg = caller_arg(x), null.ok = FALSE, ext = FALSE, call = caller_env(), ...) {
   check_null(x, arg, null.ok)
 
-  if (overedge::is_sf(x, ext = ext)) {
+  if (sfext::is_sf(x, ext = ext)) {
     invisible(return(TRUE))
   }
 
+  sf <- "sf"
+
   if (ext) {
-    sf <- c("sf", "sfc", "bbox")
-  } else {
-    sf <- "sf"
+    sf <- c(sf, "sfc", "sfg", "bbox")
+  }
+
+  if (is_class(x, sf, null.ok)) {
+    invisible(return(TRUE))
   }
 
   cli_abort(
     c("{.arg {arg}} must be a {.code sf} object.",
       "i" = "You've supplied a {class(x)} object."
     ),
+    call = call,
     ...
   )
 }

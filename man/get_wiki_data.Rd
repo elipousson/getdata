@@ -18,7 +18,6 @@ get_wiki_data(
   unit = getOption("getdata.unit", "meter"),
   asp = getOption("getdata.asp"),
   crs = getOption("getdata.unit", 3857),
-  coords = getOption("getdata.coords", c("lon", "lat")),
   remove_coords = TRUE,
   clean_names = TRUE
 )
@@ -38,6 +37,8 @@ or "secondary" to search other coordinate types.}
 
 \item{limit}{Number of pages to return (max 500); defaults to 50}
 
+\item{list}{method to use for query; "geosearch" returns data, "resp" returns response}
+
 \item{lang}{Language to search on Wikipedia; defaults to "en".}
 
 \item{geometry}{If \code{TRUE}, return sf object. If \code{FALSE}, return data frame. Defaults to \code{FALSE}.}
@@ -55,10 +56,18 @@ instead of "kilometer") are also supported. Distance in units is converted
 to units matching GDAL units for x; defaults to "meter"}
 
 \item{asp}{Aspect ratio of width to height as a numeric value (e.g. 0.33) or
-character (e.g. "1:3"). If numeric, \code{\link[overedge:get_asp]{get_asp()}} returns the same value
+character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} returns the same value
 without modification.}
 
 \item{crs}{Coordinate reference system of bounding box to return}
+
+\item{remove_coords}{For \link[sfext]{df_to_sf}, if \code{TRUE}, remove the coordinate columns
+after converting a data frame to simple feature object; defaults to
+\code{FALSE}.}
+
+\item{clean_names}{If \code{TRUE}, clean names provided to nm or created based on
+value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as
+provided.}
 }
 \description{
 Use the Wikipedia API geosearch API to get Wikipedia articles for a location.

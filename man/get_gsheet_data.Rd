@@ -25,6 +25,8 @@ get_gsheet_data(
 )
 }
 \arguments{
+\item{url}{A Google Sheets url}
+
 \item{sheet}{Sheet to read, in the sense of "worksheet" or "tab". You can identify a sheet by name, with a string, or by position, with a number. Ignored if the sheet is specified via \code{range}. If neither argument specifies the sheet, defaults to the first visible sheet.}
 
 \item{ss}{Something that identifies a Google Sheet:
@@ -40,7 +42,7 @@ returns
 Processed through \code{\link[googlesheets4:as_sheets_id]{as_sheets_id()}}.}
 
 \item{ask}{If \code{TRUE}, ask for the name of the Google Sheet to read if ss is
-not provided to \link[overedge:read_sf_ext]{overedge::read_sf_gsheet}.}
+not provided to \link[sfext:read_sf_ext]{sfext::read_sf_gsheet}.}
 
 \item{geometry}{Type of geometry to include in data frame. options include
 "drop", "wkt", "centroid", "point", Default: 'centroid'.}
@@ -61,26 +63,29 @@ instead of "kilometer") are also supported. Distance in units is converted
 to units matching GDAL units for x; defaults to "meter"}
 
 \item{asp}{Aspect ratio of width to height as a numeric value (e.g. 0.33) or
-character (e.g. "1:3"). If numeric, \code{\link[overedge:get_asp]{get_asp()}} returns the same value
+character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} returns the same value
 without modification.}
 
 \item{coords}{Coordinate columns for input dataframe or output sf object (if
 geometry is 'centroid' or 'point') Default: c("lon", "lat").}
 
-\item{remove_coords}{For \link[overedge]{df_to_sf}, if \code{TRUE}, remove the coordinate columns
+\item{remove_coords}{For \link[sfext]{df_to_sf}, if \code{TRUE}, remove the coordinate columns
 after converting a data frame to simple feature object; defaults to
 \code{FALSE}.}
 
 \item{address}{Address column name passed to \link[tidygeocoder:geocode]{tidygeocoder::geocode} or \link[tidygeocoder:geo]{tidygeocoder::geo}}
 
-\item{geo}{If \code{TRUE}, use \link[overedge]{address_to_sf} to geocode address column; defaults
+\item{geo}{If \code{TRUE}, use \link[sfext]{address_to_sf} to geocode address column; defaults
 to \code{FALSE}.}
 
-\item{from_crs}{For \link[overedge]{df_to_sf}, coordinate reference system used by
+\item{from_crs}{For \link[sfext]{df_to_sf}, coordinate reference system used by
 coordinates or well known text in data frame.}
 
-\item{...}{additional parameters passed to \link[overedge:read_sf_ext]{overedge::read_sf_path}, \link[overedge:read_sf_ext]{overedge::read_sf_url}, or
-\link[overedge:read_sf_ext]{overedge::read_sf_pkg} and \link[overedge:location_filter]{overedge::location_filter}}
+\item{clean_names}{If \code{TRUE}, clean names provided to nm or created based on
+value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as
+provided.}
+
+\item{...}{Other parameters passed onto methods.}
 }
 \description{
 Get a data frame or simple feature data from a Google Sheet

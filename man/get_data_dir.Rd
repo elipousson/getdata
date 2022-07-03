@@ -5,14 +5,14 @@
 \alias{create_data_dir}
 \title{Check data directory and create if needed}
 \usage{
-get_data_dir(path = NULL, package = "overedge")
+get_data_dir(path = NULL, package = "sfext")
 
 create_data_dir(path = NULL, create = TRUE)
 }
 \arguments{
 \item{path}{Path to directory to use as data directory.}
 
-\item{package}{Package name; defaults to "overedge"}
+\item{package}{Package name; defaults to "sfext"}
 
 \item{create}{For \link{create_data_dir}, if \code{TRUE} and directory does not exist
 at the path, prompt user to create directory. Defaults to \code{TRUE}.}

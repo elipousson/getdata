@@ -1,12 +1,13 @@
 
 #' Get a data frame or simple feature data from a Google Sheet
 #'
+#' @param url A Google Sheets url
 #' @name get_gsheet_data
 #' @inheritParams googlesheets4::read_sheet
-#' @inheritParams overedge::df_to_sf
+#' @inheritParams sfext::df_to_sf
 #' @inheritParams get_location_data
 #' @param ask If `TRUE`, ask for the name of the Google Sheet to read if ss is
-#'   not provided to [overedge::read_sf_gsheet].
+#'   not provided to [sfext::read_sf_gsheet].
 #' @export
 #' @importFrom rlang is_missing
 get_gsheet_data <- function(url,
@@ -30,7 +31,7 @@ get_gsheet_data <- function(url,
 
 
   if (is.null(ss)) {
-    if (!rlang::is_missing(url)) {
+    if (!is_missing(url)) {
       ss <- url
     } else if (ask) {
       ss <-
@@ -58,6 +59,7 @@ get_gsheet_data <- function(url,
     from_crs = from_crs,
     address = address,
     geo = geo,
-    crs = crs
+    crs = crs,
+    clean_names = clean_names
   )
 }

@@ -2,10 +2,13 @@
 #'
 #' Returns data for a selected location or a list of locations (for
 #' [map_location_data]). If data is a character string, the parameter is passed
-#' to [overedge::read_sf_url], [overedge::read_sf_path], or [overedge::read_sf_pkg]. This function uses
-#' [overedge::location_filter()] to filter (using [sf::st_intersects]), crop, or trim data
-#' to the provided location. location can also be an an address, county GeoID,
-#' state name, abbreviation, or GeoID.
+#' to [sfext::read_sf_url], [sfext::read_sf_path], or [sfext::read_sf_pkg]. This
+#' function uses [sfext::st_filter_ext()] to filter, crop, or trim data to the
+#' provided location. location can also be an an address.
+#'
+#' This function previously supported county geoid, state name, abbreviation, or
+#' geoid as a location. Currently, recommend using [get_states] or
+#' [get_counties] and passing a `sf` object to location.
 #'
 #' @details Working with sf lists for data and locations:
 #'
@@ -17,15 +20,15 @@
 #'
 #' @param location sf object. If multiple areas are provided, they are unioned
 #'   into a single sf object using [sf::st_union]
-#' @inheritParams overedge::st_bbox_ext
+#' @inheritParams sfext::st_bbox_ext
 #' @param data Character string (e.g. url, file path, or name of data from
 #'   package), a `sf`, `sfc`, or `bbox`  object including data in area.
 #' @param package Name of the package to search for data.
-#' @param filetype File type to use if passing parameters to [overedge::read_sf_download]
-#'   or [overedge::read_sf_pkg] (required for extdata and cached data).
+#' @param filetype File type to use if passing parameters to [sfext::read_sf_download]
+#'   or [sfext::read_sf_pkg] (required for extdata and cached data).
 #' @param fn Function to apply to data after filtering by location but before
 #'   returning from function.
-#' @inheritParams overedge::location_filter
+#' @inheritParams sfext::location_filter
 #' @param from_crs Coordinate reference system used to match the location CRS to
 #'   the source data.
 #' @param crs Coordinate reference system to return.
@@ -40,29 +43,32 @@
 #'   tested and may result in errors or unexpected results.
 #' @param label label is optionally used by [map_location_data] to name the data
 #'   objects in the list returned by the function.
-#' @param ... additional parameters passed to [overedge::read_sf_path], [overedge::read_sf_url], or
-#'   [overedge::read_sf_pkg] and [overedge::location_filter]
+#' @inheritParams sfext::as_sf_class
+#' @inheritParams format_data
+#' @param ... additional parameters passed to [sfext::read_sf_path], [sfext::read_sf_url], or
+#'   [sfext::read_sf_pkg] and [sfext::st_filter_ext]
 #' @rdname get_location_data
 #' @export
 #' @importFrom sf st_crs st_crop st_transform st_intersection st_filter
-#' @importFrom rlang as_function
 get_location_data <- function(location = NULL,
-                              dist = getOption("overedge.dist"),
-                              diag_ratio = getOption("overedge.diag_ratio"),
-                              unit = getOption("overedge.unit", default = "meter"),
-                              asp = getOption("overedge.asp"),
+                              dist = getOption("getdata.dist"),
+                              diag_ratio = getOption("getdata.diag_ratio"),
+                              unit = getOption("getdata.unit", default = "meter"),
+                              asp = getOption("getdata.asp"),
                               data = NULL,
-                              package = getOption("overedge.data_package"),
-                              filetype = getOption("overedge.data_filetype", default = "gpkg"),
+                              package = getOption("getdata.data_package"),
+                              filetype = getOption("getdata.data_filetype", default = "gpkg"),
                               fn = NULL,
                               crop = TRUE,
                               trim = FALSE,
-                              from_crs = getOption("overedge.from_crs"),
-                              crs = getOption("overedge.crs"),
+                              from_crs = getOption("getdata.from_crs"),
+                              crs = getOption("getdata.crs"),
                               class = "sf",
                               label = NULL,
                               index = NULL,
                               col = NULL,
+                              var_names = NULL,
+                              clean_names = FALSE,
                               ...) {
   if (!is.null(index) && is.list(index)) {
     # FIXME: This is set to work with 1 or 2 level list indices with naming conventions that match make_location_data_list
@@ -76,13 +82,13 @@ get_location_data <- function(location = NULL,
     data <- get_index_param(index, data = data)
   }
 
-  if (!is.null(location) && is.character(location)) {
-    location <- as_sf(location)
+  if (!is.null(location) && !sfext::is_sf(location)) {
+    location <- sfext::as_sf(location)
   }
 
   # Get adjusted bounding box using any adjustment variables provided
   bbox <-
-    overedge::st_bbox_ext(
+    sfext::st_bbox_ext(
       x = location,
       dist = dist,
       diag_ratio = diag_ratio,
@@ -91,10 +97,10 @@ get_location_data <- function(location = NULL,
       crs = from_crs
     )
 
-  if (!overedge::is_sf(data)) {
+  if (!sfext::is_sf(data)) {
     type <-
       dplyr::case_when(
-        overedge::is_bbox(data) ~ "bbox",
+        sfext::is_bbox(data) ~ "bbox",
         is.data.frame(data) ~ "df",
         is_url(data) ~ "url",
         is.character(data) && fs::file_exists(data) ~ "path",
@@ -104,26 +110,45 @@ get_location_data <- function(location = NULL,
 
     data <-
       switch(type,
-        "df" = overedge::df_to_sf(x = data, ...),
-        "bbox" = overedge::as_sf(data, ...),
-        "url" = overedge::read_sf_url(url = data, bbox = bbox, ...),
-        "path" = overedge::read_sf_path(path = data, bbox = bbox, ...),
-        "pkg" = overedge::read_sf_pkg(data = data, bbox = bbox, package = package, filetype = filetype, ...)
+        "df" = sfext::df_to_sf(x = data, ...),
+        "bbox" = sfext::as_sf(data, ...),
+        "url" = sfext::read_sf_url(url = data, bbox = bbox, ...),
+        "path" = sfext::read_sf_path(path = data, bbox = bbox, ...),
+        "pkg" = sfext::read_sf_pkg(data = data, bbox = bbox, package = package, filetype = filetype, ...)
       )
   }
 
-  data <-
-    overedge::location_filter(
-      data = data,
-      location = location,
-      bbox = bbox,
-      trim = trim,
-      crop = crop
-    )
+  if (crop) {
+    data <-
+      sfext::st_filter_ext(
+        data,
+        bbox,
+        crop = TRUE
+      )
+  } else if (trim) {
+    data <-
+      sfext::st_filter_ext(
+        data,
+        location,
+        trim = TRUE
+      )
+  } else {
+    if (!all(sapply(c(dist, diag_ratio, asp), is_null))) {
+      location <- bbox
+    }
+
+    data <-
+      sfext::st_filter_ext(
+        data,
+        location
+      )
+  }
 
   data <- use_fn(data = data, fn = fn)
 
-  overedge::as_sf_class(x = data, class = class, crs = crs, col = col)
+  data <- format_data(data, var_names = var_names, clean_names = clean_names)
+
+  sfext::as_sf_class(x = data, class = class, crs = crs, col = col)
 }
 
 #' @name map_location_data
@@ -132,7 +157,6 @@ get_location_data <- function(location = NULL,
 #'   defaults `FALSE`.
 #' @example examples/map_location_data.R
 #' @export
-#' @importFrom rlang list2
 #' @importFrom janitor make_clean_names
 #' @importFrom purrr set_names map_chr map map2 discard
 map_location_data <- function(location = NULL,
@@ -154,17 +178,13 @@ map_location_data <- function(location = NULL,
                               index = NULL,
                               ...) {
   # FIXME: This triggers an alert with lintr but it is used
-  params <- rlang::list2(...)
+  params <- list2(...)
 
-  is_data <-
-    overedge:::is_sf_or_what(data)
-
-  if (!grepl("list", is_data) && (length(data) > 1)) {
+  if (!is.list(data) && (length(data) > 1)) {
     data <- as.list(data)
-    is_data <- "list"
 
     # FIXME: The addition of a index parameter to get_location_data should allow the use of the index as a secondary source of name data for map_location_data
-    if (!rlang::is_named(data)) {
+    if (!is_named(data)) {
       if (!is.null(label)) {
         label <- janitor::make_clean_names(label)
       }
@@ -183,26 +203,14 @@ map_location_data <- function(location = NULL,
             )
           )
         )
-
-      is_data <- "nm_list"
     }
   }
 
-  data_is_list <-
-    grepl("list", is_data)
-
-  is_location <-
-    overedge:::is_sf_or_what(location)
-
-  if (!grepl("list", is_location) && (length(location) > 1)) {
+  if (!is.list(location) && (length(location) > 1)) {
     location <- as.list(location)
-    is_location <- "list"
   }
 
-  location_is_list <-
-    grepl("list", is_location)
-
-  if (data_is_list) {
+  if (is.list(data)) {
     data <-
       purrr::map(
         data,
@@ -225,7 +233,7 @@ map_location_data <- function(location = NULL,
           index = index
         )
       )
-  } else if (location_is_list) {
+  } else if (is.list(location)) {
     data <-
       purrr::map(
         location,
@@ -248,7 +256,7 @@ map_location_data <- function(location = NULL,
           index = index
         )
       )
-  } else if (data_is_list && location_is_list && (length(data) == length(location))) {
+  } else if (is.list(data) && is.list(location) && (length(data) == length(location))) {
     data <-
       purrr::map2(
         location,
@@ -275,7 +283,7 @@ map_location_data <- function(location = NULL,
   }
 
   data <- purrr::discard(data, ~ nrow(.x) == 0)
-  data <- overedge::as_sf_class(x = data, class = class, crs = crs) # , ...)
+  data <- sfext::as_sf_class(x = data, class = class, crs = crs) # , ...)
 
   if (load && is_sf_list(data, named = TRUE)) {
     list2env(data, envir = .GlobalEnv)

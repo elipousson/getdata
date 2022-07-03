@@ -4,9 +4,9 @@
 #' A utility function that wraps [rappdirs::user_cache_dir].
 #'
 #' @param path Path to directory to use as data directory.
-#' @param package Package name; defaults to "overedge"
+#' @param package Package name; defaults to "sfext"
 #' @export
-get_data_dir <- function(path = NULL, package = "overedge") {
+get_data_dir <- function(path = NULL, package = "sfext") {
   if (is.null(path)) {
     is_pkg_installed("rappdirs")
 
@@ -23,7 +23,6 @@ get_data_dir <- function(path = NULL, package = "overedge") {
 #' @param create For [create_data_dir], if `TRUE` and directory does not exist
 #'   at the path, prompt user to create directory. Defaults to `TRUE`.
 #' @export
-#' @importFrom cli cli_alert_success cli_abort
 create_data_dir <- function(path = NULL, create = TRUE) {
   if (!dir.exists(path) && create) {
     if (cli_yeah(
@@ -31,9 +30,9 @@ create_data_dir <- function(path = NULL, create = TRUE) {
     Do you want to create a directory at this location?"
     )) {
       dir.create(path = path)
-      cli::cli_alert_success("New directory created at {.file {path}}")
+      cli_info(c("v" = "New directory created at {.file {path}}"))
     } else {
-      cli::cli_abort("Please provide a different path for this file.")
+      cli_abort("Please provide a different path for this file.")
     }
   }
 }

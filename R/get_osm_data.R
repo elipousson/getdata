@@ -11,7 +11,7 @@
 #'   c("this", "that")`. If `value = "all"` or if `key = "building"` the values
 #'   passed to the osmdata package are from a preset list extracted from
 #'   [osmdata::available_tags()].
-#' @inheritParams overedge::st_bbox_ext
+#' @inheritParams sfext::st_bbox_ext
 #' @param geometry Geometry type to output ("polygons", "points", "lines",
 #'   "multilines", or "multipolygons"); if multiple geometry types are needed
 #'   set osmdata to `TRUE.` Default `NULL`.
@@ -30,7 +30,7 @@
 #'   "polygon" geometry.
 #' @inheritParams osmdata::opq
 #' @inheritParams osmdata::add_osm_features
-#' @inheritParams overedge::format_data
+#' @inheritParams sfext::format_data
 #' @return A simple feature object with features using selected geometry type or
 #'   an `osmdata` object with features from all geometry types.
 #' @export
@@ -84,14 +84,14 @@ get_osm_data <- function(location = NULL,
       )
   }
 
-  if (getOption("overedge.osm_attribution", TRUE)) {
+  if (getOption("getdata.osm_attribution", TRUE)) {
     osm_copyright_url <- "https://www.openstreetmap.org/copyright"
 
     cli::cli_alert_info(
       "Attribution is required when using OpenStreetMap data.
       Find more information on the Open Database License (ODbL) at {.url {osm_copyright_url}}"
     )
-    options("overedge.osm_attribution" = FALSE)
+    options("sfext.osm_attribution" = FALSE)
   }
 
   data
@@ -366,9 +366,10 @@ get_osm_data_enclosing <- function(location,
 get_osm_data_geometry <- function(data,
                                   geometry = NULL,
                                   crs = NULL,
-                                  osmdata = FALSE) {
+                                  osmdata = FALSE,
+                                  call = caller_env()) {
   geometry <-
-    match.arg(
+    arg_match(
       geometry,
       c(
         "polygons",
@@ -376,7 +377,8 @@ get_osm_data_geometry <- function(data,
         "lines",
         "multilines",
         "multipolygons"
-      )
+      ),
+      error_call = call
     )
 
   geometry <- paste0("osm_", geometry)

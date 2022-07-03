@@ -15,7 +15,7 @@
 #'   object passed to [sf::st_filter]. Any valid address or
 #'   addresses are geocoded with [tidygeocoder::geo], converted to
 #'   a simple feature object, and then used as a spatial filter. `bbox` objects
-#'   are converted using [overedge::sf_bbox_to_sf()]. Multiple addresses are supported.
+#'   are converted using [sfext::sf_bbox_to_sf()]. Multiple addresses are supported.
 #' @param label Label optionally added to "label" column; must be a length 1 or
 #'   match the number of rows returned based on the other parameters. If `union = TRUE`,
 #'   using label is recommended. Default: `NULL`
@@ -49,7 +49,7 @@ get_location <- function(type,
                          location = NULL,
                          index = NULL,
                          union = FALSE,
-                         crs = getOption("overedge.crs"),
+                         crs = getOption("getdata.crs"),
                          label = NULL,
                          class = "sf",
                          ...) {
@@ -102,7 +102,12 @@ get_location <- function(type,
     }
   } else {
     location <-
-      overedge::location_filter(data = type, location = location, trim = FALSE, crop = FALSE)
+      location_filter(
+        data = type,
+        location = location,
+        trim = FALSE,
+        crop = FALSE
+        )
   }
 
   if (!is.null(name)) {
@@ -122,8 +127,8 @@ get_location <- function(type,
   }
 
   cli_abort_ifnot(
-    condition = nrow(location) > 0,
-    c("Location can't be found based on the provided parameters.")
+    c("Location can't be found based on the provided parameters."),
+    condition = nrow(location) > 0
   )
 
   if (union) {
@@ -140,19 +145,18 @@ get_location <- function(type,
     location <- relocate_sf_col(location)
   }
 
-  overedge::as_sf_class(x = location, class = class, crs = crs, col = col)
+  sfext::as_sf_class(x = location, class = class, crs = crs, col = col)
 }
 
 
 #' Union location and combine name column
 #'
 #' @noRd
-#' @importFrom rlang has_name
 #' @importFrom sf st_union
 #' @importFrom dplyr rename
 location_union <- function(location = NULL, name_col = "name") {
   # FIXME: This skips union if the name_col is missing. should it give a warning?
-  if (!is.null(location) && ((nrow(location) == 1) || !rlang::has_name(location, name_col))) {
+  if (!is.null(location) && ((nrow(location) == 1) || !has_name(location, name_col))) {
     return(location)
   }
 
@@ -172,4 +176,8 @@ location_union <- function(location = NULL, name_col = "name") {
     location,
     "{name_col}" := name
   )
+}
+
+location_filter <- function() {
+
 }

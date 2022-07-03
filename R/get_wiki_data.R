@@ -7,7 +7,7 @@
 #' For this function, `location` can be either an `sf`, `sfc`, or `bbox` object
 #' or the title of a Wikipedia article with a related location.
 #'
-#' @inheritParams overedge::st_bbox_ext
+#' @inheritParams sfext::st_bbox_ext
 #' @inheritParams get_location_data
 #' @param radius If `TRUE`, use dist as a buffer around the center of the
 #'   location; defaults to `FALSE`
@@ -16,9 +16,12 @@
 #' @param details Additional detailed to return with results. Options include
 #'   "type", "name", "country", "region"; defaults to `NULL`.
 #' @param limit Number of pages to return (max 500); defaults to 50
+#' @param list method to use for query; "geosearch" returns data, "resp" returns response
 #' @param lang Language to search on Wikipedia; defaults to "en".
 #' @param geometry If `TRUE`, return sf object. If `FALSE`, return data frame. Defaults to `FALSE`.
 #' @rdname get_wiki_data
+#' @inheritParams format_data
+#' @inheritParams sfext::df_to_sf
 #' @export
 #' @importFrom httr2 request req_url_query req_perform resp_body_json
 get_wiki_data <- function(location,
@@ -34,7 +37,6 @@ get_wiki_data <- function(location,
                           unit = getOption("getdata.unit", "meter"),
                           asp = getOption("getdata.asp"),
                           crs = getOption("getdata.unit", 3857),
-                          coords = getOption("getdata.coords", c("lon", "lat")),
                           remove_coords = TRUE,
                           clean_names = TRUE) {
   cli_abort_ifnot(
@@ -66,13 +68,13 @@ get_wiki_data <- function(location,
 
       # FIXME: This should be pulled out of st_buffer_ext into a separate helper function
       if (is.null(dist) && !is.null(diag_ratio)) {
-        dist <- overedge::sf_bbox_diagdist(bbox = overedge::as_bbox(x), drop = TRUE) * diag_ratio
+        dist <- sfext::sf_bbox_diagdist(bbox = sfext::as_bbox(x), drop = TRUE) * diag_ratio
       }
 
-      gsradius <- as.integer(round(overedge::convert_dist_units(dist, from = unit, to = "meter")))
+      gsradius <- as.integer(round(sfext::convert_dist_units(dist, from = unit, to = "meter")))
 
       cli_abort_ifnot(
-        "radius {.arg dist} must be greater than 0.",
+        "radius {.arg dist} must be greater than 1.",
         condition = (gsradius >= 1)
       )
     } else {
@@ -102,10 +104,14 @@ get_wiki_data <- function(location,
       list = list
     )
 
+  if (list == "resp") {
+    return(data)
+  }
+
   if (geometry) {
     # FIXME: Add clean_names support
     data <-
-      overedge::df_to_sf(data, crs = crs, remove_coords = remove_coords)
+      sfext::df_to_sf(data, crs = crs, remove_coords = remove_coords)
   }
 
   format_data(data, clean_names = clean_names)
@@ -218,7 +224,7 @@ resp_wiki_query <- function(req,
 #'
 #' @noRd
 st_gscoord <- function(location, crs = 4326) {
-  center <- overedge::get_coords(location, crs = crs)
+  center <- sfext::get_coords(location, crs = crs)
   glue("{center$lat}|{center$lon}")
 }
 
@@ -227,7 +233,7 @@ st_gscoord <- function(location, crs = 4326) {
 #' @noRd
 st_gsbbox <- function(location, dist = NULL, diag_ratio = NULL, asp = NULL, unit = "meter", crs = 4326) {
   bbox <-
-    overedge::st_bbox_ext(
+    sfext::st_bbox_ext(
       x = location,
       dist = dist,
       diag_ratio = diag_ratio,

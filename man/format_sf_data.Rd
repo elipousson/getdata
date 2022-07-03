@@ -2,10 +2,9 @@
 % Please edit documentation in R/format_sf_data.R
 \name{format_sf_data}
 \alias{format_sf_data}
+\alias{erase_data}
 \alias{relocate_sf_col}
 \alias{rename_sf_col}
-\alias{bind_boundary_col}
-\alias{bind_units_col}
 \title{Format simple feature data}
 \usage{
 format_sf_data(
@@ -19,30 +18,21 @@ format_sf_data(
   ...
 )
 
+erase_data(x, erase_data = NULL)
+
 relocate_sf_col(x, .after = dplyr::everything(), ...)
 
 rename_sf_col(x, sf_col = "geometry")
-
-bind_boundary_col(x, boundary = NULL, join = NULL, col = "name", ...)
-
-bind_units_col(
-  x,
-  y,
-  units = NULL,
-  drop = FALSE,
-  keep_all = TRUE,
-  .id = NULL,
-  ...
-)
 }
 \arguments{
-\item{x}{object of class \code{sfg}, \code{sfc} or \code{sf}}
+\item{x}{A \code{sf} object or, if \code{sf_req} is \code{FALSE}, any object that can be
+converted to an \code{sf} object with \link[sfext:as_sf]{sfext::as_sf}.}
 
 \item{crs}{Coordinate reference system for returned data, Default: getOption("getdata.crs", default =
 3857)}
 
-\item{erase_data}{A \code{sf}, \code{sfc}, or \code{bbox} object with the geometry to erase
-from data, Default: \code{NULL}}
+\item{erase_data}{A \code{sf}, \code{sfc}, or \code{bbox} object with geometry that should be erased
+from the data, Default: \code{NULL}}
 
 \item{dTolerance}{numeric; tolerance parameter, specified for all or for each
 feature geometry. If you run \code{st_simplify}, the input data is
@@ -56,40 +46,12 @@ method and parameters, Default: \code{FALSE}.}
 \item{sf_col}{Name to use for the sf column after renaming; defaults to "geometry".}
 
 \item{sf_req}{If \code{TRUE}, data must be a \code{sf} object. If \code{FALSE}, data is
-passed to \link[overedge:as_sf]{overedge::as_sf} to convert data to an \code{sf} object.}
+passed to \link[sfext:as_sf]{sfext::as_sf} to convert data to an \code{sf} object.}
 
-\item{...}{passed to \link{relocate_sf_col}}
+\item{...}{Additional parameters passed to \code{format_data}}
 
 \item{.after}{The location to place sf column after; defaults to
 \link[dplyr:reexports]{dplyr::everything}.}
-
-\item{boundary}{An sf object with a column named "name" or a list of sf
-objects where all items in the list have a "name" column.}
-
-\item{join}{geometry predicate function; defaults to \code{NULL}, set to
-\link[sf:geos_binary_pred]{sf::st_intersects} if key_list contains only POLYGON or MULTIPOLYGON objects
-or \link[sf:st_nearest_feature]{sf::st_nearest_feature} if key_list contains other types.}
-
-\item{y}{Vector of numeric or units values to bind to x.}
-
-\item{units}{Units to use for y (if numeric) or convert to (if y is units
-class); defaults to \code{NULL}.}
-
-\item{drop}{If \code{TRUE}, apply the \link[units:drop_units]{units::drop_units} function to the column
-with units class values and return numeric values instead; defaults to
-\code{FALSE}.}
-
-\item{keep_all}{If \code{FALSE}, keep all columns. If \code{FALSE}, return only the
-named .id column.}
-
-\item{.id}{Name to use for vector of units provided to "y" parameter, when
-"y" is bound to the "x" data frame or tibble as a new column.}
-
-\item{data}{A \code{sf} object or, if \code{sf_req} is \code{FALSE}, any object that can be
-converted to an \code{sf} object with \link[overedge:as_sf]{overedge::as_sf}.}
-
-\item{erase}{If TRUE, pass \code{data} and \code{erase_data} to \link[overedge:st_erase]{overedge::st_erase},
-Default: \code{FALSE}}
 }
 \value{
 A \code{sf} object with columns and geometry modified based parameters.
@@ -100,7 +62,7 @@ steps in transforming an \code{sf} object and preparing for mapping or analysis:
 }
 \details{
 \itemize{
-\item Convert data to an \code{sf} object with \link[overedge:as_sf]{overedge::as_sf} if \code{sf_req} is \code{FALSE}
+\item Convert data to an \code{sf} object with \link[sfext:as_sf]{sfext::as_sf} if \code{sf_req} is \code{FALSE}
 \item Make data valid with \link[sf:valid]{sf::st_make_valid} if needed
 \item Format data with \link{format_data} using the ... parameters
 \item Erase any data overlapping with \code{erase_data} (suggested for use with water or open space)
@@ -114,16 +76,12 @@ for \code{sf} data are described in the details.
 
 Helper functions for \link{format_sf_data}:
 \itemize{
+\item \link{erase_data}: erase intersection of x and erase_data (validity of
+erase_data checked before \link[sfext:st_erase]{sfext::st_erase} and for x after completing the
+operation.
 \item \link{rename_sf_col}: Rename \code{sf} column.
-\item \link{relocate_sf_col}: Relocate \code{sf} column after selected columns (defaults to \code{\link[=everything]{everything()}}).
-}
-
-Additional formatting functions for \code{sf} objects:
-\itemize{
-\item \link{bind_boundary_col} uses \link[sf:st_join]{sf::st_join} to assign simple feature data to an
-enclosing polygon. This function with other join functions to add columns
-based on other spatial relationships, e.g. bind a column for the nearest
-point feature.
+\item \link{relocate_sf_col}: Relocate \code{sf} column after selected columns (defaults to
+\code{\link[dplyr:reexports]{dplyr::everything()}}).
 }
 }
 \examples{

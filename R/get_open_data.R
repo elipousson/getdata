@@ -13,7 +13,7 @@
 #' @param data A data set identifier (known as a resource for Socrata). If data
 #'   is set to "list" and a valid source_url is provided, the function returns a
 #'   list of all available resources.
-#' @inheritParams overedge::st_bbox_ext
+#' @inheritParams sfext::st_bbox_ext
 #' @param name_col name of column in Socrata data with
 #'   location names (e.g. County)
 #' @param name location name to return
@@ -32,7 +32,7 @@
 #' @param from_crs Coordinate reference system used to match the location CRS to
 #'   the source data.
 #' @param crs Coordinate reference system to return.
-#' @inheritParams overedge::format_data
+#' @inheritParams format_data
 #' @example examples/get_open_data.R
 #' @export
 #' @importFrom cli cli_abort
@@ -120,7 +120,7 @@ get_open_data <- function(data = NULL,
   }
 
   if (geometry) {
-    data <- overedge::df_to_sf(x = data, coords = coords, crs = crs)
+    data <- sfext::df_to_sf(x = data, coords = coords, crs = crs)
   }
 
   data
@@ -145,7 +145,7 @@ make_socrata_url <- function(data = NULL,
 
   if (!is.null(where)) {
     if (!is.null(bbox)) {
-      where <- paste0("$where=", paste0(c(where, overedge::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)), collapse = " AND "))
+      where <- paste0("$where=", paste0(c(where, sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)), collapse = " AND "))
     } else if (!is.null(name_col) && !is.null(name)) {
       where <- paste0("$where=", paste0(c(where, glue::glue("{name_col} like '{name}'")), collapse = " AND "))
     } else {

@@ -1,4 +1,4 @@
-nc <- overedge::read_sf_path(system.file("shape/nc.shp", package = "sf"))
+nc <- sfext::read_sf_path(system.file("shape/nc.shp", package = "sf"))
 
 # get_location works with a type sf object and name and id values
 get_location(type = nc, name = "Warren", name_col = "NAME")

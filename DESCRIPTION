@@ -20,7 +20,7 @@ Imports:
     glue,
     httr2,
     janitor,
-    overedge (>= 0.0.0.9001),
+    sfext (>= 0.0.0.9001),
     purrr,
     rlang,
     sf,
@@ -32,6 +32,7 @@ Suggests:
     googlesheets4,
     knitr,
     labelled,
+    mapbaltimore,
     naniar,
     osmdata,
     rappdirs,
@@ -40,9 +41,9 @@ Suggests:
     tidyr,
     tigris,
     units
-Remotes: 
+Remotes:  
     elipousson/FlickrAPI,
-    elipousson/overedge
+    elipousson/sfext
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true

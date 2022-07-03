@@ -7,7 +7,7 @@
 #' @param location A `sf` or `bbox` object to use in creating bounding box for
 #'   getting photos from Flickr.
 #' @inheritParams FlickrAPI::get_photo_search
-#' @inheritParams overedge::st_bbox_ext
+#' @inheritParams sfext::st_bbox_ext
 #' @param geometry If `TRUE`, convert data frame with information on photos to
 #'   an `sf` object, Default: `TRUE`.
 #' @param sort Supported options include "date-posted","date-taken",
@@ -29,6 +29,10 @@
 #'   frame to `sf` object.
 #' @param crs Coordinate reference system of `sf` object to return if geometry
 #'   is `TRUE`.
+#' @param key Flickr API key. If api_key is 'NULL', the [FlickrAPI::getPhotoSearch] uses
+#'   [FlickrAPI::getFlickrAPIKey()] to use the environment variable "FLICKR_API_KEY" as the
+#'   key. Use [set_access_token()] w/ `type = "FLICKR_API_KEY"` or [FlickrAPI::setFlickrAPIKey()]
+#' @inheritParams FlickrAPI::getPhotoSearch
 #' @return A data frame with photo information or `sf` object with geometry
 #'   based on latitude and longitude of geocoded photos.
 #'
@@ -103,7 +107,7 @@ get_flickr_photos <- function(location = NULL,
 
   # Get adjusted bounding box if any adjustment variables provided
   bbox <-
-    overedge::st_bbox_ext(
+    sfext::st_bbox_ext(
       x = location,
       dist = dist,
       diag_ratio = diag_ratio,
@@ -141,7 +145,7 @@ get_flickr_photos <- function(location = NULL,
     return(photos)
   }
 
-  overedge::df_to_sf(
+  sfext::df_to_sf(
     x = photos,
     coords = c("longitude", "latitude"),
     crs = crs

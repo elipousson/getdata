@@ -13,7 +13,7 @@ get_location(
   location = NULL,
   index = NULL,
   union = FALSE,
-  crs = getOption("overedge.crs"),
+  crs = getOption("getdata.crs"),
   label = NULL,
   class = "sf",
   ...
@@ -40,7 +40,7 @@ id is provided.}
 object passed to \link[sf:st_join]{sf::st_filter}. Any valid address or
 addresses are geocoded with \link[tidygeocoder:geo]{tidygeocoder::geo}, converted to
 a simple feature object, and then used as a spatial filter. \code{bbox} objects
-are converted using \code{\link[overedge:sf_bbox_misc]{overedge::sf_bbox_to_sf()}}. Multiple addresses are supported.}
+are converted using \code{\link[sfext:sf_bbox_misc]{sfext::sf_bbox_to_sf()}}. Multiple addresses are supported.}
 
 \item{index}{Optional list used to match type to data, Default: \code{NULL}}
 
@@ -70,7 +70,7 @@ geocoded street address. Optionally you can use an index list to match the
 type to a named list of URLs or sf objects.
 }
 \examples{
-nc <- overedge::read_sf_path(system.file("shape/nc.shp", package = "sf"))
+nc <- sfext::read_sf_path(system.file("shape/nc.shp", package = "sf"))
 
 # get_location works with a type sf object and name and id values
 get_location(type = nc, name = "Warren", name_col = "NAME")

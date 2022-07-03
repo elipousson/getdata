@@ -48,7 +48,7 @@ format_data <- function(x,
                         label = FALSE,
                         format_sf = FALSE,
                         ...) {
-  x <- overedge::str_trim_squish(x)
+  x <- sfext::str_trim_squish(x)
 
   if (!is.null(var_names)) {
     x <- rename_with_xwalk(x, xwalk = var_names)
@@ -104,7 +104,7 @@ make_xwalk_list <- function(xwalk) {
   }
 
   cli_abort_ifnot(
-    condition = rlang::is_named(xwalk),
+    condition = is_named(xwalk),
     message = "{.arg xwalk} must be a named list or two column data frame."
   )
 
@@ -138,7 +138,7 @@ rename_with_xwalk <- function(x, xwalk = NULL, label = FALSE) {
     message = "{.arg xwalk} must include all column names for the data frame to be renamed."
   )
 
-  if (overedge::is_sf(x) && (attributes(x)$sf_column %in% xwalk)) {
+  if (sfext::is_sf(x) && (attributes(x)$sf_column %in% xwalk)) {
     sf_col <- as.character(names(xwalk[xwalk == attributes(x)$sf_column]))
 
     x <-
@@ -230,7 +230,7 @@ bind_block_col <- function(x,
                            street_name = "street_name",
                            street_suffix = "street_type") {
   stopifnot(
-    rlang::has_name(x, c(bldg_num, street_dir_prefix, street, street_suffix))
+    has_name(x, c(bldg_num, street_dir_prefix, street, street_suffix))
   )
 
   dplyr::mutate(

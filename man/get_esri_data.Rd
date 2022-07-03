@@ -10,15 +10,15 @@ location}
 get_esri_data(
   location = NULL,
   url,
-  dist = getOption("overedge.dist"),
-  diag_ratio = getOption("overedge.diag_ratio"),
-  unit = getOption("overedge.unit"),
-  asp = getOption("overedge.asp"),
-  crs = getOption("overedge.crs"),
-  where = NULL,
-  coords_col = NULL,
-  name_col = NULL,
+  dist = getOption("getdata.dist"),
+  diag_ratio = getOption("getdata.diag_ratio"),
+  unit = getOption("getdata.unit"),
+  asp = getOption("getdata.asp"),
+  crs = getOption("getdata.crs"),
   name = NULL,
+  name_col = NULL,
+  where = NULL,
+  coords = NULL,
   clean_names = TRUE,
   ...
 )
@@ -48,19 +48,22 @@ instead of "kilometer") are also supported. Distance in units is converted
 to units matching GDAL units for x; defaults to "meter"}
 
 \item{asp}{Aspect ratio of width to height as a numeric value (e.g. 0.33) or
-character (e.g. "1:3"). If numeric, \code{\link[overedge:get_asp]{get_asp()}} returns the same value
+character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} returns the same value
 without modification.}
 
 \item{crs}{coordinate reference system to use for query; default 4326}
 
-\item{where}{where query string passed to esri2sf, Default: \code{NULL}}
-
-\item{coords_col}{coordinate columns, e.g. c("longitude", "latitude")}
+\item{name}{location name}
 
 \item{name_col}{name of ArcGIS FeatureServer or MapServer column with
 location names for features}
 
-\item{name}{location name}
+\item{where}{where query string passed to esri2sf, Default: \code{NULL}}
+
+\item{coords}{query column names with coordinates. e,g, c("X", "Y") or
+c("lat", "lon")}
+
+\item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names}; defaults to \code{TRUE}.}
 
 \item{...}{Additional arguments passed to \link[esri2sf:esri2sf]{esri2sf::esri2df} or
 \link[esri2sf:esri2sf]{esri2sf::esri2sf}}
@@ -72,10 +75,12 @@ vector.}
 
 \item{nm}{Name or vector of names to add to the layers; defaults to \code{NULL}.}
 
-\item{meta}{Name of metadata list value to return from \link[esri2sf:esri2sf]{esri2sf::esrimeta}.}
+\item{meta}{Name of metadata list value to return from \link[esri2sf:esrimeta]{esri2sf::esrimeta}.}
 
 \item{clean}{If TRUE, use janitor::make_clean_names on the returned metadata
 value (typically used for name values).}
+
+\item{coords_col}{coordinate columns, e.g. c("longitude", "latitude")}
 }
 \description{
 Wraps the \link[esri2sf:esri2sf]{esri2sf::esri2sf} and \link[esri2sf:esri2sf]{esri2sf::esri2df} function to download an

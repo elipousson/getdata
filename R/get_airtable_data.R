@@ -79,7 +79,7 @@ get_airtable_data <- function(base,
   }
 
   data <-
-    overedge::df_to_sf(
+    sfext::df_to_sf(
       data,
       coords = coords,
       remove_coords = remove_coords,

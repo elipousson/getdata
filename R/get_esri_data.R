@@ -19,8 +19,9 @@
 #' @param name location name
 #' @param ... Additional arguments passed to [esri2sf::esri2df] or
 #'   [esri2sf::esri2sf]
-#' @inheritParams overedge::sf_bbox_to_lonlat_query
-#' @inheritParams overedge::st_bbox_ext
+#' @inheritParams format_data
+#' @inheritParams sfext::sf_bbox_to_lonlat_query
+#' @inheritParams sfext::st_bbox_ext
 #' @seealso
 #'  [esri2sf::esri2sf()]
 #' @rdname get_esri_data
@@ -29,15 +30,15 @@
 #' @importFrom janitor clean_names
 get_esri_data <- function(location = NULL,
                           url,
-                          dist = getOption("overedge.dist"),
-                          diag_ratio = getOption("overedge.diag_ratio"),
-                          unit = getOption("overedge.unit"),
-                          asp = getOption("overedge.asp"),
-                          crs = getOption("overedge.crs"),
-                          where = NULL,
-                          coords_col = NULL,
-                          name_col = NULL,
+                          dist = getOption("getdata.dist"),
+                          diag_ratio = getOption("getdata.diag_ratio"),
+                          unit = getOption("getdata.unit"),
+                          asp = getOption("getdata.asp"),
+                          crs = getOption("getdata.crs"),
                           name = NULL,
+                          name_col = NULL,
+                          where = NULL,
+                          coords = NULL,
                           clean_names = TRUE,
                           ...) {
   is_pkg_installed(pkg = "esri2sf", repo = "yonghah/esri2sf")
@@ -54,7 +55,7 @@ get_esri_data <- function(location = NULL,
       asp = asp
     )
 
-    if (!is.null(coords_col)) {
+    if (!is.null(coords)) {
       # Get Table (no geometry) by filtering coordinate columns with bbox
 
       if (!is.null(where)) {
@@ -63,7 +64,7 @@ get_esri_data <- function(location = NULL,
 
       where <- c(
         where,
-        overedge::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords_col)
+        sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords_col)
       )
 
       data <- esri2sf::esri2df(
@@ -88,7 +89,6 @@ get_esri_data <- function(location = NULL,
       glue::glue("{name_col} = '{name}'")
     )
 
-
     if (meta$type == "Table") {
       # Get Table (no geometry) with location name column
       data <- esri2sf::esri2df(
@@ -104,9 +104,6 @@ get_esri_data <- function(location = NULL,
       )
     }
   } else {
-    if (is.null(where)) {
-      where <- "1=1"
-    }
 
     if (meta$type == "Table") {
       # Get Table (no geometry)
@@ -125,9 +122,9 @@ get_esri_data <- function(location = NULL,
     }
   }
 
-  if (!is.null(coords_col)) {
+  if (!is.null(coords)) {
     # Convert Table to sf object if coordinate columns exist
-    data <- overedge::df_to_sf(data, coords = coords_col)
+    data <- sfext::df_to_sf(data, coords = coords)
   }
 
   if (clean_names) {
@@ -154,7 +151,7 @@ get_esri_layers <- function(location = NULL, layers, service_url = NULL, nm = NU
   type <-
     dplyr::case_when(
       is.numeric(layers) && !is.null(service_url) && is_esri_url(service_url) ~ "id",
-      is.list(layers) && rlang::is_named(layers) ~ "nm_list",
+      is.list(layers) && is_named(layers) ~ "nm_list",
       is.list(layers) ~ "list",
       is.character(layers) ~ "url"
     )

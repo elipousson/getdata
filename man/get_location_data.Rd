@@ -7,22 +7,24 @@
 \usage{
 get_location_data(
   location = NULL,
-  dist = getOption("overedge.dist"),
-  diag_ratio = getOption("overedge.diag_ratio"),
-  unit = getOption("overedge.unit", default = "meter"),
-  asp = getOption("overedge.asp"),
+  dist = getOption("getdata.dist"),
+  diag_ratio = getOption("getdata.diag_ratio"),
+  unit = getOption("getdata.unit", default = "meter"),
+  asp = getOption("getdata.asp"),
   data = NULL,
-  package = getOption("overedge.data_package"),
-  filetype = getOption("overedge.data_filetype", default = "gpkg"),
+  package = getOption("getdata.data_package"),
+  filetype = getOption("getdata.data_filetype", default = "gpkg"),
   fn = NULL,
   crop = TRUE,
   trim = FALSE,
-  from_crs = getOption("overedge.from_crs"),
-  crs = getOption("overedge.crs"),
+  from_crs = getOption("getdata.from_crs"),
+  crs = getOption("getdata.crs"),
   class = "sf",
   label = NULL,
   index = NULL,
   col = NULL,
+  var_names = NULL,
+  clean_names = FALSE,
   ...
 )
 
@@ -64,7 +66,7 @@ instead of "kilometer") are also supported. Distance in units is converted
 to units matching GDAL units for x; defaults to "meter"}
 
 \item{asp}{Aspect ratio of width to height as a numeric value (e.g. 0.33) or
-character (e.g. "1:3"). If numeric, \code{\link[overedge:get_asp]{get_asp()}} returns the same value
+character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} returns the same value
 without modification.}
 
 \item{data}{Character string (e.g. url, file path, or name of data from
@@ -72,19 +74,11 @@ package), a \code{sf}, \code{sfc}, or \code{bbox}  object including data in area
 
 \item{package}{Name of the package to search for data.}
 
-\item{filetype}{File type to use if passing parameters to \link[overedge:read_sf_ext]{overedge::read_sf_download}
-or \link[overedge:read_sf_ext]{overedge::read_sf_pkg} (required for extdata and cached data).}
+\item{filetype}{File type to use if passing parameters to \link[sfext:read_sf_ext]{sfext::read_sf_download}
+or \link[sfext:read_sf_ext]{sfext::read_sf_pkg} (required for extdata and cached data).}
 
 \item{fn}{Function to apply to data after filtering by location but before
 returning from function.}
-
-\item{crop}{If \code{TRUE}, data is cropped to location or bounding box
-\link[sf:st_crop]{sf::st_crop} adjusted by the \code{dist}, \code{diag_ratio}, and \code{asp} parameters
-provided. Default TRUE.}
-
-\item{trim}{If \code{TRUE}, data is trimmed to area with \link[sf:geos_binary_ops]{sf::st_intersection}.
-This option ignores any \code{dist}, \code{diag_ratio}, or \code{asp} parameters. Default
-\code{FALSE}.}
 
 \item{from_crs}{Coordinate reference system used to match the location CRS to
 the source data.}
@@ -105,8 +99,19 @@ supports nested lists created by \link{make_location_data_list} (using only the
 default key names of "location" and "data"). This feature has not be fully
 tested and may result in errors or unexpected results.}
 
-\item{...}{additional parameters passed to \link[overedge:read_sf_ext]{overedge::read_sf_path}, \link[overedge:read_sf_ext]{overedge::read_sf_url}, or
-\link[overedge:read_sf_ext]{overedge::read_sf_pkg} and \link[overedge:location_filter]{overedge::location_filter}}
+\item{col}{For \link[sfext]{as_sf_list}, the name of the column used to group data if x
+is a sf object or used to group and nest data before passing to x.}
+
+\item{var_names}{A named list following the format, \code{list("New var name" = old_var_name)}, or a two column data frame with the first column being the
+new variable names and the second column being the old variable names;
+defaults to \code{NULL}.}
+
+\item{clean_names}{If \code{TRUE}, clean names provided to nm or created based on
+value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as
+provided.}
+
+\item{...}{additional parameters passed to \link[sfext:read_sf_ext]{sfext::read_sf_path}, \link[sfext:read_sf_ext]{sfext::read_sf_url}, or
+\link[sfext:read_sf_ext]{sfext::read_sf_pkg} and \link[sfext:st_filter_ext]{sfext::st_filter_ext}}
 
 \item{load}{If \code{TRUE} and class is "list", load data to local environment;
 defaults \code{FALSE}.}
@@ -114,8 +119,8 @@ defaults \code{FALSE}.}
 \description{
 Returns data for a selected location or a list of locations (for
 \link{map_location_data}). If data is a character string, the parameter is passed
-to \link[overedge:read_sf_ext]{overedge::read_sf_url}, \link[overedge:read_sf_ext]{overedge::read_sf_path}, or \link[overedge:read_sf_ext]{overedge::read_sf_pkg}. This function uses
-\code{\link[overedge:location_filter]{overedge::location_filter()}} to filter (using \link[sf:geos_binary_pred]{sf::st_intersects}), crop, or trim data
+to \link[sfext:read_sf_ext]{sfext::read_sf_url}, \link[sfext:read_sf_ext]{sfext::read_sf_path}, or \link[sfext:read_sf_ext]{sfext::read_sf_pkg}. This function uses
+\code{\link[sfext:location_filter]{sfext::location_filter()}} to filter (using \link[sf:geos_binary_pred]{sf::st_intersects}), crop, or trim data
 to the provided location. location can also be an an address, county GeoID,
 state name, abbreviation, or GeoID.
 }

@@ -40,7 +40,7 @@ cli_yeah <- function(x,
   x <- glue::glue_collapse(x, "\n")
   x <- glue::glue(x, .envir = .envir)
 
-  if (!rlang::is_interactive()) {
+  if (!is_interactive()) {
     cli::cli_abort(
       c(
         "User input required, but session is not interactive.",

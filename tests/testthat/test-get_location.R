@@ -70,7 +70,7 @@ test_that("get_location works", {
   expect_s3_class(
     get_location(
       type = sf::st_transform(nc, 6542),
-      location = overedge::st_buffer_ext(sf::st_transform(nc[1, ], 6542), 250)
+      location = sf::st_buffer(sf::st_transform(nc[1, ], 6542), units::as_units(250, "m"))
     ),
     "sf"
   )
