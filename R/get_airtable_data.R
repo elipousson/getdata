@@ -1,4 +1,29 @@
-
+#' Get Airtable data
+#'
+#' @param base Airtable base identifier
+#' @param table Airtable table name or identifier
+#' @param record Airtable record identifier, Default: NULL
+#' @param fields Fields to return from Airtable base, Default: NULL
+#' @param filter Filter (not currently supported), Default: NULL
+#' @param sort Field to sort by, Default: NULL
+#' @param desc If TRUE, sort in descending order, Default: FALSE
+#' @param view Airtable view name(?) or identifier, Default: NULL
+#' @param max_records Max records to return, Default: NULL
+#' @param per_page Max records to return per page, Default: NULL
+#' @param cell_format Cell format, Default: 'json'
+#' @param tz Time zone, Default: NULL
+#' @param locale Locale, Default: NULL
+#' @param fields_by_id If TRUE, return fields by id, Default: FALSE
+#' @param offset Offset parameter, Default: NULL
+#' @param token API token, Default: NULL (same as get_access_token(type = "AIRTABLE_API_KEY"))
+#' @param list Data type to return, Default: 'records'
+#' @inheritParams sfext::df_to_sf
+#' @inheritParams get_location_data
+#' @inheritParams format_data
+#' @rdname get_airtable_data
+#' @export
+#' @importFrom dplyr as_tibble
+#' @importFrom sfext df_to_sf
 get_airtable_data <- function(base,
                               table,
                               record = NULL,
