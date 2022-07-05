@@ -1,0 +1,32 @@
+url: https://elipousson.github.io/getdata/
+template:
+  bootstrap: 5
+reference:
+- title: Access spatial data based on location
+  contents:
+  - starts_with("get_location")
+- title: Download data from online sources
+  contents:
+  - '`get_airtable_data`'
+  - '`get_esri_data`'
+  - '`get_flickr_photos`'
+  - '`get_gsheet_data`'
+  - '`get_open_data`'
+  - '`get_osm_data`'
+  - '`osm_building_tags`'
+  - '`get_tigris_data`'
+  - '`get_wiki_data`'
+- title: Access U.S. state and county boundary data
+  contents:
+  - '`get_admin_data`'
+  - '`us_states`'
+  - '`us_counties`'
+- title: Additional utilities for working with data
+  contents:
+  - '`set_access_token`'
+  - starts_with("format")
+  - '`get_data_dir`'
+- title: Additional utilities for working with locations
+  contents:
+  - '`make_location_data_list`'
+
