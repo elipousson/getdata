@@ -45,8 +45,10 @@ Suggests:
     units,
     withr
 Remotes: 
+    yonghah/esri2sf,
     elipousson/FlickrAPI,
-    elipousson/sfext
+    elipousson/sfext,
+    elipousson/mapbaltimore
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
