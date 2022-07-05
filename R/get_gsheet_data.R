@@ -1,5 +1,5 @@
 
-#' Get a data frame or simple feature data from a Google Sheet
+#' Use googlesheets4 to get a data frame or simple feature data from a Google Sheet
 #'
 #' @param url A Google Sheets url
 #' @name get_gsheet_data

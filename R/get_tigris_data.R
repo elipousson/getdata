@@ -1,4 +1,4 @@
-#' Use package data or the {tigris} package to get state-level data from the U.S. Census Bureau
+#' Use {tigris} to get state-level data from the U.S. Census Bureau
 #'
 #' Use the tigris package to download state-level data from the U.S. Census
 #' Bureau API and filter by name or GeoID.
