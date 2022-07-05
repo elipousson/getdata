@@ -28,7 +28,7 @@
 #'   or [sfext::read_sf_pkg] (required for extdata and cached data).
 #' @param fn Function to apply to data after filtering by location but before
 #'   returning from function.
-#' @inheritParams sfext::location_filter
+#' @inheritParams sfext::st_filter_ext
 #' @param from_crs Coordinate reference system used to match the location CRS to
 #'   the source data.
 #' @param crs Coordinate reference system to return.
@@ -285,7 +285,7 @@ map_location_data <- function(location = NULL,
   data <- purrr::discard(data, ~ nrow(.x) == 0)
   data <- sfext::as_sf_class(x = data, class = class, crs = crs) # , ...)
 
-  if (load && is_sf_list(data, named = TRUE)) {
+  if (load && sfext::is_sf_list(data, named = TRUE)) {
     list2env(data, envir = .GlobalEnv)
   } else {
     data

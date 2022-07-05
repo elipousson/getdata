@@ -1,4 +1,4 @@
-#' Get U.S. State and County boundary data for a location
+#' Get U.S. State and County boundary data (1:5 mi scale) for a location
 #'
 #' Get U.S. states and counties from packaged [us_counties] or [us_states] data.
 #' See [get_tigris_data()] for more options.
@@ -26,7 +26,6 @@ get_states <- function(location = NULL,
                        class = "df",
                        call = caller_env(),
                        ...) {
-
   location <- location %||% us_admin_dots_to_location(...)
 
   if (!is_sf(location, ext = TRUE)) {
@@ -140,7 +139,7 @@ location_intersects_us_admin <- function(data,
                                          asp = NULL) {
   if (!is.null(asp)) {
     location <-
-      st_bbox_ext(
+      sfext::st_bbox_ext(
         x = location,
         dist = dist,
         diag_ratio = diag_ratio,
@@ -149,7 +148,7 @@ location_intersects_us_admin <- function(data,
       )
   } else {
     location <-
-      st_buffer_ext(
+      sfext::st_buffer_ext(
         x = location,
         dist = dist,
         diag_ratio = diag_ratio,
@@ -172,7 +171,10 @@ wkt_col_as_sfc <- function(x, wkt_col = "wkt", crs = 3857) {
 #' @noRd
 #' @importFrom sf st_as_sf st_as_sfc
 #' @importFrom dplyr bind_cols
-convert_us_admin_class <- function(data, class = "df", sf_col = "geometry", call = caller_env()) {
+convert_us_admin_class <- function(data,
+                                   class = "df",
+                                   sf_col = "geometry",
+                                   call = caller_env()) {
   check_df(data, call = call)
 
   class <-

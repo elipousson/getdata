@@ -53,7 +53,7 @@ get_wiki_data <- function(location,
   gsradius <- NULL
   gspage <- NULL
 
-  if (is_sf(location, ext = TRUE)) {
+  if (sfext::is_sf(location, ext = TRUE)) {
     if (is.numeric(radius)) {
       dist <- radius
       cli_inform(

@@ -90,7 +90,7 @@ format_data <- function(x,
     x <- fix_date(x)
   }
 
-  if (is_sf(x) && format_sf) {
+  if (sfext::is_sf(x) && format_sf) {
     x <- format_sf_data(x, ...)
   }
 
