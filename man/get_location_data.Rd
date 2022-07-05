@@ -80,6 +80,10 @@ or \link[sfext:read_sf_ext]{sfext::read_sf_pkg} (required for extdata and cached
 \item{fn}{Function to apply to data after filtering by location but before
 returning from function.}
 
+\item{crop}{If \code{TRUE}, x is cropped to y using \code{\link[sf:st_crop]{sf::st_crop()}}.}
+
+\item{trim}{If \code{TRUE}, x is trimmed to y with \code{\link[sfext:st_trim]{st_trim()}}.}
+
 \item{from_crs}{Coordinate reference system used to match the location CRS to
 the source data.}
 
@@ -119,12 +123,15 @@ defaults \code{FALSE}.}
 \description{
 Returns data for a selected location or a list of locations (for
 \link{map_location_data}). If data is a character string, the parameter is passed
-to \link[sfext:read_sf_ext]{sfext::read_sf_url}, \link[sfext:read_sf_ext]{sfext::read_sf_path}, or \link[sfext:read_sf_ext]{sfext::read_sf_pkg}. This function uses
-\code{\link[sfext:location_filter]{sfext::location_filter()}} to filter (using \link[sf:geos_binary_pred]{sf::st_intersects}), crop, or trim data
-to the provided location. location can also be an an address, county GeoID,
-state name, abbreviation, or GeoID.
+to \link[sfext:read_sf_ext]{sfext::read_sf_url}, \link[sfext:read_sf_ext]{sfext::read_sf_path}, or \link[sfext:read_sf_ext]{sfext::read_sf_pkg}. This
+function uses \code{\link[sfext:st_filter_ext]{sfext::st_filter_ext()}} to filter, crop, or trim data to the
+provided location. location can also be an an address.
 }
 \details{
+This function previously supported county geoid, state name, abbreviation, or
+geoid as a location. Currently, recommend using \link{get_states} or
+\link{get_counties} and passing a \code{sf} object to location.
+
 Working with sf lists for data and locations:
 
 \link{map_location_data} makes it easier to work with \code{sf} lists. It supports data
