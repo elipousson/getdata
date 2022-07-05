@@ -29,6 +29,7 @@ Imports:
 Suggests: 
     esri2sf,
     FlickrAPI (>= 0.1.0.1),
+    fs,
     googlesheets4,
     knitr,
     labelled,
@@ -37,11 +38,13 @@ Suggests:
     osmdata,
     rappdirs,
     RSocrata,
+    smoothr,
     testthat (>= 3.0.0),
     tidyr,
     tigris,
-    units
-Remotes:  
+    units,
+    withr
+Remotes: 
     elipousson/FlickrAPI,
     elipousson/sfext
 Config/testthat/edition: 3
