@@ -54,8 +54,8 @@ get_location <- function(type,
                          class = "sf",
                          ...) {
   stopifnot(
-    is_sf(type) || is.character(type) || (is.null(type) && is.list(index)),
-    is.character(location) || is_sf(location, ext = TRUE, null.ok = TRUE) || is.numeric(location),
+    sfext::is_sf(type) || is.character(type) || (is.null(type) && is.list(index)),
+    is.character(location) || sfext::is_sf(location, ext = TRUE, null.ok = TRUE) || is.numeric(location),
     is.list(index) || is.null(index),
     is.logical(union)
   )
@@ -107,7 +107,7 @@ get_location <- function(type,
         location = location,
         trim = FALSE,
         crop = FALSE
-        )
+      )
   }
 
   if (!is.null(name)) {
@@ -154,30 +154,31 @@ get_location <- function(type,
 #' @noRd
 #' @importFrom sf st_union
 #' @importFrom dplyr rename
-location_union <- function(location = NULL, name_col = "name") {
+location_union <- function(location = NULL, name_col = "name", sf_col = "geometry") {
   # FIXME: This skips union if the name_col is missing. should it give a warning?
-  if (!is.null(location) && ((nrow(location) == 1) || !has_name(location, name_col))) {
+  if (!is.null(location) && ((nrow(location) == 1) | !has_name(location, name_col))) {
     return(location)
   }
 
-  is_pkg_installed("knitr")
-
-  location <-
-    sf::st_as_sf(
-      data.frame(
-        "name" = as.character(
-          knitr::combine_words(words = location[[name_col]])
-        ),
-        "geometry" = sf::st_union(location)
-      )
+  sf::st_as_sf(
+    dplyr::tibble(
+      "{name_col}" := as.character(cli::pluralize("{location[[name_col]]}")),
+      "{sf_col}" := sf::st_union(location)
     )
-
-  dplyr::rename(
-    location,
-    "{name_col}" := name
   )
 }
 
-location_filter <- function() {
+#' Filter by location
+#'
+#' Converts data frame or address values to sf
+#'
+#' @noRd
+location_filter <- function(data = NULL,
+                            location = NULL,
+                            ...) {
+  if (!is_sf(location, ext = TRUE)) {
+    location <- sfext::as_sf(location)
+  }
 
+  sfext::st_filter_ext(data, location, ...)
 }
