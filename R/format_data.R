@@ -108,7 +108,7 @@ make_xwalk_list <- function(xwalk) {
     message = "{.arg xwalk} must be a named list or two column data frame."
   )
 
-  x
+  xwalk
 }
 
 #' @name rename_with_xwalk
