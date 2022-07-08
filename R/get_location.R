@@ -34,12 +34,11 @@
 #' @param ... Additional parameters passed to [get_location_data] if type
 #'   is character and index is `NULL`.
 #' @return A simple feature object from data provided to type.
-#'
 #' @example examples/get_location.R
 #' @rdname get_location
 #' @export
 #' @importFrom sf st_crs st_filter st_as_sf st_union
-#' @importFrom rlang list2
+#' @importFrom sfext is_sf st_union_ext as_sf_class
 #' @importFrom dplyr bind_cols
 get_location <- function(type,
                          name = NULL,
@@ -60,7 +59,7 @@ get_location <- function(type,
     is.logical(union)
   )
 
-  if (is.list(index) && !is_sf(type)) {
+  if (is.list(index) && !sfext::is_sf(type)) {
     type <- get_index_param(index = index, type = type)
   }
 
@@ -80,16 +79,14 @@ get_location <- function(type,
   # If location is not provided
   if (is.null(location)) {
     if (!is.null(name)) {
-      type_name_col <- type[[name_col]]
       # Filter type by name
-      location <- type[type_name_col %in% name, ]
+      location <- type[type[[name_col]] %in% name, ]
     } else if (!is.null(id)) {
-      type_id_col <- type[[id_col]]
-      if (is.character(type_id_col)) {
+      if (is.character(type[[id_col]])) {
         # Filter type by ID
-        location <- type[type_id_col %in% as.character(id), ]
+        location <- type[type[[id_col]] %in% as.character(id), ]
       } else if (is.numeric(type[[id_col]])) {
-        location <- type[type_id_col %in% as.numeric(id), ]
+        location <- type[type[[id_col]] %in% as.numeric(id), ]
       }
     }
 
@@ -132,40 +129,19 @@ get_location <- function(type,
   )
 
   if (union) {
-    location <- location_union(location, name_col = name_col)
+    location <- sfext::st_union_ext(location, name_col = name_col)
   }
 
   if (!is.null(label)) {
     location <-
-      dplyr::bind_cols(
+      dplyr::mutate(
         location,
-        "label" = label
+        "label" = label,
+        .after = name_col
       )
-
-    location <- relocate_sf_col(location)
   }
 
-  sfext::as_sf_class(x = location, class = class, crs = crs, col = col)
-}
-
-
-#' Union location and combine name column
-#'
-#' @noRd
-#' @importFrom sf st_union
-#' @importFrom dplyr rename
-location_union <- function(location = NULL, name_col = "name", sf_col = "geometry") {
-  # FIXME: This skips union if the name_col is missing. should it give a warning?
-  if (!is.null(location) && ((nrow(location) == 1) | !has_name(location, name_col))) {
-    return(location)
-  }
-
-  sf::st_as_sf(
-    dplyr::tibble(
-      "{name_col}" := as.character(cli::pluralize("{location[[name_col]]}")),
-      "{sf_col}" := sf::st_union(location)
-    )
-  )
+  sfext::as_sf_class(location, class = class, crs = crs, col = col)
 }
 
 #' Filter by location
@@ -173,10 +149,11 @@ location_union <- function(location = NULL, name_col = "name", sf_col = "geometr
 #' Converts data frame or address values to sf
 #'
 #' @noRd
+#' @importFrom sfext is_sf as_sf st_filter_ext
 location_filter <- function(data = NULL,
                             location = NULL,
                             ...) {
-  if (!is_sf(location, ext = TRUE)) {
+  if (!sfext::is_sf(location, ext = TRUE)) {
     location <- sfext::as_sf(location)
   }
 
