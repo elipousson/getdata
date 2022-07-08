@@ -4,7 +4,7 @@
 \alias{get_admin_data}
 \alias{get_states}
 \alias{get_counties}
-\title{Get U.S. State and County boundary data for a location}
+\title{Get U.S. State and County boundary data (1:5 mi scale) for a location}
 \usage{
 get_states(
   location = NULL,

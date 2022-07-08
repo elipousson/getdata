@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_gsheet_data.R
 \name{get_gsheet_data}
 \alias{get_gsheet_data}
-\title{Get a data frame or simple feature data from a Google Sheet}
+\title{Use googlesheets4 to get a data frame or simple feature data from a Google Sheet}
 \usage{
 get_gsheet_data(
   url,
@@ -89,5 +89,5 @@ provided.}
 \item{...}{Other parameters passed onto methods.}
 }
 \description{
-Get a data frame or simple feature data from a Google Sheet
+Use googlesheets4 to get a data frame or simple feature data from a Google Sheet
 }

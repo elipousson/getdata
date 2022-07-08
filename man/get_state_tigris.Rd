@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_tigris_data.R
 \name{get_tigris_data}
 \alias{get_tigris_data}
-\title{Use package data or the {tigris} package to get state-level data from the U.S. Census Bureau}
+\title{Use {tigris} to get state-level data from the U.S. Census Bureau}
 \usage{
 get_tigris_data(
   type = NULL,
