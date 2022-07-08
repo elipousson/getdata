@@ -43,6 +43,20 @@ test_that("get_location_data works", {
       ),
       "sf"
     )
+
+    expect_s3_class(
+      get_location_data(
+        data = "council_districts",
+        location = get_location(
+          type = "neighborhoods",
+          package = "mapbaltimore",
+          id = "Harwood"
+        ),
+        package = "mapbaltimore",
+        trim = TRUE
+      ),
+      "sf"
+    )
   })
 
   expect_s3_class(
