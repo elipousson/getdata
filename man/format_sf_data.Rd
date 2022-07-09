@@ -3,8 +3,6 @@
 \name{format_sf_data}
 \alias{format_sf_data}
 \alias{erase_data}
-\alias{relocate_sf_col}
-\alias{rename_sf_col}
 \title{Format simple feature data}
 \usage{
 format_sf_data(
@@ -19,10 +17,6 @@ format_sf_data(
 )
 
 erase_data(x, erase_data = NULL)
-
-relocate_sf_col(x, .after = dplyr::everything(), ...)
-
-rename_sf_col(x, sf_col = "geometry")
 }
 \arguments{
 \item{x}{A \code{sf} object or, if \code{sf_req} is \code{FALSE}, any object that can be
@@ -43,15 +37,12 @@ meters.}
 \item{smooth}{If \code{TRUE}, smooth data with \link[smoothr:smooth]{smoothr::smooth} using default
 method and parameters, Default: \code{FALSE}.}
 
-\item{sf_col}{Name to use for the sf column after renaming; defaults to "geometry".}
+\item{sf_col}{Name to use for output \code{sf} column, Default: 'geometry'.}
 
 \item{sf_req}{If \code{TRUE}, data must be a \code{sf} object. If \code{FALSE}, data is
 passed to \link[sfext:as_sf]{sfext::as_sf} to convert data to an \code{sf} object.}
 
 \item{...}{Additional parameters passed to \code{format_data}}
-
-\item{.after}{The location to place sf column after; defaults to
-\link[dplyr:reexports]{dplyr::everything}.}
 }
 \value{
 A \code{sf} object with columns and geometry modified based parameters.

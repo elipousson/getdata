@@ -106,35 +106,6 @@ erase_data <- function(x, erase_data = NULL) {
   x
 }
 
-
-#' @name relocate_sf_col
-#' @rdname format_sf_data
-#' @param .after The location to place sf column after; defaults to
-#'   [dplyr::everything].
-#' @export
-#' @importFrom dplyr everything relocate all_of
-relocate_sf_col <- function(x, .after = dplyr::everything(), ...) {
-  dplyr::relocate(
-    x,
-    dplyr::all_of(attributes(x)$sf_column),
-    .after = .after
-  )
-}
-
-#' @name rename_sf_col
-#' @rdname format_sf_data
-#' @param sf_col Name to use for the sf column after renaming; defaults to "geometry".
-#' @export
-#' @importFrom dplyr everything relocate all_of
-rename_sf_col <- function(x, sf_col = "geometry") {
-  check_null(sf_col)
-
-  names(x)[names(x) == attr(x, "sf_column")] <- sf_col
-  attr(x, "sf_column") <- sf_col
-
-  x
-}
-
 #' Set join function based on geometry type
 #'
 #' @name set_join_by_geom_type
