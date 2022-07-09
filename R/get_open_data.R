@@ -58,8 +58,8 @@ get_open_data <- function(data = NULL,
                           clean_names = TRUE) {
   cli_abort_ifnot(
     c("{.arg source_type} must be {.val socarata}.",
-      "i" = "Socrata is currently the only supported open data source for this function.
-        Other open data access options (e.g. CKAN, Flat Data) may be added in the future.",
+      "i" = "Socrata is currently the only supported open data source for this function.",
+       " " = "Other open data access options (e.g. CKAN, Flat Data) may be added in the future.",
     ),
     condition = (source_type == "socrata")
   )
@@ -80,7 +80,7 @@ get_open_data <- function(data = NULL,
   # FIXME: Check on how to access the point or polygon data types via SODA
   # See <https://dev.socrata.com/docs/datatypes/point.html> for more information
   # Get adjusted bounding box if any adjustment variables provided
-  bbox <- st_bbox_ext(
+  bbox <- sfext::st_bbox_ext(
     x = location,
     dist = dist,
     diag_ratio = diag_ratio,
@@ -92,7 +92,7 @@ get_open_data <- function(data = NULL,
   cli_abort_ifnot(
     c(
       "{.arg source_url} must be a URL.",
-      "The provided {.arg source_url} is not valid: {.url {source_url}}"
+      "i" = "The provided {.arg source_url} is not valid: {.url {source_url}}"
     ),
     condition = is_url(source_url)
   )
@@ -112,7 +112,7 @@ get_open_data <- function(data = NULL,
 
   # Download data from Socrata Open Data portal
   data <-
-    as.data.frame(RSocrata::read.socrata(url = url, app_token = token))
+    dplyr::as_tibble(RSocrata::read.socrata(url = url, app_token = token))
 
   if (clean_names) {
     data <-

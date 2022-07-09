@@ -247,7 +247,7 @@ get_osm_boundaries <- function(location,
 
   boundaries <- boundaries[, !(boundaries_nm %in% drop_nm_cols)]
 
-  st_transform_ext(x = boundaries, crs = crs)
+  sfext::st_transform_ext(x = boundaries, crs = crs)
 }
 
 
@@ -321,7 +321,7 @@ get_osm_data_enclosing <- function(location,
                                    geometry = NULL,
                                    osmdata = FALSE) {
   enclosing <- match.arg(enclosing, c("relation", "way"))
-  coords <- sf_to_df(location, crs = 4326)
+  coords <- sfext::sf_to_df(location, crs = 4326)
 
   query <-
     try(
