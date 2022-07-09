@@ -15,72 +15,92 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 The goal of {getdata} is to make the experience of getting location data
 easier and more consistent across a wide variety of sources. {getdata}
 started as part of the
-[overedge](https://elipousson.github.io/overedge/) package along with
+[{overedge}](https://elipousson.github.io/overedge/) package along with
 [{maplayer}](https://elipousson.github.io/maplayer/) and
 [{sfext}](https://elipousson.github.io/sfext/).
 
 {getdata} is designed to work well with location-specific data packages
-such as {mapmaryland} and {mapbaltimore} and to support reproducible
-approaches to map-making and place-based data analysis. The package
-supports downloading access from the following sources
+such as [{mapmaryland}](https://elipousson.github.io/mapmaryland/) and
+[{mapbaltimore}](https://elipousson.github.io/mapbaltimore/) and to
+support reproducible approaches to map-making and place-based data
+analysis. Using data access functions from {sfext} and additional API
+wrapper functions, this package supports data access for sources
+including:
 
--   ArcGIS FeatureServer and MapServer layers (using {esri2sf})
+-   ArcGIS FeatureServer and MapServer layers (using
+    [{esri2sf}](https://github.com/yonghah/esri2sf))
 
--   U.S. Census Bureau data (using {tigris})
+-   U.S. Census Bureau data (using
+    [{tigris}](https://github.com/walkerke/tigris))
 
--   OpenStreetMap (using {osmdata})
+-   OpenStreetMap (using
+    [{osmdata}](https://docs.ropensci.org/osmdata/))
 
--   Socrata Open Data resources (using {RSocrata})
+-   Socrata Open Data resources (using
+    [{RSocrata](https://github.com/Chicago/RSocrata)})
 
--   Google Sheets (using {googlesheets4})
+-   Google Sheets (using
+    [{googlesheets4}](https://googlesheets4.tidyverse.org/))
 
--   Flickr photos (using {FlickrAPI})
+-   Flickr photos (using
+    [{FlickrAPI}](https://koki25ando.github.io/FlickrAPI/))
 
--   Airtable bases (using {httr2} and the Airtable API)
+-   Static map images from Mapbox (using
+    [{mapboxapi}](https://walker-data.com/mapboxapi/))
 
--   Wikipedia articles (using {httr2} and the Wikipedia Geosearch API)
+-   Airtable bases (using {httr2} and the [Airtable
+    API](https://airtable.com/api))
 
--   Other spatial and tabular data sources including Google MyMaps,
-    GitHub gists, Excel sheets, and any data source already supported by
+-   Wikipedia articles (using {httr2} and the [Wikipedia Geosearch
+    API](https://www.mediawiki.org/wiki/Extension:GeoData))
+
+-   Other spatial data sources including Google MyMaps, GitHub gists,
+    and any data source already supported by
     [sf::read_sf()](https://r-spatial.github.io/sf/reference/st_read.html)
     (see
     [sfext::read_sf_ext()](https://elipousson.github.io/sfext/reference/read_sf_ext.html)
     for more details)
 
 The advantage of using {getdata} is that it provides a consistent
-interface for creating a bounding box for spatial filtering or for
-querying spatial data by name or id. Where possible, a spatial filter is
-used before importing or downloading data to avoid the need to load
-large data files when you are only interested in a small area. The
-package also provides a consistent approach for handling API tokens and
-keys (inspired by both the tigris and mapboxapi packages) and for
-caching data locally.
+interface for using a location to create a bounding box for spatial
+filtering. Many functions also support querying spatial data by name or
+id. Where possible, a spatial filter is used before importing or
+downloading data to avoid the need to load large data files when you are
+only need a small area. The package also provides a consistent approach
+for handling API tokens and keys and for caching data locally (see
+[set_access_token()](https://elipousson.github.io/getdata/reference/set_access_token.html)
+or
+[sfext::get_data_dir()](https://elipousson.github.io/sfext/reference/get_data_dir.html)
+for more details).
 
 The related {sfext} package allows {getdata} to supports the easy
 conversion of tabular data into spatial data. For example, if the source
 data has coordinates, you can convert the data into an sf object. If
 data has an address column, you can geocode the data using the
-{tidygeocoder} package. If the data has a location name column, such as
-“neighborhood”, you can join the data to a simple feature object with
-the related geometry. You also can turn off these options by setting
-`geometry = FALSE` for most data access functions.
+[{tidygeocoder}](https://jessecambon.github.io/tidygeocoder/) package.
+If the data has a location name column, such as “neighborhood”, you can
+join the data to a simple feature object with the related geometry. You
+also can turn off these options by setting `geometry = FALSE` for most
+data access functions.
 
 Lastly, the
 [format_data()](https://elipousson.github.io/getdata/reference/format_data.html)
 and
 [format_sf_data()](https://elipousson.github.io/getdata/reference/format_sf_data.html)
 functions provide convenient options for working with the data after it
-is downloaded. While advanced R users may prefer a more customizable
-options, these functions are designed to support the creation of custom
-data formatting and access functions such as
+is downloaded. While advanced R users may prefer to create more custom
+formatting scripts, these functions are designed to support the creation
+of custom data formatting and access functions such as
 [format_md_crash_data()](https://elipousson.github.io/mapmaryland/reference/format_md_sf.html)
 and
 [get_md_crash_data()](https://elipousson.github.io/mapmaryland/reference/get_md_open_data.html).
 
-This package imports rlang for both non-standard evaluation and error
-handling and relies on dplyr, purrr, and other tidyverse packages.
-Suggestions for additional data sources to support, new functions, or
-improvements to existing functions are welcome.
+Fair warning: this package is *not* optimized for speed and I have no
+plans to submit it to CRAN. This package imports {rlang} for both
+non-standard evaluation and error handling and relies on {dplyr},
+{purrr}, and other tidyverse packages. Suggestions for additional data
+sources to support, new functions, or improvements to existing functions
+are welcome.
 
 ## Installation
 
@@ -179,4 +199,4 @@ You must set or provide an API token or key for
 to work.
 [get_ghseet_data()](https://elipousson.github.io/getdata/reference/get_gsheet_data.html)
 will require user authentication (handled automatically by the
-googlesheets4 package).
+{googlesheets4} package).
