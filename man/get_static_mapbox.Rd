@@ -140,24 +140,26 @@ For \link{get_osm_static_mapbox}, the ... parameters are passed to the
 \code{\link[=get_osm_data]{get_osm_data()}}, \code{\link[=get_osm_id]{get_osm_id()}}, or \code{\link[=get_osm_boundaries]{get_osm_boundaries()}} functions.
 }
 \examples{
-get_osm_static_mapbox(
-  id = "way/49664223",
-  dist = 0.5,
-  unit = "mi",
-  overlay_style = list(
-    stroke = "darkgreen",
-    fill = "green",
-    fill_opacity = 0.25
+\dontrun{
+  get_osm_static_mapbox(
+    id = "way/49664223",
+    dist = 0.5,
+    unit = "mi",
+    overlay_style = list(
+      stroke = "darkgreen",
+      fill = "green",
+      fill_opacity = 0.25
+    )
   )
-)
 
-nc <- read_sf_path(system.file("shape/nc.shp", package = "sf"))
+  nc <- read_sf_path(system.file("shape/nc.shp", package = "sf"))
 
-get_location_static_mapbox(
-  type = nc,
-  name = "Ashe",
-  name_col = "NAME",
-  dist = 50,
-  unit = "mi"
-)
+  get_location_static_mapbox(
+    type = nc,
+    name = "Ashe",
+    name_col = "NAME",
+    dist = 50,
+    unit = "mi"
+  )
+}
 }
