@@ -53,3 +53,18 @@ is_gmap_url <- function(x) {
 is_unit <- function(x, null.ok = FALSE) {
   is_class(x, classes = "unit", null.ok)
 }
+
+#' Is this package installed?
+#'
+#' @param pkg Name of a package.
+#' @param repo GitHub repository to use for the package.
+#' @noRd
+is_pkg_installed <- function(pkg, repo = NULL) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    if (!is.null(repo)) {
+      pkg <- repo
+    }
+
+    check_installed(pkg = pkg)
+  }
+}
