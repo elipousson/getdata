@@ -48,7 +48,7 @@ format_data <- function(x,
                         label = FALSE,
                         format_sf = FALSE,
                         ...) {
-  x <- sfext::str_trim_squish(x)
+  x <- str_trim_squish(x)
 
   if (!is.null(var_names)) {
     x <- rename_with_xwalk(x, xwalk = var_names)
@@ -239,5 +239,24 @@ bind_block_col <- function(x,
     bldg_num_even_odd = dplyr::if_else(({{ bldg_num }} %% 2) == 0, "Even", "Odd"),
     block_num_st = paste(block_num, {{ street_dir_prefix }}, {{ street }}, {{ street_suffix }}),
     block_face_st = paste(bldg_num_even_odd, {{ street_dir_prefix }}, {{ street }}, {{ street_suffix }})
+  )
+}
+
+#' @name str_trim_squish
+#' @noRd
+#' @importFrom dplyr mutate across
+str_trim_squish <- function(string) {
+  is_pkg_installed("stringr")
+
+  dplyr::mutate(
+    string,
+    dplyr::across(
+      where(is.character),
+      ~ dplyr::if_else(
+        !is_empty(.x) & !is.na(.x),
+        stringr::str_trim(stringr::str_squish(.x)),
+        .x
+      )
+    )
   )
 }
