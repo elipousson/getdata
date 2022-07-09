@@ -16,14 +16,13 @@ ls_pkg_extdata <- function(pkg) {
 #'
 #' @noRd
 ls_pkg_cache <- function(pkg) {
-  list.files(get_data_dir(path = NULL, package = pkg))
+  list.files(sfext::get_data_dir(path = NULL, cache = TRUE, package = pkg))
 }
 
 #' Is this package installed?
 #'
 #' @param pkg Name of a package.
 #' @param repo GitHub repository to use for the package.
-#' @importFrom rlang check_installed
 #' @noRd
 is_pkg_installed <- function(pkg, repo = NULL) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
