@@ -16,7 +16,11 @@ make_location_grid(location, name_col = "name", ...)
   Arguments passed on to \code{\link[sfext:st_make_grid_ext]{sfext::st_make_grid_ext}}
   \describe{
     \item{\code{x}}{A \code{sf}, \code{sfc}, or \code{bbox} object, Default: \code{NULL}. Required.}
-    \item{\code{crs}}{object of class \code{crs}; coordinate reference system of the target of the target grid in case argument \code{x} is missing, if \code{x} is not missing, its crs is inherited.}
+    \item{\code{unit}}{Units for buffer. Supported options include "meter", "foot",
+"kilometer", and "mile", "nautical mile" Common abbreviations (e.g. "km"
+instead of "kilometer") are also supported. Distance in units is converted
+to units matching GDAL units for x; defaults to "meter"}
+    \item{\code{crs}}{Coordinate reference system of bounding box to return}
     \item{\code{cols,rows}}{Used to set n if either are not \code{NULL}; defaults to \code{NULL}.
 row and id are added as columns to the grid if they are provided.}
     \item{\code{gutter}}{Distance in units between each column cell; gutter effectively
@@ -33,6 +37,7 @@ circular polygons.}
     \item{\code{style}}{Style of cell to return with options including "rect", "square",
 "hex", "flat_top_hex", "circle", "circle_offset"}
     \item{\code{.id}}{A name to use for the cell id column. Defaults to "id".}
+    \item{\code{filter}}{If \code{TRUE} (or if trim is \code{TRUE}) filter grid geometry by x using \link[sfext]{st_filter_ext}}
     \item{\code{trim}}{If \code{TRUE}, x is trimmed to y with \code{\link[sfext:st_trim]{st_trim()}}.}
   }}
 }
