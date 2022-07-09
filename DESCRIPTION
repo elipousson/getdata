@@ -19,10 +19,10 @@ Imports:
     glue,
     httr2,
     janitor,
-    sfext (>= 0.0.0.9001),
     purrr,
     rlang,
     sf,
+    sfext (>= 0.0.0.9001),
     tibble,
     utils
 Suggests: 
@@ -33,23 +33,25 @@ Suggests:
     knitr,
     labelled,
     mapbaltimore,
+    mapboxapi,
     naniar,
     osmdata,
     rappdirs,
     RSocrata,
     smoothr,
+    stringr,
     testthat (>= 3.0.0),
     tidyr,
     tigris,
     units,
     withr
 Remotes: 
-    yonghah/esri2sf,
     elipousson/FlickrAPI,
+    elipousson/mapbaltimore,
     elipousson/sfext,
-    elipousson/mapbaltimore
+    yonghah/esri2sf
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.0.9000
 Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.0.9000
