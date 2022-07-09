@@ -62,11 +62,7 @@ steps in transforming an <code>sf</code> object and preparing for mapping or ana
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">erase_data</span><span class="op">(</span><span class="va">x</span>, erase_data <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">relocate_sf_col</span><span class="op">(</span><span class="va">x</span>, .after <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">rename_sf_col</span><span class="op">(</span><span class="va">x</span>, sf_col <span class="op">=</span> <span class="st">"geometry"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">erase_data</span><span class="op">(</span><span class="va">x</span>, erase_data <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -100,7 +96,7 @@ method and parameters, Default: <code>FALSE</code>.</p></dd>
 
 
 <dt>sf_col</dt>
-<dd><p>Name to use for the sf column after renaming; defaults to "geometry".</p></dd>
+<dd><p>Name to use for output <code>sf</code> column, Default: 'geometry'.</p></dd>
 
 
 <dt>sf_req</dt>
@@ -110,11 +106,6 @@ passed to <a href="https://elipousson.github.io/sfext/reference/as_sf.html" clas
 
 <dt>...</dt>
 <dd><p>Additional parameters passed to <code>format_data</code></p></dd>
-
-
-<dt>.after</dt>
-<dd><p>The location to place sf column after; defaults to
-<a href="https://dplyr.tidyverse.org/reference/reexports.html" class="external-link">dplyr::everything</a>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -167,7 +158,7 @@ operation.</p></li>
 <span class="r-in"><span><span class="co"># Erase data</span></span></span>
 <span class="r-in"><span><span class="va">nc_co_water</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_state_tigris.html">get_tigris_data</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"area water"</span>, state <span class="op">=</span> <span class="st">"NC"</span>, county <span class="op">=</span> <span class="va">nc_county</span><span class="op">$</span><span class="va">NAME</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Retrieving data for the year 2020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   |                                                                              |                                                                      |   0%  |                                                                              |===========================                                           |  38%  |                                                                              |==============================================                        |  66%  |                                                                              |====================================================                  |  74%  |                                                                              |======================================================================| 100%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   |                                                                              |                                                                      |   0%  |                                                                              |=========                                                             |  13%  |                                                                              |===========                                                           |  16%  |                                                                              |=============                                                         |  19%  |                                                                              |===============                                                       |  22%  |                                                                              |=================                                                     |  24%  |                                                                              |===================                                                   |  27%  |                                                                              |=====================                                                 |  30%  |                                                                              |=======================                                               |  33%  |                                                                              |=========================                                             |  35%  |                                                                              |===========================                                           |  38%  |                                                                              |===============================                                       |  44%  |                                                                              |================================                                      |  46%  |                                                                              |====================================                                  |  52%  |                                                                              |========================================                              |  57%  |                                                                              |==========================================                            |  60%  |                                                                              |==============================================                        |  66%  |                                                                              |================================================                      |  68%  |                                                                              |===================================================                   |  73%  |                                                                              |=======================================================               |  79%  |                                                                              |===========================================================           |  84%  |                                                                              |===============================================================       |  90%  |                                                                              |====================================================================  |  97%  |                                                                              |======================================================================| 100%</span>
 <span class="r-in"><span><span class="va">nc_county_erased</span> <span class="op">&lt;-</span> <span class="fu">format_sf_data</span><span class="op">(</span><span class="va">nc_county</span>, erase_data <span class="op">=</span> <span class="va">nc_co_water</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">nc_county_erased</span>, max.plot <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="format_sf_data-3.png" alt="" width="700" height="433"></span>
