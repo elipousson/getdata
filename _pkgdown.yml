@@ -4,7 +4,8 @@ template:
 reference:
 - title: Access spatial data based on location
   contents:
-  - starts_with("get_location")
+  - '`get_location`'
+  - '`get_location_data`'
 - title: Download data from online sources
   contents:
   - '`get_airtable_data`'
@@ -16,17 +17,18 @@ reference:
   - '`osm_building_tags`'
   - '`get_tigris_data`'
   - '`get_wiki_data`'
+  - '`get_static_mapbox`'
 - title: Access U.S. state and county boundary data
   contents:
   - '`get_admin_data`'
   - '`us_states`'
   - '`us_counties`'
-- title: Additional utilities for working with data
+- title: Additional data access utilities
   contents:
   - '`set_access_token`'
   - starts_with("format")
-  - '`get_data_dir`'
-- title: Additional utilities for working with locations
+- title: Additional utilities for locations
   contents:
   - '`make_location_data_list`'
+  - '`make_location_grid`'
 
