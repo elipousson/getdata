@@ -11,8 +11,9 @@
 #' @export
 make_location_grid <- function(location,
                                name_col = "name",
+                               unit = NULL,
                                ...) {
-  grid <- sfext::st_make_grid_ext(x = location, ...)
+  grid <- sfext::st_make_grid_ext(x = location, unit = unit, ...)
 
   location <- sfext::st_union_ext(location, name_col = name_col)
 
