@@ -55,6 +55,10 @@ get_osm_data <- function(location = NULL,
 
   value <- get_osm_value(key, value)
 
+  if (nodes_only) {
+    geometry <- geometry %||% "points"
+  }
+
   if (is.null(enclosing)) {
     data <-
       get_osm_data_features(
@@ -406,15 +410,20 @@ get_osm_data_geometry <- function(data,
 get_osm_value <- function(key = NULL, value = NULL) {
   check_null(key)
 
+  if (is.null(value) && (key != "building")) {
+    cli_warn("Setting missing {.arg value} to {.val all}")
+    value <- "all"
+  }
+
+  if (key == "building" && (is.null(value) | (value == "all"))) {
+    return(osm_building_tags)
+  }
+
   if (value == "all") {
-    return(osmdata::available_tags(key))
+   return(osmdata::available_tags(key))
   }
 
   if (!is.null(value)) {
     return(value)
-  }
-
-  if (key == "building") {
-    return(osm_building_tags)
   }
 }
