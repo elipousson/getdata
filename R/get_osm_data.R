@@ -420,7 +420,7 @@ get_osm_value <- function(key = NULL, value = NULL) {
   }
 
   if (value == "all") {
-   return(osmdata::available_tags(key))
+    return(osmdata::available_tags(key))
   }
 
   if (!is.null(value)) {

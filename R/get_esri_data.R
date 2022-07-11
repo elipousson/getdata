@@ -104,7 +104,6 @@ get_esri_data <- function(location = NULL,
       )
     }
   } else {
-
     if (meta$type == "Table") {
       # Get Table (no geometry)
       data <- esri2sf::esri2df(
