@@ -29,31 +29,22 @@ including:
 
 -   ArcGIS FeatureServer and MapServer layers (using
     [{esri2sf}](https://github.com/yonghah/esri2sf))
-
 -   U.S. Census Bureau data (using
     [{tigris}](https://github.com/walkerke/tigris))
-
 -   OpenStreetMap (using
     [{osmdata}](https://docs.ropensci.org/osmdata/))
-
 -   Socrata Open Data resources (using
     [{RSocrata](https://github.com/Chicago/RSocrata)})
-
 -   Google Sheets (using
     [{googlesheets4}](https://googlesheets4.tidyverse.org/))
-
 -   Flickr photos (using
     [{FlickrAPI}](https://koki25ando.github.io/FlickrAPI/))
-
 -   Static map images from Mapbox (using
     [{mapboxapi}](https://walker-data.com/mapboxapi/))
-
 -   Airtable bases (using {httr2} and the [Airtable
     API](https://airtable.com/api))
-
 -   Wikipedia articles (using {httr2} and the [Wikipedia Geosearch
     API](https://www.mediawiki.org/wiki/Extension:GeoData))
-
 -   Other spatial data sources including Google MyMaps, GitHub gists,
     and any data source already supported by
     [sf::read_sf()](https://r-spatial.github.io/sf/reference/st_read.html)

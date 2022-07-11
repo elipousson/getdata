@@ -4,7 +4,7 @@
 \alias{make_location_grid}
 \title{Make a grid over the bounding box of a location}
 \usage{
-make_location_grid(location, name_col = "name", ...)
+make_location_grid(location, name_col = "name", unit = NULL, ...)
 }
 \arguments{
 \item{location}{A sf, sfc, or bbox object passed to \link[sfext:st_make_grid_ext]{sfext::st_make_grid_ext}}
@@ -21,15 +21,15 @@ make_location_grid(location, name_col = "name", ...)
 instead of "kilometer") are also supported. Distance in units is converted
 to units matching GDAL units for x; defaults to "meter"}
     \item{\code{crs}}{Coordinate reference system of bounding box to return}
-    \item{\code{cols,rows}}{Used to set n if either are not \code{NULL}; defaults to \code{NULL}.
+    \item{\code{ncol,nrow}}{Used to set n if either are not \code{NULL}; defaults to \code{NULL}.
 row and id are added as columns to the grid if they are provided.}
+    \item{\code{n}}{If n is NULL and square is \code{TRUE}, the grid is set automatically to
+be 10 cells wide, Default: \code{NULL}}
     \item{\code{gutter}}{Distance in units between each column cell; gutter effectively
 serves as a margin as the negative buffer is applied to all cells
 (including those at the edges of the grid).}
     \item{\code{desc}}{If TRUE, reverse standard order of cell id numbering; defaults
 \code{FALSE}}
-    \item{\code{n}}{If n is NULL and square is \code{TRUE}, the grid is set automatically to
-be 10 cells wide, Default: \code{NULL}}
     \item{\code{cellsize}}{target cellsize}
     \item{\code{what}}{"polygons", "corners", "centers"; set to centers automatically if
 style is "circle", "circle_offset" but a buffer is applied to return
