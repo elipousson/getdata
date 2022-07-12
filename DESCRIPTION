@@ -25,6 +25,7 @@ Imports:
     tibble,
     utils
 Suggests: 
+    covr,
     esri2sf,
     FlickrAPI (>= 0.1.0.1),
     fs,
