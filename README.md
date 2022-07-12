@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# getdata
+# getdata <a href="https://elipousson.github.io/getdata/"><img src="man/figures/logo.png" align="right" height="118" /></a>
 
 <!-- badges: start -->
 
