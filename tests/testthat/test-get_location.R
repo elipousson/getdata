@@ -103,17 +103,18 @@ test_that("get_location works", {
 
   expect_s3_class(
     get_location(
-      type = "https://raw.githubusercontent.com/baltimoreheritage/geojson/master/baltimore-city-wards-1802.geojson",
-      location = "100 Holliday St, Baltimore, MD 21202"
+      type = "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/USA_Parks/FeatureServer/0",
+      name_col = "NAME",
+      name = "Chesapeake and Ohio Canal National Historic Park"
     ),
     "sf"
   )
 
+  skip_on_ci()
   expect_s3_class(
     get_location(
-      type = "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/USA_Parks/FeatureServer/0",
-      name_col = "NAME",
-      name = "Chesapeake and Ohio Canal National Historic Park"
+      type = "https://raw.githubusercontent.com/baltimoreheritage/geojson/master/baltimore-city-wards-1802.geojson",
+      location = "100 Holliday St, Baltimore, MD 21202"
     ),
     "sf"
   )
