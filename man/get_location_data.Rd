@@ -140,14 +140,3 @@ location as a character vector or \code{sf} list (including lists of \code{bbox}
 objects), or when both data and location are lists (such as a list created
 by \link{make_location_data_list}).
 }
-\examples{
-map_location_data(
-  data = c("streets", "mta_bus_lines"),
-  package = "mapbaltimore",
-  location = get_location(
-    type = "council_districts",
-    id = 1,
-    package = "mapbaltimore"),
-  load = TRUE
-)
-}

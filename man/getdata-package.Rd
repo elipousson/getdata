@@ -6,7 +6,7 @@
 \alias{getdata-package}
 \title{getdata: Get Easy Access to Tabular and Spatial Data}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+Download and format spatial and non-spatial data with simple filtering by location.
 }
 \seealso{
 Useful links:

@@ -5,8 +5,7 @@ Version: 0.1.0
 Authors@R: 
     person("Eli", "Pousson", , "eli.pousson@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-8280-1706"))
-Description: More about what it does (maybe more than one line) Use four
-    spaces when indenting paragraphs within the Description.
+Description: Download and format spatial and non-spatial data with simple filtering by location.
 License: MIT + file LICENSE
 URL: https://github.com/elipousson/getdata,
     https://elipousson.github.io/getdata/
@@ -32,7 +31,6 @@ Suggests:
     googlesheets4,
     knitr,
     labelled,
-    mapbaltimore,
     mapboxapi,
     naniar,
     osmdata,
@@ -46,8 +44,7 @@ Suggests:
     units,
     withr
 Remotes: 
-    elipousson/FlickrAPI,
-    elipousson/mapbaltimore,
+    koki25ando/FlickrAPI,
     elipousson/sfext,
     yonghah/esri2sf
 Config/testthat/edition: 3
