@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 
 [![CRAN status](https://www.r-pkg.org/badges/version/getdata)](https://CRAN.R-project.org/package=getdata) [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Codecov test coverage](https://codecov.io/gh/elipousson/getdata/branch/main/graph/badge.svg)](https://app.codecov.io/gh/elipousson/getdata?branch=main)
 
 <!-- badges: end -->
 
@@ -52,9 +53,9 @@ You can install the development version of getdata like so:
 pak::pkg_install("elipousson/getdata")
 ```
 
-## Example
+## Basic usage
 
-[get_location_data()](https://elipousson.github.io/getdata/reference/get_location_data.html) is a flexible function for reading and subsetting data. In this example, data is a file path but it can also be a URL, the name of a data set in another package, or a sf object.
+`get_location_data()` is a flexible function for reading and subsetting data. In this example, data is a file path but it can also be a URL, the name of a data set in another package, or a sf object.
 
 ```{r}
 library(getdata)
@@ -99,4 +100,4 @@ A similar approach works with other sources although some may require an API key
   )
 ```
 
-You must set or provide an API token or key for [get_open_data()](https://elipousson.github.io/getdata/reference/get_open_data.html), [get_airtable_data()](https://elipousson.github.io/getdata/reference/get_airtable_data.html), [get_flickr_photos()](https://elipousson.github.io/getdata/reference/get_flickr_photos.html) to work. [get_ghseet_data()](https://elipousson.github.io/getdata/reference/get_gsheet_data.html) will require user authentication (handled automatically by the {googlesheets4} package).
+You must set or provide an API token or key for `get_open_data()`, `get_airtable_data()`, `get_flickr_photos()` to work. `get_ghseet_data()` will require user authentication (handled automatically by the {googlesheets4} package).
