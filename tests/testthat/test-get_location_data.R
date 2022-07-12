@@ -12,53 +12,6 @@ test_that("get_location_data works", {
     "sf"
   )
 
-  withr::with_package(package = "mapbaltimore", {
-    expect_s3_class(
-      get_location_data(
-        location = get_location(
-          type = "neighborhoods",
-          package = "mapbaltimore",
-          location = "100 Holliday St, Baltimore, MD 21202"
-        ),
-        dist = 0.25,
-        units = "mi",
-        asp = 1,
-        data = "neighborhoods",
-        package = "mapbaltimore"
-      ),
-      "sf"
-    )
-
-
-    expect_s3_class(
-      get_location_data(
-        data = "vegetated_area",
-        location = get_location(
-          type = "council_districts",
-          package = "mapbaltimore",
-          id = 12
-        ),
-        package = "mapbaltimore",
-        filetype = "gpkg"
-      ),
-      "sf"
-    )
-
-    expect_s3_class(
-      get_location_data(
-        data = "council_districts",
-        location = get_location(
-          type = "neighborhoods",
-          package = "mapbaltimore",
-          id = "Harwood"
-        ),
-        package = "mapbaltimore",
-        trim = TRUE
-      ),
-      "sf"
-    )
-  })
-
   expect_s3_class(
     get_location_data(
       location = get_location(

@@ -12,7 +12,6 @@ test_that("get_location works", {
     "sf"
   )
 
-
   expect_s3_class(
     get_location(type = nc, id = "37185", id_col = "FIPSNO"),
     "sf"
@@ -85,15 +84,6 @@ test_that("get_location works", {
     "sf"
   )
 
-  expect_warning(
-    get_location(
-      type = nc,
-      name_col = NULL
-    ),
-    "Returning all locations of this type."
-  )
-
-
   expect_error(
     get_location(
       type = nc,
@@ -102,45 +92,29 @@ test_that("get_location works", {
     )
   )
 
-  # FIXME: This us not working and I don't know why
-  # expect_s3_class(
-  #  get_location(
-  #    type = "https://raw.githubusercontent.com/baltimoreheritage/geojson/master/baltimore-city-wards-1802.geojson",
-  #    location = "100 Holliday St, Baltimore, MD 21202"
-  #  ),
-  #  "sf"
-  # )
+  expect_error(
+    get_location(
+      type = nc,
+      name = "Ashe",
+      index = "This index is not a list."
+    ),
+    "is.list(index) || is.null(index) is not TRUE"
+  )
 
+  expect_s3_class(
+    get_location(
+      type = "https://raw.githubusercontent.com/baltimoreheritage/geojson/master/baltimore-city-wards-1802.geojson",
+      location = "100 Holliday St, Baltimore, MD 21202"
+    ),
+    "sf"
+  )
 
-  # expect_s3_class(
-  #  get_location(
-  #    type = "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/USA_Parks/FeatureServer/0",
-  #    name_col = "NAME",
-  #    name = "Chesapeake and Ohio Canal National Historic Park"
-  #  ),
-  #  "sf"
-  # )
-
-  withr::with_package(package = "mapbaltimore", {
-
-    # Get mapbaltimore
-    expect_s3_class(
-      get_location(
-        type = "neighborhoods",
-        name = "Harwood",
-        package = "mapbaltimore"
-      ),
-      "sf"
-    )
-
-    expect_error(
-      get_location(
-        type = "neighborhoods",
-        name = "Harwood",
-        package = "mapbaltimore",
-        index = "This index is not a list."
-      ),
-      "is.list(index) || is.null(index) is not TRUE"
-    )
-  })
+  expect_s3_class(
+    get_location(
+      type = "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/USA_Parks/FeatureServer/0",
+      name_col = "NAME",
+      name = "Chesapeake and Ohio Canal National Historic Park"
+    ),
+    "sf"
+  )
 })
