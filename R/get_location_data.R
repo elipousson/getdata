@@ -155,7 +155,6 @@ get_location_data <- function(location = NULL,
 #' @rdname get_location_data
 #' @param load If `TRUE` and class is "list", load data to local environment;
 #'   defaults `FALSE`.
-#' @example examples/map_location_data.R
 #' @export
 #' @importFrom janitor make_clean_names
 #' @importFrom purrr set_names map_chr map map2 discard
