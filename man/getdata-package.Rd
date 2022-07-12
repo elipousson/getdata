@@ -6,6 +6,8 @@
 \alias{getdata-package}
 \title{getdata: Get Easy Access to Tabular and Spatial Data}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Download and format spatial and non-spatial data with simple filtering by location.
 }
 \seealso{
