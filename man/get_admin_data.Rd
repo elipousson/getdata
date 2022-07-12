@@ -92,11 +92,11 @@ get_states(
 )
 
 # sf locations are used as a spatial filter
-plot(
-  get_counties(
-    location = get_states("MD", class = "sf"),
-    class = "sf"
-  ),
-  max.plot = 1
-)
+# Example not currently working
+#  get_counties(
+#    location = get_states("MD", class = "sf"),
+#    class = "sf"
+#  ),
+#  "sf"
+# )
 }
