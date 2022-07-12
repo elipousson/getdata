@@ -107,6 +107,7 @@ get_location <- function(type,
       )
   }
 
+  # FIXME: There should be an option for setting the col value
   if (!is.null(name)) {
     col <- name_col
   } else if (!is.null(id)) {
@@ -115,18 +116,15 @@ get_location <- function(type,
     col <- NULL
   }
 
-  if (is.null(location) && !is.null(type)) {
-    location <- type
-
-    if (is.null(name_col) && (nrow(type) > 1)) {
-      cli_warn("Returning all locations of this type.")
-    }
-  }
-
   cli_abort_ifnot(
     c("Location can't be found based on the provided parameters."),
     condition = nrow(location) > 0
   )
+
+  # TODO: Add an optional alert on which locations or what share of locations are being returned
+  # cli_inform(
+  #  "Returning {.val {nrow(location)}} location of {.val {nrow(type)}} from the provided {.arg type}."
+  # )
 
   if (union) {
     location <- sfext::st_union_ext(location, name_col = name_col)
@@ -153,9 +151,9 @@ get_location <- function(type,
 location_filter <- function(data = NULL,
                             location = NULL,
                             ...) {
-  if (!sfext::is_sf(location, ext = TRUE)) {
+  if (!sfext::is_sf(location, ext = TRUE, null.ok = TRUE)) {
     location <- sfext::as_sf(location)
   }
 
-  sfext::st_filter_ext(data, location, ...)
+  sfext::st_filter_ext(x = data, y = location, ...)
 }
