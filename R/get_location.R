@@ -48,7 +48,7 @@ get_location <- function(type,
                          location = NULL,
                          index = NULL,
                          union = FALSE,
-                         crs = getOption("getdata.crs"),
+                         crs = getOption("getdata.crs", 3857),
                          label = NULL,
                          class = "sf",
                          ...) {
