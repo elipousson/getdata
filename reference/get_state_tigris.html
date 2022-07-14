@@ -79,8 +79,17 @@ getOption("getdata.state").</p></dd>
 columns. Default: <code>NULL</code></p></dd>
 
 
-<dt>clean_names</dt>
-<dd><p>If <code>TRUE</code>, pass data frame to <a href="https://rdrr.io/pkg/janitor/man/clean_names.html" class="external-link">janitor::clean_names</a>; defaults to <code>TRUE</code>.</p></dd>
+<dt>crs</dt>
+<dd><p>Coordinate reference system for returned data, Default: getOption("getdata.crs", default =
+3857)</p></dd>
+
+
+<dt>cb</dt>
+<dd><p>If cb is set to <code>TRUE</code>, download a generalized (1:500k) tracts
+file. If <code>FALSE</code>, download the most detailed TIGER/Line file. Defaults to
+<code>TRUE</code> (reverse of the default for tigris functions). This parameter is
+<em>not</em> used when type is set to blocks, roads, primary secondary roads, area
+water, linear water, landmarks, or zctas.</p></dd>
 
 
 <dt>...</dt>
@@ -104,7 +113,9 @@ include: "counties", "census places", "congressional districts",
 roads", "area water",  "linear water", and "landmarks".</p>
 <p>tigris functions that do not use a "state" parameter (e.g.
 <a href="https://rdrr.io/pkg/tigris/man/coastline.html" class="external-link">tigris::coastline</a> or <a href="https://rdrr.io/pkg/tigris/man/rails.html" class="external-link">tigris::rails</a>)  are not supported by this
-function.</p>
+function. Note that the default value of the cb parameter for
+get_tigris_data is <code>TRUE</code> and the default value of for the original
+tigris package is <code>FALSE</code>.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

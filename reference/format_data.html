@@ -61,9 +61,9 @@
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">label_with_xwalk</span><span class="op">(</span><span class="va">x</span>, <span class="va">xwalk</span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu">rename_with_xwalk</span><span class="op">(</span><span class="va">x</span>, xwalk <span class="op">=</span> <span class="cn">NULL</span>, label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">label_with_xwalk</span><span class="op">(</span><span class="va">x</span>, <span class="va">xwalk</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">fix_date</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
@@ -114,6 +114,11 @@ defaults to <code>NULL</code>.</p></dd>
 FeatureServer and MapServer sources) , Default: <code>TRUE</code></p></dd>
 
 
+<dt>label</dt>
+<dd><p>If <code>TRUE</code>, pass xwalk to label_with_xwalk to label columns
+using the original names. Defaults to <code>FALSE</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional parameters passed to <a href="format_sf_data.html">format_sf_data</a></p></dd>
 
@@ -128,6 +133,11 @@ be the values and the new names must be the names.</p></dd>
 <dd><p>City, county, and state to bind to data frame or
 <code>sf</code> object.</p></dd>
 
+
+<dt>bldg_num, street_dir_prefix, street_name, street_suffix</dt>
+<dd><p>Column names to
+use for address information required to generate a block name and number.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -139,7 +149,7 @@ be the values and the new names must be the names.</p></dd>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     
 <ul><li><p>Applies <a href="https://stringr.tidyverse.org/reference/str_trim.html" class="external-link">stringr::str_squish</a> and <a href="https://stringr.tidyverse.org/reference/str_trim.html" class="external-link">stringr::str_trim</a> to all character
-columns (str_trim_squish)</p></li>
+columns</p></li>
 <li><p>Optionally replaces all character values of "" with <code>NA</code> values</p></li>
 <li><p>Optionally corrects UNIX formatted dates with 1970-01-01 origins</p></li>
 <li><p>Optionally renames variables by passing a named list of variables</p></li>

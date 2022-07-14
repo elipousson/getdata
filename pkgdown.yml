@@ -2,7 +2,7 @@ pandoc: 2.14.2
 pkgdown: 2.0.5
 pkgdown_sha: ~
 articles: {}
-last_built: 2022-07-12T18:34Z
+last_built: 2022-07-14T19:03Z
 urls:
   reference: https://elipousson.github.io/getdata/reference
   article: https://elipousson.github.io/getdata/articles

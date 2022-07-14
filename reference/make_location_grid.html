@@ -71,15 +71,16 @@ dropped. The input sf object should not have columns named id, rows, or cols.</p
 'name'</p></dd>
 
 
-<dt>...</dt>
-<dd><p>Arguments passed on to <code><a href="https://elipousson.github.io/sfext/reference/st_make_grid_ext.html" class="external-link">sfext::st_make_grid_ext</a></code></p><dl><dt><code>x</code></dt>
-<dd><p>A <code>sf</code>, <code>sfc</code>, or <code>bbox</code> object, Default: <code>NULL</code>. Required.</p></dd>
-
-    <dt><code>unit</code></dt>
+<dt>unit</dt>
 <dd><p>Units for buffer. Supported options include "meter", "foot",
 "kilometer", and "mile", "nautical mile" Common abbreviations (e.g. "km"
 instead of "kilometer") are also supported. Distance in units is converted
 to units matching GDAL units for x; defaults to "meter"</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Arguments passed on to <code><a href="https://elipousson.github.io/sfext/reference/st_make_grid_ext.html" class="external-link">sfext::st_make_grid_ext</a></code></p><dl><dt><code>x</code></dt>
+<dd><p>A <code>sf</code>, <code>sfc</code>, or <code>bbox</code> object, Default: <code>NULL</code>. Required.</p></dd>
 
     <dt><code>crs</code></dt>
 <dd><p>Coordinate reference system of bounding box to return</p></dd>
