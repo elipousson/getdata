@@ -18,7 +18,7 @@ get_location_data(
   crop = TRUE,
   trim = FALSE,
   from_crs = getOption("getdata.from_crs"),
-  crs = getOption("getdata.crs"),
+  crs = getOption("getdata.crs", 3857),
   class = "sf",
   label = NULL,
   index = NULL,

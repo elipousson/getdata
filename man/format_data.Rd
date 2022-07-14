@@ -22,9 +22,9 @@ format_data(
   ...
 )
 
-label_with_xwalk(x, xwalk)
-
 rename_with_xwalk(x, xwalk = NULL, label = FALSE)
+
+label_with_xwalk(x, xwalk)
 
 fix_date(x)
 
@@ -59,6 +59,9 @@ defaults to \code{NULL}.}
 \item{fix_date}{If \code{TRUE}, fix UNIX dates (common issue with dates from
 FeatureServer and MapServer sources) , Default: \code{TRUE}}
 
+\item{label}{If \code{TRUE}, pass xwalk to \link{label_with_xwalk} to label columns
+using the original names. Defaults to \code{FALSE}.}
+
 \item{...}{Additional parameters passed to \link{format_sf_data}}
 
 \item{xwalk}{a data frame with two columns using the first column as name and
@@ -67,6 +70,9 @@ be the values and the new names must be the names.}
 
 \item{city, county, state}{City, county, and state to bind to data frame or
 \code{sf} object.}
+
+\item{bldg_num, street_dir_prefix, street_name, street_suffix}{Column names to
+use for address information required to generate a block name and number.}
 }
 \value{
 The input data frame or simple feature object with formatting functions applied.
@@ -77,7 +83,7 @@ This function can apply the following common data cleaning tasks:
 \details{
 \itemize{
 \item Applies \link[stringr:str_trim]{stringr::str_squish} and \link[stringr:str_trim]{stringr::str_trim} to all character
-columns (\link{str_trim_squish})
+columns
 \item Optionally replaces all character values of "" with \code{NA} values
 \item Optionally corrects UNIX formatted dates with 1970-01-01 origins
 \item Optionally renames variables by passing a named list of variables

@@ -9,17 +9,19 @@ location}
 \usage{
 get_esri_data(
   location = NULL,
-  url,
   dist = getOption("getdata.dist"),
   diag_ratio = getOption("getdata.diag_ratio"),
   unit = getOption("getdata.unit"),
   asp = getOption("getdata.asp"),
-  crs = getOption("getdata.crs"),
+  crs = getOption("getdata.crs", 3857),
+  url,
+  where = NULL,
   name = NULL,
   name_col = NULL,
-  where = NULL,
   coords = NULL,
+  from_crs = 4326,
   clean_names = TRUE,
+  progress = TRUE,
   ...
 )
 
@@ -30,10 +32,6 @@ get_esri_metadata(url, meta = "name", clean = TRUE)
 \arguments{
 \item{location}{\code{sf}, \code{sfc}, or \code{bbox} object (or other object convertible with
 \code{\link[=as_bbox]{as_bbox()}}. Optional.}
-
-\item{url}{FeatureServer or MapServer url to retrieve data from. Passed to
-\code{url} parameter of \link[esri2sf:esri2sf]{esri2sf::esri2sf} or
-\link[esri2sf:esri2sf]{esri2sf::esri2df} functions.}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -51,22 +49,47 @@ to units matching GDAL units for x; defaults to "meter"}
 character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} returns the same value
 without modification.}
 
-\item{crs}{coordinate reference system to use for query; default 4326}
+\item{crs}{Cordinate reference system to return, Default: 4326 for \link[sfext]{sf_to_df}
+and NULL for \link[sfext]{df_to_sf}.}
+
+\item{url}{FeatureServer or MapServer url to retrieve data from. Passed to
+\code{url} parameter of \link[esri2sf:esri2sf]{esri2sf::esri2sf} or
+\link[esri2sf:esri2sf]{esri2sf::esri2df} functions.}
+
+\item{where}{where query string passed to esri2sf, Default: \code{NULL}}
 
 \item{name}{location name}
 
 \item{name_col}{name of ArcGIS FeatureServer or MapServer column with
 location names for features}
 
-\item{where}{where query string passed to esri2sf, Default: \code{NULL}}
+\item{coords}{Coordinate columns for input dataframe or output sf object (if
+geometry is 'centroid' or 'point') Default: c("lon", "lat").}
 
-\item{coords}{query column names with coordinates. e,g, c("X", "Y") or
-c("lat", "lon")}
+\item{from_crs}{For \link[sfext]{df_to_sf}, coordinate reference system used by
+coordinates or well known text in data frame.}
 
 \item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names}; defaults to \code{TRUE}.}
 
-\item{...}{Additional arguments passed to \link[esri2sf:esri2sf]{esri2sf::esri2df} or
-\link[esri2sf:esri2sf]{esri2sf::esri2sf}}
+\item{progress}{Show progress bar with \code{\link[pbapply:pbapply]{pbapply::pblapply()}} if \code{TRUE}.
+Default FALSE.}
+
+\item{...}{
+  Arguments passed on to \code{\link[esri2sf:esri2sf]{esri2sf::esri2sf}}
+  \describe{
+    \item{\code{outFields}}{vector of fields you want to include. default is \code{NULL} for
+all fields.}
+    \item{\code{bbox}}{bbox class object from \code{\link[sf:st_bbox]{sf::st_bbox()}} or a simple feature object
+that can be converted to a bounding box.}
+    \item{\code{token}}{string for authentication token (if needed). defaults to \code{NULL}.}
+    \item{\code{geomType}}{string specifying the layer geometry ('esriGeometryPolygon'
+or 'esriGeometryPoint' or 'esriGeometryPolyline' - if \code{NULL}, will try to
+be inferred from the server)}
+    \item{\code{replaceDomainInfo}}{If \code{TRUE}, add domain information to the return data frame.
+Default \code{FALSE}.}
+    \item{\code{geometry}}{An \code{sf} or \code{bbox} object. Only sf objects a single \code{POINT}
+feature are currently supported.}
+  }}
 
 \item{layers}{Either a vector with URLs, a named list of urls, or a numeric
 vector.}
@@ -77,10 +100,8 @@ vector.}
 
 \item{meta}{Name of metadata list value to return from \link[esri2sf:esrimeta]{esri2sf::esrimeta}.}
 
-\item{clean}{If TRUE, use janitor::make_clean_names on the returned metadata
+\item{clean}{If \code{TRUE}, use janitor::make_clean_names on the returned metadata
 value (typically used for name values).}
-
-\item{coords_col}{coordinate columns, e.g. c("longitude", "latitude")}
 }
 \description{
 Wraps the \link[esri2sf:esri2sf]{esri2sf::esri2sf} and \link[esri2sf:esri2sf]{esri2sf::esri2df} function to download an

@@ -24,7 +24,14 @@ getOption("getdata.state").}
 \item{name}{Name matching a value in the namelsad, namelsad, or geoid
 columns. Default: \code{NULL}}
 
-\item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names}; defaults to \code{TRUE}.}
+\item{crs}{Coordinate reference system for returned data, Default: getOption("getdata.crs", default =
+3857)}
+
+\item{cb}{If cb is set to \code{TRUE}, download a generalized (1:500k) tracts
+file. If \code{FALSE}, download the most detailed TIGER/Line file. Defaults to
+\code{TRUE} (reverse of the default for \link{tigris} functions). This parameter is
+\emph{not} used when type is set to blocks, roads, primary secondary roads, area
+water, linear water, landmarks, or zctas.}
 
 \item{...}{Additional parameters passed on to {tigris} functions.}
 }
@@ -47,5 +54,7 @@ roads", "area water",  "linear water", and "landmarks".
 
 tigris functions that do not use a "state" parameter (e.g.
 \link[tigris:coastline]{tigris::coastline} or \link[tigris:rails]{tigris::rails})  are not supported by this
-function.
+function. Note that the default value of the cb parameter for
+\link{get_tigris_data} is \code{TRUE} and the default value of for the original
+{tigris} package is \code{FALSE}.
 }

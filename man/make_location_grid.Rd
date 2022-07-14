@@ -12,14 +12,15 @@ make_location_grid(location, name_col = "name", unit = NULL, ...)
 \item{name_col}{Column name to collapse into new name_col value, Default:
 'name'}
 
+\item{unit}{Units for buffer. Supported options include "meter", "foot",
+"kilometer", and "mile", "nautical mile" Common abbreviations (e.g. "km"
+instead of "kilometer") are also supported. Distance in units is converted
+to units matching GDAL units for x; defaults to "meter"}
+
 \item{...}{
   Arguments passed on to \code{\link[sfext:st_make_grid_ext]{sfext::st_make_grid_ext}}
   \describe{
     \item{\code{x}}{A \code{sf}, \code{sfc}, or \code{bbox} object, Default: \code{NULL}. Required.}
-    \item{\code{unit}}{Units for buffer. Supported options include "meter", "foot",
-"kilometer", and "mile", "nautical mile" Common abbreviations (e.g. "km"
-instead of "kilometer") are also supported. Distance in units is converted
-to units matching GDAL units for x; defaults to "meter"}
     \item{\code{crs}}{Coordinate reference system of bounding box to return}
     \item{\code{ncol,nrow}}{Used to set n if either are not \code{NULL}; defaults to \code{NULL}.
 row and id are added as columns to the grid if they are provided.}
