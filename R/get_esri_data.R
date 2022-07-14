@@ -11,17 +11,16 @@
 #' @param url FeatureServer or MapServer url to retrieve data from. Passed to
 #'   `url` parameter of [esri2sf::esri2sf] or
 #'   [esri2sf::esri2df] functions.
-#' @param where string for where condition. Default is 1=1 for all rows.
 #' @param where where query string passed to esri2sf, Default: `NULL`
-#' @param coords_col coordinate columns, e.g. c("longitude", "latitude")
+#' @inheritParams sfext::df_to_sf
 #' @param name_col name of ArcGIS FeatureServer or MapServer column with
 #'   location names for features
 #' @param name location name
-#' @param ... Additional arguments passed to [esri2sf::esri2df] or
-#'   [esri2sf::esri2sf]
 #' @inheritParams format_data
 #' @inheritParams sfext::sf_bbox_to_lonlat_query
 #' @inheritParams sfext::st_bbox_ext
+#' @inheritParams esri2sf::esri2sf
+#' @inheritDotParams esri2sf::esri2sf
 #' @seealso
 #'  [esri2sf::esri2sf()]
 #' @rdname get_esri_data
@@ -29,21 +28,29 @@
 #' @importFrom glue glue
 #' @importFrom janitor clean_names
 get_esri_data <- function(location = NULL,
-                          url,
                           dist = getOption("getdata.dist"),
                           diag_ratio = getOption("getdata.diag_ratio"),
                           unit = getOption("getdata.unit"),
                           asp = getOption("getdata.asp"),
-                          crs = getOption("getdata.crs"),
+                          crs = getOption("getdata.crs", 3857),
+                          url,
+                          where = NULL,
                           name = NULL,
                           name_col = NULL,
-                          where = NULL,
                           coords = NULL,
+                          from_crs = 4326,
                           clean_names = TRUE,
+                          progress = TRUE,
                           ...) {
   is_pkg_installed(pkg = "esri2sf", repo = "yonghah/esri2sf")
 
   meta <- esri2sf::esrimeta(url)
+
+  bbox <- NULL
+
+  if (!is.null(where)) {
+    where <- paste0("(", where, ")")
+  }
 
   if (!is.null(location)) {
     # Adjust bounding box
@@ -56,77 +63,52 @@ get_esri_data <- function(location = NULL,
     )
 
     if (!is.null(coords)) {
-      # Get Table (no geometry) by filtering coordinate columns with bbox
-
-      if (!is.null(where)) {
-        where <- paste0("(", where, ")")
-      }
-
       where <- c(
         where,
         sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords_col)
       )
-
-      data <- esri2sf::esri2df(
-        url = url,
-        where = paste(where[!is.na(where)], collapse = " AND "),
-        ...
-      )
-    } else {
-      # Get FeatureServer with geometry
-      data <- esri2sf::esri2sf(
-        url = url,
-        where = where,
-        bbox = bbox,
-        crs = crs,
-        progress = TRUE,
-        ...
-      )
-    }
-  } else if (!is.null(name_col)) {
-    where <- c(
-      where,
-      glue::glue("{name_col} = '{name}'")
-    )
-
-    if (meta$type == "Table") {
-      # Get Table (no geometry) with location name column
-      data <- esri2sf::esri2df(
-        url = url,
-        where = paste(where[!is.na(where)], collapse = " AND "),
-        ...
-      )
-    } else {
-      data <- esri2sf::esri2sf(
-        url = url,
-        where = paste(where[!is.na(where)], collapse = " AND "),
-        ...
-      )
-    }
-  } else {
-    if (meta$type == "Table") {
-      # Get Table (no geometry)
-      data <- esri2sf::esri2df(
-        url = url,
-        progress = TRUE,
-        ...
-      )
-    } else {
-      # Get FeatureServer with no bounding box
-      data <- esri2sf::esri2sf(
-        url = url,
-        progress = TRUE,
-        ...
-      )
     }
   }
 
-  if (!is.null(coords)) {
+  if (!is.null(name_col)) {
+    where <- c(
+      where,
+      glue("{name_col} = '{name}'")
+    )
+  }
+
+  if (!is.null(where)) {
+    where <- paste(where[!is.na(where)], collapse = " AND ")
+  } else {
+    # FIXME: This is required for the current version of esri2sf but not the httr2 version
+    where <- "1=1"
+  }
+
+  if (meta$type == "Table") {
+    # Get Table (no geometry) with location name column
+    data <- esri2sf::esri2df(
+      url = url,
+      where = where,
+      progress = progress,
+      ...
+    )
+  } else {
+    data <- esri2sf::esri2sf(
+      url = url,
+      where = where,
+      bbox = bbox,
+      progress = progress,
+      ...
+    )
+  }
+
+  if (!is.null(coords) && is.data.frame(data)) {
     # Convert Table to sf object if coordinate columns exist
-    data <- sfext::df_to_sf(data, coords = coords)
+    data <- sfext::df_to_sf(data, coords = coords, from_crs = from_crs)
   }
 
   if (clean_names) {
+    # TODO: Expand support for format_data parameters especially label_with_xwalk using alias from the esri layer metadata
     data <- janitor::clean_names(data)
   }
 
@@ -186,7 +168,7 @@ get_esri_layers <- function(location = NULL, layers, service_url = NULL, nm = NU
 #' @name get_esri_metadata
 #' @rdname get_esri_data
 #' @param meta Name of metadata list value to return from [esri2sf::esrimeta].
-#' @param clean If TRUE, use janitor::make_clean_names on the returned metadata
+#' @param clean If `TRUE`, use janitor::make_clean_names on the returned metadata
 #'   value (typically used for name values).
 #' @export
 #' @importFrom janitor make_clean_names
