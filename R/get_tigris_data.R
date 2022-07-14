@@ -14,7 +14,9 @@
 #'
 #'   tigris functions that do not use a "state" parameter (e.g.
 #'   [tigris::coastline] or [tigris::rails])  are not supported by this
-#'   function.
+#'   function. Note that the default value of the cb parameter for
+#'   [get_tigris_data] is `TRUE` and the default value of for the original
+#'   {tigris} package is `FALSE`.
 #'
 #' @param state State name, abbreviation, or GeoID. Required. Defaults to
 #'   getOption("getdata.state").
@@ -22,7 +24,12 @@
 #'   columns. Default: `NULL`
 #' @param type Type of data to return, Default: `NULL`; See details for
 #'   supported options.
-#' @inheritParams format_data
+#' @param cb If cb is set to `TRUE`, download a generalized (1:500k) tracts
+#'   file. If `FALSE`, download the most detailed TIGER/Line file. Defaults to
+#'   `TRUE` (reverse of the default for [tigris] functions). This parameter is
+#'   *not* used when type is set to blocks, roads, primary secondary roads, area
+#'   water, linear water, landmarks, or zctas.
+#' @inheritParams format_sf_data
 #' @param ... Additional parameters passed on to {tigris} functions.
 #' @return A simple feature object matching the type provided.
 #' @rdname get_state_tigris
@@ -74,7 +81,6 @@ get_tigris_data <- function(type = NULL,
   data <-
     format_sf_data(
       data,
-      # FIXME: incorporate functionality from mapmaryland::format_sf_data
       crs = crs,
       clean_names = clean_names
     )
@@ -86,12 +92,14 @@ get_tigris_data <- function(type = NULL,
   data[lookup_tigris_name(name, data), ]
 }
 
+#' Help
 #' @noRd
 lookup_tigris_name <- function(name, data = NULL) {
   name <- tolower(name)
 
-  lookup <-
-    ((tolower(data[["name"]]) %in% name) | (tolower(data[["namelsad"]]) %in% name) | (data[["geoid"]] %in% name))
+  lookup_col <- function(name_col) {
+    tolower(data[[name_col]]) %in% name
+  }
 
-  return(lookup)
+  lookup_col("name") | lookup_col("namelsad") | lookup_col("geoid")
 }
