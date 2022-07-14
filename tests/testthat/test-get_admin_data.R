@@ -21,6 +21,13 @@ test_that("get_admin_data works", {
     "data.frame"
   )
 
+  expect_s3_class(
+    get_counties(
+      state = "MD"
+    ),
+    "data.frame"
+  )
+
   # Two-digit integer GeoIDs are supported
   # bbox and wkt columns are dropped when returning class "sf"
   expect_s3_class(
