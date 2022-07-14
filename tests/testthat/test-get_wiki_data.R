@@ -1,25 +1,24 @@
 test_that("get_wiki_data works", {
-  nc_county <-
+  location <-
     get_location(
       type = system.file("shape/nc.shp", package = "sf"),
       name = "Ashe",
-      name_col = "NAME"
+      name_col = "NAME",
+      fn = ~ suppressWarnings(sf::st_centroid(.x))
     )
 
-  nc_county <- suppressWarnings(sf::st_centroid(nc_county))
-
+  skip_if_offline()
   expect_s3_class(
     get_wiki_data(
-      location = nc_county,
+      location = location,
       dist = 4,
       unit = "mi"
     ),
     "sf"
   )
-
   expect_s3_class(
     get_wiki_data(
-      location = nc_county,
+      location = location,
       radius = 4,
       unit = "mi"
     ),

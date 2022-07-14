@@ -1,5 +1,6 @@
 test_that("get_location works", {
   nc <- sf::st_read(system.file("shape/nc.shp", package = "sf"))
+  nc <- sf::st_transform(nc, 3857)
 
   # Check if type as sf object with name/id lookup works
   expect_s3_class(
@@ -68,18 +69,8 @@ test_that("get_location works", {
   # Check passing an sf object to location
   expect_s3_class(
     get_location(
-      type = sf::st_transform(nc, 6542),
-      location = sf::st_buffer(sf::st_transform(nc[1, ], 6542), units::as_units(250, "m"))
-    ),
-    "sf"
-  )
-
-  # Check if type as url works with passing extra parameters to get_location_data()
-  # In this case, no location information is passed to get_location() so it warns before returning all types
-  expect_s3_class(
-    get_location(
-      type = "https://raw.githubusercontent.com/baltimoreheritage/geojson/master/baltimore-city-wards-1797.geojson",
-      name = "1st Ward"
+      type = nc,
+      location = sf::st_buffer(nc[1, ], units::as_units(250, "m"))
     ),
     "sf"
   )
@@ -101,6 +92,18 @@ test_that("get_location works", {
     "is.list(index) || is.null(index) is not TRUE"
   )
 
+  # Check if type as url works with passing extra parameters to get_location_data()
+  # In this case, no location information is passed to get_location() so it warns before returning all types
+  skip_if_offline()
+  expect_s3_class(
+    get_location(
+      type = "https://raw.githubusercontent.com/baltimoreheritage/geojson/master/baltimore-city-wards-1797.geojson",
+      name = "1st Ward"
+    ),
+    "sf"
+  )
+
+  skip_if_offline()
   expect_s3_class(
     get_location(
       type = "https://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/USA_Parks/FeatureServer/0",
@@ -110,7 +113,8 @@ test_that("get_location works", {
     "sf"
   )
 
-  skip_on_ci()
+  # skip_on_ci()
+  skip_if_offline()
   expect_s3_class(
     get_location(
       type = "https://raw.githubusercontent.com/baltimoreheritage/geojson/master/baltimore-city-wards-1802.geojson",

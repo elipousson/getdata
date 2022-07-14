@@ -12,6 +12,7 @@ test_that("get_location_data works", {
     "sf"
   )
 
+  skip_if_offline()
   expect_s3_class(
     get_location_data(
       location = get_location(
