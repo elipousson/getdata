@@ -3,7 +3,7 @@
 #' This function can apply the following common data cleaning tasks:
 #'
 #' - Applies [stringr::str_squish] and [stringr::str_trim] to all character
-#' columns ([str_trim_squish])
+#' columns
 #' - Optionally replaces all character values of "" with `NA` values
 #' - Optionally corrects UNIX formatted dates with 1970-01-01 origins
 #' - Optionally renames variables by passing a named list of variables
@@ -50,8 +50,9 @@ format_data <- function(x,
                         ...) {
   x <- str_trim_squish(x)
 
-  if (!is.null(var_names)) {
-    x <- rename_with_xwalk(x, xwalk = var_names)
+  if (!is.null(var_names) | !is.null(xwalk)) {
+    xwalk <- xwalk %|% var_names
+    x <- rename_with_xwalk(x, xwalk = xwalk, label = label)
   }
 
   if (clean_names) {
@@ -113,17 +114,11 @@ make_xwalk_list <- function(xwalk) {
 
 #' @name rename_with_xwalk
 #' @rdname format_data
-label_with_xwalk <- function(x, xwalk) {
-  is_pkg_installed("labelled")
-
-  labelled::set_variable_labels(x, .labels = make_xwalk_list(xwalk))
-}
-
-#' @name rename_with_xwalk
-#' @rdname format_data
 #' @param xwalk a data frame with two columns using the first column as name and
 #'   the second column as value; or a named list. The existing names of x must
 #'   be the values and the new names must be the names.
+#' @param label If `TRUE`, pass xwalk to [label_with_xwalk] to label columns
+#'   using the original names. Defaults to `FALSE`.
 #' @export
 #' @importFrom tibble deframe
 #' @importFrom dplyr rename
@@ -164,11 +159,22 @@ rename_with_xwalk <- function(x, xwalk = NULL, label = FALSE) {
   label_with_xwalk(x, xwalk = xwalk)
 }
 
+#' @name rename_with_xwalk
+#' @rdname format_data
+label_with_xwalk <- function(x, xwalk) {
+  is_pkg_installed("labelled")
+
+  # TODO: Consider adding an optional for value labelling as well as variable labelling
+  labelled::set_variable_labels(x, .labels = make_xwalk_list(xwalk))
+}
+
 #' @name format_data
 #' @rdname format_data
 #' @export
 #' @importFrom dplyr mutate across contains
 fix_date <- function(x) {
+  # FIXME: This needs better documentation and some kind of check to make sure the date is in the correct format
+  # Alternatively, considering renaming so the focused scope for this function is clear
   dplyr::mutate(
     x,
     dplyr::across(
@@ -221,8 +227,9 @@ bind_address_col <- function(x, city = NULL, county = NULL, state = NULL) {
 
 #' @name bind_block_col
 #' @rdname format_data
+#' @param bldg_num,street_dir_prefix,street_name,street_suffix Column names to
+#'   use for address information required to generate a block name and number.
 #' @export
-#' @importFrom rlang has_name
 #' @importFrom dplyr mutate if_else
 bind_block_col <- function(x,
                            bldg_num = "bldg_num",
