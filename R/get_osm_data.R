@@ -1,8 +1,7 @@
 #' Use osmdata to get Open Street Map data for a location
 #'
-#' Wraps `osmdata` functions to query OSM data by adjusted bounding box or
-#' by enclosing ways/relations around the center of a location. timeout and
-#' nodes_only parameters are not fully supported currently.
+#' Use `osmdata` functions to query OSM data by adjusted bounding box or
+#' by enclosing ways/relations around the center of a location.
 #'
 #' @param location A `sf`, `sfc`, or `bbox` object.
 #' @param key Feature key for overpass API query.
@@ -21,13 +20,13 @@
 #' @param osmdata If `TRUE` return a `osmdata` class object that includes the
 #'   overpass API call, metadata including timestamp and version numbers, and
 #'   all available geometry types; defaults to `FALSE`.
-#' @param enclosing If enclosing is "relation" or "way", use the
-#'   [osmdata::opq_enclosing()] function to query the OSM data (instead of
-#'   [osmdata::add_osm_feature()]. Defaults to `NULL`. When using enclosing, the
-#'   dist, diag_ratio, asp, and unit parameters are ignored and the center of
-#'   the provided location is used for the query. geometry is set automatically
-#'   based enclosing with "relation" using "multipolygon" and "way" using
-#'   "polygon" geometry.
+#' @param enclosing If enclosing is "relation" or "way", this function uses the
+#'   [osmdata::opq_enclosing()] to query the OSM data (instead of
+#'   [osmdata::add_osm_feature()]. Defaults to `NULL`. When the enclosing
+#'   parameter is provided, the dist, diag_ratio, asp, and unit parameters are
+#'   ignored and the center of the provided location is used for the query.
+#'   geometry is set automatically based enclosing with "relation" using
+#'   "multipolygons" and "way" using "polygons" geometry.
 #' @inheritParams osmdata::opq
 #' @inheritParams osmdata::add_osm_features
 #' @inheritParams sfext::format_data
@@ -49,18 +48,32 @@ get_osm_data <- function(location = NULL,
                          geometry = NULL,
                          osmdata = FALSE,
                          enclosing = NULL,
-                         nodes_only = FALSE,
-                         timeout = 120) {
+                         nodes_only = FALSE) {
   is_pkg_installed("osmdata")
 
-  value <- get_osm_value(key, value)
+  if (is.null(features)) {
+    value <- get_osm_value(key, value)
+  } else {
+    stopifnot(
+      "features must be NULL or a character vector" = is.character(features)
+    )
+  }
 
   if (nodes_only) {
     geometry <- geometry %||% "points"
   }
 
+  cli_inform(
+    c(
+      "i" = "OpenStreetMap data is licensed under the Open Database License (ODbL) which requires attribution.",
+      "*" = "Learn more about the ODbL and OSM attribution requirements at {.url https://www.openstreetmap.org/copyright}"
+    ),
+    .frequency = "once",
+    .frequency_id = "get_osm_data_attribution"
+  )
+
   if (is.null(enclosing)) {
-    data <-
+    return(
       get_osm_data_features(
         location = location,
         dist = dist,
@@ -75,30 +88,18 @@ get_osm_data <- function(location = NULL,
         osmdata = osmdata,
         nodes_only = nodes_only
       )
-  } else if (!is.null(enclosing)) {
-    data <-
-      get_osm_data_enclosing(
-        location = location,
-        key = key,
-        value = value,
-        enclosing = enclosing,
-        crs = crs,
-        geometry = geometry,
-        osmdata = osmdata
-      )
-  }
-
-  if (getOption("getdata.osm_attribution", TRUE)) {
-    osm_copyright_url <- "https://www.openstreetmap.org/copyright"
-
-    cli::cli_alert_info(
-      "Attribution is required when using OpenStreetMap data.
-      Find more information on the Open Database License (ODbL) at {.url {osm_copyright_url}}"
     )
-    options("sfext.osm_attribution" = FALSE)
   }
 
-  data
+  get_osm_data_enclosing(
+    location = location,
+    key = key,
+    value = value,
+    enclosing = enclosing,
+    crs = crs,
+    geometry = geometry,
+    osmdata = osmdata
+  )
 }
 
 
@@ -112,16 +113,24 @@ get_osm_id <- function(id, type = NULL, crs = NULL, geometry = NULL, osmdata = F
   is_pkg_installed("osmdata")
 
   if (length(id) > 1) {
-    data <- purrr::map_dfr(id, ~ get_osm_id(id = .x, type = type, crs = crs, geometry = geometry, osmdata = FALSE))
-
-    return(data)
+    return(
+      purrr::map_dfr(
+        id,
+        ~ get_osm_id(
+          id = .x,
+          type = type,
+          crs = crs,
+          geometry = geometry,
+          osmdata = FALSE
+        )
+      )
+    )
   }
 
-  id_type <-
-    get_osm_id_type(id = id, type = type, geometry = geometry)
+  id_type <- get_osm_id_type(id = id, type = type, geometry = geometry)
 
   data <-
-    osmdata::osmdata_sf(
+    try_osmdata_sf(
       osmdata::opq_string(
         osmdata::opq_osm_id(type = id_type$type, id = id_type$id)
       )
@@ -135,10 +144,25 @@ get_osm_id <- function(id, type = NULL, crs = NULL, geometry = NULL, osmdata = F
   )
 }
 
+#' Try to fetch data using osmdata_sf and abort if it returns an error
+#'
+#' @noRd
+try_osmdata_sf <- function(query, call = caller_env()) {
+  data <-
+    try_fetch(
+      suppressMessages(osmdata::osmdata_sf(
+        query
+      )),
+      error = function(cnd) cli_abort("{.fn osmdata::osmdata_sf} encountered an error.", parent = cnd, call = call)
+    )
+
+  data
+}
+
 #' Get a list of the OSM id, type, and geometry from a named list or type prefixed id value
 #'
 #' @noRd
-get_osm_id_type <- function(id, type = NULL, geometry = NULL) {
+get_osm_id_type <- function(id, type = NULL, geometry = NULL, call = caller_env()) {
   if (is.null(type)) {
     if (has_osm_type_prefix(id)) {
       split_id <- strsplit(id, split = "/")
@@ -149,8 +173,7 @@ get_osm_id_type <- function(id, type = NULL, geometry = NULL) {
     }
   }
 
-  id <- as.character(id)
-  type <- match.arg(type, c("node", "way", "relation"))
+  type <- arg_match(type, c("node", "way", "relation"), error_call = call)
 
   if (is.null(geometry)) {
     geometry <-
@@ -161,22 +184,19 @@ get_osm_id_type <- function(id, type = NULL, geometry = NULL) {
       )
   }
 
-  return(list("type" = type, "id" = id, "geometry" = geometry))
+  list("type" = type, "id" = as.character(id), "geometry" = geometry)
 }
 
 #' Is this an OpenStreetMap element (id with type)?
 #'
 #' @noRd
 is_osm_element <- function(x) {
-  return(has_osm_type_prefix(x) | has_osm_type_name(x))
+  (has_osm_type_prefix(x) | has_osm_type_name(x))
 }
 
 #' @noRd
 has_osm_type_prefix <- function(x) {
-  grepl(
-    "^node/|^way/|^relation/",
-    x
-  )
+  grepl("^node/|^way/|^relation/", x)
 }
 
 #' @noRd
@@ -214,6 +234,10 @@ get_osm_boundaries <- function(location,
       geometry = geometry,
       osmdata = osmdata
     )
+
+  if (osmdata) {
+    return(boundaries)
+  }
 
   if (!is.null(level)) {
     boundaries <-
@@ -297,7 +321,7 @@ get_osm_data_features <- function(location = NULL,
         key = key,
         value = value
       )
-  } else if (is.character(features)) {
+  } else {
     query <-
       osmdata::add_osm_features(
         opq = query,
@@ -305,8 +329,7 @@ get_osm_data_features <- function(location = NULL,
       )
   }
 
-  data <-
-    suppressMessages(osmdata::osmdata_sf(query))
+  data <- try_osmdata_sf(query)
 
   get_osm_data_geometry(
     data,
@@ -323,8 +346,9 @@ get_osm_data_enclosing <- function(location,
                                    enclosing = NULL,
                                    crs = NULL,
                                    geometry = NULL,
-                                   osmdata = FALSE) {
-  enclosing <- match.arg(enclosing, c("relation", "way"))
+                                   osmdata = FALSE,
+                                   call = caller_env()) {
+  enclosing <- arg_match(enclosing, c("relation", "way"), error_call = call)
   coords <- sfext::sf_to_df(location, crs = 4326)
 
   query <-
@@ -339,19 +363,16 @@ get_osm_data_enclosing <- function(location,
       silent = TRUE
     )
 
-  query <-
-    osmdata::opq_string(opq = query)
+  query <- osmdata::opq_string(opq = query)
 
-  data <-
-    suppressMessages(osmdata::osmdata_sf(query))
+  data <- try_osmdata_sf(query)
 
-  if (is.null(geometry)) {
-    geometry <-
-      switch(enclosing,
-        "relation" = "multipolygon",
-        "way" = "polygon"
-      )
-  }
+  geometry <-
+    geometry %||%
+    switch(enclosing,
+      "relation" = "multipolygons",
+      "way" = "polygons"
+    )
 
   get_osm_data_geometry(
     data,
@@ -385,23 +406,19 @@ get_osm_data_geometry <- function(data,
       error_call = call
     )
 
-  geometry <- paste0("osm_", geometry)
-
-  if (!osmdata) {
-    data <-
-      purrr::pluck(
-        data,
-        var = geometry
-      )
-
-    if (!is.null(crs)) {
-      data <- sf::st_transform(data, crs)
-    }
-
-    return(data)
+  if (osmdata) {
+    return(osmdata::unique_osmdata(data))
   }
 
-  osmdata::unique_osmdata(data)
+  geometry <- paste0("osm_", geometry)
+
+  data <-
+    purrr::pluck(
+      data,
+      var = geometry
+    )
+
+  sfext::st_transform_ext(data, crs)
 }
 
 #' Get OSM value from osm_building_tags or osmdata::available_tags
@@ -423,7 +440,5 @@ get_osm_value <- function(key = NULL, value = NULL) {
     return(osmdata::available_tags(key))
   }
 
-  if (!is.null(value)) {
-    return(value)
-  }
+  value
 }
