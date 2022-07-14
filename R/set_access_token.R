@@ -46,7 +46,7 @@ set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = N
         if (any(grepl(type, readLines(renv)))) {
           cli_abort(
             c("{.val {type}} already exists in your .Renviron.",
-              "i" = "Set {.arg overwrite = TRUE} to replace this token."
+              "*" = "Set {.arg overwrite = TRUE} to replace this token."
             )
           )
         }
@@ -54,12 +54,12 @@ set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = N
     }
 
     # Append access token to .Renviron file
-    write(glue("{type}='{token}'"), renv, sep = "\n", append = TRUE)
+    write(glue("{type}=\'{token}\'"), renv, sep = "\n", append = TRUE)
 
     cli_inform(
       c(
         "i" = "The token {.val {token}} is now stored in your .Renviron.",
-        " " = 'To use it, restart R or run {.code readRenviron("~/.Renviron")}.
+        "*" = 'To use it, restart R or run {.code readRenviron("~/.Renviron")}.
         You can then access the token using `Sys.getenv("{type}")`.'
       )
     )
@@ -70,7 +70,7 @@ set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = N
   cli_inform(
     c(
       "v" = "Token set with {.fun Sys.setenv}.",
-      "i" = "To use the token {.val {token}} in future sessions, run this function with {.arg install = TRUE}."
+      "*" = "To use the token {.val {token}} in future sessions, run this function with {.arg install = TRUE}."
     )
   )
 
@@ -95,5 +95,5 @@ get_access_token <- function(token = NULL, type = NULL) {
     return(token)
   }
 
-  cli_abort("Can’t find token {.val {type}} in your .Renviron.")
+  cli_abort("{.val {type}} can't be found in your .Renviron.")
 }
