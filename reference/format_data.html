@@ -58,6 +58,7 @@
 <span>  fix_date <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  format_sf <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  xwalk <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -119,14 +120,14 @@ FeatureServer and MapServer sources) , Default: <code>TRUE</code></p></dd>
 using the original names. Defaults to <code>FALSE</code>.</p></dd>
 
 
-<dt>...</dt>
-<dd><p>Additional parameters passed to <a href="format_sf_data.html">format_sf_data</a></p></dd>
-
-
 <dt>xwalk</dt>
 <dd><p>a data frame with two columns using the first column as name and
 the second column as value; or a named list. The existing names of x must
 be the values and the new names must be the names.</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Additional parameters passed to <a href="format_sf_data.html">format_sf_data</a></p></dd>
 
 
 <dt>city, county, state</dt>
