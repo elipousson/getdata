@@ -15,7 +15,7 @@
 #' @param locale Locale, Default: NULL
 #' @param fields_by_id If TRUE, return fields by id, Default: FALSE
 #' @param offset Offset parameter, Default: NULL
-#' @param token API token, Default: NULL (same as get_access_token(type = "AIRTABLE_API_KEY"))
+#' @param token,type API token and type, token defaults to NULL and type to  "AIRTABLE_API_KEY" (same as get_access_token(type = "AIRTABLE_API_KEY"))
 #' @param list Data type to return, Default: 'records'
 #' @inheritParams sfext::df_to_sf
 #' @inheritParams get_location_data
@@ -40,7 +40,6 @@ get_airtable_data <- function(base,
                               locale = NULL,
                               fields_by_id = FALSE,
                               offset = NULL,
-                              token = NULL,
                               list = "records",
                               geometry = TRUE,
                               location = NULL,
@@ -55,7 +54,9 @@ get_airtable_data <- function(base,
                               address = getOption("getdata.address", "address"),
                               geo = FALSE,
                               clean_names = TRUE,
-                              label = TRUE) {
+                              label = TRUE,
+                              token = NULL,
+                              type =  "AIRTABLE_API_KEY") {
   req <-
     req_airtable(
       base = base,
@@ -73,7 +74,8 @@ get_airtable_data <- function(base,
       locale = locale,
       fields_by_id = fields_by_id,
       offset = offset,
-      token = token
+      token = token,
+      type = type
     )
 
   data <-
@@ -138,6 +140,7 @@ req_airtable <- function(base,
                          tz = NULL,
                          locale = NULL,
                          token = NULL,
+                         type = "AIRTABLE_API_KEY",
                          fields_by_id = FALSE,
                          fields = NULL,
                          filter = NULL,
@@ -167,7 +170,7 @@ req_airtable <- function(base,
         req, record
       )
 
-    return(req_auth_airtable(req, token))
+    return(req_auth_airtable(req, token, type))
   }
 
   if (!is.null(sort)) {
@@ -214,7 +217,7 @@ req_airtable <- function(base,
     }
   }
 
-  req_auth_airtable(req, token)
+  req_auth_airtable(req, token, type)
 }
 
 #' Set rate limit, set user agent, and authenticate Airtable request with key/token
