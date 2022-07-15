@@ -145,14 +145,24 @@ make_socrata_url <- function(data = NULL,
   }
 
   if (!is.null(where)) {
-    if (!is.null(bbox)) {
-      where <- paste0("$where=", paste0(c(where, sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)), collapse = " AND "))
-    } else if (!is.null(name_col) && !is.null(name)) {
-      # FIXME: This probably fails with multiple names
-      where <- paste0("$where=", paste0(c(where, glue::glue("{name_col} like '{name}'")), collapse = " AND "))
-    } else {
-      where <- paste0("$where=", where)
-    }
+    where <- glue("({where})")
+  }
+
+  where_name <- NULL
+
+  if (!is.null(name_col) && !is.null(name)) {
+    # FIXME: This probably fails with multiple names
+    where_name <- glue("({name_col} like '{name}')")
+  }
+
+  where_bbox <- NULL
+
+  if (!is.null(bbox)) {
+    where_bbox <- glue("({sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)})")
+  }
+
+  if (!all(sapply(c(bbox, name_col, where), is.null))) {
+    where <- paste0("$where=", paste0(c(where, where_bbox, where_name), collapse = " AND "))
   }
 
   if (!is.null(query)) {
@@ -174,7 +184,7 @@ make_socrata_url <- function(data = NULL,
 
   # Append select, where, and query parameters to the url
   if (!any(sapply(c(select, where, query), is.null))) {
-    url <- paste0(url, "?", paste0(c(select, where, query), collapse = "&"))
+    url <- paste0("(", url, "?", paste0(c(select, where, query), collapse = "&"), ")")
   }
 
   url
