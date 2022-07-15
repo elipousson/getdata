@@ -65,7 +65,7 @@ get_esri_data <- function(location = NULL,
     if (!is.null(coords)) {
       where <- c(
         where,
-        sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords_col)
+        sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)
       )
     }
   }
