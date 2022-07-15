@@ -162,7 +162,7 @@ make_socrata_url <- function(data = NULL,
   }
 
   if (!all(sapply(c(bbox, name_col, where), is.null))) {
-    where <- paste0("$where=", paste0(c(where, where_bbox, where_name), collapse = " AND "))
+    where <- glue("$where=({paste0(c(where, where_bbox, where_name), collapse = ' AND ')})")
   }
 
   if (!is.null(query)) {
@@ -184,7 +184,7 @@ make_socrata_url <- function(data = NULL,
 
   # Append select, where, and query parameters to the url
   if (!any(sapply(c(select, where, query), is.null))) {
-    url <- paste0("(", url, "?", paste0(c(select, where, query), collapse = "&"), ")")
+    url <- glue("{url}?{paste0(c(select, where, query), collapse = '&')}")
   }
 
   url
