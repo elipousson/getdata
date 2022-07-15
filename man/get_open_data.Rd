@@ -22,6 +22,7 @@ get_open_data(
   coords = c("longitude", "latitude"),
   geometry = FALSE,
   token = NULL,
+  type = NULL,
   from_crs = 4326,
   crs = NULL,
   clean_names = TRUE
@@ -49,9 +50,9 @@ get_socrata_data(
 )
 }
 \arguments{
-\item{data}{A data set identifier (known as a resource for Socrata). If data
-is set to "list" and a valid source_url is provided, the function returns a
-list of all available resources.}
+\item{data}{A data set identifier (known as a resource for Socrata) or a url
+for an individual dataset. If data is set to "list" and a valid source_url
+is provided, the function returns a list of all available resources. If data is a url, source_url must be null.}
 
 \item{source_url}{A data source url. For Socrata, this should the base url
 for the open data portal.}
@@ -67,8 +68,6 @@ to WHERE. \url{https://dev.socrata.com/docs/queries/where.html}}
 
 \item{query}{SODA $query parameter. A full SoQL query string, all as one
 parameter. \url{https://dev.socrata.com/docs/queries/query.html}}
-
-\item{location}{sf or bbox obkect}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -86,23 +85,24 @@ to units matching GDAL units for x; defaults to "meter"}
 character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} returns the same value
 without modification.}
 
-\item{name_col}{name of column in Socrata data with
-location names (e.g. County)}
+\item{name, name_col}{name of column in Socrata data resource with
+location names (e.g. County) and name of location to return.}
 
-\item{name}{location name to return}
+\item{coords}{Coordinate columns for input dataframe or output sf object (if
+geometry is 'centroid' or 'point') Default: c("lon", "lat").}
 
-\item{coords}{Name(s) of column with coordinate data, Default: c("longitude",
-"latitude")}
+\item{geometry}{If \code{TRUE} and coords are provided, return a
+\code{sf} object. Default \code{FALSE}.}
 
-\item{geometry}{If \code{TRUE} and latitude/longitude columns available, return a
-\code{\link[=sf]{sf()}} object. Default \code{FALSE}.}
+\item{token, type}{Access token or API Key and token type (name used to store
+token in .Renvironment). A token may be required to access data from
+Socrata and other open data portals but can be stored as an environment
+variable with \link{set_access_token}.}
 
-\item{token}{Access token or API Key; required to access data from Socrata.}
+\item{from_crs}{For \link[sfext]{df_to_sf}, coordinate reference system used by
+coordinates or well known text in data frame.}
 
-\item{from_crs}{Coordinate reference system used to match the location CRS to
-the source data.}
-
-\item{crs}{Coordinate reference system to return.}
+\item{crs}{Coordinate reference system of bounding box to return}
 
 \item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names}; defaults to \code{TRUE}.}
 }

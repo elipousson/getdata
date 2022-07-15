@@ -6,32 +6,29 @@
 #' Details on SoQL queries are found in the Socrata API documentation
 #' <https://dev.socrata.com/docs/queries/>.
 #'
+#' @param data A data set identifier (known as a resource for Socrata) or a url
+#'   for an individual dataset. If data is set to "list" and a valid source_url
+#'   is provided, the function returns a list of all available resources. If data is a url, source_url must be null.
 #' @param source_url A data source url. For Socrata, this should the base url
 #'   for the open data portal.
 #' @param source_type Data source type; defaults to "socrata" which is currently
 #'   the only supported option.
-#' @param data A data set identifier (known as a resource for Socrata). If data
-#'   is set to "list" and a valid source_url is provided, the function returns a
-#'   list of all available resources.
 #' @inheritParams sfext::st_bbox_ext
-#' @param name_col name of column in Socrata data with
-#'   location names (e.g. County)
-#' @param name location name to return
+#' @param name,name_col name of column in Socrata data resource with
+#'   location names (e.g. County) and name of location to return.
 #' @param select SODA $select parameter. Set of columns to be returned, similar
 #'   to a SELECT in SQL. <https://dev.socrata.com/docs/queries/select.html>
 #' @param where SODA $where parameter. Filters the rows to be returned, similar
 #'   to WHERE. <https://dev.socrata.com/docs/queries/where.html>
 #' @param query SODA $query parameter. A full SoQL query string, all as one
 #'   parameter. <https://dev.socrata.com/docs/queries/query.html>
-#' @param geometry If `TRUE` and latitude/longitude columns available, return a
-#'   [sf()] object. Default `FALSE`.
-#' @param coords Name(s) of column with coordinate data, Default: c("longitude",
-#'   "latitude")
-#' @param token Access token or API Key; required to access data from Socrata.
-#' @param location sf or bbox obkect
-#' @param from_crs Coordinate reference system used to match the location CRS to
-#'   the source data.
-#' @param crs Coordinate reference system to return.
+#' @param geometry If `TRUE` and coords are provided, return a
+#'   `sf` object. Default `FALSE`.
+#' @param token,type Access token or API Key and token type (name used to store
+#'   token in .Renvironment). A token may be required to access data from
+#'   Socrata and other open data portals but can be stored as an environment
+#'   variable with [set_access_token].
+#' @inheritParams sfext::df_to_sf
 #' @inheritParams format_data
 #' @example examples/get_open_data.R
 #' @export
@@ -53,9 +50,23 @@ get_open_data <- function(data = NULL,
                           coords = c("longitude", "latitude"),
                           geometry = FALSE,
                           token = NULL,
+                          type = NULL,
                           from_crs = 4326,
                           crs = NULL,
                           clean_names = TRUE) {
+
+  # Get an API key
+  token <- get_access_token(token = token, type = type)
+
+  source_type <- tolower(source_type)
+
+  cli_abort_ifnot(
+    c(
+      "{.arg source_url} must be a valid URL or, if {.arg data} is a url, {.arg source_url} must be NULL."
+    ),
+    condition = is_url(source_url) | (is_url(data) && is.null(source_url))
+  )
+
   cli_abort_ifnot(
     c("{.arg source_type} must be {.val socarata}.",
       "i" = "Socrata is currently the only supported open data source for this function.",
@@ -64,66 +75,56 @@ get_open_data <- function(data = NULL,
     condition = (source_type == "socrata")
   )
 
-  is_pkg_installed("RSocrata")
+  if (source_type == "socrata") {
+    is_pkg_installed("RSocrata")
 
-  if (data == "list") {
-    url <- source_url
-    data_list <- RSocrata::ls.socrata(url = url)
-    return(data_list)
-  }
-
-  # Check for an API key
-  if (is.null(token) | (token == "")) {
-    cli_abort("An API key or access token is required.")
+    if (data == "list") {
+      data_list <- RSocrata::ls.socrata(url = source_url)
+      return(data_list)
+    }
   }
 
   # FIXME: Check on how to access the point or polygon data types via SODA
   # See <https://dev.socrata.com/docs/datatypes/point.html> for more information
   # Get adjusted bounding box if any adjustment variables provided
-  bbox <- sfext::st_bbox_ext(
-    x = location,
-    dist = dist,
-    diag_ratio = diag_ratio,
-    unit = unit,
-    asp = asp,
-    crs = from_crs
-  )
-
-  cli_abort_ifnot(
-    c(
-      "{.arg source_url} must be a URL.",
-      "i" = "The provided {.arg source_url} is not valid: {.url {source_url}}"
-    ),
-    condition = is_url(source_url)
-  )
-
-  url <-
-    make_socrata_url(
-      data = data,
-      source_url = source_url,
-      select = select,
-      where = where,
-      query = query,
-      bbox = bbox,
-      name_col = name_col,
-      name = name,
-      coords = coords
+  bbox <-
+    sfext::st_bbox_ext(
+      x = location,
+      dist = dist,
+      diag_ratio = diag_ratio,
+      unit = unit,
+      asp = asp,
+      crs = from_crs
     )
 
-  # Download data from Socrata Open Data portal
-  data <-
-    dplyr::as_tibble(RSocrata::read.socrata(url = url, app_token = token))
+  if (source_type == "socrata") {
+    url <-
+      make_socrata_url(
+        data = data,
+        source_url = source_url,
+        select = select,
+        where = where,
+        query = query,
+        bbox = bbox,
+        name_col = name_col,
+        name = name,
+        coords = coords
+      )
+
+    # Download data from Socrata Open Data portal
+    data <- dplyr::as_tibble(RSocrata::read.socrata(url = url, app_token = token))
+  }
 
   if (clean_names) {
     data <-
       janitor::clean_names(data)
   }
 
-  if (geometry) {
-    data <- sfext::df_to_sf(x = data, coords = coords, crs = crs)
+  if (!geometry) {
+    return(data)
   }
 
-  data
+  sfext::df_to_sf(x = data, coords = coords, from_crs = from_crs, crs = crs)
 }
 
 #' @noRd
@@ -137,7 +138,7 @@ make_socrata_url <- function(data = NULL,
                              name_col = NULL,
                              name = NULL,
                              coords = c("longitude", "latitude")) {
-
+  # FIXME: Rewrite this to work with httr2
   # Make parameter calls
   if (!is.null(select)) {
     select <- paste0("$select=", select)
@@ -147,6 +148,7 @@ make_socrata_url <- function(data = NULL,
     if (!is.null(bbox)) {
       where <- paste0("$where=", paste0(c(where, sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)), collapse = " AND "))
     } else if (!is.null(name_col) && !is.null(name)) {
+      # FIXME: This probably fails with multiple names
       where <- paste0("$where=", paste0(c(where, glue::glue("{name_col} like '{name}'")), collapse = " AND "))
     } else {
       where <- paste0("$where=", where)
@@ -158,15 +160,21 @@ make_socrata_url <- function(data = NULL,
   }
 
   if (grepl("/dataset/", source_url) && is.null(data)) {
+    # If data is null but source_url is for a dataset
     url <- source_url
-  } else if (!grepl("/dataset/", source_url)) {
-    # Assemble url from data identifier, and select, where, and query parameters
+  } else if (!grepl("/dataset/", source_url) && !is_url(data)) {
+    # If data is an identifier and source_url is not a dataset
     source_url <- gsub("/$", "", source_url)
     url <- paste0(source_url, "/resource/", data, ".json")
+  } else if (is_url(data) && !grepl(".json$", data)) {
+    # If data is a url but does not a direct url for the json endpoint
+    data <- gsub("/$", "", data)
+    url <- paste0(data, ".json")
+  }
 
-    if (!any(sapply(c(select, where, query), is.null))) {
-      url <- paste0(url, "?", paste0(c(select, where, query), collapse = "&"))
-    }
+  # Append select, where, and query parameters to the url
+  if (!any(sapply(c(select, where, query), is.null))) {
+    url <- paste0(url, "?", paste0(c(select, where, query), collapse = "&"))
   }
 
   url
@@ -190,6 +198,7 @@ get_socrata_data <- function(data = NULL,
                              coords = c("longitude", "latitude"),
                              geometry = FALSE,
                              token = NULL,
+                             type = NULL,
                              from_crs = 4326,
                              crs = NULL,
                              clean_names = TRUE) {
