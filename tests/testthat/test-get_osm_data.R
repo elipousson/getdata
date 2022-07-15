@@ -25,11 +25,4 @@ test_that("get_osm_data works", {
     ),
     "sf"
   )
-  expect_s3_class(
-    get_osm_data(
-      location = location,
-      features = c("\"aeroway\"=\"aerodrome\"")
-    ),
-    "sf"
-  )
 })
