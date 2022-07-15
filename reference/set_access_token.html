@@ -51,9 +51,15 @@ package by Kyle Walker.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_access_token</span><span class="op">(</span><span class="va">token</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span>, install <span class="op">=</span> <span class="cn">FALSE</span>, type <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_access_token</span><span class="op">(</span></span>
+<span>  <span class="va">token</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  install <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  type <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  call <span class="op">=</span> <span class="fu">caller_env</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_access_token</span><span class="op">(</span>token <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">get_access_token</span><span class="op">(</span>token <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="cn">NULL</span>, call <span class="op">=</span> <span class="fu">caller_env</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -74,6 +80,11 @@ If token is not provided; type is required for <code>get_access_token()</code>.<
 
 <dt>type</dt>
 <dd><p>Name of token; defaults to <code>NULL</code>.</p></dd>
+
+
+<dt>call</dt>
+<dd><p>Passed as the call parameter for <a href="https://cli.r-lib.org/reference/cli_abort.html" class="external-link">cli::cli_abort</a> to improve
+error messages when function is used internally.</p></dd>
 
 </dl></div>
 
