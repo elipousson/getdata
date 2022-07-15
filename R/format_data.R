@@ -47,6 +47,7 @@ format_data <- function(x,
                         fix_date = FALSE,
                         label = FALSE,
                         format_sf = FALSE,
+                        xwalk = NULL,
                         ...) {
   x <- str_trim_squish(x)
 

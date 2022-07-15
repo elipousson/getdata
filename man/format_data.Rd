@@ -19,6 +19,7 @@ format_data(
   fix_date = FALSE,
   label = FALSE,
   format_sf = FALSE,
+  xwalk = NULL,
   ...
 )
 
@@ -62,11 +63,11 @@ FeatureServer and MapServer sources) , Default: \code{TRUE}}
 \item{label}{If \code{TRUE}, pass xwalk to \link{label_with_xwalk} to label columns
 using the original names. Defaults to \code{FALSE}.}
 
-\item{...}{Additional parameters passed to \link{format_sf_data}}
-
 \item{xwalk}{a data frame with two columns using the first column as name and
 the second column as value; or a named list. The existing names of x must
 be the values and the new names must be the names.}
+
+\item{...}{Additional parameters passed to \link{format_sf_data}}
 
 \item{city, county, state}{City, county, and state to bind to data frame or
 \code{sf} object.}
