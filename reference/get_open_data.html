@@ -77,6 +77,7 @@ Details on SoQL queries are found in the Socrata API documentation
 <span>  coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"longitude"</span>, <span class="st">"latitude"</span><span class="op">)</span>,</span>
 <span>  geometry <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  token <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  from_crs <span class="op">=</span> <span class="fl">4326</span>,</span>
 <span>  crs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  clean_names <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -107,9 +108,9 @@ Details on SoQL queries are found in the Socrata API documentation
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data</dt>
-<dd><p>A data set identifier (known as a resource for Socrata). If data
-is set to "list" and a valid source_url is provided, the function returns a
-list of all available resources.</p></dd>
+<dd><p>A data set identifier (known as a resource for Socrata) or a url
+for an individual dataset. If data is set to "list" and a valid source_url
+is provided, the function returns a list of all available resources. If data is a url, source_url must be null.</p></dd>
 
 
 <dt>source_url</dt>
@@ -137,10 +138,6 @@ to WHERE. <a href="https://dev.socrata.com/docs/queries/where.html" class="exter
 parameter. <a href="https://dev.socrata.com/docs/queries/query.html" class="external-link">https://dev.socrata.com/docs/queries/query.html</a></p></dd>
 
 
-<dt>location</dt>
-<dd><p>sf or bbox obkect</p></dd>
-
-
 <dt>dist</dt>
 <dd><p>buffer distance in units. Optional.</p></dd>
 
@@ -165,36 +162,35 @@ character (e.g. "1:3"). If numeric, <code><a href="https://elipousson.github.io/
 without modification.</p></dd>
 
 
-<dt>name_col</dt>
-<dd><p>name of column in Socrata data with
-location names (e.g. County)</p></dd>
-
-
-<dt>name</dt>
-<dd><p>location name to return</p></dd>
+<dt>name, name_col</dt>
+<dd><p>name of column in Socrata data resource with
+location names (e.g. County) and name of location to return.</p></dd>
 
 
 <dt>coords</dt>
-<dd><p>Name(s) of column with coordinate data, Default: c("longitude",
-"latitude")</p></dd>
+<dd><p>Coordinate columns for input dataframe or output sf object (if
+geometry is 'centroid' or 'point') Default: c("lon", "lat").</p></dd>
 
 
 <dt>geometry</dt>
-<dd><p>If <code>TRUE</code> and latitude/longitude columns available, return a
-<code><a href="https://r-spatial.github.io/sf/reference/sf.html" class="external-link">sf()</a></code> object. Default <code>FALSE</code>.</p></dd>
+<dd><p>If <code>TRUE</code> and coords are provided, return a
+<code>sf</code> object. Default <code>FALSE</code>.</p></dd>
 
 
-<dt>token</dt>
-<dd><p>Access token or API Key; required to access data from Socrata.</p></dd>
+<dt>token, type</dt>
+<dd><p>Access token or API Key and token type (name used to store
+token in .Renvironment). A token may be required to access data from
+Socrata and other open data portals but can be stored as an environment
+variable with <a href="set_access_token.html">set_access_token</a>.</p></dd>
 
 
 <dt>from_crs</dt>
-<dd><p>Coordinate reference system used to match the location CRS to
-the source data.</p></dd>
+<dd><p>For <a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">df_to_sf</a>, coordinate reference system used by
+coordinates or well known text in data frame.</p></dd>
 
 
 <dt>crs</dt>
-<dd><p>Coordinate reference system to return.</p></dd>
+<dd><p>Coordinate reference system of bounding box to return</p></dd>
 
 
 <dt>clean_names</dt>
