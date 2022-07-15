@@ -9,11 +9,13 @@
 #' @param install If `TRUE`, install token for use in future sessions; Default:
 #'   `FALSE`
 #' @param type Name of token; defaults to `NULL`.
+#' @param call Passed as the call parameter for [cli::cli_abort] to improve
+#'   error messages when function is used internally.
 #' @rdname set_access_token
 #' @export
 #'
 #' @importFrom utils read.table write.table
-set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = NULL) {
+set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = NULL, call = caller_env()) {
   check_required(token)
   check_character(token)
   check_character(type)
@@ -47,7 +49,8 @@ set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = N
           cli_abort(
             c("{.val {type}} already exists in your .Renviron.",
               "*" = "Set {.arg overwrite = TRUE} to replace this token."
-            )
+            ),
+            call = call
           )
         }
       }
@@ -80,7 +83,7 @@ set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = N
 #' @name get_access_token
 #' @rdname set_access_token
 #' @export
-get_access_token <- function(token = NULL, type = NULL) {
+get_access_token <- function(token = NULL, type = NULL, call = caller_env()) {
   if (!is.null(token)) {
     return(token)
   }
@@ -91,9 +94,9 @@ get_access_token <- function(token = NULL, type = NULL) {
 
   token <- Sys.getenv(type)
 
-  if (token != "") {
+  if (!is.null(token) && token != "") {
     return(token)
   }
 
-  cli_abort("{.val {type}} can't be found in your .Renviron.")
+  cli_abort("{.val {type}} can't be found in your .Renviron.", call = call)
 }

@@ -5,9 +5,15 @@
 \alias{get_access_token}
 \title{Set or get an access token or API key to/from environment variables.}
 \usage{
-set_access_token(token, overwrite = FALSE, install = FALSE, type = NULL)
+set_access_token(
+  token,
+  overwrite = FALSE,
+  install = FALSE,
+  type = NULL,
+  call = caller_env()
+)
 
-get_access_token(token = NULL, type = NULL)
+get_access_token(token = NULL, type = NULL, call = caller_env())
 }
 \arguments{
 \item{token}{An access token or API key; required for \code{\link[=set_access_token]{set_access_token()}}.
@@ -19,6 +25,9 @@ If token is not provided; type is required for \code{\link[=get_access_token]{ge
 \code{FALSE}}
 
 \item{type}{Name of token; defaults to \code{NULL}.}
+
+\item{call}{Passed as the call parameter for \link[cli:cli_abort]{cli::cli_abort} to improve
+error messages when function is used internally.}
 }
 \description{
 Based on the \link[mapboxapi:mb_access_token]{mapboxapi::mb_access_token} function from the {mapboxapi}
