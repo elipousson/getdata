@@ -45,11 +45,12 @@ get_esri_data <- function(location = NULL,
   is_pkg_installed(pkg = "esri2sf", repo = "yonghah/esri2sf")
 
   meta <- esri2sf::esrimeta(url)
+  table <- any(c(is.null(meta$geometryType), (meta$geometryType == "")))
 
   bbox <- NULL
 
   if (!is.null(where)) {
-    where <- paste0("(", where, ")")
+    where <- glue("({where})")
   }
 
   if (!is.null(location)) {
@@ -62,7 +63,7 @@ get_esri_data <- function(location = NULL,
       asp = asp
     )
 
-    if (!is.null(coords)) {
+    if (!is.null(coords) && table) {
       where <- c(
         where,
         sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)
@@ -73,18 +74,15 @@ get_esri_data <- function(location = NULL,
   if (!is.null(name_col)) {
     where <- c(
       where,
-      glue("{name_col} = '{name}'")
+      glue("({name_col} = '{name}')")
     )
   }
 
   if (!is.null(where)) {
     where <- paste(where[!is.na(where)], collapse = " AND ")
-  } else {
-    # FIXME: This is required for the current version of esri2sf but not the httr2 version
-    where <- "1=1"
   }
 
-  if (meta$type == "Table") {
+  if (table) {
     # Get Table (no geometry) with location name column
     data <- esri2sf::esri2df(
       url = url,
@@ -98,18 +96,20 @@ get_esri_data <- function(location = NULL,
       where = where,
       bbox = bbox,
       progress = progress,
+      crs = crs,
       ...
     )
   }
 
-  if (!is.null(coords) && is.data.frame(data)) {
+  if (!is.null(coords) && table) {
     # Convert Table to sf object if coordinate columns exist
-    data <- sfext::df_to_sf(data, coords = coords, from_crs = from_crs)
+    data <-
+      sfext::df_to_sf(data, coords = coords, from_crs = from_crs, crs = crs)
   }
 
   if (clean_names) {
     # TODO: Expand support for format_data parameters especially label_with_xwalk using alias from the esri layer metadata
-    data <- janitor::clean_names(data)
+    data <- format_data(data, clean_names = clean_names)
   }
 
   data

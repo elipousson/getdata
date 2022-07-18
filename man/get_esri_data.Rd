@@ -71,24 +71,31 @@ coordinates or well known text in data frame.}
 
 \item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names}; defaults to \code{TRUE}.}
 
-\item{progress}{Show progress bar with \code{\link[pbapply:pbapply]{pbapply::pblapply()}} if \code{TRUE}.
-Default FALSE.}
+\item{progress}{Show progress bar from \code{\link[cli:cli_progress_along]{cli::cli_progress_along()}} if \code{TRUE}.
+Default \code{FALSE}.}
 
 \item{...}{
   Arguments passed on to \code{\link[esri2sf:esri2sf]{esri2sf::esri2sf}}
   \describe{
     \item{\code{outFields}}{vector of fields you want to include. default is \code{NULL} for
 all fields.}
+    \item{\code{geometry}}{An \code{sf} or \code{bbox} object. Currently, \code{sf} objects with a single
+POINT feature are supported. All other \code{sf} objects are converted to \code{bbox}
+objects.}
     \item{\code{bbox}}{bbox class object from \code{\link[sf:st_bbox]{sf::st_bbox()}} or a simple feature object
 that can be converted to a bounding box.}
-    \item{\code{token}}{string for authentication token (if needed). defaults to \code{NULL}.}
+    \item{\code{token}}{string for authentication token. defaults to \code{NULL}.}
     \item{\code{geomType}}{string specifying the layer geometry ('esriGeometryPolygon'
 or 'esriGeometryPoint' or 'esriGeometryPolyline' - if \code{NULL}, will try to
 be inferred from the server)}
+    \item{\code{spatialRel}}{Spatial relationship applied to the input \code{geometry} when
+performing the query; defaults to \code{NULL} (equivalent to
+"esriSpatialRelIntersects"). Additional supported options include
+"esriSpatialRelContains", "esriSpatialRelCrosses",
+"esriSpatialRelEnvelopeIntersects", "esriSpatialRelIndexIntersects",
+"esriSpatialRelOverlaps", "esriSpatialRelTouches", "esriSpatialRelWithin"}
     \item{\code{replaceDomainInfo}}{If \code{TRUE}, add domain information to the return data frame.
 Default \code{FALSE}.}
-    \item{\code{geometry}}{An \code{sf} or \code{bbox} object. Only sf objects a single \code{POINT}
-feature are currently supported.}
   }}
 
 \item{layers}{Either a vector with URLs, a named list of urls, or a numeric

@@ -48,7 +48,7 @@ Suggests:
 Remotes: 
     koki25ando/FlickrAPI,
     elipousson/sfext,
-    yonghah/esri2sf
+    elipousson/esri2sf
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8
