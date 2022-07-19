@@ -393,6 +393,10 @@ get_osm_data_geometry <- function(data,
                                   crs = NULL,
                                   osmdata = FALSE,
                                   call = caller_env()) {
+  if (osmdata) {
+    return(osmdata::unique_osmdata(data))
+  }
+
   geometry <-
     arg_match(
       geometry,
@@ -405,10 +409,6 @@ get_osm_data_geometry <- function(data,
       ),
       error_call = call
     )
-
-  if (osmdata) {
-    return(osmdata::unique_osmdata(data))
-  }
 
   geometry <- paste0("osm_", geometry)
 
