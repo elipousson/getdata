@@ -20,7 +20,6 @@ get_airtable_data(
   locale = NULL,
   fields_by_id = FALSE,
   offset = NULL,
-  token = NULL,
   list = "records",
   geometry = TRUE,
   location = NULL,
@@ -35,7 +34,9 @@ get_airtable_data(
   address = getOption("getdata.address", "address"),
   geo = FALSE,
   clean_names = TRUE,
-  label = TRUE
+  label = TRUE,
+  token = NULL,
+  type = "AIRTABLE_API_KEY"
 )
 }
 \arguments{
@@ -68,8 +69,6 @@ get_airtable_data(
 \item{fields_by_id}{If TRUE, return fields by id, Default: FALSE}
 
 \item{offset}{Offset parameter, Default: NULL}
-
-\item{token}{API token, Default: NULL (same as get_access_token(type = "AIRTABLE_API_KEY"))}
 
 \item{list}{Data type to return, Default: 'records'}
 
@@ -120,6 +119,8 @@ provided.}
 
 \item{label}{label is optionally used by \link{map_location_data} to name the data
 objects in the list returned by the function.}
+
+\item{token, type}{API token and type, token defaults to NULL and type to  "AIRTABLE_API_KEY" (same as get_access_token(type = "AIRTABLE_API_KEY"))}
 }
 \description{
 Get Airtable data

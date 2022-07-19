@@ -44,6 +44,7 @@ get_socrata_data(
   coords = c("longitude", "latitude"),
   geometry = FALSE,
   token = NULL,
+  type = NULL,
   from_crs = 4326,
   crs = NULL,
   clean_names = TRUE
