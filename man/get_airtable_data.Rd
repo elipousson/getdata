@@ -2,17 +2,17 @@
 % Please edit documentation in R/get_airtable_data.R
 \name{get_airtable_data}
 \alias{get_airtable_data}
-\title{Get Airtable data}
+\title{Get data from an Airtable base and optionally convert to a sf object}
 \usage{
 get_airtable_data(
   base,
   table,
+  view = NULL,
   record = NULL,
   fields = NULL,
   filter = NULL,
   sort = NULL,
   desc = FALSE,
-  view = NULL,
   max_records = NULL,
   per_page = NULL,
   cell_format = "json",
@@ -21,7 +21,7 @@ get_airtable_data(
   fields_by_id = FALSE,
   offset = NULL,
   list = "records",
-  geometry = TRUE,
+  geometry = FALSE,
   location = NULL,
   dist = getOption("getdata.dist"),
   diag_ratio = getOption("getdata.diag_ratio"),
@@ -40,40 +40,42 @@ get_airtable_data(
 )
 }
 \arguments{
-\item{base}{Airtable base identifier}
+\item{base}{Airtable base identifier. Required.}
 
-\item{table}{Airtable table name or identifier}
+\item{table}{Airtable table name or identifier. Required.}
 
-\item{record}{Airtable record identifier, Default: NULL}
+\item{view}{Airtable view identifier, Default: \code{NULL}}
 
-\item{fields}{Fields to return from Airtable base, Default: NULL}
+\item{record}{Airtable record identifier, Default: \code{NULL}}
 
-\item{filter}{Filter (not currently supported), Default: NULL}
+\item{fields}{Fields to return from Airtable base, Default: \code{NULL}}
 
-\item{sort}{Field to sort by, Default: NULL}
+\item{filter}{Filter to apply to records, Note: This parameter is a
+placeholder and is not currently implemented. Default: \code{NULL}}
 
-\item{desc}{If TRUE, sort in descending order, Default: FALSE}
+\item{sort}{Field to sort by, Default: \code{NULL}}
 
-\item{view}{Airtable view name(?) or identifier, Default: NULL}
+\item{desc}{If \code{TRUE}, sort in descending order, Default: \code{FALSE}}
 
-\item{max_records}{Max records to return, Default: NULL}
+\item{max_records}{Maximum number of records to return, Default: \code{NULL}}
 
-\item{per_page}{Max records to return per page, Default: NULL}
+\item{per_page}{Max records to return per page, Default: \code{NULL}}
 
-\item{cell_format}{Cell format, Default: 'json'}
+\item{cell_format}{Cell format for "Link to another record" fields (either
+"json" (unique ID) or "string" (displayed character string)), Default:
+'json'}
 
-\item{tz}{Time zone, Default: NULL}
+\item{tz, locale}{Time zone and locale, Defaults: \code{NULL}}
 
-\item{locale}{Locale, Default: NULL}
+\item{fields_by_id}{If \code{TRUE}, return fields by id, Default: \code{FALSE}}
 
-\item{fields_by_id}{If TRUE, return fields by id, Default: FALSE}
+\item{offset}{Offset parameter, Default: \code{NULL}}
 
-\item{offset}{Offset parameter, Default: NULL}
+\item{list}{Data type to return, Default: 'records'. Set list to "resp" to
+return the API response without any additional formatting or conversion.}
 
-\item{list}{Data type to return, Default: 'records'}
-
-\item{geometry}{Type of geometry to include in data frame. options include
-"drop", "wkt", "centroid", "point", Default: 'centroid'.}
+\item{geometry}{If \code{TRUE}, convert data into a simple feature object.
+Defaults to \code{FALSE}.}
 
 \item{location}{sf object. If multiple areas are provided, they are unioned
 into a single sf object using \link[sf:geos_combine]{sf::st_union}}
@@ -120,8 +122,19 @@ provided.}
 \item{label}{label is optionally used by \link{map_location_data} to name the data
 objects in the list returned by the function.}
 
-\item{token, type}{API token and type, token defaults to NULL and type to  "AIRTABLE_API_KEY" (same as get_access_token(type = "AIRTABLE_API_KEY"))}
+\item{token, type}{API token and type, token defaults to \code{NULL} and type to
+\code{"AIRTABLE_API_KEY"} (same as \code{get_access_token(type = "AIRTABLE_API_KEY")})}
 }
 \description{
-Get Airtable data
+Get data from an Airtable base using the Airtable API and the httr2 package.
+If the base includes coordinate fields/columns, optionally convert the data
+to a simple feature object using \link[sfext:sf_to_df]{sfext::df_to_sf} if \code{geometry = TRUE}.
+}
+\details{
+This function requires an Airtable API key which you can set using
+\verb{set_access_token(token = <YOUR_API_KEY>, type = "AIRTABLE_API_KEY")}
+
+Learn more about the Airtable API
+\url{https://support.airtable.com/hc/en-us/articles/203313985-Public-REST-API} or
+access the API for your Airtable base \url{https://airtable.com/api}
 }

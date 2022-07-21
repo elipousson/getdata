@@ -1,22 +1,40 @@
-#' Get Airtable data
+#' Get data from an Airtable base and optionally convert to a sf object
 #'
-#' @param base Airtable base identifier
-#' @param table Airtable table name or identifier
-#' @param record Airtable record identifier, Default: NULL
-#' @param fields Fields to return from Airtable base, Default: NULL
-#' @param filter Filter (not currently supported), Default: NULL
-#' @param sort Field to sort by, Default: NULL
-#' @param desc If TRUE, sort in descending order, Default: FALSE
-#' @param view Airtable view name(?) or identifier, Default: NULL
-#' @param max_records Max records to return, Default: NULL
-#' @param per_page Max records to return per page, Default: NULL
-#' @param cell_format Cell format, Default: 'json'
-#' @param tz Time zone, Default: NULL
-#' @param locale Locale, Default: NULL
-#' @param fields_by_id If TRUE, return fields by id, Default: FALSE
-#' @param offset Offset parameter, Default: NULL
-#' @param token,type API token and type, token defaults to NULL and type to  "AIRTABLE_API_KEY" (same as get_access_token(type = "AIRTABLE_API_KEY"))
-#' @param list Data type to return, Default: 'records'
+#' Get data from an Airtable base using the Airtable API and the httr2 package.
+#' If the base includes coordinate fields/columns, optionally convert the data
+#' to a simple feature object using [sfext::df_to_sf] if `geometry = TRUE`.
+#'
+#' This function requires an Airtable API key which you can set using
+#' `set_access_token(token = <YOUR_API_KEY>, type = "AIRTABLE_API_KEY")`
+#'
+#' Learn more about the Airtable API
+#' <https://support.airtable.com/hc/en-us/articles/203313985-Public-REST-API> or
+#' access the API for your Airtable base <https://airtable.com/api>
+#'
+#' @param base Airtable base identifier. Required.
+#' @param table Airtable table name or identifier. Required.
+#' @param view Airtable view identifier, Default: `NULL`
+#' @param record Airtable record identifier, Default: `NULL`
+#' @param fields Fields to return from Airtable base, Default: `NULL`
+#' @param filter Filter to apply to records, Note: This parameter is a
+#'   placeholder and is not currently implemented. Default: `NULL`
+#' @param sort Field to sort by, Default: `NULL`
+#' @param desc If `TRUE`, sort in descending order, Default: `FALSE`
+#' @param max_records Maximum number of records to return, Default: `NULL`
+#' @param per_page Max records to return per page, Default: `NULL`
+#' @param cell_format Cell format for "Link to another record" fields (either
+#'   "json" (unique ID) or "string" (displayed character string)), Default:
+#'   'json'
+#' @param tz,locale Time zone and locale, Defaults: `NULL`
+#' @param fields_by_id If `TRUE`, return fields by id, Default: `FALSE`
+#' @param offset Offset parameter, Default: `NULL`
+#' @param token,type API token and type, token defaults to `NULL` and type to
+#'   `"AIRTABLE_API_KEY"` (same as `get_access_token(type =
+#'   "AIRTABLE_API_KEY")`)
+#' @param geometry If `TRUE`, convert data into a simple feature object.
+#'   Defaults to `FALSE`.
+#' @param list Data type to return, Default: 'records'. Set list to "resp" to
+#'   return the API response without any additional formatting or conversion.
 #' @inheritParams sfext::df_to_sf
 #' @inheritParams get_location_data
 #' @inheritParams format_data
@@ -26,13 +44,13 @@
 #' @importFrom sfext df_to_sf
 get_airtable_data <- function(base,
                               table,
+                              view = NULL,
                               record = NULL,
                               fields = NULL,
                               # filterByFormula = NULL, # SQL style query
                               filter = NULL,
                               sort = NULL,
                               desc = FALSE,
-                              view = NULL,
                               max_records = NULL, # integer
                               per_page = NULL,
                               cell_format = "json",
@@ -41,7 +59,7 @@ get_airtable_data <- function(base,
                               fields_by_id = FALSE,
                               offset = NULL,
                               list = "records",
-                              geometry = TRUE,
+                              geometry = FALSE,
                               location = NULL,
                               dist = getOption("getdata.dist"),
                               diag_ratio = getOption("getdata.diag_ratio"),
