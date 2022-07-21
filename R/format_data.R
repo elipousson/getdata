@@ -243,15 +243,15 @@ bind_block_col <- function(x,
                            street_name = "street_name",
                            street_suffix = "street_type") {
   stopifnot(
-    has_name(x, c(bldg_num, street_dir_prefix, street, street_suffix))
+    has_name(x, c(bldg_num, street_dir_prefix, street_name, street_suffix))
   )
 
   dplyr::mutate(
     x,
     block_num = floor({{ bldg_num }} / 100) * 100,
     bldg_num_even_odd = dplyr::if_else(({{ bldg_num }} %% 2) == 0, "Even", "Odd"),
-    block_num_st = paste(block_num, {{ street_dir_prefix }}, {{ street }}, {{ street_suffix }}),
-    block_face_st = paste(bldg_num_even_odd, {{ street_dir_prefix }}, {{ street }}, {{ street_suffix }})
+    block_num_st = paste(block_num, {{ street_dir_prefix }}, {{ street_name }}, {{ street_suffix }}),
+    block_face_st = paste(bldg_num_even_odd, {{ street_dir_prefix }}, {{ street_name }}, {{ street_suffix }})
   )
 }
 
