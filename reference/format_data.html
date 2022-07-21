@@ -92,12 +92,13 @@ defaults to <code>NULL</code>.</p></dd>
 
 
 <dt>clean_names</dt>
-<dd><p>If <code>TRUE</code>, pass data frame to <a href="https://rdrr.io/pkg/janitor/man/clean_names.html" class="external-link">janitor::clean_names</a>; defaults to <code>TRUE</code>.</p></dd>
+<dd><p>If <code>TRUE</code>, pass data frame to <a href="https://rdrr.io/pkg/janitor/man/clean_names.html" class="external-link">janitor::clean_names</a>;
+defaults to <code>TRUE</code>.</p></dd>
 
 
 <dt>replace_na_with</dt>
-<dd><p>A named list to pass to <a href="https://tidyr.tidyverse.org/reference/replace_na.html" class="external-link">tidyr::replace_na</a>; defaults to
-<code>NULL</code>.</p></dd>
+<dd><p>A named list to pass to <a href="https://tidyr.tidyverse.org/reference/replace_na.html" class="external-link">tidyr::replace_na</a>; defaults
+to <code>NULL</code>.</p></dd>
 
 
 <dt>replace_with_na</dt>
@@ -118,6 +119,11 @@ FeatureServer and MapServer sources) , Default: <code>TRUE</code></p></dd>
 <dt>label</dt>
 <dd><p>If <code>TRUE</code>, pass xwalk to label_with_xwalk to label columns
 using the original names. Defaults to <code>FALSE</code>.</p></dd>
+
+
+<dt>format_sf</dt>
+<dd><p>If <code>TRUE</code>, pass x and additional parameters to
+<a href="format_sf_data.html">format_sf_data</a>.</p></dd>
 
 
 <dt>xwalk</dt>
@@ -144,7 +150,8 @@ use for address information required to generate a block name and number.</p></d
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>The input data frame or simple feature object with formatting functions applied.</p>
+<p>The input data frame or simple feature object with formatting
+functions applied.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

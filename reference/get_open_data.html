@@ -125,18 +125,23 @@ the only supported option.</p></dd>
 
 
 <dt>select</dt>
-<dd><p>SODA $select parameter. Set of columns to be returned, similar
+<dd><p>SODA $select parameter. Set of columns to be returned, equivalent
 to a SELECT in SQL. <a href="https://dev.socrata.com/docs/queries/select.html" class="external-link">https://dev.socrata.com/docs/queries/select.html</a></p></dd>
 
 
 <dt>where</dt>
-<dd><p>SODA $where parameter. Filters the rows to be returned, similar
-to WHERE. <a href="https://dev.socrata.com/docs/queries/where.html" class="external-link">https://dev.socrata.com/docs/queries/where.html</a></p></dd>
+<dd><p>SODA $where parameter. Filters the rows to be returned, equivalent
+to WHERE in SQL. <a href="https://dev.socrata.com/docs/queries/where.html" class="external-link">https://dev.socrata.com/docs/queries/where.html</a></p></dd>
 
 
 <dt>query</dt>
 <dd><p>SODA $query parameter. A full SoQL query string, all as one
 parameter. <a href="https://dev.socrata.com/docs/queries/query.html" class="external-link">https://dev.socrata.com/docs/queries/query.html</a></p></dd>
+
+
+<dt>location</dt>
+<dd><p>sf object. If multiple areas are provided, they are unioned
+into a single sf object using <a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">sf::st_union</a></p></dd>
 
 
 <dt>dist</dt>
@@ -164,7 +169,7 @@ without modification.</p></dd>
 
 
 <dt>name, name_col</dt>
-<dd><p>name of column in Socrata data resource with
+<dd><p>Name of column in Socrata data resource with
 location names (e.g. County) and name of location to return.</p></dd>
 
 
@@ -186,8 +191,8 @@ variable with <a href="set_access_token.html">set_access_token</a>.</p></dd>
 
 
 <dt>from_crs</dt>
-<dd><p>For <a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">df_to_sf</a>, coordinate reference system used by
-coordinates or well known text in data frame.</p></dd>
+<dd><p>Coordinate reference system used to match the location CRS to
+the source data.</p></dd>
 
 
 <dt>crs</dt>
@@ -195,7 +200,9 @@ coordinates or well known text in data frame.</p></dd>
 
 
 <dt>clean_names</dt>
-<dd><p>If <code>TRUE</code>, pass data frame to <a href="https://rdrr.io/pkg/janitor/man/clean_names.html" class="external-link">janitor::clean_names</a>; defaults to <code>TRUE</code>.</p></dd>
+<dd><p>If <code>TRUE</code>, clean names provided to nm or created based on
+value of col using <a href="https://rdrr.io/pkg/janitor/man/clean_names.html" class="external-link">janitor::clean_names</a>. If <code>FALSE</code>, use names as
+provided.</p></dd>
 
 </dl></div>
 
