@@ -61,14 +61,17 @@ for the open data portal.}
 \item{source_type}{Data source type; defaults to "socrata" which is currently
 the only supported option.}
 
-\item{select}{SODA $select parameter. Set of columns to be returned, similar
+\item{select}{SODA $select parameter. Set of columns to be returned, equivalent
 to a SELECT in SQL. \url{https://dev.socrata.com/docs/queries/select.html}}
 
-\item{where}{SODA $where parameter. Filters the rows to be returned, similar
-to WHERE. \url{https://dev.socrata.com/docs/queries/where.html}}
+\item{where}{SODA $where parameter. Filters the rows to be returned, equivalent
+to WHERE in SQL. \url{https://dev.socrata.com/docs/queries/where.html}}
 
 \item{query}{SODA $query parameter. A full SoQL query string, all as one
 parameter. \url{https://dev.socrata.com/docs/queries/query.html}}
+
+\item{location}{sf object. If multiple areas are provided, they are unioned
+into a single sf object using \link[sf:geos_combine]{sf::st_union}}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -86,7 +89,7 @@ to units matching GDAL units for x; defaults to "meter"}
 character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} returns the same value
 without modification.}
 
-\item{name, name_col}{name of column in Socrata data resource with
+\item{name, name_col}{Name of column in Socrata data resource with
 location names (e.g. County) and name of location to return.}
 
 \item{coords}{Coordinate columns for input dataframe or output sf object (if
@@ -100,12 +103,14 @@ token in .Renvironment). A token may be required to access data from
 Socrata and other open data portals but can be stored as an environment
 variable with \link{set_access_token}.}
 
-\item{from_crs}{For \link[sfext]{df_to_sf}, coordinate reference system used by
-coordinates or well known text in data frame.}
+\item{from_crs}{Coordinate reference system used to match the location CRS to
+the source data.}
 
 \item{crs}{Coordinate reference system of bounding box to return}
 
-\item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names}; defaults to \code{TRUE}.}
+\item{clean_names}{If \code{TRUE}, clean names provided to nm or created based on
+value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as
+provided.}
 }
 \description{
 get_socrata_data is get_open_data with source_type set to "socrata" (the only

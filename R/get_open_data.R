@@ -14,12 +14,12 @@
 #' @param source_type Data source type; defaults to "socrata" which is currently
 #'   the only supported option.
 #' @inheritParams sfext::st_bbox_ext
-#' @param name,name_col name of column in Socrata data resource with
+#' @param name,name_col Name of column in Socrata data resource with
 #'   location names (e.g. County) and name of location to return.
-#' @param select SODA $select parameter. Set of columns to be returned, similar
+#' @param select SODA $select parameter. Set of columns to be returned, equivalent
 #'   to a SELECT in SQL. <https://dev.socrata.com/docs/queries/select.html>
-#' @param where SODA $where parameter. Filters the rows to be returned, similar
-#'   to WHERE. <https://dev.socrata.com/docs/queries/where.html>
+#' @param where SODA $where parameter. Filters the rows to be returned, equivalent
+#'   to WHERE in SQL. <https://dev.socrata.com/docs/queries/where.html>
 #' @param query SODA $query parameter. A full SoQL query string, all as one
 #'   parameter. <https://dev.socrata.com/docs/queries/query.html>
 #' @param geometry If `TRUE` and coords are provided, return a
@@ -28,6 +28,7 @@
 #'   token in .Renvironment). A token may be required to access data from
 #'   Socrata and other open data portals but can be stored as an environment
 #'   variable with [set_access_token].
+#' @inheritParams get_location_data
 #' @inheritParams sfext::df_to_sf
 #' @inheritParams format_data
 #' @example examples/get_open_data.R

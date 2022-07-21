@@ -30,6 +30,7 @@
 #'   *not* used when type is set to blocks, roads, primary secondary roads, area
 #'   water, linear water, landmarks, or zctas.
 #' @inheritParams format_sf_data
+#' @inheritParams format_data
 #' @param ... Additional parameters passed on to {tigris} functions.
 #' @return A simple feature object matching the type provided.
 #' @rdname get_state_tigris

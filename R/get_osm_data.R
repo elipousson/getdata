@@ -387,7 +387,6 @@ get_osm_data_enclosing <- function(location,
 #' @noRd
 #' @importFrom purrr pluck
 #' @importFrom sf st_transform
-#' @importFrom janitor clean_names
 get_osm_data_geometry <- function(data,
                                   geometry = NULL,
                                   crs = NULL,

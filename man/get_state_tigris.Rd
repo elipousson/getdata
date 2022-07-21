@@ -33,6 +33,9 @@ file. If \code{FALSE}, download the most detailed TIGER/Line file. Defaults to
 \emph{not} used when type is set to blocks, roads, primary secondary roads, area
 water, linear water, landmarks, or zctas.}
 
+\item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names};
+defaults to \code{TRUE}.}
+
 \item{...}{Additional parameters passed on to {tigris} functions.}
 }
 \value{

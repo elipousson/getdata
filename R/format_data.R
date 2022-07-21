@@ -9,20 +9,25 @@
 #' - Optionally renames variables by passing a named list of variables
 #'
 #' @param x A tibble or data frame object
-#' @param var_names A named list following the format, `list("New var name" = old_var_name)`, or a two column data frame with the first column being the
+#' @param var_names A named list following the format, `list("New var name" =
+#'   old_var_name)`, or a two column data frame with the first column being the
 #'   new variable names and the second column being the old variable names;
 #'   defaults to `NULL`.
-#' @param clean_names If `TRUE`, pass data frame to [janitor::clean_names]; defaults to `TRUE`.
-#' @param replace_na_with A named list to pass to [tidyr::replace_na]; defaults to
-#'   `NULL`.
+#' @param clean_names If `TRUE`, pass data frame to [janitor::clean_names];
+#'   defaults to `TRUE`.
+#' @param replace_na_with A named list to pass to [tidyr::replace_na]; defaults
+#'   to `NULL`.
 #' @param replace_with_na A named list to pass to [naniar::replace_with_na];
 #'   defaults to `NULL`.
 #' @param replace_empty_char_with_na If `TRUE`, replace "" with `NA` using
 #'   [naniar::replace_with_na_if], Default: `TRUE`
+#' @param format_sf If `TRUE`, pass x and additional parameters to
+#'   [format_sf_data].
 #' @param fix_date If `TRUE`, fix UNIX dates (common issue with dates from
 #'   FeatureServer and MapServer sources) , Default: `TRUE`
 #' @param ... Additional parameters passed to [format_sf_data]
-#' @return The input data frame or simple feature object with formatting functions applied.
+#' @return The input data frame or simple feature object with formatting
+#'   functions applied.
 #'
 #' @details Bind columns to address data:
 #'

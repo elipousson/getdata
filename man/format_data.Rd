@@ -46,10 +46,11 @@ bind_block_col(
 new variable names and the second column being the old variable names;
 defaults to \code{NULL}.}
 
-\item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names}; defaults to \code{TRUE}.}
+\item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names};
+defaults to \code{TRUE}.}
 
-\item{replace_na_with}{A named list to pass to \link[tidyr:replace_na]{tidyr::replace_na}; defaults to
-\code{NULL}.}
+\item{replace_na_with}{A named list to pass to \link[tidyr:replace_na]{tidyr::replace_na}; defaults
+to \code{NULL}.}
 
 \item{replace_with_na}{A named list to pass to \link[naniar:replace_with_na]{naniar::replace_with_na};
 defaults to \code{NULL}.}
@@ -62,6 +63,9 @@ FeatureServer and MapServer sources) , Default: \code{TRUE}}
 
 \item{label}{If \code{TRUE}, pass xwalk to \link{label_with_xwalk} to label columns
 using the original names. Defaults to \code{FALSE}.}
+
+\item{format_sf}{If \code{TRUE}, pass x and additional parameters to
+\link{format_sf_data}.}
 
 \item{xwalk}{a data frame with two columns using the first column as name and
 the second column as value; or a named list. The existing names of x must
@@ -76,7 +80,8 @@ be the values and the new names must be the names.}
 use for address information required to generate a block name and number.}
 }
 \value{
-The input data frame or simple feature object with formatting functions applied.
+The input data frame or simple feature object with formatting
+functions applied.
 }
 \description{
 This function can apply the following common data cleaning tasks:

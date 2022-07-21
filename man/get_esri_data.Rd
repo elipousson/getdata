@@ -69,7 +69,8 @@ geometry is 'centroid' or 'point') Default: c("lon", "lat").}
 \item{from_crs}{For \link[sfext]{df_to_sf}, coordinate reference system used by
 coordinates or well known text in data frame.}
 
-\item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names}; defaults to \code{TRUE}.}
+\item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names};
+defaults to \code{TRUE}.}
 
 \item{progress}{Show progress bar from \code{\link[cli:cli_progress_along]{cli::cli_progress_along()}} if \code{TRUE}.
 Default \code{FALSE}.}
