@@ -7,7 +7,6 @@ test_that("get_wiki_data works", {
       fn = ~ suppressWarnings(sf::st_centroid(.x))
     )
 
-  skip_if_offline()
   expect_s3_class(
     get_wiki_data(
       location = location,

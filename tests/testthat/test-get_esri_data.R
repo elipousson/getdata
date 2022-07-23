@@ -6,7 +6,6 @@ test_that("get_esri_data works", {
   test_url <-
     "https://carto.nationalmap.gov/arcgis/rest/services/govunits/MapServer/29"
 
-  skip_if_offline()
   expect_s3_class(
     get_esri_data(
       location = location,

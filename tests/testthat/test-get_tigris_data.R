@@ -1,5 +1,4 @@
 test_that("get_tigris_data works", {
-  skip_if_offline()
   expect_s3_class(
     get_tigris_data(type = "counties", state = "RI"),
     "sf"
