@@ -2,15 +2,17 @@
 % Please edit documentation in R/get_tigris_data.R
 \name{get_tigris_data}
 \alias{get_tigris_data}
-\title{Use {tigris} to get state-level data from the U.S. Census Bureau}
+\title{Use tigris to get state-level data from the U.S. Census Bureau}
 \usage{
 get_tigris_data(
   type = NULL,
   state = getOption("getdata.state"),
   name = NULL,
+  name_col = c("name", "namelsad", "geoid"),
   crs = getOption("getdata.crs", default = 3857),
   cb = TRUE,
   clean_names = TRUE,
+  cache = TRUE,
   ...
 )
 }
@@ -21,29 +23,35 @@ supported options.}
 \item{state}{State name, abbreviation, or GeoID. Required. Defaults to
 getOption("getdata.state").}
 
-\item{name}{Name matching a value in the namelsad, namelsad, or geoid
-columns. Default: \code{NULL}}
+\item{name, name_col}{Name and columns to filter by name. name defaults to
+\code{NULL}, and name_col defaults to c("namelsad", "namelsad", "geoid")
+columns.}
 
 \item{crs}{Coordinate reference system for returned data, Default: getOption("getdata.crs", default =
 3857)}
 
-\item{cb}{If cb is set to \code{TRUE}, download a generalized (1:500k) tracts
-file. If \code{FALSE}, download the most detailed TIGER/Line file. Defaults to
-\code{TRUE} (reverse of the default for \link{tigris} functions). This parameter is
-\emph{not} used when type is set to blocks, roads, primary secondary roads, area
-water, linear water, landmarks, or zctas.}
+\item{cb}{If \code{TRUE}, download a generalized (1:500k) file. If \code{FALSE},
+download the most detailed TIGER/Line file. Defaults to \code{TRUE} (reverse of
+the default for tigris functions). This parameter is \emph{not} used when type
+is set to blocks, roads, primary secondary roads, area water, linear water,
+landmarks, or zctas.}
 
 \item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names};
 defaults to \code{TRUE}.}
 
-\item{...}{Additional parameters passed on to {tigris} functions.}
+\item{cache}{If \code{TRUE}, set \code{options(tigris_use_cache = TRUE)} to cache
+downloaded tigris data. Ignored if \code{getOption("tigris_use_cache")} is not
+\code{NULL}.}
+
+\item{...}{Additional parameters passed on to tigris functions.}
 }
 \value{
 A simple feature object matching the type provided.
 }
 \description{
-Use the tigris package to download state-level data from the U.S. Census
-Bureau API and filter by name or GeoID.
+Use the \href{https://github.com/walkerke/tigris}{{tigris}} package to download
+state-level data from the U.S. Census Bureau API and optionally filter by
+name or GeoID.
 }
 \details{
 Supported data types:
