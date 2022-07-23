@@ -304,7 +304,7 @@ get_index_param <- function(index = NULL,
   # objects)
   if (!is.null(location)) {
     if ((is.character(data) || is.numeric(data))) {
-      if ("location" %in% names(index)) {
+      if (has_name(index, "location")) {
         location <- index$location[[location]]
       } else {
         location <- index[[location]]
@@ -316,7 +316,7 @@ get_index_param <- function(index = NULL,
   # Return data from index list if provided (may include character (e.g. url, file path, data name if in package), bbox, sfc, or sf objects)
   if (!is.null(data)) {
     if ((is.character(data) || is.numeric(data))) {
-      if ("data" %in% names(index)) {
+      if (has_name(index, "data")) {
         data <- index$data[[data]]
       } else {
         data <- index[[data]]
@@ -325,7 +325,7 @@ get_index_param <- function(index = NULL,
     return(data)
   }
 
-  if (!is.null(index$type)) {
+  if (has_name(index, "type")) {
     type <- unique(index$type)
     return(type)
   } else if (!is.null(type) && (is.character(type) || is.numeric(type))) {

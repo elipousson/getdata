@@ -153,7 +153,8 @@ req_wiki_query <- function(lang = NULL,
       gspage = gspage
     )
 
-  primary <- match.arg(primary, c("primary", "all", "secondary"))
+  primary <- primary %||% "primary"
+  primary <- arg_match(primary, c("primary", "all", "secondary"))
 
   req <-
     httr2::req_url_query(
@@ -163,7 +164,11 @@ req_wiki_query <- function(lang = NULL,
 
   if (!is.null(details)) {
     details <-
-      match.arg(details, c("name", "type", "dim", "scale", "region", "country", "globe"), several.ok = TRUE)
+      arg_match(
+        details,
+        c("name", "type", "dim", "scale", "region", "country", "globe"),
+        multiple = TRUE
+        )
 
     req <-
       httr2::req_url_query(
@@ -203,16 +208,16 @@ resp_wiki_query <- function(req,
   resp <-
     httr2::resp_body_json(
       resp = resp,
-      simplifyVector = TRUE
+      simplifyVector = simplifyVector
     )
 
-  if ("error" %in% names(resp)) {
+  if (has_name(resp, "error")) {
     cli_abort(
       'Wikipedia {.arg {list}} query can\'t be completed due to an error: {resp[["error"]][["info"]]}.'
     )
   }
 
-  list <- match.arg(list, c("resp", "geosearch"))
+  list <- arg_match(list, c("resp", "geosearch"))
 
   switch(list,
     "resp" = resp,
