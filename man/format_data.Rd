@@ -4,7 +4,7 @@
 \alias{format_data}
 \alias{rename_with_xwalk}
 \alias{label_with_xwalk}
-\alias{fix_date}
+\alias{fix_epoch_date}
 \alias{bind_address_col}
 \alias{bind_block_col}
 \title{Format data frames and simple features using common approaches}
@@ -27,7 +27,7 @@ rename_with_xwalk(x, xwalk = NULL, label = FALSE)
 
 label_with_xwalk(x, xwalk)
 
-fix_date(x)
+fix_epoch_date(x)
 
 bind_address_col(x, city = NULL, county = NULL, state = NULL)
 
@@ -58,8 +58,9 @@ defaults to \code{NULL}.}
 \item{replace_empty_char_with_na}{If \code{TRUE}, replace "" with \code{NA} using
 \link[naniar:replace_with_na_if]{naniar::replace_with_na_if}, Default: \code{TRUE}}
 
-\item{fix_date}{If \code{TRUE}, fix UNIX dates (common issue with dates from
-FeatureServer and MapServer sources) , Default: \code{TRUE}}
+\item{fix_date}{If \code{FALSE}, fix UNIX epoch dates (common issue with dates from
+FeatureServer and MapServer sources) using the \link{fix_epoch_date} function,
+Default: \code{TRUE}}
 
 \item{label}{If \code{TRUE}, pass xwalk to \link{label_with_xwalk} to label columns
 using the original names. Defaults to \code{FALSE}.}

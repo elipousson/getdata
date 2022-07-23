@@ -23,8 +23,9 @@
 #'   [naniar::replace_with_na_if], Default: `TRUE`
 #' @param format_sf If `TRUE`, pass x and additional parameters to
 #'   [format_sf_data].
-#' @param fix_date If `TRUE`, fix UNIX dates (common issue with dates from
-#'   FeatureServer and MapServer sources) , Default: `TRUE`
+#' @param fix_date If `FALSE`, fix UNIX epoch dates (common issue with dates from
+#'   FeatureServer and MapServer sources) using the [fix_epoch_date] function,
+#'   Default: `TRUE`
 #' @param ... Additional parameters passed to [format_sf_data]
 #' @return The input data frame or simple feature object with formatting
 #'   functions applied.
@@ -94,7 +95,7 @@ format_data <- function(x,
   }
 
   if (fix_date) {
-    x <- fix_date(x)
+    x <- fix_epoch_date(x)
   }
 
   if (sfext::is_sf(x) && format_sf) {
@@ -165,7 +166,7 @@ rename_with_xwalk <- function(x, xwalk = NULL, label = FALSE) {
   label_with_xwalk(x, xwalk = xwalk)
 }
 
-#' @name rename_with_xwalk
+#' @name label_with_xwalk
 #' @rdname format_data
 label_with_xwalk <- function(x, xwalk) {
   is_pkg_installed("labelled")
@@ -174,13 +175,14 @@ label_with_xwalk <- function(x, xwalk) {
   labelled::set_variable_labels(x, .labels = make_xwalk_list(xwalk))
 }
 
-#' @name format_data
+#' @name fix_epoch_date
 #' @rdname format_data
 #' @export
 #' @importFrom dplyr mutate across contains
-fix_date <- function(x) {
-  # FIXME: This needs better documentation and some kind of check to make sure the date is in the correct format
-  # Alternatively, considering renaming so the focused scope for this function is clear
+fix_epoch_date <- function(x) {
+  # FIXME: This needs better documentation and some kind of check to make sure
+  # the date is in the correct format Alternatively, considering renaming so the
+  # focused scope for this function is clear
   dplyr::mutate(
     x,
     dplyr::across(
