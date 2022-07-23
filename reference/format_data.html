@@ -66,7 +66,7 @@
 <span></span>
 <span><span class="fu">label_with_xwalk</span><span class="op">(</span><span class="va">x</span>, <span class="va">xwalk</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">fix_date</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu">fix_epoch_date</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">bind_address_col</span><span class="op">(</span><span class="va">x</span>, city <span class="op">=</span> <span class="cn">NULL</span>, county <span class="op">=</span> <span class="cn">NULL</span>, state <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
@@ -112,8 +112,9 @@ defaults to <code>NULL</code>.</p></dd>
 
 
 <dt>fix_date</dt>
-<dd><p>If <code>TRUE</code>, fix UNIX dates (common issue with dates from
-FeatureServer and MapServer sources) , Default: <code>TRUE</code></p></dd>
+<dd><p>If <code>FALSE</code>, fix UNIX epoch dates (common issue with dates from
+FeatureServer and MapServer sources) using the fix_epoch_date function,
+Default: <code>TRUE</code></p></dd>
 
 
 <dt>label</dt>
