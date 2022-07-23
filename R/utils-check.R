@@ -19,7 +19,7 @@ check_null <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, null.req 
 }
 
 check_character <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = NULL, call = caller_env(), ...) {
-  check_null(x, arg, null.ok, FALSE, call)
+  check_null(x, arg, null.ok, call = call)
 
   if (is_character(x, n = n)) {
     invisible(return(TRUE))
@@ -35,7 +35,7 @@ check_character <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = 
 }
 
 check_logical <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = NULL, call = caller_env(), ...) {
-  check_null(x, arg, null.ok, FALSE, call)
+  check_null(x, arg, null.ok, call = call)
 
   if (is_logical(x, n = n)) {
     invisible(return(TRUE))
@@ -51,7 +51,7 @@ check_logical <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = NU
 }
 
 check_len <- function(x = NULL, len = 1, arg = caller_arg(x), null.ok = FALSE, call = caller_env(), ...) {
-  check_null(x, arg, null.ok, FALSE, call)
+  check_null(x, arg, null.ok, call = call)
 
   if ((length(x) >= min(len)) && (length(x) <= max(len))) {
     invisible(return(TRUE))
@@ -73,7 +73,7 @@ check_len <- function(x = NULL, len = 1, arg = caller_arg(x), null.ok = FALSE, c
 }
 
 check_grepl <- function(x = NULL, pattern = NULL, arg = caller_arg(x), null.ok = FALSE, ignore.case = FALSE, perl = FALSE, message = NULL, ...) {
-  check_null(x, arg, null.ok, FALSE, call)
+  check_null(x, arg, null.ok, call = call)
 
   if (grepl(pattern, x, ignore.case = ignore.case, perl = perl)) {
     invisible(return(TRUE))
