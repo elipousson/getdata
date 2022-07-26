@@ -108,7 +108,6 @@ get_tigris_data <- function(type = NULL,
 #'
 #' @noRd
 lookup_tigris_name <- function(name, name_col = c("name", "namelsad", "geoid"), data = NULL) {
-
   lookup <- FALSE
   name <- tolower(name)
   name_col <- name_col[name_col %in% names(data)]

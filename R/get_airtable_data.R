@@ -74,7 +74,7 @@ get_airtable_data <- function(base,
                               clean_names = TRUE,
                               label = TRUE,
                               token = NULL,
-                              type =  "AIRTABLE_API_KEY") {
+                              type = "AIRTABLE_API_KEY") {
   req <-
     req_airtable(
       base = base,

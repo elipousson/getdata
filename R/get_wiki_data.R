@@ -168,7 +168,7 @@ req_wiki_query <- function(lang = NULL,
         details,
         c("name", "type", "dim", "scale", "region", "country", "globe"),
         multiple = TRUE
-        )
+      )
 
     req <-
       httr2::req_url_query(
