@@ -23,10 +23,11 @@ reference:
   - '`get_admin_data`'
   - '`us_states`'
   - '`us_counties`'
-- title: Additional data access utilities
+- title: Additional data access/formatting utilities
   contents:
-  - '`set_access_token`'
   - starts_with("format")
+  - '`set_access_token`'
+  - '`set_pkg_options`'
 - title: Additional utilities for locations
   contents:
   - '`make_location_data_list`'
