@@ -36,6 +36,7 @@
 #' @return A simple feature object from data provided to type.
 #' @example examples/get_location.R
 #' @rdname get_location
+#' @aliases get_location_type
 #' @export
 #' @importFrom sf st_crs st_filter st_as_sf st_union
 #' @importFrom sfext is_sf st_union_ext as_sf_class

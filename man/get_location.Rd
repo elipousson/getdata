@@ -2,6 +2,7 @@
 % Please edit documentation in R/get_location.R
 \name{get_location}
 \alias{get_location}
+\alias{get_location_type}
 \title{Get location of a specified type based on name, id, or location}
 \usage{
 get_location(
