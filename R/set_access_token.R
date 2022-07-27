@@ -12,6 +12,7 @@
 #' @param call Passed as the call parameter for [cli::cli_abort] to improve
 #'   error messages when function is used internally.
 #' @rdname set_access_token
+#' @aliases set_token_type
 #' @export
 #'
 #' @importFrom utils read.table write.table
@@ -63,7 +64,7 @@ set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = N
       c(
         "i" = "The token {.val {token}} is now stored in your .Renviron.",
         "*" = 'To use it, restart R or run {.code readRenviron("~/.Renviron")}.
-        You can then access the token using `Sys.getenv("{type}")`.'
+        You can then access the token using {.code Sys.getenv("{type}")}.'
       )
     )
 
@@ -82,6 +83,7 @@ set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = N
 
 #' @name get_access_token
 #' @rdname set_access_token
+#' @aliases get_token_type
 #' @export
 get_access_token <- function(token = NULL, type = NULL, call = caller_env()) {
   if (!is.null(token)) {
@@ -89,8 +91,7 @@ get_access_token <- function(token = NULL, type = NULL, call = caller_env()) {
   }
 
   check_null(x = type)
-  check_character(type)
-  check_len(type, len = 1)
+  check_character(type, n = 1)
 
   token <- Sys.getenv(type)
 

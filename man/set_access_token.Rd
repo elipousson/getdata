@@ -2,7 +2,9 @@
 % Please edit documentation in R/set_access_token.R
 \name{set_access_token}
 \alias{set_access_token}
+\alias{set_token_type}
 \alias{get_access_token}
+\alias{get_token_type}
 \title{Set or get an access token or API key to/from environment variables.}
 \usage{
 set_access_token(
