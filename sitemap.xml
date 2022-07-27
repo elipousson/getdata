@@ -25,9 +25,6 @@
     <loc>https://elipousson.github.io/getdata/reference/format_sf_data.html</loc>
   </url>
   <url>
-    <loc>https://elipousson.github.io/getdata/reference/get_admin_data.html</loc>
-  </url>
-  <url>
     <loc>https://elipousson.github.io/getdata/reference/get_airtable_data.html</loc>
   </url>
   <url>
@@ -83,11 +80,5 @@
   </url>
   <url>
     <loc>https://elipousson.github.io/getdata/reference/set_pkg_options.html</loc>
-  </url>
-  <url>
-    <loc>https://elipousson.github.io/getdata/reference/us_counties.html</loc>
-  </url>
-  <url>
-    <loc>https://elipousson.github.io/getdata/reference/us_states.html</loc>
   </url>
 </urlset>
