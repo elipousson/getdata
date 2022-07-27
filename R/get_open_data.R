@@ -71,7 +71,7 @@ get_open_data <- function(data = NULL,
   cli_abort_ifnot(
     c("{.arg source_type} must be {.val socarata}.",
       "i" = "Socrata is currently the only supported open data source for this function.",
-      " " = "Other open data access options (e.g. CKAN, Flat Data) may be added in the future.",
+      " " = "Other open data access options (e.g. CKAN, Flat Data) may be added in the future."
     ),
     condition = (source_type == "socrata")
   )
