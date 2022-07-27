@@ -2,31 +2,39 @@
 % Please edit documentation in R/set_pkg_options.R
 \name{set_pkg_options}
 \alias{set_pkg_options}
-\title{Set overedge packge options}
+\title{Set getdata or other package-specific options}
 \usage{
-set_pkg_options(
-  dist = NULL,
-  diag_ratio = NULL,
-  unit = NULL,
-  asp = NULL,
-  data_package = NULL,
-  data_filetype = NULL,
-  coords = NULL,
-  from_crs = NULL,
-  address = NULL,
-  crs = NULL,
-  state = NULL,
-  overwrite = TRUE,
-  pkg = "getdata"
-)
+set_pkg_options(..., overwrite = FALSE, .pkg = "getdata")
 }
 \arguments{
-\item{dist, diag_ratio, unit, asp, data_package, data_filetype, coords, from_crs, address, crs, state}{options to set, e.g. "crs = 2804" with \code{pkg = "getdata"} to set
-"getdata.crs" to 2804.}
+\item{...}{Named list of options to set, e.g. "crs = 2804" with \code{.pkg = "getdata"} to set "getdata.crs" to 2804.}
 
 \item{overwrite}{If \code{TRUE}, overwrite any existing option value.}
+
+\item{.pkg}{Package name to append to option name.}
 }
 \description{
-Can set options for package, diag_ratio, dist, asp, or crs. Equivalent to
-\code{\link[overedge:set_overedge_options]{overedge::set_overedge_options()}}
+This function can set named options for a package using the convention of
+"pkg.option". For examples \code{set_pkg_options(crs = 2804, .pkg = "getdata")} sets the option "getdata.crs" to 2804. If "getdata.crs" is
+already set, overwrite must be TRUE to replace the existing value.
 }
+\section{Options for the getdata package}{
+
+
+Implemented options (with defaults if used) for the getdata package include:
+\itemize{
+\item dist
+\item diag_ratio
+\item unit ("meter")
+\item asp
+\item crs (3857)
+\item from_crs (4326)
+\item address ("address")
+\item package
+\item filetype ("gpkg")
+}
+
+A similar convention is used for the maplayer package. The use of options is
+not implemented across all functions and may be changed in the future.
+}
+

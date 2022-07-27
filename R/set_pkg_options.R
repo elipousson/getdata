@@ -1,84 +1,95 @@
-#' Set overedge packge options
+#' Set getdata or other package-specific options
 #'
-#' Can set options for package, diag_ratio, dist, asp, or crs. Equivalent to
-#' [overedge::set_overedge_options()]
+#' This function can set named options for a package using the convention of
+#' "pkg.option". For examples `set_pkg_options(crs = 2804, .pkg =
+#' "getdata")` sets the option "getdata.crs" to 2804. If "getdata.crs" is
+#' already set, overwrite must be TRUE to replace the existing value.
 #'
+#' @section Options for the getdata package:
 #'
-#' @param dist,diag_ratio,unit,asp,data_package,data_filetype,coords,from_crs,address,crs,state
-#'    options to set, e.g. "crs = 2804" with `pkg = "getdata"` to set
-#'   "getdata.crs" to 2804.
+#' Implemented options (with defaults if used) for the getdata package include:
+#'
+#' - dist
+#' - diag_ratio
+#' - unit ("meter")
+#' - asp
+#' - crs (3857)
+#' - from_crs (4326)
+#' - address ("address")
+#' - package
+#' - filetype ("gpkg")
+#'
+#' A similar convention is used for the maplayer package. The use of options is
+#' not implemented across all functions and may be changed in the future.
+#'
+#' @param ... Named list of options to set, e.g. "crs = 2804" with `.pkg =
+#'   "getdata"` to set "getdata.crs" to 2804.
 #' @param overwrite If `TRUE`, overwrite any existing option value.
+#' @param .pkg Package name to append to option name.
 #' @name set_pkg_options
 #' @export
-#' @importFrom purrr set_names
-#' @importFrom cli cli_vec
-set_pkg_options <- function(dist = NULL,
-                            diag_ratio = NULL,
-                            unit = NULL,
-                            asp = NULL,
-                            data_package = NULL,
-                            data_filetype = NULL,
-                            coords = NULL,
-                            from_crs = NULL,
-                            address = NULL,
-                            crs = NULL,
-                            state = NULL,
-                            overwrite = TRUE,
-                            pkg = "getdata") {
-  possible_options <-
-    paste0(
-      pkg,
-      ".",
-      c(
-        "dist",
-        "diag_ratio",
-        "unit",
-        "asp",
-        "data_package",
-        "data_filetype",
-        "coords",
-        "from_crs",
-        "address",
-        "state",
-        "crs"
-      )
-    )
+#' @importFrom purrr discard
+set_pkg_options <- function(...,
+                            overwrite = FALSE,
+                            .pkg = "getdata") {
+  opts <- list2(...)
 
+  # Make vector of names based on provided options and .pkg
+  nm_opts <- paste0(.pkg, ".", names(opts))
+  names(opts) <- nm_opts
 
-  update_options <-
-    purrr::set_names(
-      list(
-        dist, diag_ratio, unit, asp,
-        data_package, data_filetype, coords,
-        from_crs, address, state,
-        crs
-      ),
-      nm = possible_options
-    )
+  # Get existing options matching new_opts
+  existing_opts <- sapply(nm_opts, getOption)
+  existing_opts <- purrr::discard(existing_opts, is.null)
 
-  update_options <-
-    update_options[!sapply(update_options, is.null)]
+  existing_nm <- names(existing_opts)
+  conflict_nm <- existing_nm %in% nm_opts
 
-  existing_options <-
-    sapply(
-      possible_options,
-      getOption
-    )
+  conflict_opts <- NULL
+  update_opts <- opts
 
-  existing_options <-
-    existing_options[!sapply(existing_options, is.null)]
-
-
-  if (overwrite | all(sapply(existing_options, is.null))) {
-    options(
-      update_options
-    )
-
-    update_options <-
-      cli::cli_vec(update_options, style = list(vec_last = " and "))
-
-    cli_inform(
-      c("v" = "{pkg} options updated for {.arg {update_options}}.")
-    )
+  if (any(conflict_nm)) {
+    conflict_opts <- sapply(existing_opts[conflict_nm], as.character)
+    names(conflict_opts) <- existing_nm[conflict_nm]
   }
+
+  if (!is.null(conflict_opts)) {
+    if (!overwrite) {
+      cli_inform(c("x" = "The provided options conflict with these existing values:"))
+      cli_ul_items(conflict_opts)
+      cli_inform(
+        c("i" = "Set {.code overwrite = TRUE} to replace these {.pkg {.pkg}} options.")
+      )
+
+      if (!all(conflict_nm)) {
+        update_opts <- opts[[!conflict_nm]]
+      } else {
+        update_opts <- NULL
+      }
+    } else {
+      cli_inform(c("!" = "Replacing these existing options:"))
+      cli_ul_items(conflict_opts)
+    }
+  }
+
+  if (!is.null(update_opts)) {
+    options(update_opts)
+
+    cli_inform(c("v" = "Updated options for {.pkg {.pkg}}:"))
+    cli_ul_items(update_opts)
+  }
+}
+
+#' @noRd
+#' @importFrom cli cli_ul cli_li cli_end
+cli_ul_items <- function(items) {
+  items <- sapply(items, as.character)
+  cli::cli_ul()
+  sapply(
+    seq_along(items),
+    function(x) {
+      cli::cli_li("{.code {names(items)[[x]]}}: {.val {items[[x]]}}")
+    }
+  )
+  cli::cli_end()
 }
