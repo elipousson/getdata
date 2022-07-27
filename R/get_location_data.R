@@ -56,8 +56,8 @@ get_location_data <- function(location = NULL,
                               unit = getOption("getdata.unit", default = "meter"),
                               asp = getOption("getdata.asp"),
                               data = NULL,
-                              package = getOption("getdata.data_package"),
-                              filetype = getOption("getdata.data_filetype", default = "gpkg"),
+                              package = getOption("getdata.package"),
+                              filetype = getOption("getdata.filetype", default = "gpkg"),
                               fn = NULL,
                               crop = TRUE,
                               trim = FALSE,
@@ -75,7 +75,7 @@ get_location_data <- function(location = NULL,
     # This should be clearly documented as alternate index naming conventions supported if possible
     if (("package" %in% names(index)) && is.null(package)) {
       package <- unique(index$package) # could use data as an index
-      check_len(package, len = 1)
+      check_character(package, n = 1)
     }
 
     location <- get_index_param(index, location = location)
