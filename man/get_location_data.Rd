@@ -129,8 +129,8 @@ provided location. location can also be an an address.
 }
 \details{
 This function previously supported county geoid, state name, abbreviation, or
-geoid as a location. Currently, recommend using \link{get_states} or
-\link{get_counties} and passing a \code{sf} object to location.
+geoid as a location. Currently, recommend using \link{get_tigris_data} and passing
+a \code{sf} object to location.
 
 Working with sf lists for data and locations:
 

@@ -18,11 +18,6 @@ reference:
   - '`get_tigris_data`'
   - '`get_wiki_data`'
   - '`get_static_mapbox`'
-- title: Access U.S. state and county boundary data
-  contents:
-  - '`get_admin_data`'
-  - '`us_states`'
-  - '`us_counties`'
 - title: Additional data access/formatting utilities
   contents:
   - starts_with("format")

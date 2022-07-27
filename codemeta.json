@@ -421,7 +421,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "2334.751KB",
+  "fileSize": "2320.089KB",
   "readme": "https://github.com/elipousson/getdata/blob/main/README.md",
   "contIntegration": "https://app.codecov.io/gh/elipousson/getdata?branch=main",
   "developmentStatus": ["https://lifecycle.r-lib.org/articles/stages.html#experimental", "https://www.repostatus.org/#active"],

@@ -7,8 +7,8 @@
 #' provided location. location can also be an an address.
 #'
 #' This function previously supported county geoid, state name, abbreviation, or
-#' geoid as a location. Currently, recommend using [get_states] or
-#' [get_counties] and passing a `sf` object to location.
+#' geoid as a location. Currently, recommend using [get_tigris_data] and passing
+#' a `sf` object to location.
 #'
 #' @details Working with sf lists for data and locations:
 #'
