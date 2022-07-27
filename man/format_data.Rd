@@ -15,7 +15,7 @@ format_data(
   clean_names = TRUE,
   replace_na_with = NULL,
   replace_with_na = NULL,
-  replace_empty_char_with_na = TRUE,
+  replace_empty_char_with_na = FALSE,
   fix_date = FALSE,
   label = FALSE,
   format_sf = FALSE,
@@ -25,7 +25,7 @@ format_data(
 
 rename_with_xwalk(x, xwalk = NULL, label = FALSE)
 
-label_with_xwalk(x, xwalk)
+label_with_xwalk(x, xwalk = NULL)
 
 fix_epoch_date(x)
 

@@ -49,7 +49,7 @@ format_data <- function(x,
                         clean_names = TRUE,
                         replace_na_with = NULL,
                         replace_with_na = NULL,
-                        replace_empty_char_with_na = TRUE,
+                        replace_empty_char_with_na = FALSE,
                         fix_date = FALSE,
                         label = FALSE,
                         format_sf = FALSE,
@@ -68,29 +68,18 @@ format_data <- function(x,
 
   if (!is.null(replace_na_with)) {
     is_pkg_installed("tidyr")
-
-    x <-
-      tidyr::replace_na(x, replace = replace_na_with)
+    x <- tidyr::replace_na(x, replace = replace_na_with)
   }
-
 
   if (!is.null(replace_with_na) || replace_empty_char_with_na) {
     is_pkg_installed("naniar")
 
     if (!is.null(replace_with_na)) {
-      x <-
-        naniar::replace_with_na(
-          x,
-          replace = replace_with_na
-        )
+      x <- naniar::replace_with_na(x, replace = replace_with_na)
     }
 
     if (replace_empty_char_with_na) {
-      x <-
-        naniar::replace_with_na_if(
-          x,
-          is.character, ~ .x == ""
-        )
+      x <- naniar::replace_with_na_if(x, is.character, ~ .x == "")
     }
   }
 
@@ -106,6 +95,7 @@ format_data <- function(x,
 }
 
 #' @noRd
+#' @importFrom tibble deframe
 make_xwalk_list <- function(xwalk) {
   if (is.data.frame(xwalk) && (ncol(xwalk) == 2)) {
     return(as.list(tibble::deframe(xwalk)))
@@ -128,7 +118,8 @@ make_xwalk_list <- function(xwalk) {
 #'   using the original names. Defaults to `FALSE`.
 #' @export
 #' @importFrom tibble deframe
-#' @importFrom dplyr rename
+#' @importFrom dplyr rename_with
+#' @importFrom sfext is_sf
 rename_with_xwalk <- function(x, xwalk = NULL, label = FALSE) {
 
   # From https://twitter.com/PipingHotData/status/1497014703473704965
@@ -143,11 +134,7 @@ rename_with_xwalk <- function(x, xwalk = NULL, label = FALSE) {
   if (sfext::is_sf(x) && (attributes(x)$sf_column %in% xwalk)) {
     sf_col <- as.character(names(xwalk[xwalk == attributes(x)$sf_column]))
 
-    x <-
-      rename_sf_col(
-        x,
-        sf_col = sf_col
-      )
+    x <- rename_sf_col(x, sf_col = sf_col)
 
     xwalk[[sf_col]] <- NULL
   }
@@ -168,10 +155,11 @@ rename_with_xwalk <- function(x, xwalk = NULL, label = FALSE) {
 
 #' @name label_with_xwalk
 #' @rdname format_data
-label_with_xwalk <- function(x, xwalk) {
+label_with_xwalk <- function(x, xwalk = NULL) {
   is_pkg_installed("labelled")
 
-  # TODO: Consider adding an optional for value labelling as well as variable labelling
+  # TODO: Consider adding an optional for value labelling as well as variable
+  # labelling
   labelled::set_variable_labels(x, .labels = make_xwalk_list(xwalk))
 }
 
@@ -202,32 +190,17 @@ fix_epoch_date <- function(x) {
 bind_address_col <- function(x, city = NULL, county = NULL, state = NULL) {
   if (!is.null(city)) {
     x <- has_same_name_col(x, col = "city")
-
-    x <-
-      dplyr::mutate(
-        x,
-        city = city
-      )
+    x <- dplyr::mutate(x, city = city)
   }
 
   if (!is.null(county)) {
     x <- has_same_name_col(x, col = "county")
-
-    x <-
-      dplyr::mutate(
-        x,
-        county = county
-      )
+    x <- dplyr::mutate(x, county = county)
   }
 
   if (!is.null(state)) {
     x <- has_same_name_col(x, col = "state")
-
-    x <-
-      dplyr::mutate(
-        x,
-        state = state
-      )
+    x <- dplyr::mutate(x, state = state)
   }
 
   x
@@ -259,7 +232,7 @@ bind_block_col <- function(x,
 
 #' @name str_trim_squish
 #' @noRd
-#' @importFrom dplyr mutate across
+#' @importFrom dplyr mutate across if_else
 str_trim_squish <- function(string) {
   is_pkg_installed("stringr")
 
