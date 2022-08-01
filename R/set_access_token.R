@@ -41,7 +41,7 @@ set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = N
           )
         } else {
           oldenv <- read.table(renv, stringsAsFactors = FALSE)
-          newenv <- oldenv[-grep(type, oldenv), ]
+          newenv <- oldenv[!grepl(type, readLines(renv)), ]
 
           write.table(
             newenv, renv,
