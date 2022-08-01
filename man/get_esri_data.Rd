@@ -19,19 +19,19 @@ get_esri_data(
   name = NULL,
   name_col = NULL,
   coords = NULL,
-  from_crs = 4326,
+  from_crs = getOption("getdata.crs", 4326),
   clean_names = TRUE,
   progress = TRUE,
   ...
 )
 
-get_esri_layers(location = NULL, layers, service_url = NULL, nm = NULL, ...)
+get_esri_layers(location = NULL, layers, url = NULL, nm = NULL, ...)
 
-get_esri_metadata(url, meta = "name", clean = TRUE)
+get_esri_metadata(url, meta = "name", clean_names = TRUE)
 }
 \arguments{
-\item{location}{\code{sf}, \code{sfc}, or \code{bbox} object (or other object convertible with
-\code{\link[=as_bbox]{as_bbox()}}. Optional.}
+\item{location}{\code{sf}, \code{sfc}, or \code{bbox} object (or other object convertible
+with \code{\link[=as_bbox]{as_bbox()}}. Optional.}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -53,15 +53,14 @@ without modification.}
 and NULL for \link[sfext]{df_to_sf}.}
 
 \item{url}{FeatureServer or MapServer url to retrieve data from. Passed to
-\code{url} parameter of \link[esri2sf:esri2sf]{esri2sf::esri2sf} or
-\link[esri2sf:esri2sf]{esri2sf::esri2df} functions.}
+\code{url} parameter of \link[esri2sf:esri2sf]{esri2sf::esri2sf} or \link[esri2sf:esri2sf]{esri2sf::esri2df} functions. For
+\link{get_esri_layers}, the optional url must be a service url which is the base
+url for one or more layer urls.}
 
 \item{where}{where query string passed to esri2sf, Default: \code{NULL}}
 
-\item{name}{location name}
-
-\item{name_col}{name of ArcGIS FeatureServer or MapServer column with
-location names for features}
+\item{name, name_col}{Name value and name column found in the ArcGIS
+FeatureServer or MapServer data.}
 
 \item{coords}{Coordinate columns for input dataframe or output sf object (if
 geometry is 'centroid' or 'point') Default: c("lon", "lat").}
@@ -102,8 +101,6 @@ Default \code{FALSE}.}
 \item{layers}{Either a vector with URLs, a named list of urls, or a numeric
 vector.}
 
-\item{service_url}{Base service URL with layers are located.}
-
 \item{nm}{Name or vector of names to add to the layers; defaults to \code{NULL}.}
 
 \item{meta}{Name of metadata list value to return from \link[esri2sf:esrimeta]{esri2sf::esrimeta}.}
@@ -115,7 +112,10 @@ value (typically used for name values).}
 Wraps the \link[esri2sf:esri2sf]{esri2sf::esri2sf} and \link[esri2sf:esri2sf]{esri2sf::esri2df} function to download an
 ArcGIS FeatureServer or MapServer. Supports spatial filtering with bounding
 box based on location and filtering by location name (if location name column
-is provided).
+is provided). As of July 2022, this package suggests the
+\href{https://github.com/elipousson/esri2sf/}{elipousson/esri2sf} fork using httr2
+but I expect to see this fork merged back into the main package in the
+future.
 }
 \seealso{
 \code{\link[esri2sf:esri2sf]{esri2sf::esri2sf()}}

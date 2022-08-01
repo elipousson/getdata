@@ -4,18 +4,21 @@
 #' Wraps the [esri2sf::esri2sf] and [esri2sf::esri2df] function to download an
 #' ArcGIS FeatureServer or MapServer. Supports spatial filtering with bounding
 #' box based on location and filtering by location name (if location name column
-#' is provided).
+#' is provided). As of July 2022, this package suggests the
+#' [elipousson/esri2sf](https://github.com/elipousson/esri2sf/) fork using httr2
+#' but I expect to see this fork merged back into the main package in the
+#' future.
 #'
-#' @param location `sf`, `sfc`, or `bbox` object (or other object convertible with
-#'   [as_bbox()]. Optional.
+#' @param location `sf`, `sfc`, or `bbox` object (or other object convertible
+#'   with [as_bbox()]. Optional.
 #' @param url FeatureServer or MapServer url to retrieve data from. Passed to
-#'   `url` parameter of [esri2sf::esri2sf] or
-#'   [esri2sf::esri2df] functions.
+#'   `url` parameter of [esri2sf::esri2sf] or [esri2sf::esri2df] functions. For
+#'   [get_esri_layers], the optional url must be a service url which is the base
+#'   url for one or more layer urls.
 #' @param where where query string passed to esri2sf, Default: `NULL`
 #' @inheritParams sfext::df_to_sf
-#' @param name_col name of ArcGIS FeatureServer or MapServer column with
-#'   location names for features
-#' @param name location name
+#' @param name,name_col Name value and name column found in the ArcGIS
+#'   FeatureServer or MapServer data.
 #' @inheritParams format_data
 #' @inheritParams sfext::sf_bbox_to_lonlat_query
 #' @inheritParams sfext::st_bbox_ext
@@ -38,11 +41,11 @@ get_esri_data <- function(location = NULL,
                           name = NULL,
                           name_col = NULL,
                           coords = NULL,
-                          from_crs = 4326,
+                          from_crs = getOption("getdata.crs", 4326),
                           clean_names = TRUE,
                           progress = TRUE,
                           ...) {
-  is_pkg_installed(pkg = "esri2sf", repo = "yonghah/esri2sf")
+  is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
 
   meta <- esri2sf::esrimeta(url)
   table <- any(c(is.null(meta$geometryType), (meta$geometryType == "")))
@@ -104,15 +107,21 @@ get_esri_data <- function(location = NULL,
   if (!is.null(coords) && table) {
     # Convert Table to sf object if coordinate columns exist
     data <-
-      sfext::df_to_sf(data, coords = coords, from_crs = from_crs, crs = crs)
+      sfext::df_to_sf(
+      data,
+      coords = coords,
+      from_crs = from_crs,
+      crs = crs
+      )
   }
 
-  if (clean_names) {
-    # TODO: Expand support for format_data parameters especially label_with_xwalk using alias from the esri layer metadata
-    data <- format_data(data, clean_names = clean_names)
+  if (!clean_names) {
+    return(data)
   }
 
-  data
+  # TODO: Expand support for format_data parameters especially
+  # label_with_xwalk using alias from the esri layer metadata
+  format_data(data, clean_names = clean_names)
 }
 
 #' Get multiple ArcGIS feature server layers
@@ -121,17 +130,20 @@ get_esri_data <- function(location = NULL,
 #' @rdname get_esri_data
 #' @param layers Either a vector with URLs, a named list of urls, or a numeric
 #'   vector.
-#' @param service_url Base service URL with layers are located.
 #' @param nm Name or vector of names to add to the layers; defaults to `NULL`.
 #' @export
 #' @importFrom dplyr case_when
 #' @importFrom  purrr map_chr
-get_esri_layers <- function(location = NULL, layers, service_url = NULL, nm = NULL, ...) {
-  is_pkg_installed(pkg = "esri2sf", repo = "yonghah/esri2sf")
+get_esri_layers <- function(location = NULL,
+                            layers,
+                            url = NULL,
+                            nm = NULL,
+                            ...) {
+  is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
 
   type <-
     dplyr::case_when(
-      is.numeric(layers) && !is.null(service_url) && is_esri_url(service_url) ~ "id",
+      is.numeric(layers) && !is.null(url) && is_esri_url(url) ~ "id",
       is.list(layers) && is_named(layers) ~ "nm_list",
       is.list(layers) ~ "list",
       is.character(layers) ~ "url"
@@ -141,19 +153,17 @@ get_esri_layers <- function(location = NULL, layers, service_url = NULL, nm = NU
 
   layer_urls <-
     switch(type,
-      "id" = paste0(service_url, "/", layers),
+      "id" = paste0(url, "/", layers),
       "nm_list" = as.character(layers),
       "list" = as.character(layers),
       "url" = layers
     )
 
-  if (is.null(nm)) {
-    if ((type == "nm_list")) {
-      nm <- names(layers)
+    if (type == "nm_list") {
+      nm <- nm  %||% names(layers)
     } else {
-      nm <- purrr::map_chr(layer_urls, ~ get_esri_metadata(.x))
+      nm <- nm %||% purrr::map_chr(layer_urls, ~ get_esri_metadata(.x))
     }
-  }
 
   data <- as.list(layer_urls)
   names(data) <- nm
@@ -172,14 +182,18 @@ get_esri_layers <- function(location = NULL, layers, service_url = NULL, nm = NU
 #'   value (typically used for name values).
 #' @export
 #' @importFrom janitor make_clean_names
-get_esri_metadata <- function(url, meta = "name", clean = TRUE) {
-  is_pkg_installed(pkg = "esri2sf", repo = "yonghah/esri2sf")
+get_esri_metadata <- function(url, meta = "name", clean_names = TRUE) {
+  is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
 
-  meta <- esri2sf::esrimeta(url)[[meta]]
+  metadata <- esri2sf::esrimeta(url)
 
-  if (clean) {
-    janitor::make_clean_names(meta)
-  } else {
-    nm
+  if (!is.null(meta)) {
+    meta <- metadata[[meta]]
   }
+
+  if (!clean_names) {
+    return(meta)
+  }
+
+  janitor::make_clean_names(meta)
 }
