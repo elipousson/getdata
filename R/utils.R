@@ -2,29 +2,34 @@
   # run_on_load()
 
   utils::data(
-    list = c(
-      "osm_building_tags", "us_counties", "us_states"
-    ),
+    list = c("osm_building_tags"),
     package = pkg,
     envir = parent.env(environment())
   )
 }
 
 utils::globalVariables(
-  c("admin_level", "bldg_num_even_odd", "block_num", "crs", "name", "nm", "street", "x")
+  c(
+    "admin_level", "bldg_num_even_odd", "block_num",
+    "crs", "name", "nm", "street", "x"
+  )
 )
 
 #' Add default user agent to request
 #'
 #' @noRd
 #' @importFrom httr2 req_user_agent
-req_getdata_user <- function(req,
-                             string = getOption("getdata.useragent", default = "getdata (https://github.com/elipousson/getdata)")) {
-  httr2::req_user_agent(
-    req = req,
-    string = string
-  )
-}
+req_getdata_user <-
+  function(req,
+           string = getOption(
+             "getdata.useragent",
+             default = "getdata (https://github.com/elipousson/getdata)"
+           )) {
+    httr2::req_user_agent(
+      req = req,
+      string = string
+    )
+  }
 
 
 #' Eval and parse data
@@ -57,7 +62,12 @@ use_fn <- function(data, fn = NULL) {
 #' @importFrom rlang has_name
 #' @importFrom cli cli_abort cli_alert_success
 #' @importFrom dplyr rename
-has_same_name_col <- function(x, col = NULL, prefix = "orig", ask = FALSE, quiet = FALSE, drop = TRUE) {
+has_same_name_col <- function(x,
+                              col = NULL,
+                              prefix = "orig",
+                              ask = FALSE,
+                              quiet = FALSE,
+                              drop = TRUE) {
   if (!has_name(x, col)) {
     return(x)
   }
@@ -69,15 +79,18 @@ has_same_name_col <- function(x, col = NULL, prefix = "orig", ask = FALSE, quiet
   new_col <- paste0(prefix, "_", col)
 
   if (ask && !quiet) {
-    if (!cli_yeah("The provided data includes an existing column named '{col}'.
-                   Do you want to proceed and rename this column to {new_col}?")) {
+    if (!cli_yeah(
+      "The provided data includes an existing column named '{col}'.
+    Do you want to proceed and rename this column to {new_col}?"
+    )) {
       cli_abort("Please rename your column to use this function.")
     }
   }
 
   if (!quiet) {
     cli::cli_alert_success(
-      "The existing column '{col}' to '{new_col}' to avoid overwriting any existing values."
+      "The existing column '{col}' to '{new_col}' to avoid
+      overwriting any existing values."
     )
   }
 
