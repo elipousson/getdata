@@ -28,30 +28,29 @@ set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = N
     if (!file.exists(renv)) {
       file.create(renv)
     } else {
-
       # Backup original .Renviron before doing anything else here.
       file.copy(renv, file.path(home, ".Renviron_backup"))
 
-      if (overwrite) {
-        oldenv <- read.table(renv, stringsAsFactors = FALSE)
-        newenv <- oldenv[-grep(type, oldenv), ]
-
-        write.table(
-          newenv, renv,
-          quote = FALSE, sep = "\n",
-          col.names = FALSE, row.names = FALSE
-        )
-
-        cli_inform(
-          c("v" = "Your original .Renviron is backed up to your R HOME directory if needed.")
-        )
-      } else {
-        if (any(grepl(type, readLines(renv)))) {
+      if (any(grepl(type, readLines(renv)))) {
+        if (!overwrite) {
           cli_abort(
             c("{.val {type}} already exists in your .Renviron.",
               "*" = "Set {.arg overwrite = TRUE} to replace this token."
             ),
             call = call
+          )
+        } else {
+          oldenv <- read.table(renv, stringsAsFactors = FALSE)
+          newenv <- oldenv[-grep(type, oldenv), ]
+
+          write.table(
+            newenv, renv,
+            quote = FALSE, sep = "\n",
+            col.names = FALSE, row.names = FALSE
+          )
+
+          cli_inform(
+            c("v" = "Your original .Renviron is backed up to your R HOME directory if needed.")
           )
         }
       }
