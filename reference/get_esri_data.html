@@ -155,8 +155,8 @@ coordinates or well known text in data frame.</p></dd>
 
 
 <dt>clean_names</dt>
-<dd><p>If <code>TRUE</code>, pass data frame to <a href="https://rdrr.io/pkg/janitor/man/clean_names.html" class="external-link">janitor::clean_names</a>;
-defaults to <code>TRUE</code>.</p></dd>
+<dd><p>If <code>TRUE</code>, use janitor::make_clean_names on the returned metadata
+value (typically used for name values).</p></dd>
 
 
 <dt>progress</dt>
@@ -213,11 +213,6 @@ vector.</p></dd>
 
 <dt>meta</dt>
 <dd><p>Name of metadata list value to return from <a href="https://rdrr.io/pkg/esri2sf/man/esrimeta.html" class="external-link">esri2sf::esrimeta</a>.</p></dd>
-
-
-<dt>clean</dt>
-<dd><p>If <code>TRUE</code>, use janitor::make_clean_names on the returned metadata
-value (typically used for name values).</p></dd>
 
 </dl></div>
     <div class="section level2">
