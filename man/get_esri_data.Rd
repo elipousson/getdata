@@ -68,8 +68,8 @@ geometry is 'centroid' or 'point') Default: c("lon", "lat").}
 \item{from_crs}{For \link[sfext]{df_to_sf}, coordinate reference system used by
 coordinates or well known text in data frame.}
 
-\item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names};
-defaults to \code{TRUE}.}
+\item{clean_names}{If \code{TRUE}, use janitor::make_clean_names on the returned metadata
+value (typically used for name values).}
 
 \item{progress}{Show progress bar from \code{\link[cli:cli_progress_along]{cli::cli_progress_along()}} if \code{TRUE}.
 Default \code{FALSE}.}
@@ -104,9 +104,6 @@ vector.}
 \item{nm}{Name or vector of names to add to the layers; defaults to \code{NULL}.}
 
 \item{meta}{Name of metadata list value to return from \link[esri2sf:esrimeta]{esri2sf::esrimeta}.}
-
-\item{clean}{If \code{TRUE}, use janitor::make_clean_names on the returned metadata
-value (typically used for name values).}
 }
 \description{
 Wraps the \link[esri2sf:esri2sf]{esri2sf::esri2sf} and \link[esri2sf:esri2sf]{esri2sf::esri2df} function to download an

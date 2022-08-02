@@ -178,7 +178,7 @@ get_esri_layers <- function(location = NULL,
 #' @name get_esri_metadata
 #' @rdname get_esri_data
 #' @param meta Name of metadata list value to return from [esri2sf::esrimeta].
-#' @param clean If `TRUE`, use janitor::make_clean_names on the returned metadata
+#' @param clean_names If `TRUE`, use janitor::make_clean_names on the returned metadata
 #'   value (typically used for name values).
 #' @export
 #' @importFrom janitor make_clean_names
