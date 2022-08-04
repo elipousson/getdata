@@ -148,6 +148,7 @@ get_airtable_data <- function(base,
 #' List or retrieve records from an Airtable base
 #'
 #' @noRd
+#' @importFrom httr2 request req_url_path_append req_url_query
 req_airtable <- function(base,
                          table,
                          record = NULL,
