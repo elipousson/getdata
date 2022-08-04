@@ -74,6 +74,7 @@ Details on SoQL queries are found in the Socrata API documentation
 <span>  asp <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  location_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"longitude"</span>, <span class="st">"latitude"</span><span class="op">)</span>,</span>
 <span>  geometry <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  token <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -96,6 +97,7 @@ Details on SoQL queries are found in the Socrata API documentation
 <span>  asp <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  location_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"longitude"</span>, <span class="st">"latitude"</span><span class="op">)</span>,</span>
 <span>  geometry <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  token <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -103,7 +105,11 @@ Details on SoQL queries are found in the Socrata API documentation
 <span>  from_crs <span class="op">=</span> <span class="fl">4326</span>,</span>
 <span>  crs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  clean_names <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">get_socrata_metadata</span><span class="op">(</span>source_url <span class="op">=</span> <span class="cn">NULL</span>, data <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">list_socrata_data</span><span class="op">(</span><span class="va">source_url</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -111,7 +117,9 @@ Details on SoQL queries are found in the Socrata API documentation
     <dl><dt>data</dt>
 <dd><p>A data set identifier (known as a resource for Socrata) or a url
 for an individual dataset. If data is set to "list" and a valid source_url
-is provided, the function returns a list of all available resources. If data is a url, source_url must be null.</p></dd>
+is provided, the function returns a list of all available resources. If
+data is a url, source_url must be NULL. get_socrata_metadata requires the
+data parameter.</p></dd>
 
 
 <dt>source_url</dt>
@@ -171,6 +179,10 @@ without modification.</p></dd>
 <dt>name, name_col</dt>
 <dd><p>Name of column in Socrata data resource with
 location names (e.g. County) and name of location to return.</p></dd>
+
+
+<dt>location_col</dt>
+<dd><p>Name of a "location" or "point" type column in a Socrata dataset.</p></dd>
 
 
 <dt>coords</dt>
