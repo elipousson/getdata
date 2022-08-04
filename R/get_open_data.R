@@ -8,7 +8,9 @@
 #'
 #' @param data A data set identifier (known as a resource for Socrata) or a url
 #'   for an individual dataset. If data is set to "list" and a valid source_url
-#'   is provided, the function returns a list of all available resources. If data is a url, source_url must be null.
+#'   is provided, the function returns a list of all available resources. If
+#'   data is a url, source_url must be NULL. [get_socrata_metadata] requires the
+#'   data parameter.
 #' @param source_url A data source url. For Socrata, this should the base url
 #'   for the open data portal.
 #' @param source_type Data source type; defaults to "socrata" which is currently
@@ -22,6 +24,7 @@
 #'   to WHERE in SQL. <https://dev.socrata.com/docs/queries/where.html>
 #' @param query SODA $query parameter. A full SoQL query string, all as one
 #'   parameter. <https://dev.socrata.com/docs/queries/query.html>
+#' @param location_col Name of a "location" or "point" type column in a Socrata dataset.
 #' @param geometry If `TRUE` and coords are provided, return a
 #'   `sf` object. Default `FALSE`.
 #' @param token,type Access token or API Key and token type (name used to store
@@ -48,6 +51,7 @@ get_open_data <- function(data = NULL,
                           asp = NULL,
                           name_col = NULL,
                           name = NULL,
+                          location_col = NULL,
                           coords = c("longitude", "latitude"),
                           geometry = FALSE,
                           token = NULL,
@@ -55,10 +59,6 @@ get_open_data <- function(data = NULL,
                           from_crs = 4326,
                           crs = NULL,
                           clean_names = TRUE) {
-
-  # Get an API key
-  token <- get_access_token(token = token, type = type)
-
   source_type <- tolower(source_type)
 
   cli_abort_ifnot(
@@ -77,13 +77,13 @@ get_open_data <- function(data = NULL,
   )
 
   if (source_type == "socrata") {
-    is_pkg_installed("RSocrata")
-
     if (data == "list") {
-      data_list <- RSocrata::ls.socrata(url = source_url)
-      return(data_list)
+      return(list_socrata_data(source_url))
     }
   }
+
+  # Get an API key
+  token <- get_access_token(token = token, type = type)
 
   # FIXME: Check on how to access the point or polygon data types via SODA
   # See <https://dev.socrata.com/docs/datatypes/point.html> for more information
@@ -99,6 +99,28 @@ get_open_data <- function(data = NULL,
     )
 
   if (source_type == "socrata") {
+    if (!is.null(data)) {
+      meta <-
+        get_socrata_metadata(
+          source_url = source_url,
+          data = data
+        )
+
+      cli::cli_inform(
+        "Downloading {.val {meta$name}} from {.url {resp$dataUri}}"
+      )
+
+      cli::cli_dl(
+        items = c(
+          `Attribution` = "{.val {meta$attribution}} / {.url {meta$attributionLink}}",
+          `Data created` = "{.val {meta$createdAt}}",
+          `Data updated` = "{.val {meta$dataUpdatedAt}}",
+          `Category` = "{.val {meta$category}}",
+          `License` = "{.val {meta$license}}"
+        )
+      )
+    }
+
     url <-
       make_socrata_url(
         data = data,
@@ -109,9 +131,11 @@ get_open_data <- function(data = NULL,
         bbox = bbox,
         name_col = name_col,
         name = name,
+        location_col = location_col,
         coords = coords
       )
 
+    is_pkg_installed("RSocrata")
     # Download data from Socrata Open Data portal
     data <- dplyr::as_tibble(RSocrata::read.socrata(url = url, app_token = token))
   }
@@ -138,6 +162,7 @@ make_socrata_url <- function(data = NULL,
                              bbox = NULL,
                              name_col = NULL,
                              name = NULL,
+                             location_col = NULL,
                              coords = c("longitude", "latitude")) {
   # FIXME: Rewrite this to work with httr2
   # Make parameter calls
@@ -159,7 +184,13 @@ make_socrata_url <- function(data = NULL,
   where_bbox <- NULL
 
   if (!is.null(bbox)) {
-    where_bbox <- glue("({sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)})")
+    if (is.null(location_col)) {
+      where_bbox <-
+        glue("({sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)})")
+    } else {
+      where_bbox <-
+        glue("within_box({location_col}, {bbox$ymax}, {bbox$xmax}, {bbox$ymin}, {bbox$xmin})")
+    }
   }
 
   if (!all(sapply(c(bbox, name_col, where), is.null))) {
@@ -170,6 +201,19 @@ make_socrata_url <- function(data = NULL,
     query <- paste0("$query=", query)
   }
 
+  url <- make_dataset_url(data = data, source_url = source_url)
+
+  # Append select, where, and query parameters to the url
+  if (!any(sapply(c(select, where, query), is.null))) {
+    url <- glue("{url}?{paste0(c(select, where, query), collapse = '&')}")
+  }
+
+  url
+}
+
+#' @noRd
+make_dataset_url <- function(data = NULL,
+                             source_url = NULL) {
   if (grepl("/dataset/", source_url) && is.null(data)) {
     # If data is null but source_url is for a dataset
     url <- source_url
@@ -181,11 +225,6 @@ make_socrata_url <- function(data = NULL,
     # If data is a url but does not a direct url for the json endpoint
     data <- gsub("/$", "", data)
     url <- paste0(data, ".json")
-  }
-
-  # Append select, where, and query parameters to the url
-  if (!any(sapply(c(select, where, query), is.null))) {
-    url <- glue("{url}?{paste0(c(select, where, query), collapse = '&')}")
   }
 
   url
@@ -206,6 +245,7 @@ get_socrata_data <- function(data = NULL,
                              asp = NULL,
                              name_col = NULL,
                              name = NULL,
+                             location_col = NULL,
                              coords = c("longitude", "latitude"),
                              geometry = FALSE,
                              token = NULL,
@@ -229,6 +269,7 @@ get_socrata_data <- function(data = NULL,
     asp = asp,
     name_col = name_col,
     name = name,
+    location_col = location_col,
     coords = coords,
     geometry = geometry,
     token = token,
@@ -236,4 +277,36 @@ get_socrata_data <- function(data = NULL,
     crs = crs,
     clean_names = clean_names
   )
+}
+
+#' @rdname get_open_data
+#' @name get_socrata_data
+#' @export
+#' @importFrom httr2 request req_url_path_append req_perform resp_body_json
+get_socrata_metadata <- function(source_url = NULL,
+                                 data = NULL) {
+  req <- httr2::request(source_url)
+  req <- httr2::req_url_path_append(req, "api/views/metadata/v1", data)
+  req <- req_getdata_user(req)
+  resp <- httr2::req_perform(req)
+
+  httr2::resp_body_json(resp)
+}
+
+#' @rdname get_open_data
+#' @name list_socrata_data
+#' @export
+#' @importFrom httr2 request req_perform resp_body_json
+#' @importFrom dplyr as_tibble
+list_socrata_data <- function(source_url) {
+  req <- httr2::request(paste0(source_url, "/data.json"))
+  req <- req_getdata_user(req)
+  resp <- httr2::req_perform(req)
+  resp <- httr2::resp_body_json(resp, simplifyVector = TRUE)
+
+  datasets <- dplyr::as_tibble(resp$dataset)
+  datasets$issued <- as.POSIXct(list$issued)
+  datasets$modified <- as.POSIXct(list$modified)
+
+  datasets
 }

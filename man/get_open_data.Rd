@@ -3,6 +3,8 @@
 \name{get_open_data}
 \alias{get_open_data}
 \alias{get_socrata_data}
+\alias{get_socrata_metadata}
+\alias{list_socrata_data}
 \title{Get data from an open data portal (Socrata) for a location}
 \usage{
 get_open_data(
@@ -19,6 +21,7 @@ get_open_data(
   asp = NULL,
   name_col = NULL,
   name = NULL,
+  location_col = NULL,
   coords = c("longitude", "latitude"),
   geometry = FALSE,
   token = NULL,
@@ -41,6 +44,7 @@ get_socrata_data(
   asp = NULL,
   name_col = NULL,
   name = NULL,
+  location_col = NULL,
   coords = c("longitude", "latitude"),
   geometry = FALSE,
   token = NULL,
@@ -49,11 +53,17 @@ get_socrata_data(
   crs = NULL,
   clean_names = TRUE
 )
+
+get_socrata_metadata(source_url = NULL, data = NULL)
+
+list_socrata_data(source_url)
 }
 \arguments{
 \item{data}{A data set identifier (known as a resource for Socrata) or a url
 for an individual dataset. If data is set to "list" and a valid source_url
-is provided, the function returns a list of all available resources. If data is a url, source_url must be null.}
+is provided, the function returns a list of all available resources. If
+data is a url, source_url must be NULL. \link{get_socrata_metadata} requires the
+data parameter.}
 
 \item{source_url}{A data source url. For Socrata, this should the base url
 for the open data portal.}
@@ -91,6 +101,8 @@ without modification.}
 
 \item{name, name_col}{Name of column in Socrata data resource with
 location names (e.g. County) and name of location to return.}
+
+\item{location_col}{Name of a "location" or "point" type column in a Socrata dataset.}
 
 \item{coords}{Coordinate columns for input dataframe or output sf object (if
 geometry is 'centroid' or 'point') Default: c("lon", "lat").}
