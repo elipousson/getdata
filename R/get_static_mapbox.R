@@ -1,26 +1,57 @@
-#' Use {mapboxapi} to get a static Mapbox map image
+#' Use {mapboxapi} or {bingmapr} to get a static map image
 #'
-#' Wrapper function for [mapboxapi::static_mapbox()], [get_location()], and
-#' [get_osm_data()], [get_osm_id()], or [get_osm_boundaries()] functions.
+#' Get a static map image using the  [Mapbox Static Maps
+#' API](https://www.mapbox.com/static-maps) using [mapboxapi::static_mapbox] or
+#' the [Bing Maps Static Map
+#' API](https://docs.microsoft.com/en-us/bingmaps/rest-services/imagery/get-a-static-map)
+#' using [bingmapr::get_map_image]. An API key or access token is required for
+#' both services. Set the bingmap API token using [bingmapr::bing_maps_api_key]
+#' and the Mapbox token with [mapboxapi::mb_access_token] or use
+#' `set_access_token` with `type = "BING_MAPS_API_KEY"` or `type =
+#' "MAPBOX_PUBLIC_TOKEN"`.
 #'
-#' For [get_osm_static_mapbox], the ... parameters are passed to the
-#' [get_osm_data()], [get_osm_id()], or [get_osm_boundaries()] functions.
+#' Variations on get_static_mapbox include
 #'
-#' @name get_static_mapbox
-#' @param type For get_osm_static_mapbox, type of feature with id; ("node", "way", or "relation"); for get_location_static_mapbox, type of location (see [get_location()] for details.
-#' @param dist Buffer distance passed to buffer_dist parameter of [mapboxapi::static_mapbox()].
-#' @param unit Unit of `dist` argument. `dist` is converted from `unit` to meters for [mapboxapi::static_mapbox()].
-#' @param overlay_location If `TRUE`, use the location (or OpenStreetMap feature) as the overlay_sf parameter.
+#' - [get_location_static_mapbox] wrapping [get_location()]
+#' - [get_osm_static_mapbox] wrapping [get_osm_data()], [get_osm_id()], and
+#' [get_osm_boundaries()]
+#'
+#' In those cases, the ... parameters are passed on the getdata functions rather
+#' than the static map function.
+#'
+#' For [get_static_bingmap], parameter names are modified from
+#' [bingmapr::get_map_image] for consistency, so the bearing parameter passed to
+#' orientation and token is passed to key.
+#'
+#' @name get_static_map
+#' @param dist Buffer distance passed to buffer_dist parameter of
+#'   [mapboxapi::static_mapbox()] or to [sfext::st_buffer_ext] for
+#'   [get_static_bingmap].
+#' @param unit Unit of `dist` argument. Defaults to "meters".
+#' @param type For [get_osm_static_mapbox], type of feature with id; ("node",
+#'   "way", or "relation"); for [get_location_static_mapbox], type of location
+#'   (see [get_location] for details.
+#' @param overlay_location If `TRUE`, use the location (or OpenStreetMap
+#'   feature) as the overlay_sf parameter. Default to `FALSE`. Ignored if
+#'   overlay_sf is provided.
 #' @param style_url Style URL; defaults to "mapbox://styles/mapbox/light-v10"
-#' @param width,height Map width and height; defaults to 600 px width and 400 px height.
+#' @param width,height Map width and height; defaults to 600 px width and 400 px
+#'   height.
+#' @param token Optional token or API key. Recommend setting the Bing Maps API
+#'   key using [bingmapr::bing_maps_api_key] and the Mapbox access token with
+#'   [mapboxapi::mb_access_token].
 #' @example examples/get_static_mapbox.R
+NULL
+
+#' @name get_static_mapbox
+#' @rdname get_static_map
 #' @export
 #' @inheritParams mapboxapi::static_mapbox
 get_static_mapbox <- function(location,
                               dist = NULL,
                               unit = "meter",
-                              overlay_location = TRUE,
                               style_url = "mapbox://styles/mapbox/light-v10",
+                              overlay_location = FALSE,
                               overlay_sf = NULL,
                               overlay_style = NULL,
                               zoom = NULL,
@@ -33,44 +64,35 @@ get_static_mapbox <- function(location,
     overlay_sf <- location
   }
 
-  overlay_sf <-
-    set_overlay_style(
-      overlay_sf = overlay_sf,
-      overlay_style = overlay_style
-    )
+  dist <- dist %||% 0
 
-  if (!is.null(dist)) {
+  if (!is.null(unit) && (unit != "meter")) {
     buffer_dist <-
-      as.numeric(
-        sfext::convert_dist_units(
-          dist = dist,
-          from = unit,
-          to = "meter"
-        )
+      sfext::convert_dist_units(
+        buffer_dist,
+        from = unit,
+        to = "m",
+        drop = TRUE
       )
-  } else {
-    buffer_dist <- 0
   }
 
-  suppressMessages(
-    mapboxapi::static_mapbox(
-      location = location,
-      buffer_dist = buffer_dist,
-      style_url = style_url,
-      overlay_sf = overlay_sf,
-      zoom = zoom,
-      pitch = pitch,
-      bearing = bearing,
-      width = width,
-      height = height,
-      ...
-    )
+  mapboxapi::static_mapbox(
+    location = location,
+    buffer_dist = buffer_dist,
+    style_url = style_url,
+    overlay_sf = overlay_sf,
+    zoom = zoom,
+    pitch = pitch,
+    bearing = bearing,
+    width = width,
+    height = height,
+    ...
   )
 }
 
 
 #' @name get_osm_static_mapbox
-#' @rdname get_static_mapbox
+#' @rdname get_static_map
 #' @export
 #' @inheritParams get_osm_data
 get_osm_static_mapbox <- function(id = NULL,
@@ -90,11 +112,14 @@ get_osm_static_mapbox <- function(id = NULL,
                                   pitch = NULL,
                                   ...) {
   if (!is.null(id)) {
-    location <- get_osm_id(id = id, crs = 3857, ...)
+    location <-
+      get_osm_id(id = id, crs = 3857, ...)
   } else if (!is.null(key)) {
-    location <- get_osm_data(location = location, crs = 3857, key = key, ...)
+    location <-
+      get_osm_data(location = location, crs = 3857, key = key, ...)
   } else if (!is.null(level) && !is.null(location)) {
-    location <- get_osm_boundaries(location = location, crs = 3857, level = level, ...)
+    location <-
+      get_osm_boundaries(location = location, crs = 3857, level = level, ...)
   }
 
   get_static_mapbox(
@@ -114,7 +139,7 @@ get_osm_static_mapbox <- function(id = NULL,
 }
 
 #' @name get_location_static_mapbox
-#' @rdname get_static_mapbox
+#' @rdname get_static_map
 #' @export
 #' @inheritParams get_location
 get_location_static_mapbox <- function(type,
@@ -167,64 +192,37 @@ get_location_static_mapbox <- function(type,
   )
 }
 
-#' Set overlay style
-#' @noRd
-#' @importFrom utils URLencode
-set_overlay_style <-
-  function(overlay_sf,
-           overlay_style = NULL,
-           stroke = NULL,
-           stroke_opacity = NULL,
-           stroke_width = NULL,
-           fill = NULL,
-           fill_opacity = NULL) {
-    if (is.null(overlay_style)) {
-      overlay_style <- overlay_sf
-    }
+#' @name get_static_bingmap
+#' @inheritParams bingmapr::get_map_image
+#' @rdname get_static_map
+#' @export
+get_static_bingmap <- function(location = NULL,
+                               width = 600,
+                               height = 400,
+                               dist = NULL,
+                               unit = "m",
+                               bearing = NULL,
+                               imagery = "BirdsEye",
+                               token = NULL,
+                               ...) {
+  is_pkg_installed("bingmapr")
 
-    style_names <- names(overlay_style)
+  bearing <- bearing %||% 0
 
-    if ("stroke" %in% style_names) {
-      if (!grepl("^#", overlay_style$stroke)) {
-        overlay_style$stroke <- col2hex(overlay_style$stroke)
-      }
+  location <-
+    sfext::st_buffer_ext(
+      location,
+      dist = dist,
+      unit = unit
+    )
 
-      overlay_sf$stroke <-
-        utils::URLencode(overlay_style$stroke, reserved = TRUE)
-    }
-
-    if ("stroke_opacity" %in% style_names) {
-      overlay_sf$`stroke-opacity` <-
-        utils::URLencode(overlay_style$stroke_opacity, reserved = TRUE)
-    }
-
-    if ("stroke_width" %in% style_names) {
-      overlay_sf$`stroke-width` <-
-        utils::URLencode(as.character(overlay_style$stroke_width), reserved = TRUE)
-    }
-
-    if ("fill" %in% style_names) {
-      if (!grepl("^#", overlay_style$fill)) {
-        overlay_style$fill <- col2hex(overlay_style$fill)
-      }
-
-      overlay_sf$fill <-
-        utils::URLencode(overlay_style$fill, reserved = TRUE)
-    }
-
-    if ("fill_opacity" %in% style_names) {
-      overlay_sf$`fill-opacity` <-
-        utils::URLencode(as.character(overlay_style$fill_opacity), reserved = TRUE)
-    }
-
-    return(overlay_sf)
-  }
-
-
-#' Convert color name to hex value
-#'
-#' @noRd
-#' @importFrom grDevices rgb col2rgb
-col2hex <- function(color) {
-  grDevices::rgb(t(grDevices::col2rgb(color)), maxColorValue = 255)
+  bingmapr::get_map_image(
+    location = location,
+    width = width,
+    height = height,
+    orientation = bearing,
+    imagery = imagery,
+    key = token,
+    ...
+  )
 }
