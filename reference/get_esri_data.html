@@ -83,13 +83,22 @@ future.</p>
 <span>  coords <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  from_crs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"getdata.crs"</span>, <span class="fl">4326</span><span class="op">)</span>,</span>
 <span>  clean_names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  token <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_esri_layers</span><span class="op">(</span>location <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">layers</span>, url <span class="op">=</span> <span class="cn">NULL</span>, nm <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">get_esri_layers</span><span class="op">(</span></span>
+<span>  location <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">layers</span>,</span>
+<span>  url <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  nm <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  token <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_esri_metadata</span><span class="op">(</span><span class="va">url</span>, meta <span class="op">=</span> <span class="st">"name"</span>, clean_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">get_esri_metadata</span><span class="op">(</span><span class="va">url</span>, meta <span class="op">=</span> <span class="st">"name"</span>, token <span class="op">=</span> <span class="cn">NULL</span>, clean_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -159,6 +168,10 @@ coordinates or well known text in data frame.</p></dd>
 value (typically used for name values).</p></dd>
 
 
+<dt>token</dt>
+<dd><p>string for authentication token. defaults to <code>NULL</code>.</p></dd>
+
+
 <dt>progress</dt>
 <dd><p>Show progress bar from <code><a href="https://cli.r-lib.org/reference/cli_progress_along.html" class="external-link">cli::cli_progress_along()</a></code> if <code>TRUE</code>.
 Default <code>FALSE</code>.</p></dd>
@@ -168,31 +181,6 @@ Default <code>FALSE</code>.</p></dd>
 <dd><p>Arguments passed on to <code><a href="https://rdrr.io/pkg/esri2sf/man/esri2sf.html" class="external-link">esri2sf::esri2sf</a></code></p><dl><dt><code>outFields</code></dt>
 <dd><p>vector of fields you want to include. default is <code>NULL</code> for
 all fields.</p></dd>
-
-    <dt><code>geometry</code></dt>
-<dd><p>An <code>sf</code> or <code>bbox</code> object. Currently, <code>sf</code> objects with a single
-POINT feature are supported. All other <code>sf</code> objects are converted to <code>bbox</code>
-objects.</p></dd>
-
-    <dt><code>bbox</code></dt>
-<dd><p>bbox class object from <code><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">sf::st_bbox()</a></code> or a simple feature object
-that can be converted to a bounding box.</p></dd>
-
-    <dt><code>token</code></dt>
-<dd><p>string for authentication token. defaults to <code>NULL</code>.</p></dd>
-
-    <dt><code>geomType</code></dt>
-<dd><p>string specifying the layer geometry ('esriGeometryPolygon'
-or 'esriGeometryPoint' or 'esriGeometryPolyline' - if <code>NULL</code>, will try to
-be inferred from the server)</p></dd>
-
-    <dt><code>spatialRel</code></dt>
-<dd><p>Spatial relationship applied to the input <code>geometry</code> when
-performing the query; defaults to <code>NULL</code> (equivalent to
-"esriSpatialRelIntersects"). Additional supported options include
-"esriSpatialRelContains", "esriSpatialRelCrosses",
-"esriSpatialRelEnvelopeIntersects", "esriSpatialRelIndexIntersects",
-"esriSpatialRelOverlaps", "esriSpatialRelTouches", "esriSpatialRelWithin"</p></dd>
 
     <dt><code>replaceDomainInfo</code></dt>
 <dd><p>If <code>TRUE</code>, add domain information to the return data frame.
@@ -215,10 +203,6 @@ vector.</p></dd>
 <dd><p>Name of metadata list value to return from <a href="https://rdrr.io/pkg/esri2sf/man/esrimeta.html" class="external-link">esri2sf::esrimeta</a>.</p></dd>
 
 </dl></div>
-    <div class="section level2">
-    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/esri2sf/man/esri2sf.html" class="external-link">esri2sf::esri2sf()</a></code></p></div>
-    </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
