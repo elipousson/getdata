@@ -21,13 +21,22 @@ get_esri_data(
   coords = NULL,
   from_crs = getOption("getdata.crs", 4326),
   clean_names = TRUE,
+  token = NULL,
   progress = TRUE,
+  quiet = FALSE,
   ...
 )
 
-get_esri_layers(location = NULL, layers, url = NULL, nm = NULL, ...)
+get_esri_layers(
+  location = NULL,
+  layers,
+  url = NULL,
+  nm = NULL,
+  token = NULL,
+  ...
+)
 
-get_esri_metadata(url, meta = "name", clean_names = TRUE)
+get_esri_metadata(url, meta = "name", token = NULL, clean_names = TRUE)
 }
 \arguments{
 \item{location}{\code{sf}, \code{sfc}, or \code{bbox} object (or other object convertible
@@ -71,6 +80,8 @@ coordinates or well known text in data frame.}
 \item{clean_names}{If \code{TRUE}, use janitor::make_clean_names on the returned metadata
 value (typically used for name values).}
 
+\item{token}{string for authentication token. defaults to \code{NULL}.}
+
 \item{progress}{Show progress bar from \code{\link[cli:cli_progress_along]{cli::cli_progress_along()}} if \code{TRUE}.
 Default \code{FALSE}.}
 
@@ -79,21 +90,6 @@ Default \code{FALSE}.}
   \describe{
     \item{\code{outFields}}{vector of fields you want to include. default is \code{NULL} for
 all fields.}
-    \item{\code{geometry}}{An \code{sf} or \code{bbox} object. Currently, \code{sf} objects with a single
-POINT feature are supported. All other \code{sf} objects are converted to \code{bbox}
-objects.}
-    \item{\code{bbox}}{bbox class object from \code{\link[sf:st_bbox]{sf::st_bbox()}} or a simple feature object
-that can be converted to a bounding box.}
-    \item{\code{token}}{string for authentication token. defaults to \code{NULL}.}
-    \item{\code{geomType}}{string specifying the layer geometry ('esriGeometryPolygon'
-or 'esriGeometryPoint' or 'esriGeometryPolyline' - if \code{NULL}, will try to
-be inferred from the server)}
-    \item{\code{spatialRel}}{Spatial relationship applied to the input \code{geometry} when
-performing the query; defaults to \code{NULL} (equivalent to
-"esriSpatialRelIntersects"). Additional supported options include
-"esriSpatialRelContains", "esriSpatialRelCrosses",
-"esriSpatialRelEnvelopeIntersects", "esriSpatialRelIndexIntersects",
-"esriSpatialRelOverlaps", "esriSpatialRelTouches", "esriSpatialRelWithin"}
     \item{\code{replaceDomainInfo}}{If \code{TRUE}, add domain information to the return data frame.
 Default \code{FALSE}.}
   }}
@@ -113,7 +109,4 @@ is provided). As of July 2022, this package suggests the
 \href{https://github.com/elipousson/esri2sf/}{elipousson/esri2sf} fork using httr2
 but I expect to see this fork merged back into the main package in the
 future.
-}
-\seealso{
-\code{\link[esri2sf:esri2sf]{esri2sf::esri2sf()}}
 }

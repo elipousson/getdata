@@ -23,9 +23,7 @@
 #' @inheritParams sfext::sf_bbox_to_lonlat_query
 #' @inheritParams sfext::st_bbox_ext
 #' @inheritParams esri2sf::esri2sf
-#' @inheritDotParams esri2sf::esri2sf
-#' @seealso
-#'  [esri2sf::esri2sf()]
+#' @inheritDotParams esri2sf::esri2sf -bbox -geometry -geomType -spatialRel
 #' @rdname get_esri_data
 #' @export
 #' @importFrom glue glue
@@ -43,11 +41,13 @@ get_esri_data <- function(location = NULL,
                           coords = NULL,
                           from_crs = getOption("getdata.crs", 4326),
                           clean_names = TRUE,
+                          token = NULL,
                           progress = TRUE,
+                          quiet = FALSE,
                           ...) {
   is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
 
-  meta <- esri2sf::esrimeta(url)
+  meta <- esri2sf::esrimeta(url, token)
   table <- any(c(is.null(meta$geometryType), (meta$geometryType == "")))
 
   bbox <- NULL
@@ -89,17 +89,21 @@ get_esri_data <- function(location = NULL,
     # Get Table (no geometry) with location name column
     data <- esri2sf::esri2df(
       url = url,
+      token = token,
       where = where,
       progress = progress,
+      quiet = quiet,
       ...
     )
   } else {
     data <- esri2sf::esri2sf(
       url = url,
+      token = token,
       where = where,
       bbox = bbox,
       progress = progress,
       crs = crs,
+      quiet = quiet,
       ...
     )
   }
@@ -108,10 +112,10 @@ get_esri_data <- function(location = NULL,
     # Convert Table to sf object if coordinate columns exist
     data <-
       sfext::df_to_sf(
-      data,
-      coords = coords,
-      from_crs = from_crs,
-      crs = crs
+        data,
+        coords = coords,
+        from_crs = from_crs,
+        crs = crs
       )
   }
 
@@ -138,6 +142,7 @@ get_esri_layers <- function(location = NULL,
                             layers,
                             url = NULL,
                             nm = NULL,
+                            token = NULL,
                             ...) {
   is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
 
@@ -159,11 +164,11 @@ get_esri_layers <- function(location = NULL,
       "url" = layers
     )
 
-    if (type == "nm_list") {
-      nm <- nm  %||% names(layers)
-    } else {
-      nm <- nm %||% purrr::map_chr(layer_urls, ~ get_esri_metadata(.x))
-    }
+  if (type == "nm_list") {
+    nm <- nm %||% names(layers)
+  } else {
+    nm <- nm %||% purrr::map_chr(layer_urls, ~ get_esri_metadata(.x, token))
+  }
 
   data <- as.list(layer_urls)
   names(data) <- nm
@@ -182,18 +187,18 @@ get_esri_layers <- function(location = NULL,
 #'   value (typically used for name values).
 #' @export
 #' @importFrom janitor make_clean_names
-get_esri_metadata <- function(url, meta = "name", clean_names = TRUE) {
+get_esri_metadata <- function(url, meta = "name", token = NULL, clean_names = TRUE) {
   is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
 
-  metadata <- esri2sf::esrimeta(url)
+  metadata <- esri2sf::esrimeta(url, token)
 
   if (!is.null(meta)) {
-    meta <- metadata[[meta]]
+    metadata <- metadata[[meta]]
   }
 
-  if (!clean_names) {
-    return(meta)
+  if (!clean_names | !is.character(metadata)) {
+    return(metadata)
   }
 
-  janitor::make_clean_names(meta)
+  janitor::make_clean_names(metadata)
 }
