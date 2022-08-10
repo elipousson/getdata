@@ -26,6 +26,7 @@ Imports:
     tibble,
     utils
 Suggests: 
+    bingmapr (>= 0.1.0),
     covr,
     esri2sf,
     FlickrAPI (>= 0.1.0.1),
@@ -47,9 +48,9 @@ Suggests:
     units,
     withr
 Remotes: 
-    koki25ando/FlickrAPI,
     elipousson/sfext,
-    elipousson/esri2sf
+    elipousson/esri2sf,
+    elipousson/bingmapr
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8

@@ -45,6 +45,13 @@
   "softwareSuggestions": [
     {
       "@type": "SoftwareApplication",
+      "identifier": "bingmapr",
+      "name": "bingmapr",
+      "version": ">= 0.1.0",
+      "sameAs": "https://github.com/elipousson/bingmapr"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "covr",
       "name": "covr",
       "provider": {
@@ -72,7 +79,7 @@
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://github.com/koki25ando/FlickrAPI"
+      "sameAs": "https://CRAN.R-project.org/package=FlickrAPI"
     },
     {
       "@type": "SoftwareApplication",
@@ -421,7 +428,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "2320.089KB",
+  "fileSize": "227.927KB",
   "readme": "https://github.com/elipousson/getdata/blob/main/README.md",
   "contIntegration": "https://app.codecov.io/gh/elipousson/getdata?branch=main",
   "developmentStatus": ["https://lifecycle.r-lib.org/articles/stages.html#experimental", "https://www.repostatus.org/#active"],
