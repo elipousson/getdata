@@ -137,7 +137,7 @@ get_esri_data <- function(location = NULL,
 #' @param nm Name or vector of names to add to the layers; defaults to `NULL`.
 #' @export
 #' @importFrom dplyr case_when
-#' @importFrom  purrr map_chr
+#' @importFrom  purrr map_chr map
 get_esri_layers <- function(location = NULL,
                             layers,
                             url = NULL,
@@ -170,14 +170,34 @@ get_esri_layers <- function(location = NULL,
     nm <- nm %||% purrr::map_chr(layer_urls, ~ get_esri_metadata(.x, token))
   }
 
-  data <- as.list(layer_urls)
+  layer_urls <- as.list(layer_urls)
+
+  params <- list2(...)
+
+  data <-
+    purrr::map(
+      layer_urls,
+      ~ get_esri_data(
+        location = location,
+        url = .x,
+        token = token,
+        dist = params$dist,
+        diag_ratio = params$diag_ratio,
+        asp = params$asp,
+        crs = params$crs %||% getOption("getdata.crs", 3857),
+        unit = params$unit,
+        where = params$where,
+        name = params$name,
+        name_col = params$name_col,
+        coords = params$coords,
+        clean_names = params$clean_names %||% TRUE,
+        progress = params$progress %||% TRUE
+      )
+    )
+
   names(data) <- nm
 
-  map_location_data(
-    location = location,
-    data = data,
-    ...
-  )
+  data
 }
 
 #' @name get_esri_metadata
