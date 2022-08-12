@@ -78,7 +78,7 @@ get_location <- function(type,
   }
 
   # If location is not provided
-  if (is.null(location)) {
+  if (is.null(location) && (!is.null(name) | !is.null(id))) {
     if (!is.null(name)) {
       # Filter type by name
       location <- type[type[[name_col]] %in% name, ]
@@ -91,13 +91,10 @@ get_location <- function(type,
       }
     }
 
-    # FIXME: The prior error message may be more informative: "The name/id did not match any features of the type provided."
-    if (!is.null(location)) {
-      check_df_rows(
-        location,
-        rows = 1
-      )
-    }
+    stopifnot(
+      "The name/id did not match any features of the type provided." = nrow(location) > 0
+    )
+
   } else {
     location <-
       location_filter(
@@ -122,9 +119,11 @@ get_location <- function(type,
     condition = nrow(location) > 0
   )
 
-  # TODO: Add an optional alert on which locations or what share of locations are being returned
+  # TODO: Add an optional alert on which locations or what share of locations
+  # are being returned
   # cli_inform(
-  #  "Returning {.val {nrow(location)}} location of {.val {nrow(type)}} from the provided {.arg type}."
+  #  "Returning {.val {nrow(location)}} location of {.val {nrow(type)}}
+  # from the provided {.arg type}."
   # )
 
   if (union) {
