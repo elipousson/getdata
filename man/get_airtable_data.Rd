@@ -96,23 +96,23 @@ to units matching GDAL units for x; defaults to "meter"}
 character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} returns the same value
 without modification.}
 
-\item{crs}{Cordinate reference system to return, Default: 4326 for \link[sfext]{sf_to_df}
-and NULL for \link[sfext]{df_to_sf}.}
+\item{crs}{Cordinate reference system to return, Default: 4326 for
+\code{\link[sfext:sf_to_df]{sf_to_df()}} and NULL for \code{\link[sfext:df_to_sf]{df_to_sf()}}.}
 
 \item{coords}{Coordinate columns for input dataframe or output sf object (if
 geometry is 'centroid' or 'point') Default: c("lon", "lat").}
 
-\item{from_crs}{For \link[sfext]{df_to_sf}, coordinate reference system used by
+\item{from_crs}{For \code{\link[sfext:df_to_sf]{df_to_sf()}}, coordinate reference system used by
 coordinates or well known text in data frame.}
 
-\item{remove_coords}{For \link[sfext]{df_to_sf}, if \code{TRUE}, remove the coordinate columns
+\item{remove_coords}{For \code{\link[sfext:df_to_sf]{df_to_sf()}}, if \code{TRUE}, remove the coordinate columns
 after converting a data frame to simple feature object; defaults to
 \code{FALSE}.}
 
-\item{address}{Address column name passed to \link[tidygeocoder:geocode]{tidygeocoder::geocode} or
+\item{address}{Address column name passed to \code{\link[tidygeocoder:geocode]{tidygeocoder::geocode()}} or
 \link[tidygeocoder:geo]{tidygeocoder::geo}}
 
-\item{geo}{If \code{TRUE}, use \link[sfext]{address_to_sf} to geocode address column; defaults
+\item{geo}{If \code{TRUE}, use \code{\link[sfext:address_to_sf]{address_to_sf()}} to geocode address column; defaults
 to \code{FALSE}.}
 
 \item{clean_names}{If \code{TRUE}, clean names provided to nm or created based on

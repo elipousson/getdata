@@ -29,14 +29,15 @@ get_esri_data(
 
 get_esri_layers(
   location = NULL,
-  layers,
+  layers = NULL,
   url = NULL,
   nm = NULL,
   token = NULL,
+  clean_names = TRUE,
   ...
 )
 
-get_esri_metadata(url, meta = "name", token = NULL, clean_names = TRUE)
+get_esri_metadata(url, token = NULL, meta = NULL, clean_names = TRUE)
 }
 \arguments{
 \item{location}{\code{sf}, \code{sfc}, or \code{bbox} object (or other object convertible
@@ -58,8 +59,8 @@ to units matching GDAL units for x; defaults to "meter"}
 character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} returns the same value
 without modification.}
 
-\item{crs}{Cordinate reference system to return, Default: 4326 for \link[sfext]{sf_to_df}
-and NULL for \link[sfext]{df_to_sf}.}
+\item{crs}{Cordinate reference system to return, Default: 4326 for
+\code{\link[sfext:sf_to_df]{sf_to_df()}} and NULL for \code{\link[sfext:df_to_sf]{df_to_sf()}}.}
 
 \item{url}{FeatureServer or MapServer url to retrieve data from. Passed to
 \code{url} parameter of \link[esri2sf:esri2sf]{esri2sf::esri2sf} or \link[esri2sf:esri2sf]{esri2sf::esri2df} functions. For
@@ -74,11 +75,11 @@ FeatureServer or MapServer data.}
 \item{coords}{Coordinate columns for input dataframe or output sf object (if
 geometry is 'centroid' or 'point') Default: c("lon", "lat").}
 
-\item{from_crs}{For \link[sfext]{df_to_sf}, coordinate reference system used by
+\item{from_crs}{For \code{\link[sfext:df_to_sf]{df_to_sf()}}, coordinate reference system used by
 coordinates or well known text in data frame.}
 
-\item{clean_names}{If \code{TRUE}, use janitor::make_clean_names on the returned metadata
-value (typically used for name values).}
+\item{clean_names}{If \code{TRUE}, use \code{\link[janitor:make_clean_names]{janitor::make_clean_names()}} on the
+returned metadata value. Ignored for non-character values, e.g. \code{meta = "id"}.}
 
 \item{token}{string for authentication token. defaults to \code{NULL}.}
 
@@ -95,11 +96,12 @@ Default \code{FALSE}.}
   }}
 
 \item{layers}{Either a vector with URLs, a named list of urls, or a numeric
-vector.}
+vector; defaults to \code{NULL}. Optional if url is a}
 
 \item{nm}{Name or vector of names to add to the layers; defaults to \code{NULL}.}
 
-\item{meta}{Name of metadata list value to return from \link[esri2sf:esrimeta]{esri2sf::esrimeta}.}
+\item{meta}{Name of metadata list value to return from \link[esri2sf:esrimeta]{esri2sf::esrimeta},
+e.g. "name" to return layer name. Defaults to \code{NULL}.}
 }
 \description{
 Wraps the \link[esri2sf:esri2sf]{esri2sf::esri2sf} and \link[esri2sf:esri2sf]{esri2sf::esri2df} function to download an

@@ -61,7 +61,7 @@ without modification.}
 
 \item{crs}{Coordinate reference system of bounding box to return}
 
-\item{remove_coords}{For \link[sfext]{df_to_sf}, if \code{TRUE}, remove the coordinate columns
+\item{remove_coords}{For \code{\link[sfext:df_to_sf]{df_to_sf()}}, if \code{TRUE}, remove the coordinate columns
 after converting a data frame to simple feature object; defaults to
 \code{FALSE}.}
 
