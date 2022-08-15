@@ -165,28 +165,14 @@ get_esri_layers <- function(location = NULL,
     meta <- get_esri_metadata(layers, token)
 
     if (any(rlang::has_name(meta, c("layers", "subLayers")))) {
-      if (rlang::has_name(meta, "layers")) {
-        layer_type <- "layers"
-        has_no_sublayers <- vapply(
-          meta[[layer_type]]$subLayerIds,
-          function(x) {is.na(x) | is.null(x)}, TRUE
-          )
-        layer_id <- meta[[layer_type]]$id[has_no_sublayers]
-        layer_name <- meta[[layer_type]]$name[has_no_sublayers]
-      } else {
-        layer_type <- "subLayers"
-        layer_id <- meta[[layer_type]]$id
-        layer_name <- meta[[layer_type]]$name
-      }
-
-      url <- gsub("[0-9]+$|[0-9]+/$", "", layers, perl = TRUE)
+      layer_list <- get_layer_list(meta)
 
       return(
         get_esri_layers(
           location = location,
-          layers = layer_id,
-          url = url,
-          nm = layer_name,
+          layers = layer_list$id,
+          url = gsub("[0-9]+$|[0-9]+/$", "", layers, perl = TRUE),
+          nm = layer_list$name,
           token = token,
           clean_names = clean_names,
           ...
@@ -214,8 +200,8 @@ get_esri_layers <- function(location = NULL,
   } else {
     nm <- nm %||%
       purrr::map_chr(
-      layer_urls,
-      ~ get_esri_metadata(.x, token, meta = "name", clean_names = clean_names)
+        layer_urls,
+        ~ get_esri_metadata(.x, token, meta = "name", clean_names = clean_names)
       )
   }
 
@@ -245,6 +231,30 @@ get_esri_layers <- function(location = NULL,
     )
 
   rlang::set_names(data, nm)
+}
+
+#' Get layer and sublayer IDs and names from metadata
+#'
+#' @noRd
+get_layer_list <- function(meta) {
+  if (rlang::has_name(meta, "layers")) {
+    type <- "layers"
+  } else if (rlang::has_name(meta, "subLayers")) {
+    type <- "subLayers"
+  } else {
+    return(NULL)
+  }
+
+  layer_list <- meta[[type]]
+
+  if (rlang::has_name(layer_list, "subLayerIds")) {
+    layer_list <- dplyr::filter(layer_list, is.na(subLayerIds) | is.null(subLayerIds))
+  }
+
+  list(
+    "id" = layer_list$id,
+    "name" = layer_list$name
+  )
 }
 
 #' @name get_esri_metadata
