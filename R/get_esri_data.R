@@ -179,7 +179,7 @@ get_esri_layers <- function(location = NULL,
         )
 
       if (clean_names) {
-        layers <- rlang::set_names(layers, janitor::make_clean_names(layers))
+        layers <- rlang::set_names(layers, janitor::make_clean_names(names(layers)))
       }
 
       return(layers)
