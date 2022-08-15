@@ -167,7 +167,7 @@ get_esri_layers <- function(location = NULL,
     if (any(rlang::has_name(meta, c("layers", "subLayers")))) {
       layer_list <- get_layer_list(meta)
 
-      return(
+      layers <-
         get_esri_layers(
           location = location,
           layers = layer_list$id,
@@ -177,7 +177,12 @@ get_esri_layers <- function(location = NULL,
           clean_names = clean_names,
           ...
         )
-      )
+
+      if (clean_names) {
+        layers <- rlang::set_names(layers, janitor::make_clean_names(layers))
+      }
+
+      return(layers)
     }
   }
 
