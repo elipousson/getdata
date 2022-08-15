@@ -167,7 +167,10 @@ get_esri_layers <- function(location = NULL,
     if (any(rlang::has_name(meta, c("layers", "subLayers")))) {
       if (rlang::has_name(meta, "layers")) {
         layer_type <- "layers"
-        has_no_sublayers <- vapply(meta[[layer_type]]$subLayerIds, is.null, TRUE)
+        has_no_sublayers <- vapply(
+          meta[[layer_type]]$subLayerIds,
+          function(x) {is.na(x) | is.null(x)}, TRUE
+          )
         layer_id <- meta[[layer_type]]$id[has_no_sublayers]
         layer_name <- meta[[layer_type]]$name[has_no_sublayers]
       } else {
