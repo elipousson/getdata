@@ -47,7 +47,7 @@ get_esri_data <- function(location = NULL,
                           ...) {
   is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
 
-  meta <- esri2sf::esrimeta(url, token)
+  meta <- get_esri_metadata(url, token)
   table <- any(c(is.null(meta$geometryType), (meta$geometryType == "")))
 
   bbox <- NULL
@@ -133,26 +133,64 @@ get_esri_data <- function(location = NULL,
 #' @name get_esri_layers
 #' @rdname get_esri_data
 #' @param layers Either a vector with URLs, a named list of urls, or a numeric
-#'   vector.
+#'   vector; defaults to `NULL`. Optional if url is a
 #' @param nm Name or vector of names to add to the layers; defaults to `NULL`.
 #' @export
 #' @importFrom dplyr case_when
-#' @importFrom  purrr map_chr map
+#' @importFrom rlang has_name list2 set_names
+#' @importFrom janitor make_clean_names
+#' @importFrom purrr map_chr map
 get_esri_layers <- function(location = NULL,
-                            layers,
+                            layers = NULL,
                             url = NULL,
                             nm = NULL,
                             token = NULL,
+                            clean_names = TRUE,
                             ...) {
   is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
+
+  layers <- layers %||% url
 
   type <-
     dplyr::case_when(
       is.numeric(layers) && !is.null(url) && is_esri_url(url) ~ "id",
-      is.list(layers) && is_named(layers) ~ "nm_list",
+      all(is.list(layers) && is_named(layers)) ~ "nm_list",
       is.list(layers) ~ "list",
-      is.character(layers) ~ "url"
+      is_esri_url(layers) ~ "url"
     )
+
+  type <- unique(type)
+
+  if (type == "url") {
+    meta <- get_esri_metadata(layers, token)
+
+    if (any(rlang::has_name(meta, c("layers", "subLayers")))) {
+      if (rlang::has_name(meta, "layers")) {
+        layer_type <- "layers"
+        has_no_sublayers <- vapply(meta[[layer_type]]$subLayerIds, is.null, TRUE)
+        layer_id <- meta[[layer_type]]$id[has_no_sublayers]
+        layer_name <- meta[[layer_type]]$name[has_no_sublayers]
+      } else {
+        layer_type <- "subLayers"
+        layer_id <- meta[[layer_type]]$id
+        layer_name <- meta[[layer_type]]$name
+      }
+
+      url <- gsub("[0-9]+$|[0-9]+/$", "", layers, perl = TRUE)
+
+      return(
+        get_esri_layers(
+          location = location,
+          layers = layer_id,
+          url = url,
+          nm = layer_name,
+          token = token,
+          clean_names = clean_names,
+          ...
+        )
+      )
+    }
+  }
 
   layer_urls <- NULL
 
@@ -166,13 +204,21 @@ get_esri_layers <- function(location = NULL,
 
   if (type == "nm_list") {
     nm <- nm %||% names(layers)
+
+    if (clean_names) {
+      nm <- janitor::make_clean_names(nm)
+    }
   } else {
-    nm <- nm %||% purrr::map_chr(layer_urls, ~ get_esri_metadata(.x, token))
+    nm <- nm %||%
+      purrr::map_chr(
+      layer_urls,
+      ~ get_esri_metadata(.x, token, meta = "name", clean_names = clean_names)
+      )
   }
 
   layer_urls <- as.list(layer_urls)
 
-  params <- list2(...)
+  params <- rlang::list2(...)
 
   data <-
     purrr::map(
@@ -190,24 +236,25 @@ get_esri_layers <- function(location = NULL,
         name = params$name,
         name_col = params$name_col,
         coords = params$coords,
-        clean_names = params$clean_names %||% TRUE,
+        clean_names = clean_names,
         progress = params$progress %||% TRUE
       )
     )
 
-  names(data) <- nm
-
-  data
+  rlang::set_names(data, nm)
 }
 
 #' @name get_esri_metadata
 #' @rdname get_esri_data
-#' @param meta Name of metadata list value to return from [esri2sf::esrimeta].
-#' @param clean_names If `TRUE`, use janitor::make_clean_names on the returned metadata
-#'   value (typically used for name values).
+#' @param meta Name of metadata list value to return from [esri2sf::esrimeta],
+#'   e.g. "name" to return layer name. Defaults to `NULL`.
+#' @param clean_names If `TRUE`, use [janitor::make_clean_names()] on the
+#'   returned metadata value. Ignored for non-character values, e.g. `meta =
+#'   "id"`.
 #' @export
 #' @importFrom janitor make_clean_names
-get_esri_metadata <- function(url, meta = "name", token = NULL, clean_names = TRUE) {
+#' @importFrom rlang is_character
+get_esri_metadata <- function(url, token = NULL, meta = NULL, clean_names = TRUE) {
   is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
 
   metadata <- esri2sf::esrimeta(url, token)
@@ -216,7 +263,7 @@ get_esri_metadata <- function(url, meta = "name", token = NULL, clean_names = TR
     metadata <- metadata[[meta]]
   }
 
-  if (!clean_names | !is.character(metadata)) {
+  if (!clean_names | !rlang::is_character(metadata)) {
     return(metadata)
   }
 
