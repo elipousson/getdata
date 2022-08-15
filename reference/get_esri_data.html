@@ -91,14 +91,15 @@ future.</p>
 <span></span>
 <span><span class="fu">get_esri_layers</span><span class="op">(</span></span>
 <span>  location <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">layers</span>,</span>
+<span>  layers <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  url <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nm <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  token <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  clean_names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_esri_metadata</span><span class="op">(</span><span class="va">url</span>, meta <span class="op">=</span> <span class="st">"name"</span>, token <span class="op">=</span> <span class="cn">NULL</span>, clean_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">get_esri_metadata</span><span class="op">(</span><span class="va">url</span>, token <span class="op">=</span> <span class="cn">NULL</span>, meta <span class="op">=</span> <span class="cn">NULL</span>, clean_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -133,8 +134,8 @@ without modification.</p></dd>
 
 
 <dt>crs</dt>
-<dd><p>Cordinate reference system to return, Default: 4326 for <a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">sf_to_df</a>
-and NULL for <a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">df_to_sf</a>.</p></dd>
+<dd><p>Cordinate reference system to return, Default: 4326 for
+<code><a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">sf_to_df()</a></code> and NULL for <code><a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">df_to_sf()</a></code>.</p></dd>
 
 
 <dt>url</dt>
@@ -159,13 +160,13 @@ geometry is 'centroid' or 'point') Default: c("lon", "lat").</p></dd>
 
 
 <dt>from_crs</dt>
-<dd><p>For <a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">df_to_sf</a>, coordinate reference system used by
+<dd><p>For <code><a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">df_to_sf()</a></code>, coordinate reference system used by
 coordinates or well known text in data frame.</p></dd>
 
 
 <dt>clean_names</dt>
-<dd><p>If <code>TRUE</code>, use janitor::make_clean_names on the returned metadata
-value (typically used for name values).</p></dd>
+<dd><p>If <code>TRUE</code>, use <code><a href="https://rdrr.io/pkg/janitor/man/make_clean_names.html" class="external-link">janitor::make_clean_names()</a></code> on the
+returned metadata value. Ignored for non-character values, e.g. <code>meta = "id"</code>.</p></dd>
 
 
 <dt>token</dt>
@@ -192,7 +193,7 @@ Default <code>FALSE</code>.</p></dd>
 
 <dt>layers</dt>
 <dd><p>Either a vector with URLs, a named list of urls, or a numeric
-vector.</p></dd>
+vector; defaults to <code>NULL</code>. Optional if url is a</p></dd>
 
 
 <dt>nm</dt>
@@ -200,7 +201,8 @@ vector.</p></dd>
 
 
 <dt>meta</dt>
-<dd><p>Name of metadata list value to return from <a href="https://rdrr.io/pkg/esri2sf/man/esrimeta.html" class="external-link">esri2sf::esrimeta</a>.</p></dd>
+<dd><p>Name of metadata list value to return from <a href="https://rdrr.io/pkg/esri2sf/man/esrimeta.html" class="external-link">esri2sf::esrimeta</a>,
+e.g. "name" to return layer name. Defaults to <code>NULL</code>.</p></dd>
 
 </dl></div>
 
