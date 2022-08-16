@@ -5,8 +5,6 @@
 \alias{rename_with_xwalk}
 \alias{label_with_xwalk}
 \alias{fix_epoch_date}
-\alias{bind_address_col}
-\alias{bind_block_col}
 \title{Format data frames and simple features using common approaches}
 \usage{
 format_data(
@@ -28,16 +26,6 @@ rename_with_xwalk(x, xwalk = NULL, label = FALSE)
 label_with_xwalk(x, xwalk = NULL)
 
 fix_epoch_date(x)
-
-bind_address_col(x, city = NULL, county = NULL, state = NULL)
-
-bind_block_col(
-  x,
-  bldg_num = "bldg_num",
-  street_dir_prefix = "street_dir_prefix",
-  street_name = "street_name",
-  street_suffix = "street_type"
-)
 }
 \arguments{
 \item{x}{A tibble or data frame object}
@@ -73,12 +61,6 @@ the second column as value; or a named list. The existing names of x must
 be the values and the new names must be the names.}
 
 \item{...}{Additional parameters passed to \link{format_sf_data}}
-
-\item{city, county, state}{City, county, and state to bind to data frame or
-\code{sf} object.}
-
-\item{bldg_num, street_dir_prefix, street_name, street_suffix}{Column names to
-use for address information required to generate a block name and number.}
 }
 \value{
 The input data frame or simple feature object with formatting
@@ -86,8 +68,6 @@ functions applied.
 }
 \description{
 This function can apply the following common data cleaning tasks:
-}
-\details{
 \itemize{
 \item Applies \link[stringr:str_trim]{stringr::str_squish} and \link[stringr:str_trim]{stringr::str_trim} to all character
 columns
@@ -96,15 +76,6 @@ columns
 \item Optionally renames variables by passing a named list of variables
 }
 
-Bind columns to address data:
-\itemize{
-\item \link{bind_address_col} bind a provided value for city, county, and state to a
-data frame (to supplement address data with consistent values for these
-variables)
-\item \link{bind_block_col} requires a data frame with columns named "bldg_num",
-"street_dir_prefix", "street_name", and "street_type" and binds derived
-values for whether a building is on the even or odd side of a block and
-create a block number (street segment), and block face (street segment side)
-identifier.
-}
+The address functions previously included with \code{\link[=format_data]{format_data()}} are now
+documented at \code{\link[=format_address_data]{format_address_data()}}.
 }

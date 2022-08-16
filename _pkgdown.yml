@@ -18,9 +18,11 @@ reference:
   - '`get_tigris_data`'
   - '`get_wiki_data`'
   - '`get_static_mapbox`'
-- title: Additional data access/formatting utilities
+- title: Additional data formatting utilities
   contents:
   - starts_with("format")
+- title: Additional data access utilities
+  contents:
   - '`set_access_token`'
   - '`set_pkg_options`'
 - title: Additional utilities for locations

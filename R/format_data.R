@@ -1,5 +1,6 @@
 #' Format data frames and simple features using common approaches
 #'
+#' @description
 #' This function can apply the following common data cleaning tasks:
 #'
 #' - Applies [stringr::str_squish] and [stringr::str_trim] to all character
@@ -7,6 +8,9 @@
 #' - Optionally replaces all character values of "" with `NA` values
 #' - Optionally corrects UNIX formatted dates with 1970-01-01 origins
 #' - Optionally renames variables by passing a named list of variables
+#'
+#' The address functions previously included with [format_data()] are now
+#' documented at [format_address_data()].
 #'
 #' @param x A tibble or data frame object
 #' @param var_names A named list following the format, `list("New var name" =
@@ -29,17 +33,6 @@
 #' @param ... Additional parameters passed to [format_sf_data]
 #' @return The input data frame or simple feature object with formatting
 #'   functions applied.
-#'
-#' @details Bind columns to address data:
-#'
-#'  - [bind_address_col] bind a provided value for city, county, and state to a
-#'  data frame (to supplement address data with consistent values for these
-#'  variables)
-#' - [bind_block_col] requires a data frame with columns named "bldg_num",
-#' "street_dir_prefix", "street_name", and "street_type" and binds derived
-#' values for whether a building is on the even or odd side of a block and
-#' create a block number (street segment), and block face (street segment side)
-#' identifier.
 #'
 #' @rdname format_data
 #' @export
@@ -177,56 +170,6 @@ fix_epoch_date <- function(x) {
       dplyr::contains("date"),
       ~ as.POSIXct(.x / 1000, origin = "1970-01-01")
     )
-  )
-}
-
-
-#' @name bind_address_col
-#' @rdname format_data
-#' @param city,county,state City, county, and state to bind to data frame or
-#'   `sf` object.
-#' @export
-#' @importFrom dplyr mutate
-bind_address_col <- function(x, city = NULL, county = NULL, state = NULL) {
-  if (!is.null(city)) {
-    x <- has_same_name_col(x, col = "city")
-    x <- dplyr::mutate(x, city = city)
-  }
-
-  if (!is.null(county)) {
-    x <- has_same_name_col(x, col = "county")
-    x <- dplyr::mutate(x, county = county)
-  }
-
-  if (!is.null(state)) {
-    x <- has_same_name_col(x, col = "state")
-    x <- dplyr::mutate(x, state = state)
-  }
-
-  x
-}
-
-#' @name bind_block_col
-#' @rdname format_data
-#' @param bldg_num,street_dir_prefix,street_name,street_suffix Column names to
-#'   use for address information required to generate a block name and number.
-#' @export
-#' @importFrom dplyr mutate if_else
-bind_block_col <- function(x,
-                           bldg_num = "bldg_num",
-                           street_dir_prefix = "street_dir_prefix",
-                           street_name = "street_name",
-                           street_suffix = "street_type") {
-  stopifnot(
-    has_name(x, c(bldg_num, street_dir_prefix, street_name, street_suffix))
-  )
-
-  dplyr::mutate(
-    x,
-    block_num = floor({{ bldg_num }} / 100) * 100,
-    bldg_num_even_odd = dplyr::if_else(({{ bldg_num }} %% 2) == 0, "Even", "Odd"),
-    block_num_st = paste(block_num, {{ street_dir_prefix }}, {{ street_name }}, {{ street_suffix }}),
-    block_face_st = paste(bldg_num_even_odd, {{ street_dir_prefix }}, {{ street_name }}, {{ street_suffix }})
   )
 }
 
