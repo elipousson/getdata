@@ -78,7 +78,8 @@ create a block segment and a block face (including the even/odd identifier).</p>
 <span>  street_dir_prefix <span class="op">=</span> <span class="st">"street_dir_prefix"</span>,</span>
 <span>  street_name <span class="op">=</span> <span class="st">"street_name"</span>,</span>
 <span>  street_suffix <span class="op">=</span> <span class="st">"street_type"</span>,</span>
-<span>  block_col <span class="op">=</span> <span class="st">"block"</span></span>
+<span>  block_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  case <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">bind_address_col</span><span class="op">(</span><span class="va">x</span>, city <span class="op">=</span> <span class="cn">NULL</span>, county <span class="op">=</span> <span class="cn">NULL</span>, state <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
@@ -92,8 +93,14 @@ use for address information required to generate a block name and number.</p></d
 
 
 <dt>block_col</dt>
-<dd><p>String to use as prefix for block identifier columns.
-Defaults to "block".</p></dd>
+<dd><p>String to use as prefix for block identifier columns and
+separator between block number and street. Set to "block" when <code>NULL</code>
+(default).</p></dd>
+
+
+<dt>case</dt>
+<dd><p>Case to use for new columns. "upper", "lower", or "title".
+Defaults to <code>NULL</code>.</p></dd>
 
 
 <dt>city, county, state</dt>
