@@ -195,13 +195,12 @@ str_trim_squish_across <- function(x, .cols = where(is.character)) {
 #'
 #' @noRd
 #' @importFrom dplyr everything mutate across if_else
-#' @importFrom rlang is_empty
 str_empty_to_blank_across <- function(x, .cols = everything(), blank = "") {
   dplyr::mutate(
     x,
     dplyr::across(
       .cols,
-      ~ dplyr::if_else(rlang::is_empty(.x), blank, .x)
+      ~ dplyr::if_else(is.na(.x) | is.null(.x), blank, .x)
     )
   )
 }
@@ -210,7 +209,7 @@ str_empty_to_blank_across <- function(x, .cols = everything(), blank = "") {
 #'
 #' @noRd
 #' @importFrom dplyr everything mutate across
-str_to_squish_across <- function(x, .cols = everything()) {
+str_squish_across <- function(x, .cols = everything()) {
   dplyr::mutate(
     x,
     dplyr::across(
