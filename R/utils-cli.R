@@ -70,7 +70,7 @@ cli_ask <- function(text, prompt = ">> ", ..., .envir = parent.frame()) {
 
 
 #' @noRd
-cli_abort_ifnot <- function(..., condition = FALSE, .data = NULL, call = caller_env()) {
+cli_abort_ifnot <- function(..., condition = FALSE, .data = NULL, .envir = parent.frame(), call = .envir) {
   if (!is_logical(condition)) {
     condition <- as_function(condition)
     condition <- condition(.data)
@@ -79,6 +79,7 @@ cli_abort_ifnot <- function(..., condition = FALSE, .data = NULL, call = caller_
 
   if (!condition) {
     cli_abort(...,
+              .envir = .envir,
       call = call
     )
   }
