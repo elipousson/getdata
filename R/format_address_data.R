@@ -19,17 +19,21 @@ NULL
 #' @rdname format_address_data
 #' @param bldg_num,street_dir_prefix,street_name,street_suffix Column names to
 #'   use for address information required to generate a block name and number.
-#' @param block_col String to use as prefix for block identifier columns.
-#'   Defaults to "block".
+#' @param block_col String to use as prefix for block identifier columns and
+#'   separator between block number and street. Set to "block" when `NULL`
+#'   (default).
+#' @param case Case to use for new columns. "upper", "lower", or "title".
+#'   Defaults to `NULL`.
 #' @export
 #' @importFrom rlang has_name
-#' @importFrom dplyr mutate if_else across all_of
+#' @importFrom dplyr mutate across all_of if_else
 bind_block_col <- function(x,
                            bldg_num = "bldg_num",
                            street_dir_prefix = "street_dir_prefix",
                            street_name = "street_name",
                            street_suffix = "street_type",
-                           block_col = "block") {
+                           block_col = NULL,
+                           case = NULL) {
   address_cols <- c(bldg_num, street_dir_prefix, street_name, street_suffix)
   x_missing_cols <- address_cols[!rlang::has_name(x, address_cols)]
 
@@ -45,6 +49,17 @@ bind_block_col <- function(x,
     x[[bldg_num]] <- as.numeric(x[[bldg_num]])
   }
 
+  x <-
+    dplyr::mutate(
+      x,
+      dplyr::across(
+        dplyr::all_of(c(street_dir_prefix, street_suffix)),
+        ~ dplyr::if_else(is.na(.x) | is.null(.x), "", .x)
+      )
+    )
+
+  block_col <- block_col %||% "block"
+
   block_col_labels <-
     paste0(block_col, "_", c("num", "even_odd", "segment", "face"))
 
@@ -52,15 +67,34 @@ bind_block_col <- function(x,
     x,
     "{block_col_labels[[1]]}" := floor(.data[[bldg_num]] / 100) * 100,
     "{block_col_labels[[2]]}" := dplyr::if_else(
-      (.data[[bldg_num]] %% 2) == 0, "Even", "Odd"),
+      (.data[[bldg_num]] %% 2) == 0, "Even", "Odd"
+    ),
     "{block_col_labels[[3]]}" := paste(
       .data[[block_col_labels[[1]]]], block_col,
-      .data[[street_dir_prefix]], .data[[street_name]], .data[[street_suffix]]),
-      "{block_col_labels[[4]]}" := paste(
-        .data[[block_col_labels[[3]]]],
-        paste0("(", .data[[block_col_labels[[2]]]], ")")
-      )
+      .data[[street_dir_prefix]], .data[[street_name]], .data[[street_suffix]]
+    ),
+    "{block_col_labels[[4]]}" := paste(
+      .data[[block_col_labels[[3]]]],
+      paste0("(", .data[[block_col_labels[[2]]]], ")")
     )
+  )
+
+  if (!is.null(case)) {
+    case <- match.arg(tolower(case), c("lower", "upper", "title"))
+
+    x <-
+      dplyr::mutate(
+        x,
+        dplyr::across(
+          dplyr::all_of(block_col_labels),
+          ~ switch(case,
+            "lower" = tolower(.x),
+            "upper" = toupper(.x),
+            "title" = str_capitalize(.x)
+          )
+        )
+      )
+  }
 
   squish_cols <- c(block_col_labels[[3]], block_col_labels[[4]])
 
@@ -69,10 +103,19 @@ bind_block_col <- function(x,
     dplyr::across(
       dplyr::all_of(squish_cols),
       ~ gsub("\\s\\s+", " ", .x, perl = TRUE)
-      )
+    )
   )
 }
 
+#' Helper function from examples for toupper and tolower
+#'
+#' @noRd
+str_capitalize <- function(string, strict = FALSE) {
+  cap <- function(string) paste(toupper(substring(string, 1, 1)),
+                                {string <- substring(string, 2); if(strict) tolower(string) else string},
+                                sep = "", collapse = " " )
+  sapply(strsplit(string, split = " "), cap, USE.NAMES = !is.null(names(string)))
+}
 
 #' @name bind_address_col
 #' @rdname format_address_data
