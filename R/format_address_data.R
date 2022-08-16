@@ -45,23 +45,24 @@ bind_block_col <- function(x,
     x[[bldg_num]] <- as.numeric(x[[bldg_num]])
   }
 
+  block_col_labels <-
+    paste0(block_col, "_", c("num", "even_odd", "segment", "face"))
+
   x <- dplyr::mutate(
     x,
-    x,
-    "{block_col_num_label}" := floor(.data[[bldg_num]] / 100) * 100,
-    "{block_col}_even_odd" := dplyr::if_else(
+    "{block_col_labels[[1]]}" := floor(.data[[bldg_num]] / 100) * 100,
+    "{block_col_labels[[2]]}" := dplyr::if_else(
       (.data[[bldg_num]] %% 2) == 0, "Even", "Odd"),
-    "{block_col}_segment" := paste(
-      .data[[block_col_num_label]], "block",
-      .data[[street_dir_prefix]], .data[[street_name]], .data[[street_suffix]]
-    ),
-    "{block_col}_face" := paste(
-      .data[[glue("{block_col}_segment")]],
-      paste0("(", .data[[glue("{block_col}_even_odd")]], ")")
+    "{block_col_labels[[3]]}" := paste(
+      .data[[block_col_labels[[1]]]], block_col,
+      .data[[street_dir_prefix]], .data[[street_name]], .data[[street_suffix]]),
+      "{block_col_labels[[4]]}" := paste(
+        .data[[block_col_labels[[3]]]],
+        paste0("(", .data[[block_col_labels[[2]]]], ")")
+      )
     )
-  )
 
-  squish_cols <- c(glue("{block_col}_segment"), glue("{block_col}_face"))
+  squish_cols <- c(block_col_labels[[3]], block_col_labels[[4]])
 
   dplyr::mutate(
     x,
