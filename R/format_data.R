@@ -48,7 +48,7 @@ format_data <- function(x,
                         format_sf = FALSE,
                         xwalk = NULL,
                         ...) {
-  x <- str_trim_squish(x)
+  x <- str_trim_squish_across(x)
 
   if (!is.null(var_names) | !is.null(xwalk)) {
     xwalk <- xwalk %|% var_names
@@ -114,7 +114,6 @@ make_xwalk_list <- function(xwalk) {
 #' @importFrom dplyr rename_with
 #' @importFrom sfext is_sf
 rename_with_xwalk <- function(x, xwalk = NULL, label = FALSE) {
-
   # From https://twitter.com/PipingHotData/status/1497014703473704965
   # https://stackoverflow.com/questions/20987295/rename-multiple-columns-by-names/41343022#41343022
   xwalk <- make_xwalk_list(xwalk)
@@ -173,21 +172,92 @@ fix_epoch_date <- function(x) {
   )
 }
 
-#' @name str_trim_squish
+#' @name str_trim_squish_across
 #' @noRd
 #' @importFrom dplyr mutate across if_else
-str_trim_squish <- function(string) {
+str_trim_squish_across <- function(x, .cols = where(is.character)) {
   is_pkg_installed("stringr")
 
   dplyr::mutate(
-    string,
+    x,
     dplyr::across(
-      where(is.character),
+      .cols,
       ~ dplyr::if_else(
-        !is_empty(.x) & !is.na(.x),
+        !rlang::is_empty(.x),
         stringr::str_trim(stringr::str_squish(.x)),
         .x
       )
     )
   )
+}
+
+#' Helper function to squish white space across dataframe columns
+#'
+#' @noRd
+#' @importFrom dplyr everything mutate across if_else
+#' @importFrom rlang is_empty
+str_empty_to_blank_across <- function(x, .cols = everything(), blank = "") {
+  dplyr::mutate(
+    x,
+    dplyr::across(
+      .cols,
+      ~ dplyr::if_else(rlang::is_empty(.x), blank, .x)
+    )
+  )
+}
+
+#' Helper function to squish white space across dataframe columns
+#'
+#' @noRd
+#' @importFrom dplyr everything mutate across
+str_to_squish_across <- function(x, .cols = everything()) {
+  dplyr::mutate(
+    x,
+    dplyr::across(
+      .cols,
+      ~ gsub("\\s\\s+", " ", .x, perl = TRUE)
+    )
+  )
+}
+
+#' Helper function to change case across dataframe columns
+#'
+#' @noRd
+#' @importFrom dplyr everything mutate across
+str_to_case_across <- function(x, .cols = everything(), case = NULL) {
+  if (is.null(case)) {
+    return(x)
+  }
+
+  case <- match.arg(tolower(case), c("lower", "upper", "title"))
+
+  x <-
+    dplyr::mutate(
+      x,
+      dplyr::across(
+        .cols,
+        ~ switch(case,
+          "lower" = tolower(.x),
+          "upper" = toupper(.x),
+          "title" = str_capitalize(.x)
+        )
+      )
+    )
+}
+
+#' Helper function from examples for toupper and tolower
+#'
+#' @noRd
+str_capitalize <- function(string, strict = FALSE) {
+  cap <- function(string) {
+    paste(toupper(substring(string, 1, 1)),
+      {
+        string <- substring(string, 2)
+        if (strict) tolower(string) else string
+      },
+      sep = "",
+      collapse = " "
+    )
+  }
+  sapply(strsplit(string, split = " "), cap, USE.NAMES = !is.null(names(string)))
 }

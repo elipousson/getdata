@@ -50,12 +50,9 @@ bind_block_col <- function(x,
   }
 
   x <-
-    dplyr::mutate(
+    str_empty_to_blank_across(
       x,
-      dplyr::across(
-        dplyr::all_of(c(street_dir_prefix, street_suffix)),
-        ~ dplyr::if_else(is.na(.x) | is.null(.x), "", .x)
-      )
+      .cols = dplyr::all_of(c(street_dir_prefix, street_suffix))
     )
 
   block_col <- block_col %||% "block"
@@ -79,42 +76,11 @@ bind_block_col <- function(x,
     )
   )
 
-  if (!is.null(case)) {
-    case <- match.arg(tolower(case), c("lower", "upper", "title"))
-
-    x <-
-      dplyr::mutate(
-        x,
-        dplyr::across(
-          dplyr::all_of(block_col_labels),
-          ~ switch(case,
-            "lower" = tolower(.x),
-            "upper" = toupper(.x),
-            "title" = str_capitalize(.x)
-          )
-        )
-      )
-  }
+  x <- str_to_case_across(x, dplyr::all_of(block_col_labels), case)
 
   squish_cols <- c(block_col_labels[[3]], block_col_labels[[4]])
 
-  dplyr::mutate(
-    x,
-    dplyr::across(
-      dplyr::all_of(squish_cols),
-      ~ gsub("\\s\\s+", " ", .x, perl = TRUE)
-    )
-  )
-}
-
-#' Helper function from examples for toupper and tolower
-#'
-#' @noRd
-str_capitalize <- function(string, strict = FALSE) {
-  cap <- function(string) paste(toupper(substring(string, 1, 1)),
-                                {string <- substring(string, 2); if(strict) tolower(string) else string},
-                                sep = "", collapse = " " )
-  sapply(strsplit(string, split = " "), cap, USE.NAMES = !is.null(names(string)))
+  str_squish_across(x, dplyr::all_of(squish_cols))
 }
 
 #' @name bind_address_col
