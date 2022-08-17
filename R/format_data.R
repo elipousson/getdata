@@ -210,16 +210,20 @@ str_trim_squish_across <- function(x) {
   )
 }
 
-#' Helper function to squish white space across dataframe columns
+#' Helper function to squish white space across data.frame columns
 #'
 #' @noRd
 #' @importFrom dplyr everything mutate across if_else
-str_empty_to_blank_across <- function(x, .cols = everything(), blank = "") {
+str_empty_to_blank_across <- function(x, .cols = dplyr::everything(), blank = "") {
   dplyr::mutate(
     x,
     dplyr::across(
       .cols,
-      ~ dplyr::if_else(is.na(.x) | is.null(.x), blank, .x)
+      ~ dplyr::if_else(
+        is.na(.x) | is.null(.x),
+        blank,
+        as.character(.x)
+      )
     )
   )
 }
