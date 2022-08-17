@@ -1,8 +1,7 @@
 .onLoad <- function(lib, pkg) {
-  # run_on_load()
-
+  rlang::run_on_load()
   utils::data(
-    list = c("osm_building_tags"),
+    list = c("osm_building_tags", "street_suffixes", "street_dir_prefixes"),
     package = pkg,
     envir = parent.env(environment())
   )
