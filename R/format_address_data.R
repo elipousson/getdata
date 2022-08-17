@@ -58,7 +58,7 @@ bind_block_col <- function(x,
   x <-
     str_empty_to_blank_across(
       x,
-      .cols = dplyr::all_of(c(street_dir_prefix, street_suffix))
+      .cols = dplyr::all_of(c(street_dir_prefix, street_name, street_suffix))
     )
 
   block_col <- block_col %||% "block"
@@ -72,13 +72,19 @@ bind_block_col <- function(x,
     "{block_col_labels[[2]]}" := dplyr::if_else(
       (.data[[bldg_num]] %% 2) == 0, "Even", "Odd"
     ),
-    "{block_col_labels[[3]]}" := paste(
-      .data[[block_col_labels[[1]]]], block_col,
-      .data[[street_dir_prefix]], .data[[street_name]], .data[[street_suffix]]
+    "{block_col_labels[[3]]}" := dplyr::if_else(
+      !is.na(.data[[block_col_labels[[1]]]]),
+      paste(
+        .data[[block_col_labels[[1]]]], block_col,
+        .data[[street_dir_prefix]], .data[[street_name]], .data[[street_suffix]]
+      ), ""
     ),
-    "{block_col_labels[[4]]}" := paste(
-      .data[[block_col_labels[[3]]]],
-      paste0("(", .data[[block_col_labels[[2]]]], ")")
+    "{block_col_labels[[4]]}" := dplyr::if_else(
+      !is.na(.data[[block_col_labels[[1]]]]),
+      paste(
+        .data[[block_col_labels[[3]]]],
+        paste0("(", .data[[block_col_labels[[2]]]], ")")
+      ), ""
     )
   )
 
