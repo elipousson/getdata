@@ -131,7 +131,6 @@ req_wiki_query <- function(lang = NULL,
                            details = NULL,
                            limit = 50,
                            format = "json") {
-
   # <https://www.mediawiki.org/wiki/Extension:GeoData>
   check_null(lang)
 

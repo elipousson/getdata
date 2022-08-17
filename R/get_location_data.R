@@ -299,7 +299,6 @@ get_index_param <- function(index = NULL,
                             location = NULL,
                             type = NULL,
                             data = NULL) {
-
   # Return data from index list if provided (may include bbox, sfc, or sf
   # objects)
   if (!is.null(location)) {

@@ -145,11 +145,11 @@ quarter-mile of Warren County.
 ``` r
 nearby_counties <-
   get_location_data(
-  data = nc,
-  location = location,
-  dist = 0.25,
-  unit = "mi"
-)
+    data = nc,
+    location = location,
+    dist = 0.25,
+    unit = "mi"
+  )
 
 glimpse(nearby_counties)
 #> Rows: 6
@@ -176,14 +176,14 @@ API key to work.
 
 ``` r
 ## Get Q2 2020 vehicle crash data for Cecil County, Maryland
-  get_open_data(
-    source_url = "https://opendata.maryland.gov",
-    data = "65du-s3qu",
-    where = "(year = '2020') AND (quarter = 'Q2')",
-    name_col = "county_desc",
-    name = "Cecil",
-    token = Sys.getenv("MARYLAND_OPEN_DATA_API_KEY")
-  )
+get_open_data(
+  source_url = "https://opendata.maryland.gov",
+  data = "65du-s3qu",
+  where = "(year = '2020') AND (quarter = 'Q2')",
+  name_col = "county_desc",
+  name = "Cecil",
+  token = Sys.getenv("MARYLAND_OPEN_DATA_API_KEY")
+)
 ```
 
 You must set or provide an API token or key for `get_open_data()`,

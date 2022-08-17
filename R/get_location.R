@@ -94,7 +94,6 @@ get_location <- function(type,
     stopifnot(
       "The name/id did not match any features of the type provided." = nrow(location) > 0
     )
-
   } else {
     location <-
       location_filter(

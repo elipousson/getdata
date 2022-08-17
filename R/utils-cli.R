@@ -79,7 +79,7 @@ cli_abort_ifnot <- function(..., condition = FALSE, .data = NULL, .envir = paren
 
   if (!condition) {
     cli_abort(...,
-              .envir = .envir,
+      .envir = .envir,
       call = call
     )
   }
