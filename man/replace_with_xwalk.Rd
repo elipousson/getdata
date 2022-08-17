@@ -19,19 +19,22 @@ replace_street_suffixes(
   x,
   street_suffix = "street_type",
   xwalk = NULL,
-  case = NULL,
-  abb = TRUE
+  abb = TRUE,
+  case = NULL
 )
 
 replace_street_dir_prefixes(
   x,
   street_dir_prefix = "street_dir_prefix",
   xwalk = NULL,
-  case = NULL,
-  abb = TRUE
+  abb = TRUE,
+  case = NULL
 )
 }
 \arguments{
+\item{x}{A data.frame or character vector. If x is a character vector, .cols
+is optional. If x is a data.frame, x is required.}
+
 \item{.cols}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> Columns to transform.
 Because \code{across()} is used within functions like \code{summarise()} and
 \code{mutate()}, you can't select or compute upon grouping variables.}
@@ -49,7 +52,14 @@ assumed to hold the replacement values and the second column is assumed to
 hold the original values. For example, for \code{\link[=replace_street_suffixes]{replace_street_suffixes()}}, If
 \code{TRUE}, replace full suffix names with abbreviations. If \code{FALSE}, replace
 abbreviations with full street suffix names.}
+
+\item{case}{Case to use for text in new columns or in modified values.
+Options include "lower", "upper", "title", or "sentence". Defaults to \code{NULL}.}
 }
 \description{
-Replace values in a character vector or data frame with a crosswalk
+Use \code{\link[stringr:str_replace]{stringr::str_replace_all()}} to replace values in a character vector or
+(with \code{\link[dplyr:across]{dplyr::across()}}) in select columns from a data.frame.
+\code{\link[=replace_street_dir_prefixes]{replace_street_dir_prefixes()}} and \code{\link[=replace_street_suffixes]{replace_street_suffixes()}} pass
+reference data (\link{street_dir_prefixes} and \link{street_suffixes}) to the dict
+parameter to support formatting addresses with \code{\link[=bind_block_cols]{bind_block_cols()}}.
 }

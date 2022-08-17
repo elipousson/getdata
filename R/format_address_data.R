@@ -120,6 +120,14 @@ bind_address_col <- function(x, city = NULL, county = NULL, state = NULL, case =
 
 #' Replace values in a character vector or data frame with a crosswalk
 #'
+#' Use [stringr::str_replace_all()] to replace values in a character vector or
+#' (with [dplyr::across()]) in select columns from a data.frame.
+#' [replace_street_dir_prefixes()] and [replace_street_suffixes()] pass
+#' reference data ([street_dir_prefixes] and [street_suffixes]) to the dict
+#' parameter to support formatting addresses with [bind_block_cols()].
+#'
+#' @param x A data.frame or character vector. If x is a character vector, .cols
+#'   is optional. If x is a data.frame, x is required.
 #' @inheritParams dplyr::across
 #' @param xwalk,dict Named list or data frame with a minimum of two columns
 #'   where one column contains the replacement values and the other the values
@@ -133,6 +141,7 @@ bind_address_col <- function(x, city = NULL, county = NULL, state = NULL, case =
 #'   hold the original values. For example, for [replace_street_suffixes()], If
 #'   `TRUE`, replace full suffix names with abbreviations. If `FALSE`, replace
 #'   abbreviations with full street suffix names.
+#' @inheritParams format_address_data
 #' @export
 #' @importFrom rlang is_character
 #' @importFrom dplyr mutate
@@ -147,8 +156,8 @@ replace_with_xwalk <- function(x,
   if (!is.null(dict)) {
     dict_cols <- c(1:2)
     if (abb) {
-      # Keep the abbreviation column first if converting abbreviation to full
-      # suffix
+      # Move the abbreviation column to the second column if converting
+      # abbreviation to full value
       dict_cols <- c(2:1)
     }
 
@@ -188,14 +197,15 @@ replace_with_xwalk <- function(x,
 #' @name replace_street_suffixes
 #' @rdname replace_with_xwalk
 #' @export
+#' @importFrom dplyr all_of
 replace_street_suffixes <- function(x,
                                     street_suffix = "street_type",
                                     xwalk = NULL,
-                                    case = NULL,
-                                    abb = TRUE) {
+                                    abb = TRUE,
+                                    case = NULL) {
   replace_with_xwalk(
     x,
-    col = street_suffix,
+    .cols = dplyr::all_of(street_suffix),
     xwalk = xwalk,
     dict = street_suffixes,
     abb = abb,
@@ -205,14 +215,15 @@ replace_street_suffixes <- function(x,
 
 #' @name replace_street_dir_prefixes
 #' @rdname replace_with_xwalk
+#' @importFrom dplyr all_of
 replace_street_dir_prefixes <- function(x,
                                         street_dir_prefix = "street_dir_prefix",
                                         xwalk = NULL,
-                                        case = NULL,
-                                        abb = TRUE) {
+                                        abb = TRUE,
+                                        case = NULL) {
   replace_with_xwalk(
     x,
-    col = street_dir_prefix,
+    .cols = dplyr::all_of(street_dir_prefix),
     xwalk = xwalk,
     dict = street_dir_prefixes,
     abb = abb,
