@@ -75,6 +75,7 @@ documented at <code><a href="format_address_data.html">format_address_data()</a>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">format_data</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  var_names <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  xwalk <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  clean_names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  replace_na_with <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  replace_with_na <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -82,15 +83,21 @@ documented at <code><a href="format_address_data.html">format_address_data()</a>
 <span>  fix_date <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  format_sf <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  xwalk <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">rename_with_xwalk</span><span class="op">(</span><span class="va">x</span>, xwalk <span class="op">=</span> <span class="cn">NULL</span>, label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">rename_with_xwalk</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  xwalk <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  .strict <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  arg <span class="op">=</span> <span class="fu">caller_arg</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span>  call <span class="op">=</span> <span class="fu">caller_env</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">label_with_xwalk</span><span class="op">(</span><span class="va">x</span>, xwalk <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">label_with_xwalk</span><span class="op">(</span><span class="va">x</span>, xwalk <span class="op">=</span> <span class="cn">NULL</span>, label <span class="op">=</span> <span class="st">"var"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">fix_epoch_date</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">fix_epoch_date</span><span class="op">(</span><span class="va">x</span>, .cols <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"date"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -103,6 +110,12 @@ documented at <code><a href="format_address_data.html">format_address_data()</a>
 <dd><p>A named list following the format, <code>list("New var name" = old_var_name)</code>, or a two column data frame with the first column being the
 new variable names and the second column being the old variable names;
 defaults to <code>NULL</code>.</p></dd>
+
+
+<dt>xwalk</dt>
+<dd><p>a data frame with two columns using the first column as name and
+the second column as value; or a named list. The existing names of x must
+be the values and the new names must be the names.</p></dd>
 
 
 <dt>clean_names</dt>
@@ -132,8 +145,11 @@ Default: <code>TRUE</code></p></dd>
 
 
 <dt>label</dt>
-<dd><p>If <code>TRUE</code>, pass xwalk to label_with_xwalk to label columns
-using the original names. Defaults to <code>FALSE</code>.</p></dd>
+<dd><p>For <code>label_with_xwalk()</code> use <code>label = "val"</code> to use
+<code><a href="http://larmarange.github.io/labelled/reference/val_labels.html" class="external-link">labelled::set_value_labels()</a></code> or "var" (default) to use
+<code><a href="http://larmarange.github.io/labelled/reference/var_label.html" class="external-link">labelled::set_variable_labels()</a></code>. For <code>rename_with_xwalk()</code>, if label is
+<code>TRUE</code>, xwalk is passed to <code>label_with_xwalk()</code> with label = "var" to label
+columns using the original names. Defaults to <code>FALSE</code>.</p></dd>
 
 
 <dt>format_sf</dt>
@@ -141,14 +157,13 @@ using the original names. Defaults to <code>FALSE</code>.</p></dd>
 <a href="format_sf_data.html">format_sf_data</a>.</p></dd>
 
 
-<dt>xwalk</dt>
-<dd><p>a data frame with two columns using the first column as name and
-the second column as value; or a named list. The existing names of x must
-be the values and the new names must be the names.</p></dd>
-
-
 <dt>...</dt>
 <dd><p>Additional parameters passed to <a href="format_sf_data.html">format_sf_data</a></p></dd>
+
+
+<dt>.strict</dt>
+<dd><p>If <code>TRUE</code>, require that all values from the xwalk are found in
+the column names of the x data.frame.</p></dd>
 
 </dl></div>
     <div class="section level2">

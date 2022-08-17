@@ -79,9 +79,18 @@
     <loc>https://elipousson.github.io/getdata/reference/pipe.html</loc>
   </url>
   <url>
+    <loc>https://elipousson.github.io/getdata/reference/replace_with_xwalk.html</loc>
+  </url>
+  <url>
     <loc>https://elipousson.github.io/getdata/reference/set_access_token.html</loc>
   </url>
   <url>
     <loc>https://elipousson.github.io/getdata/reference/set_pkg_options.html</loc>
+  </url>
+  <url>
+    <loc>https://elipousson.github.io/getdata/reference/street_dir_prefixes.html</loc>
+  </url>
+  <url>
+    <loc>https://elipousson.github.io/getdata/reference/street_suffixes.html</loc>
   </url>
 </urlset>

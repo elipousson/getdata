@@ -122,11 +122,11 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nearby_counties</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="reference/get_location_data.html">get_location_data</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="va">nc</span>,</span>
-<span>  location <span class="op">=</span> <span class="va">location</span>,</span>
-<span>  dist <span class="op">=</span> <span class="fl">0.25</span>,</span>
-<span>  unit <span class="op">=</span> <span class="st">"mi"</span></span>
-<span><span class="op">)</span></span>
+<span>    data <span class="op">=</span> <span class="va">nc</span>,</span>
+<span>    location <span class="op">=</span> <span class="va">location</span>,</span>
+<span>    dist <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>    unit <span class="op">=</span> <span class="st">"mi"</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">nearby_counties</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 6</span></span>
@@ -149,14 +149,14 @@
 <p>A similar approach works with other sources although some may require an API key to work.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Get Q2 2020 vehicle crash data for Cecil County, Maryland</span></span>
-<span>  <span class="fu"><a href="reference/get_open_data.html">get_open_data</a></span><span class="op">(</span></span>
-<span>    source_url <span class="op">=</span> <span class="st">"https://opendata.maryland.gov"</span>,</span>
-<span>    data <span class="op">=</span> <span class="st">"65du-s3qu"</span>,</span>
-<span>    where <span class="op">=</span> <span class="st">"(year = '2020') AND (quarter = 'Q2')"</span>,</span>
-<span>    name_col <span class="op">=</span> <span class="st">"county_desc"</span>,</span>
-<span>    name <span class="op">=</span> <span class="st">"Cecil"</span>,</span>
-<span>    token <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"MARYLAND_OPEN_DATA_API_KEY"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/get_open_data.html">get_open_data</a></span><span class="op">(</span></span>
+<span>  source_url <span class="op">=</span> <span class="st">"https://opendata.maryland.gov"</span>,</span>
+<span>  data <span class="op">=</span> <span class="st">"65du-s3qu"</span>,</span>
+<span>  where <span class="op">=</span> <span class="st">"(year = '2020') AND (quarter = 'Q2')"</span>,</span>
+<span>  name_col <span class="op">=</span> <span class="st">"county_desc"</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"Cecil"</span>,</span>
+<span>  token <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"MARYLAND_OPEN_DATA_API_KEY"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>You must set or provide an API token or key for <code><a href="reference/get_open_data.html">get_open_data()</a></code>, <code><a href="reference/get_airtable_data.html">get_airtable_data()</a></code>, <code><a href="reference/get_flickr_photos.html">get_flickr_photos()</a></code> to work. <code>get_ghseet_data()</code> will require user authentication (handled automatically by the {googlesheets4} package).</p>
 </div>
 </div>
