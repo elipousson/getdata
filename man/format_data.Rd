@@ -71,6 +71,9 @@ columns using the original names. Defaults to \code{FALSE}.}
 \link{format_sf_data}.}
 
 \item{...}{Additional parameters passed to \link{format_sf_data}}
+
+\item{.strict}{If \code{TRUE}, require that all values from the xwalk are found in
+the column names of the x data.frame.}
 }
 \value{
 The input data frame or simple feature object with formatting
