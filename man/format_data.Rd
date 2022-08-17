@@ -10,6 +10,7 @@
 format_data(
   x,
   var_names = NULL,
+  xwalk = NULL,
   clean_names = TRUE,
   replace_na_with = NULL,
   replace_with_na = NULL,
@@ -17,15 +18,21 @@ format_data(
   fix_date = FALSE,
   label = FALSE,
   format_sf = FALSE,
-  xwalk = NULL,
   ...
 )
 
-rename_with_xwalk(x, xwalk = NULL, label = FALSE)
+rename_with_xwalk(
+  x,
+  xwalk = NULL,
+  label = FALSE,
+  .strict = TRUE,
+  arg = caller_arg(x),
+  call = caller_env()
+)
 
-label_with_xwalk(x, xwalk = NULL)
+label_with_xwalk(x, xwalk = NULL, label = "var", ...)
 
-fix_epoch_date(x)
+fix_epoch_date(x, .cols = dplyr::contains("date"))
 }
 \arguments{
 \item{x}{A tibble or data frame object}
@@ -33,6 +40,10 @@ fix_epoch_date(x)
 \item{var_names}{A named list following the format, \code{list("New var name" = old_var_name)}, or a two column data frame with the first column being the
 new variable names and the second column being the old variable names;
 defaults to \code{NULL}.}
+
+\item{xwalk}{a data frame with two columns using the first column as name and
+the second column as value; or a named list. The existing names of x must
+be the values and the new names must be the names.}
 
 \item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names};
 defaults to \code{TRUE}.}
@@ -50,15 +61,14 @@ defaults to \code{NULL}.}
 FeatureServer and MapServer sources) using the \link{fix_epoch_date} function,
 Default: \code{TRUE}}
 
-\item{label}{If \code{TRUE}, pass xwalk to \link{label_with_xwalk} to label columns
-using the original names. Defaults to \code{FALSE}.}
+\item{label}{For \code{\link[=label_with_xwalk]{label_with_xwalk()}} use \code{label = "val"} to use
+\code{\link[labelled:val_labels]{labelled::set_value_labels()}} or "var" (default) to use
+\code{\link[labelled:var_label]{labelled::set_variable_labels()}}. For \code{\link[=rename_with_xwalk]{rename_with_xwalk()}}, if label is
+\code{TRUE}, xwalk is passed to \code{\link[=label_with_xwalk]{label_with_xwalk()}} with label = "var" to label
+columns using the original names. Defaults to \code{FALSE}.}
 
 \item{format_sf}{If \code{TRUE}, pass x and additional parameters to
 \link{format_sf_data}.}
-
-\item{xwalk}{a data frame with two columns using the first column as name and
-the second column as value; or a named list. The existing names of x must
-be the values and the new names must be the names.}
 
 \item{...}{Additional parameters passed to \link{format_sf_data}}
 }

@@ -39,6 +39,7 @@
 #' @importFrom tibble deframe
 format_data <- function(x,
                         var_names = NULL,
+                        xwalk = NULL,
                         clean_names = TRUE,
                         replace_na_with = NULL,
                         replace_with_na = NULL,
@@ -46,7 +47,6 @@ format_data <- function(x,
                         fix_date = FALSE,
                         label = FALSE,
                         format_sf = FALSE,
-                        xwalk = NULL,
                         ...) {
   x <- str_trim_squish_across(x)
 
@@ -95,8 +95,10 @@ make_xwalk_list <- function(xwalk) {
   }
 
   cli_abort_ifnot(
+    message = c("{.arg xwalk} must be a {.cls list} or two column {.cls data.frame}.",
+      "i" = "The provided {.arg xwalk} has class {.cls {class(xwalk)}}."
+    ),
     condition = is_named(xwalk),
-    message = "{.arg xwalk} must be a named list or two column data frame."
   )
 
   xwalk
@@ -107,27 +109,32 @@ make_xwalk_list <- function(xwalk) {
 #' @param xwalk a data frame with two columns using the first column as name and
 #'   the second column as value; or a named list. The existing names of x must
 #'   be the values and the new names must be the names.
-#' @param label If `TRUE`, pass xwalk to [label_with_xwalk] to label columns
-#'   using the original names. Defaults to `FALSE`.
+#' @param .strict If `TRUE`, require that all values from the xwalk are found in
+#'   the column names of the x data.frame.
 #' @export
 #' @importFrom tibble deframe
 #' @importFrom dplyr rename_with
 #' @importFrom sfext is_sf
-rename_with_xwalk <- function(x, xwalk = NULL, label = FALSE) {
+rename_with_xwalk <- function(x, xwalk = NULL, label = FALSE, .strict = TRUE,
+                              arg = caller_arg(x), call = caller_env()) {
   # From https://twitter.com/PipingHotData/status/1497014703473704965
   # https://stackoverflow.com/questions/20987295/rename-multiple-columns-by-names/41343022#41343022
   xwalk <- make_xwalk_list(xwalk)
+  xwalk_in_x <- xwalk %in% colnames(x)
 
   cli_abort_ifnot(
-    condition = all(xwalk %in% colnames(x)),
-    message = "{.arg xwalk} must include all column names for the data frame to be renamed."
+    c("{.arg xwalk} values must all be column names in {.arg x}.",
+      "i" = "{.val {xwalk[xwalk_in_x]}} can't be found in {.arg x} column names.",
+      "*" = "Set {.arg .strict} to {.code FALSE} to ignore missing values."
+    ),
+    condition = all(xwalk_in_x) && .strict,
+    arg = arg,
+    call = call
   )
 
   if (sfext::is_sf(x) && (attributes(x)$sf_column %in% xwalk)) {
     sf_col <- as.character(names(xwalk[xwalk == attributes(x)$sf_column]))
-
-    x <- rename_sf_col(x, sf_col = sf_col)
-
+    x <- sfext::rename_sf_col(x, sf_col = sf_col)
     xwalk[[sf_col]] <- NULL
   }
 
@@ -135,57 +142,69 @@ rename_with_xwalk <- function(x, xwalk = NULL, label = FALSE) {
     dplyr::rename_with(
       x,
       ~ names(xwalk)[which(xwalk == .x)],
-      .cols = as.character(xwalk)
+      .cols = dplyr::any_of(as.character(xwalk))
     )
 
   if (!label) {
     return(x)
   }
 
-  label_with_xwalk(x, xwalk = xwalk)
+  label_with_xwalk(x, xwalk = xwalk, label = "var")
 }
 
 #' @name label_with_xwalk
+#' @param label For [label_with_xwalk()] use `label = "val"` to use
+#'   [labelled::set_value_labels()] or "var" (default) to use
+#'   [labelled::set_variable_labels()]. For [rename_with_xwalk()], if label is
+#'   `TRUE`, xwalk is passed to [label_with_xwalk()] with label = "var" to label
+#'   columns using the original names. Defaults to `FALSE`.
 #' @rdname format_data
-label_with_xwalk <- function(x, xwalk = NULL) {
+label_with_xwalk <- function(x, xwalk = NULL, label = "var", ...) {
   is_pkg_installed("labelled")
 
-  # TODO: Consider adding an optional for value labelling as well as variable
-  # labelling
-  labelled::set_variable_labels(x, .labels = make_xwalk_list(xwalk))
+  label <- rlang::arg_match(label, c("val", "var"))
+  if (label == "var") {
+    labelled::set_variable_labels(x, .labels = make_xwalk_list(xwalk), ...)
+  } else {
+    labelled::set_value_labels(x, .labels = make_xwalk_list(xwalk), ...)
+  }
 }
 
 #' @name fix_epoch_date
 #' @rdname format_data
 #' @export
 #' @importFrom dplyr mutate across contains
-fix_epoch_date <- function(x) {
-  # FIXME: This needs better documentation and some kind of check to make sure
-  # the date is in the correct format Alternatively, considering renaming so the
-  # focused scope for this function is clear
+fix_epoch_date <- function(x, .cols = dplyr::contains("date")) {
   dplyr::mutate(
     x,
     dplyr::across(
-      dplyr::contains("date"),
+      .cols,
       ~ as.POSIXct(.x / 1000, origin = "1970-01-01")
     )
   )
 }
 
+#' Helper function for getting names of character columns
+#'
+#' @noRd
+chr_colnames <- function(x) {
+  names(x)[vapply(x, is.character, TRUE)]
+}
+
 #' @name str_trim_squish_across
 #' @noRd
 #' @importFrom dplyr mutate across if_else
-str_trim_squish_across <- function(x, .cols = where(is.character)) {
+str_trim_squish_across <- function(x) {
   is_pkg_installed("stringr")
 
   dplyr::mutate(
     x,
     dplyr::across(
-      .cols,
+      dplyr::any_of(chr_colnames(x)),
       ~ dplyr::if_else(
-        !rlang::is_empty(.x),
-        stringr::str_trim(stringr::str_squish(.x)),
-        .x
+        is.na(.x) | is.null(.x),
+        .x,
+        stringr::str_trim(stringr::str_squish(.x))
       )
     )
   )
@@ -209,7 +228,7 @@ str_empty_to_blank_across <- function(x, .cols = everything(), blank = "") {
 #'
 #' @noRd
 #' @importFrom dplyr everything mutate across
-str_squish_across <- function(x, .cols = everything()) {
+str_squish_across <- function(x, .cols = dplyr::everything()) {
   dplyr::mutate(
     x,
     dplyr::across(
@@ -223,25 +242,40 @@ str_squish_across <- function(x, .cols = everything()) {
 #'
 #' @noRd
 #' @importFrom dplyr everything mutate across
-str_to_case_across <- function(x, .cols = everything(), case = NULL) {
+str_to_case_across <- function(x, .cols = dplyr::everything(), case = NULL) {
   if (is.null(case)) {
     return(x)
   }
-
-  case <- match.arg(tolower(case), c("lower", "upper", "title"))
 
   x <-
     dplyr::mutate(
       x,
       dplyr::across(
         .cols,
-        ~ switch(case,
-          "lower" = tolower(.x),
-          "upper" = toupper(.x),
-          "title" = str_capitalize(.x)
-        )
+        ~ switch_case(.x, case)
       )
     )
+}
+
+#' @noRd
+switch_case <- function(x, case = NULL, ...) {
+  if (is.data.frame(x)) {
+    return(str_to_case_across(x, case = case, ...))
+  }
+
+  case <- tolower(case)
+  case <- rlang::arg_match(case, c("lower", "upper", "title", "sentence"))
+
+  if (case == "sentence") {
+    is_pkg_installed("stringr")
+  }
+
+  switch(case,
+    "lower" = tolower(x),
+    "upper" = toupper(x),
+    "title" = str_capitalize(x),
+    "sentence" = stringr::str_to_sentence(x)
+  )
 }
 
 #' Helper function from examples for toupper and tolower

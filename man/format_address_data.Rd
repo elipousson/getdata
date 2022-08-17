@@ -12,22 +12,26 @@ bind_block_col(
   street_dir_prefix = "street_dir_prefix",
   street_name = "street_name",
   street_suffix = "street_type",
+  replace_suffix = FALSE,
   block_col = NULL,
   case = NULL
 )
 
-bind_address_col(x, city = NULL, county = NULL, state = NULL)
+bind_address_col(x, city = NULL, county = NULL, state = NULL, case = NULL)
 }
 \arguments{
 \item{bldg_num, street_dir_prefix, street_name, street_suffix}{Column names to
 use for address information required to generate a block name and number.}
 
+\item{replace_suffix}{If \code{TRUE}, replace values in street_suffix column with
+abbreviations from \link{street_suffixes}.}
+
 \item{block_col}{String to use as prefix for block identifier columns and
 separator between block number and street. Set to "block" when \code{NULL}
 (default).}
 
-\item{case}{Case to use for new columns. "upper", "lower", or "title".
-Defaults to \code{NULL}.}
+\item{case}{Case to use for text in new columns or in modified values.
+Options include "lower", "upper", "title", or "sentence". Defaults to \code{NULL}.}
 
 \item{city, county, state}{City, county, and state to bind to data frame or
 \code{sf} object.}
