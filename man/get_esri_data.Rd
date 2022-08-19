@@ -8,13 +8,13 @@
 location}
 \usage{
 get_esri_data(
+  url,
   location = NULL,
   dist = getOption("getdata.dist"),
   diag_ratio = getOption("getdata.diag_ratio"),
   unit = getOption("getdata.unit"),
   asp = getOption("getdata.asp"),
   crs = getOption("getdata.crs", 3857),
-  url,
   where = NULL,
   name = NULL,
   name_col = NULL,
@@ -40,6 +40,11 @@ get_esri_layers(
 get_esri_metadata(url, token = NULL, meta = NULL, clean_names = TRUE)
 }
 \arguments{
+\item{url}{FeatureServer or MapServer url to retrieve data from. Passed to
+\code{url} parameter of \link[esri2sf:esri2sf]{esri2sf::esri2sf} or \link[esri2sf:esri2sf]{esri2sf::esri2df} functions. For
+\link{get_esri_layers}, the optional url must be a service url which is the base
+url for one or more layer urls.}
+
 \item{location}{\code{sf}, \code{sfc}, or \code{bbox} object (or other object convertible
 with \code{\link[=as_bbox]{as_bbox()}}. Optional.}
 
@@ -61,11 +66,6 @@ without modification.}
 
 \item{crs}{Cordinate reference system to return, Default: 4326 for
 \code{\link[sfext:sf_to_df]{sf_to_df()}} and NULL for \code{\link[sfext:df_to_sf]{df_to_sf()}}.}
-
-\item{url}{FeatureServer or MapServer url to retrieve data from. Passed to
-\code{url} parameter of \link[esri2sf:esri2sf]{esri2sf::esri2sf} or \link[esri2sf:esri2sf]{esri2sf::esri2df} functions. For
-\link{get_esri_layers}, the optional url must be a service url which is the base
-url for one or more layer urls.}
 
 \item{where}{where query string passed to esri2sf, Default: \code{NULL}}
 

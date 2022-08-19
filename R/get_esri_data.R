@@ -9,12 +9,12 @@
 #' but I expect to see this fork merged back into the main package in the
 #' future.
 #'
-#' @param location `sf`, `sfc`, or `bbox` object (or other object convertible
-#'   with [as_bbox()]. Optional.
 #' @param url FeatureServer or MapServer url to retrieve data from. Passed to
 #'   `url` parameter of [esri2sf::esri2sf] or [esri2sf::esri2df] functions. For
 #'   [get_esri_layers], the optional url must be a service url which is the base
 #'   url for one or more layer urls.
+#' @param location `sf`, `sfc`, or `bbox` object (or other object convertible
+#'   with [as_bbox()]. Optional.
 #' @param where where query string passed to esri2sf, Default: `NULL`
 #' @inheritParams sfext::df_to_sf
 #' @param name,name_col Name value and name column found in the ArcGIS
@@ -28,13 +28,13 @@
 #' @export
 #' @importFrom glue glue
 #' @importFrom janitor clean_names
-get_esri_data <- function(location = NULL,
+get_esri_data <- function(url,
+                          location = NULL,
                           dist = getOption("getdata.dist"),
                           diag_ratio = getOption("getdata.diag_ratio"),
                           unit = getOption("getdata.unit"),
                           asp = getOption("getdata.asp"),
                           crs = getOption("getdata.crs", 3857),
-                          url,
                           where = NULL,
                           name = NULL,
                           name_col = NULL,
@@ -75,6 +75,8 @@ get_esri_data <- function(location = NULL,
   }
 
   if (!is.null(name_col)) {
+    name_col <- rlang::arg_match(name_col, meta[["fields"]][["name"]])
+
     where <- c(
       where,
       glue("({name_col} = '{name}')")
@@ -87,25 +89,27 @@ get_esri_data <- function(location = NULL,
 
   if (table) {
     # Get Table (no geometry) with location name column
-    data <- esri2sf::esri2df(
-      url = url,
-      token = token,
-      where = where,
-      progress = progress,
-      quiet = quiet,
-      ...
-    )
+    data <-
+      esri2sf::esri2df(
+        url = url,
+        token = token,
+        where = where,
+        progress = progress,
+        quiet = quiet,
+        ...
+      )
   } else {
-    data <- esri2sf::esri2sf(
-      url = url,
-      token = token,
-      where = where,
-      bbox = bbox,
-      progress = progress,
-      crs = crs,
-      quiet = quiet,
-      ...
-    )
+    data <-
+      esri2sf::esri2sf(
+        url = url,
+        token = token,
+        where = where,
+        bbox = bbox,
+        progress = progress,
+        crs = crs,
+        quiet = quiet,
+        ...
+      )
   }
 
   if (!is.null(coords) && table) {
@@ -218,8 +222,8 @@ get_esri_layers <- function(location = NULL,
     purrr::map(
       layer_urls,
       ~ get_esri_data(
-        location = location,
         url = .x,
+        location = location,
         token = token,
         dist = params$dist,
         diag_ratio = params$diag_ratio,
@@ -274,6 +278,7 @@ get_layer_list <- function(meta) {
 #' @importFrom rlang is_character
 get_esri_metadata <- function(url, token = NULL, meta = NULL, clean_names = TRUE) {
   is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
+  rlang::check_required(url)
 
   metadata <- esri2sf::esrimeta(url, token)
 
