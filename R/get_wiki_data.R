@@ -22,6 +22,8 @@
 #' @rdname get_wiki_data
 #' @inheritParams format_data
 #' @inheritParams sfext::df_to_sf
+#' @seealso
+#'  - [geonames::GNfindNearbyWikipedia()], [geonames::GNwikipediaBoundingBox()]
 #' @export
 #' @importFrom httr2 request req_url_query req_perform resp_body_json
 get_wiki_data <- function(location,
@@ -109,7 +111,6 @@ get_wiki_data <- function(location,
   }
 
   if (geometry) {
-    # FIXME: Add clean_names support
     data <-
       sfext::df_to_sf(data, crs = crs, remove_coords = remove_coords)
   }
