@@ -70,13 +70,13 @@ future.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_esri_data</span><span class="op">(</span></span>
+<span>  <span class="va">url</span>,</span>
 <span>  location <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dist <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"getdata.dist"</span><span class="op">)</span>,</span>
 <span>  diag_ratio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"getdata.diag_ratio"</span><span class="op">)</span>,</span>
 <span>  unit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"getdata.unit"</span><span class="op">)</span>,</span>
 <span>  asp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"getdata.asp"</span><span class="op">)</span>,</span>
 <span>  crs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"getdata.crs"</span>, <span class="fl">3857</span><span class="op">)</span>,</span>
-<span>  <span class="va">url</span>,</span>
 <span>  where <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  name_col <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -104,7 +104,14 @@ future.</p>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>location</dt>
+    <dl><dt>url</dt>
+<dd><p>FeatureServer or MapServer url to retrieve data from. Passed to
+<code>url</code> parameter of <a href="https://rdrr.io/pkg/esri2sf/man/esri2sf.html" class="external-link">esri2sf::esri2sf</a> or <a href="https://rdrr.io/pkg/esri2sf/man/esri2sf.html" class="external-link">esri2sf::esri2df</a> functions. For
+get_esri_layers, the optional url must be a service url which is the base
+url for one or more layer urls.</p></dd>
+
+
+<dt>location</dt>
 <dd><p><code>sf</code>, <code>sfc</code>, or <code>bbox</code> object (or other object convertible
 with <code>as_bbox()</code>. Optional.</p></dd>
 
@@ -136,13 +143,6 @@ without modification.</p></dd>
 <dt>crs</dt>
 <dd><p>Cordinate reference system to return, Default: 4326 for
 <code><a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">sf_to_df()</a></code> and NULL for <code><a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">df_to_sf()</a></code>.</p></dd>
-
-
-<dt>url</dt>
-<dd><p>FeatureServer or MapServer url to retrieve data from. Passed to
-<code>url</code> parameter of <a href="https://rdrr.io/pkg/esri2sf/man/esri2sf.html" class="external-link">esri2sf::esri2sf</a> or <a href="https://rdrr.io/pkg/esri2sf/man/esri2sf.html" class="external-link">esri2sf::esri2df</a> functions. For
-get_esri_layers, the optional url must be a service url which is the base
-url for one or more layer urls.</p></dd>
 
 
 <dt>where</dt>
