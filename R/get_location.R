@@ -53,9 +53,25 @@ get_location <- function(type,
                          label = NULL,
                          class = "sf",
                          ...) {
+  if (is.null(index)) {
+    rlang::check_required(type)
+    cli_abort_ifnot(
+      "{.arg type} must be a {.cls sf} or {.cls character} class but the
+      provided {.arg type} has class {.cls {class(type)}}.",
+      condition = sfext::is_sf(type) || is.character(type)
+    )
+  } else {
+    cli_abort_ifnot(
+      "{.arg index} must be a {.cls list} but the
+      provided {.arg index} has class {.cls {class(index)}}.",
+      condition = is.list(index)
+    )
+  }
+
   stopifnot(
-    sfext::is_sf(type) || is.character(type) || (is.null(type) && is.list(index)),
-    is.character(location) || sfext::is_sf(location, ext = TRUE, null.ok = TRUE) || is.numeric(location),
+    is.character(location) ||
+      sfext::is_sf(location, ext = TRUE, null.ok = TRUE) ||
+      is.numeric(location),
     is.list(index) || is.null(index),
     is.logical(union)
   )
@@ -77,53 +93,27 @@ get_location <- function(type,
       )
   }
 
-  # If location is not provided
-  if (is.null(location) && (!is.null(name) | !is.null(id))) {
-    if (!is.null(name)) {
-      # Filter type by name
-      location <- type[type[[name_col]] %in% name, ]
-    } else if (!is.null(id)) {
-      if (is.character(type[[id_col]])) {
-        # Filter type by ID
-        location <- type[type[[id_col]] %in% as.character(id), ]
-      } else if (is.numeric(type[[id_col]])) {
-        location <- type[type[[id_col]] %in% as.numeric(id), ]
-      }
-    }
-
-    stopifnot(
-      "The name/id did not match any features of the type provided." = nrow(location) > 0
+  params <-
+    dplyr::case_when(
+      is.null(location) && !is.null(name) ~ "name",
+      is.null(location) && !is.null(id) ~ "id",
+      TRUE ~ "location"
     )
-  } else {
-    location <-
-      location_filter(
-        data = type,
-        location = location,
-        trim = FALSE,
-        crop = FALSE
-      )
-  }
 
+  location <-
+    switch(params,
+    "name" = filter_name(type, name = name, name_col = name_col),
+    "id" = filter_name(type, name = id, name_col = id_col),
+    "location" = filter_location(type, location = location)
+  )
+
+  col <- NULL
   # FIXME: There should be an option for setting the col value
   if (!is.null(name)) {
     col <- name_col
   } else if (!is.null(id)) {
     col <- id_col
-  } else {
-    col <- NULL
   }
-
-  cli_abort_ifnot(
-    c("Location can't be found based on the provided parameters."),
-    condition = nrow(location) > 0
-  )
-
-  # TODO: Add an optional alert on which locations or what share of locations
-  # are being returned
-  # cli_inform(
-  #  "Returning {.val {nrow(location)}} location of {.val {nrow(type)}}
-  # from the provided {.arg type}."
-  # )
 
   if (union) {
     location <- sfext::st_union_ext(location, name_col = name_col)
@@ -147,12 +137,33 @@ get_location <- function(type,
 #'
 #' @noRd
 #' @importFrom sfext is_sf as_sf st_filter_ext
-location_filter <- function(data = NULL,
+filter_location <- function(data = NULL,
                             location = NULL,
+                            null.ok = TRUE,
                             ...) {
-  if (!sfext::is_sf(location, ext = TRUE, null.ok = TRUE)) {
+  if (is.null(location) && null.ok) {
+    return(data)
+  }
+
+  if (!sfext::is_sf(location, ext = TRUE)) {
     location <- sfext::as_sf(location)
   }
 
   sfext::st_filter_ext(x = data, y = location, ...)
+}
+
+#' @noRd
+filter_name <- function(x = NULL,
+                        name = NULL,
+                        name_col = "name",
+                        arg = rlang::caller_arg(name_col),
+                        call = rlang::caller_env()) {
+  if (is.null(name) | is.null(name_col)) {
+    return(x)
+  }
+
+  name_col <-
+    rlang::arg_match(name_col, names(x), error_arg = arg, error_call = call)
+
+  x[x[[name_col]] %in% name, ]
 }
