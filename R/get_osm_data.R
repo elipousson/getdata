@@ -392,7 +392,13 @@ get_osm_data_geometry <- function(data,
                                   crs = NULL,
                                   osmdata = FALSE,
                                   call = caller_env()) {
-  if (osmdata) {
+  if (osmdata | is.null(geometry)) {
+    if (is.null(geometry) && !osmdata) {
+      cli_warn(
+        "{.arg geometry} is {.code NULL}. Setting {.arg osmdata} to {.val TRUE}."
+      )
+    }
+
     return(osmdata::unique_osmdata(data))
   }
 
