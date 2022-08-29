@@ -67,9 +67,9 @@ get_static_mapbox <- function(location,
   dist <- dist %||% 0
 
   if (!is.null(unit) && (unit != "meter")) {
-    buffer_dist <-
+    dist <-
       sfext::convert_dist_units(
-        buffer_dist,
+        dist,
         from = unit,
         to = "m",
         drop = TRUE
@@ -78,7 +78,7 @@ get_static_mapbox <- function(location,
 
   mapboxapi::static_mapbox(
     location = location,
-    buffer_dist = buffer_dist,
+    buffer_dist = dist,
     style_url = style_url,
     overlay_sf = overlay_sf,
     zoom = zoom,
