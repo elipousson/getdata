@@ -207,8 +207,6 @@ get_static_bingmap <- function(location = NULL,
                                ...) {
   is_pkg_installed("bingmapr")
 
-  bearing <- bearing %||% 0
-
   location <-
     sfext::st_buffer_ext(
       location,
@@ -220,7 +218,7 @@ get_static_bingmap <- function(location = NULL,
     location = location,
     width = width,
     height = height,
-    orientation = bearing,
+    orientation = bearing %||% 0,
     imagery = imagery,
     key = token,
     ...
