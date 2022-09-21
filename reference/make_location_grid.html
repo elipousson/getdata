@@ -83,7 +83,8 @@ to units matching GDAL units for x; defaults to "meter"</p></dd>
 <dd><p>A <code>sf</code>, <code>sfc</code>, or <code>bbox</code> object, Default: <code>NULL</code>. Required.</p></dd>
 
     <dt><code>crs</code></dt>
-<dd><p>Coordinate reference system of bounding box to return</p></dd>
+<dd><p>Coordinate reference system of bounding box to return; defaults to
+<code>NULL</code> which maintains the crs of the input object.</p></dd>
 
     <dt><code>ncol,nrow</code></dt>
 <dd><p>Used to set n if either are not <code>NULL</code>; defaults to <code>NULL</code>.
@@ -118,7 +119,8 @@ circular polygons.</p></dd>
 <dd><p>A name to use for the cell id column. Defaults to "id".</p></dd>
 
     <dt><code>filter</code></dt>
-<dd><p>If <code>TRUE</code> (or if trim is <code>TRUE</code>) filter grid geometry by x using <a href="https://elipousson.github.io/sfext/reference/st_filter_ext.html" class="external-link">st_filter_ext</a></p></dd>
+<dd><p>If <code>TRUE</code> (or if trim is <code>TRUE</code>) filter grid geometry by x
+using <a href="https://elipousson.github.io/sfext/reference/st_filter_ext.html" class="external-link">st_filter_ext</a></p></dd>
 
     <dt><code>trim</code></dt>
 <dd><p>If <code>TRUE</code>, x is trimmed to y with <code><a href="https://elipousson.github.io/sfext/reference/st_erase.html" class="external-link">st_trim()</a></code>.</p></dd>

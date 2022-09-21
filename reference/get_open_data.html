@@ -186,7 +186,7 @@ location names (e.g. County) and name of location to return.</p></dd>
 
 
 <dt>coords</dt>
-<dd><p>Coordinate columns for input dataframe or output sf object (if
+<dd><p>Coordinate columns for input data.frame or output sf object (if
 geometry is 'centroid' or 'point') Default: c("lon", "lat").</p></dd>
 
 
@@ -208,7 +208,8 @@ the source data.</p></dd>
 
 
 <dt>crs</dt>
-<dd><p>Coordinate reference system of bounding box to return</p></dd>
+<dd><p>Coordinate reference system of bounding box to return; defaults to
+<code>NULL</code> which maintains the crs of the input object.</p></dd>
 
 
 <dt>clean_names</dt>

@@ -58,7 +58,7 @@ location</h1>
     </div>
 
     <div class="ref-description section level2">
-    <p>Wraps the <a href="https://rdrr.io/pkg/esri2sf/man/esri2sf.html" class="external-link">esri2sf::esri2sf</a> and <a href="https://rdrr.io/pkg/esri2sf/man/esri2sf.html" class="external-link">esri2sf::esri2df</a> function to download an
+    <p>Wraps the <a href="https://rdrr.io/pkg/esri2sf/man/esri2sf-package.html" class="external-link">esri2sf::esri2sf</a> and <a href="https://rdrr.io/pkg/esri2sf/man/esri2sf-package.html" class="external-link">esri2sf::esri2df</a> function to download an
 ArcGIS FeatureServer or MapServer. Supports spatial filtering with bounding
 box based on location and filtering by location name (if location name column
 is provided). As of July 2022, this package suggests the
@@ -106,7 +106,7 @@ future.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>url</dt>
 <dd><p>FeatureServer or MapServer url to retrieve data from. Passed to
-<code>url</code> parameter of <a href="https://rdrr.io/pkg/esri2sf/man/esri2sf.html" class="external-link">esri2sf::esri2sf</a> or <a href="https://rdrr.io/pkg/esri2sf/man/esri2sf.html" class="external-link">esri2sf::esri2df</a> functions. For
+<code>url</code> parameter of <a href="https://rdrr.io/pkg/esri2sf/man/esri2sf-package.html" class="external-link">esri2sf::esri2sf</a> or <a href="https://rdrr.io/pkg/esri2sf/man/esri2sf-package.html" class="external-link">esri2sf::esri2df</a> functions. For
 get_esri_layers, the optional url must be a service url which is the base
 url for one or more layer urls.</p></dd>
 
@@ -142,7 +142,7 @@ without modification.</p></dd>
 
 <dt>crs</dt>
 <dd><p>Cordinate reference system to return, Default: 4326 for
-<code><a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">sf_to_df()</a></code> and NULL for <code><a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">df_to_sf()</a></code>.</p></dd>
+<code><a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">sf_to_df()</a></code> and <code>NULL</code> for <code><a href="https://elipousson.github.io/sfext/reference/sf_to_df.html" class="external-link">df_to_sf()</a></code>.</p></dd>
 
 
 <dt>where</dt>
@@ -155,7 +155,7 @@ FeatureServer or MapServer data.</p></dd>
 
 
 <dt>coords</dt>
-<dd><p>Coordinate columns for input dataframe or output sf object (if
+<dd><p>Coordinate columns for input data.frame or output sf object (if
 geometry is 'centroid' or 'point') Default: c("lon", "lat").</p></dd>
 
 
@@ -179,7 +179,7 @@ Default <code>FALSE</code>.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Arguments passed on to <code><a href="https://rdrr.io/pkg/esri2sf/man/esri2sf.html" class="external-link">esri2sf::esri2sf</a></code></p><dl><dt><code>outFields</code></dt>
+<dd><p>Arguments passed on to <code><a href="https://rdrr.io/pkg/esri2sf/man/esri2sf-package.html" class="external-link">esri2sf::esri2sf</a></code></p><dl><dt><code>outFields</code></dt>
 <dd><p>vector of fields you want to include. default is <code>NULL</code> for
 all fields.</p></dd>
 
