@@ -33,9 +33,10 @@ set_pkg_options <- function(...,
                             overwrite = FALSE,
                             .pkg = "getdata") {
   opts <- list2(...)
+  pkg_nm <- .pkg
 
   # Make vector of names based on provided options and .pkg
-  nm_opts <- paste0(.pkg, ".", names(opts))
+  nm_opts <- paste0(pkg_nm, ".", names(opts))
   names(opts) <- nm_opts
 
   # Get existing options matching new_opts
@@ -55,10 +56,13 @@ set_pkg_options <- function(...,
 
   if (!is.null(conflict_opts)) {
     if (!overwrite) {
-      cli_inform(c("x" = "The provided options conflict with these existing values:"))
+      cli_inform(
+        c("x" = "The provided options conflict with these existing values:")
+      )
       cli_ul_items(conflict_opts)
       cli_inform(
-        c("i" = "Set {.code overwrite = TRUE} to replace these {.pkg {.pkg}} options.")
+        c("i" = "Set {.code overwrite = TRUE} to replace these
+          {.pkg {pkg_nm}} options.")
       )
 
       if (!all(conflict_nm)) {
@@ -75,7 +79,7 @@ set_pkg_options <- function(...,
   if (!is.null(update_opts)) {
     options(update_opts)
 
-    cli_inform(c("v" = "Updated options for {.pkg {.pkg}}:"))
+    cli_inform(c("v" = "Updated options for {.pkg {pkg_nm}}:"))
     cli_ul_items(update_opts)
   }
 }
