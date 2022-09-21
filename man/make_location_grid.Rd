@@ -21,7 +21,8 @@ to units matching GDAL units for x; defaults to "meter"}
   Arguments passed on to \code{\link[sfext:st_make_grid_ext]{sfext::st_make_grid_ext}}
   \describe{
     \item{\code{x}}{A \code{sf}, \code{sfc}, or \code{bbox} object, Default: \code{NULL}. Required.}
-    \item{\code{crs}}{Coordinate reference system of bounding box to return}
+    \item{\code{crs}}{Coordinate reference system of bounding box to return; defaults to
+\code{NULL} which maintains the crs of the input object.}
     \item{\code{ncol,nrow}}{Used to set n if either are not \code{NULL}; defaults to \code{NULL}.
 row and id are added as columns to the grid if they are provided.}
     \item{\code{n}}{If n is NULL and square is \code{TRUE}, the grid is set automatically to
@@ -38,7 +39,8 @@ circular polygons.}
     \item{\code{style}}{Style of cell to return with options including "rect", "square",
 "hex", "flat_top_hex", "circle", "circle_offset"}
     \item{\code{.id}}{A name to use for the cell id column. Defaults to "id".}
-    \item{\code{filter}}{If \code{TRUE} (or if trim is \code{TRUE}) filter grid geometry by x using \link[sfext]{st_filter_ext}}
+    \item{\code{filter}}{If \code{TRUE} (or if trim is \code{TRUE}) filter grid geometry by x
+using \link[sfext]{st_filter_ext}}
     \item{\code{trim}}{If \code{TRUE}, x is trimmed to y with \code{\link[sfext:st_trim]{st_trim()}}.}
   }}
 }

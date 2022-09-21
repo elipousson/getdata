@@ -65,14 +65,14 @@ character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} retur
 without modification.}
 
 \item{crs}{Cordinate reference system to return, Default: 4326 for
-\code{\link[sfext:sf_to_df]{sf_to_df()}} and NULL for \code{\link[sfext:df_to_sf]{df_to_sf()}}.}
+\code{\link[sfext:sf_to_df]{sf_to_df()}} and \code{NULL} for \code{\link[sfext:df_to_sf]{df_to_sf()}}.}
 
 \item{where}{where query string passed to esri2sf, Default: \code{NULL}}
 
 \item{name, name_col}{Name value and name column found in the ArcGIS
 FeatureServer or MapServer data.}
 
-\item{coords}{Coordinate columns for input dataframe or output sf object (if
+\item{coords}{Coordinate columns for input data.frame or output sf object (if
 geometry is 'centroid' or 'point') Default: c("lon", "lat").}
 
 \item{from_crs}{For \code{\link[sfext:df_to_sf]{df_to_sf()}}, coordinate reference system used by

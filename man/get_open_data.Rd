@@ -104,7 +104,7 @@ location names (e.g. County) and name of location to return.}
 
 \item{location_col}{Name of a "location" or "point" type column in a Socrata dataset.}
 
-\item{coords}{Coordinate columns for input dataframe or output sf object (if
+\item{coords}{Coordinate columns for input data.frame or output sf object (if
 geometry is 'centroid' or 'point') Default: c("lon", "lat").}
 
 \item{geometry}{If \code{TRUE} and coords are provided, return a
@@ -118,7 +118,8 @@ variable with \link{set_access_token}.}
 \item{from_crs}{Coordinate reference system used to match the location CRS to
 the source data.}
 
-\item{crs}{Coordinate reference system of bounding box to return}
+\item{crs}{Coordinate reference system of bounding box to return; defaults to
+\code{NULL} which maintains the crs of the input object.}
 
 \item{clean_names}{If \code{TRUE}, clean names provided to nm or created based on
 value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as

@@ -66,7 +66,7 @@ to units matching GDAL units for x; defaults to "meter"}
 character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} returns the same value
 without modification.}
 
-\item{coords}{Coordinate columns for input dataframe or output sf object (if
+\item{coords}{Coordinate columns for input data.frame or output sf object (if
 geometry is 'centroid' or 'point') Default: c("lon", "lat").}
 
 \item{remove_coords}{For \code{\link[sfext:df_to_sf]{df_to_sf()}}, if \code{TRUE}, remove the coordinate columns
