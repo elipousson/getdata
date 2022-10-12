@@ -5,7 +5,8 @@
 #'
 #'  - [bind_address_col] bind a provided value for city, county, and state to a
 #'  data frame (to supplement address data with consistent values for these
-#'  variables)
+#'  variables). This function is useful for converting partial street addresses
+#'  with a consistent values for state, county, or city into full addresses
 #' - [bind_block_col] requires a data frame with columns named "bldg_num",
 #' "street_dir_prefix", "street_name", and "street_type" and binds derived
 #' values for whether a building is on the even or odd side of a block and
@@ -13,7 +14,8 @@
 #'
 #' @name format_address_data
 #' @param case Case to use for text in new columns or in modified values.
-#'   Options include "lower", "upper", "title", or "sentence". Defaults to `NULL`.
+#'   Options include "lower", "upper", "title", or "sentence". Defaults to
+#'   `NULL` which leaves the case as is.
 NULL
 
 #' @name bind_block_col
@@ -22,9 +24,12 @@ NULL
 #'   use for address information required to generate a block name and number.
 #' @param block_col String to use as prefix for block identifier columns and
 #'   separator between block number and street. Set to "block" when `NULL`
-#'   (default).
+#'   (default). If length 2 (e.g. c("blk", "block")), the second value is used
+#'   as the block separator and the first as the column identifier prefix.
 #' @param replace_suffix If `TRUE`, replace values in street_suffix column with
 #'   abbreviations from [street_suffixes].
+#' @param .after passed to [dplyr::mutate()] defaults to street_suffix for
+#'   [bind_block_col()] and "address" for [bind_address_col()].
 #' @export
 #' @importFrom rlang has_name
 #' @importFrom dplyr mutate across all_of if_else
@@ -35,6 +40,7 @@ bind_block_col <- function(x,
                            street_suffix = "street_type",
                            replace_suffix = FALSE,
                            block_col = NULL,
+                           .after = street_suffix,
                            case = NULL) {
   address_cols <- c(bldg_num, street_dir_prefix, street_name, street_suffix)
   x_missing_cols <- address_cols[!rlang::has_name(x, address_cols)]
@@ -63,6 +69,13 @@ bind_block_col <- function(x,
 
   block_col <- block_col %||% "block"
 
+  if (length(block_col) > 1) {
+    block_sep <- block_col[[2]]
+    block_col <- block_col[[1]]
+  } else {
+    block_sep <- block_col
+  }
+
   block_col_labels <-
     paste0(block_col, "_", c("num", "even_odd", "segment", "face"))
 
@@ -75,7 +88,7 @@ bind_block_col <- function(x,
     "{block_col_labels[[3]]}" := dplyr::if_else(
       !is.na(.data[[block_col_labels[[1]]]]),
       paste(
-        .data[[block_col_labels[[1]]]], block_col,
+        .data[[block_col_labels[[1]]]], block_sep,
         .data[[street_dir_prefix]], .data[[street_name]], .data[[street_suffix]]
       ), ""
     ),
@@ -85,7 +98,8 @@ bind_block_col <- function(x,
         .data[[block_col_labels[[3]]]],
         paste0("(", .data[[block_col_labels[[2]]]], ")")
       ), ""
-    )
+    ),
+    .after = street_suffix
   )
 
   x <- str_to_case_across(x, dplyr::all_of(block_col_labels), case)
@@ -97,31 +111,51 @@ bind_block_col <- function(x,
 
 #' @name bind_address_col
 #' @rdname format_address_data
-#' @param city,county,state City, county, and state to bind to data frame or
-#'   `sf` object.
+#' @param street Street address column name, (e.g. 100 Holliday St) Default:
+#'   'street_address'.
+#' @param address Full address column name. If city and state or city and county
+#'   are provided, a combined address column is added to the data.frame using
+#'   the street address column. If both county and city are provided, county is
+#'   ignored.
+#' @param address_cols Named list specifying the additional column names to use
+#'   for city, county, and state data.
 #' @export
 #' @importFrom dplyr mutate
-bind_address_col <- function(x, city = NULL, county = NULL, state = NULL, case = NULL) {
-  if (!is.null(city)) {
-    x <- has_same_name_col(x, col = "city")
-    x <- dplyr::mutate(x, city = city)
-  }
+bind_address_col <- function(x, ...,
+                             case = NULL,
+                             street = "street_address",
+                             address = "address",
+                             address_cols = list(
+                               city = "city",
+                               county = "county",
+                               state = "state"
+                             ),
+                             .after = NULL) {
+  x <- dplyr::mutate(x, ..., .after = .after %||% street)
 
-  if (!is.null(county)) {
-    x <- has_same_name_col(x, col = "county")
-    x <- dplyr::mutate(x, county = county)
-  }
+  params <- rlang::list2(...)
 
-  if (!is.null(state)) {
-    x <- has_same_name_col(x, col = "state")
-    x <- dplyr::mutate(x, state = state)
-  }
+  x <-
+    str_to_case_across(
+      x,
+      dplyr::any_of(city, county, state),
+      case
+    )
 
-  str_to_case_across(
-    x,
-    dplyr::any_of(city, county, state),
-    case
-  )
+  has_city <- rlang::has_name(params, address_cols$city)
+  has_county <- rlang::has_name(params, address_cols$county)
+
+  if (rlang::has_name(params, address_cols$state) && any(c(has_city, has_county))) {
+    x <-
+      dplyr::mutate(
+        x,
+        "{address}" := dplyr::case_when(
+          has_city ~ glue("{.data[[street]]}, {.data[[address_cols$city]]} {.data[[address_cols$state]]}"),
+          has_county ~ glue("{.data[[street]]}, {.data[[address_cols$county]]} {.data[[address_cols$state]]}")
+        ),
+        .after = dplyr::all_of(address_cols$state)
+      )
+  }
 }
 
 #' Replace values in a character vector or data frame with a crosswalk

@@ -14,10 +14,19 @@ bind_block_col(
   street_suffix = "street_type",
   replace_suffix = FALSE,
   block_col = NULL,
+  .after = street_suffix,
   case = NULL
 )
 
-bind_address_col(x, city = NULL, county = NULL, state = NULL, case = NULL)
+bind_address_col(
+  x,
+  ...,
+  case = NULL,
+  street = "street_address",
+  address = "address",
+  address_cols = list(city = "city", county = "county", state = "state"),
+  .after = NULL
+)
 }
 \arguments{
 \item{bldg_num, street_dir_prefix, street_name, street_suffix}{Column names to
@@ -28,20 +37,34 @@ abbreviations from \link{street_suffixes}.}
 
 \item{block_col}{String to use as prefix for block identifier columns and
 separator between block number and street. Set to "block" when \code{NULL}
-(default).}
+(default). If length 2 (e.g. c("blk", "block")), the second value is used
+as the block separator and the first as the column identifier prefix.}
+
+\item{.after}{passed to \code{\link[dplyr:mutate]{dplyr::mutate()}} defaults to street_suffix for
+\code{\link[=bind_block_col]{bind_block_col()}} and "address" for \code{\link[=bind_address_col]{bind_address_col()}}.}
 
 \item{case}{Case to use for text in new columns or in modified values.
-Options include "lower", "upper", "title", or "sentence". Defaults to \code{NULL}.}
+Options include "lower", "upper", "title", or "sentence". Defaults to
+\code{NULL} which leaves the case as is.}
 
-\item{city, county, state}{City, county, and state to bind to data frame or
-\code{sf} object.}
+\item{street}{Street address column name, (e.g. 100 Holliday St) Default:
+'street_address'.}
+
+\item{address}{Full address column name. If city and state or city and county
+are provided, a combined address column is added to the data.frame using
+the street address column. If both county and city are provided, county is
+ignored.}
+
+\item{address_cols}{Named list specifying the additional column names to use
+for city, county, and state data.}
 }
 \description{
 getdata has two helpers for working with address data:
 \itemize{
 \item \link{bind_address_col} bind a provided value for city, county, and state to a
 data frame (to supplement address data with consistent values for these
-variables)
+variables). This function is useful for converting partial street addresses
+with a consistent values for state, county, or city into full addresses
 \item \link{bind_block_col} requires a data frame with columns named "bldg_num",
 "street_dir_prefix", "street_name", and "street_type" and binds derived
 values for whether a building is on the even or odd side of a block and
