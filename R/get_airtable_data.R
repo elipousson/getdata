@@ -2,7 +2,7 @@
 #'
 #' Get data from an Airtable base using the Airtable API and the httr2 package.
 #' If the base includes coordinate fields/columns, optionally convert the data
-#' to a simple feature object using [sfext::df_to_sf] if `geometry = TRUE`.
+#' to a simple feature object using [sfext::df_to_sf()] if `geometry = TRUE`.
 #'
 #' This function requires an Airtable API key which you can set using
 #' `set_access_token(token = <YOUR_API_KEY>, type = "AIRTABLE_API_KEY")`
@@ -33,7 +33,7 @@
 #'   "AIRTABLE_API_KEY")`)
 #' @param geometry If `TRUE`, convert data into a simple feature object.
 #'   Defaults to `FALSE`.
-#' @param list Data type to return, Default: 'records'. Set list to "resp" to
+#' @param list Data type to return, Default: "records". Set list to "resp" to
 #'   return the API response without any additional formatting or conversion.
 #' @inheritParams sfext::df_to_sf
 #' @inheritParams get_location_data
@@ -103,7 +103,6 @@ get_airtable_data <- function(base,
     return(data)
   }
 
-
   if (label) {
     labels <- names(data)
   } else {
@@ -154,7 +153,7 @@ req_airtable <- function(base,
                          record = NULL,
                          view = NULL,
                          sort = NULL,
-                         max_records = NULL,
+                         max_records = 100,
                          per_page = NULL,
                          tz = NULL,
                          locale = NULL,
@@ -242,7 +241,10 @@ req_airtable <- function(base,
 #' Set rate limit, set user agent, and authenticate Airtable request with key/token
 #'
 #' @noRd
-req_auth_airtable <- function(req, token = NULL, type = "AIRTABLE_API_KEY", realm = NULL) {
+req_auth_airtable <- function(req,
+                              token = NULL,
+                              type = "AIRTABLE_API_KEY",
+                              realm = NULL) {
   req <-
     httr2::req_throttle(
       req = req,
@@ -251,19 +253,22 @@ req_auth_airtable <- function(req, token = NULL, type = "AIRTABLE_API_KEY", real
     )
 
   httr2::req_auth_bearer_token(
-    req = req_getdata_user(req),
+    req = req,
     token = get_access_token(token = token, type = type)
   )
 }
 
 #' Perform request and get data based on list
 #' @noRd
-resp_airtable <- function(req, simplifyVector = TRUE, list = "records") {
+resp_airtable <- function(req,
+                          simplifyVector = TRUE,
+                          list = "records",
+                          max_records = 100) {
   list <- match.arg(list, c("resp", "fields", "records"))
 
   resp <-
     httr2::resp_body_json(
-      resp = httr2::req_perform(req),
+      resp = req_getdata(req),
       simplifyVector = simplifyVector
     )
 

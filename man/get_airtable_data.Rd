@@ -71,7 +71,7 @@ placeholder and is not currently implemented. Default: \code{NULL}}
 
 \item{offset}{Offset parameter, Default: \code{NULL}}
 
-\item{list}{Data type to return, Default: 'records'. Set list to "resp" to
+\item{list}{Data type to return, Default: "records". Set list to "resp" to
 return the API response without any additional formatting or conversion.}
 
 \item{geometry}{If \code{TRUE}, convert data into a simple feature object.
@@ -97,9 +97,9 @@ character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} retur
 without modification.}
 
 \item{crs}{Cordinate reference system to return, Default: 4326 for
-\code{\link[sfext:sf_to_df]{sf_to_df()}} and NULL for \code{\link[sfext:df_to_sf]{df_to_sf()}}.}
+\code{\link[sfext:sf_to_df]{sf_to_df()}} and \code{NULL} for \code{\link[sfext:df_to_sf]{df_to_sf()}}.}
 
-\item{coords}{Coordinate columns for input dataframe or output sf object (if
+\item{coords}{Coordinate columns for input data.frame or output sf object (if
 geometry is 'centroid' or 'point') Default: c("lon", "lat").}
 
 \item{from_crs}{For \code{\link[sfext:df_to_sf]{df_to_sf()}}, coordinate reference system used by
@@ -128,7 +128,7 @@ objects in the list returned by the function.}
 \description{
 Get data from an Airtable base using the Airtable API and the httr2 package.
 If the base includes coordinate fields/columns, optionally convert the data
-to a simple feature object using \link[sfext:sf_to_df]{sfext::df_to_sf} if \code{geometry = TRUE}.
+to a simple feature object using \code{\link[sfext:sf_to_df]{sfext::df_to_sf()}} if \code{geometry = TRUE}.
 }
 \details{
 This function requires an Airtable API key which you can set using
