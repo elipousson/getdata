@@ -14,20 +14,23 @@ utils::globalVariables(
   )
 )
 
-#' Add default user agent to request
+#' Add default user agent to request and perform request
 #'
 #' @noRd
 #' @importFrom httr2 req_user_agent
-req_getdata_user <-
+req_getdata <-
   function(req,
            string = getOption(
              "getdata.useragent",
              default = "getdata (https://github.com/elipousson/getdata)"
            )) {
-    httr2::req_user_agent(
-      req = req,
-      string = string
-    )
+    req <-
+      httr2::req_user_agent(
+        req = req,
+        string = string
+      )
+
+    httr2::req_perform(req)
   }
 
 

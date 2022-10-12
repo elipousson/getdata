@@ -107,7 +107,7 @@ get_open_data <- function(data = NULL,
         )
 
       cli::cli_inform(
-        "Downloading {.val {meta$name}} from {.url {resp$dataUri}}"
+        "Downloading {.val {meta$name}} from {.url {meta$dataUri}}"
       )
 
       cli::cli_dl(
@@ -137,7 +137,9 @@ get_open_data <- function(data = NULL,
 
     is_pkg_installed("RSocrata")
     # Download data from Socrata Open Data portal
-    data <- dplyr::as_tibble(RSocrata::read.socrata(url = url, app_token = token))
+    data <- dplyr::as_tibble(
+        RSocrata::read.socrata(url = url, app_token = token)
+        )
   }
 
   if (clean_names) {
@@ -189,12 +191,14 @@ make_socrata_url <- function(data = NULL,
         glue("({sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)})")
     } else {
       where_bbox <-
-        glue("within_box({location_col}, {bbox$ymax}, {bbox$xmax}, {bbox$ymin}, {bbox$xmin})")
+        glue("within_box({location_col},
+             {bbox$ymax}, {bbox$xmax}, {bbox$ymin}, {bbox$xmin})")
     }
   }
 
   if (!all(sapply(c(bbox, name_col, where), is.null))) {
-    where <- glue("$where=({paste0(c(where, where_bbox, where_name), collapse = ' AND ')})")
+    where <- glue("$where=({paste0(c(where, where_bbox, where_name),
+                  collapse = ' AND ')})")
   }
 
   if (!is.null(query)) {
@@ -287,10 +291,7 @@ get_socrata_metadata <- function(source_url = NULL,
                                  data = NULL) {
   req <- httr2::request(source_url)
   req <- httr2::req_url_path_append(req, "api/views/metadata/v1", data)
-  req <- req_getdata_user(req)
-  resp <- httr2::req_perform(req)
-
-  httr2::resp_body_json(resp)
+  httr2::resp_body_json(req_getdata(req))
 }
 
 #' @rdname get_open_data
@@ -300,9 +301,7 @@ get_socrata_metadata <- function(source_url = NULL,
 #' @importFrom dplyr as_tibble
 list_socrata_data <- function(source_url) {
   req <- httr2::request(paste0(source_url, "/data.json"))
-  req <- req_getdata_user(req)
-  resp <- httr2::req_perform(req)
-  resp <- httr2::resp_body_json(resp, simplifyVector = TRUE)
+  resp <- httr2::resp_body_json(req_getdata(req), simplifyVector = TRUE)
 
   datasets <- dplyr::as_tibble(resp$dataset)
   datasets$issued <- as.POSIXct(list$issued)

@@ -187,14 +187,11 @@ req_wiki_query <- function(lang = NULL,
     limit <- 500
   }
 
-  req <-
-    httr2::req_url_query(
+  httr2::req_url_query(
       req,
       gslimit = limit,
       format = format
     )
-
-  req_getdata_user(req)
 }
 
 #' Perform query and get response
@@ -203,11 +200,9 @@ req_wiki_query <- function(lang = NULL,
 resp_wiki_query <- function(req,
                             list = "geosearch",
                             simplifyVector = TRUE) {
-  resp <- httr2::req_perform(req = req)
-
   resp <-
     httr2::resp_body_json(
-      resp = resp,
+      resp = req_getdata(req),
       simplifyVector = simplifyVector
     )
 
