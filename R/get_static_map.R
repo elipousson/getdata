@@ -197,17 +197,20 @@ get_location_static_mapbox <- function(type,
 #' @rdname get_static_map
 #' @export
 get_static_bingmap <- function(location = NULL,
-                               width = 600,
-                               height = 400,
                                dist = NULL,
                                unit = "m",
-                               bearing = NULL,
                                imagery = "BirdsEye",
+                               zoom = NULL,
+                               width = 600,
+                               height = 400,
+                               bearing = NULL,
                                token = NULL,
                                ...) {
   is_pkg_installed("bingmapr")
 
   location <-
+    # FIXME: If bingmapr::get_map_image only uses the centroid - does the dist
+    # parameter make any difference?
     sfext::st_buffer_ext(
       location,
       dist = dist,
@@ -216,10 +219,11 @@ get_static_bingmap <- function(location = NULL,
 
   bingmapr::get_map_image(
     location = location,
+    imagery = imagery,
+    zoom = zoom,
     width = width,
     height = height,
     orientation = bearing %||% 0,
-    imagery = imagery,
     key = token,
     ...
   )

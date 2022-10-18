@@ -68,12 +68,13 @@ get_location_static_mapbox(
 
 get_static_bingmap(
   location = NULL,
-  width = 600,
-  height = 400,
   dist = NULL,
   unit = "m",
-  bearing = NULL,
   imagery = "BirdsEye",
+  zoom = NULL,
+  width = 600,
+  height = 400,
+  bearing = NULL,
   token = NULL,
   ...
 )
