@@ -132,7 +132,7 @@ rename_with_xwalk <- function(x,
 
   cli_abort_ifnot(
     c("{.arg xwalk} values must all be column names in {.arg x}.",
-      "i" = "{.val {xwalk[xwalk_in_x]}} can't be found in {.arg x} column names.",
+      "i" = "{.val {xwalk[!xwalk_in_x]}} can't be found in {.arg x} column names.",
       "*" = "Set {.arg .strict} to {.code FALSE} to ignore missing values."
     ),
     condition = (all(xwalk_in_x) && .strict) | !.strict,
@@ -142,6 +142,7 @@ rename_with_xwalk <- function(x,
 
   if (!keep_all) {
     x <- x[, colnames(x) %in% xwalk]
+    xwalk <- xwalk[xwalk %in% names(x)]
   }
 
   if (sfext::is_sf(x) && (attributes(x)$sf_column %in% xwalk)) {
