@@ -111,8 +111,8 @@ make_xwalk_list <- function(xwalk) {
 #'   be the values and the new names must be the names.
 #' @param .strict If `TRUE` (default), require that all values from the xwalk are found in
 #'   the column names of the x data.frame. If `FALSE`, unmatched values from the xwalk are ignored.
-#' @param .keep If `FALSE`, columns that are not named in the xwalk are dropped.
-#'   If `TRUE` (default), all columns are retained. If x is an sf object, the
+#' @param keep_all If `FALSE`, columns that are not named in the xwalk are dropped.
+#'   If `TRUE` (default), all columns are retained. If x is an `sf` object, the
 #'   geometry column will not be dropped even it is not renamed.
 #' @export
 #' @importFrom tibble deframe
@@ -122,7 +122,7 @@ rename_with_xwalk <- function(x,
                               xwalk = NULL,
                               label = FALSE,
                               .strict = TRUE,
-                              .keep = TRUE,
+                              keep_all = TRUE,
                               arg = caller_arg(x),
                               call = caller_env()) {
   # From https://twitter.com/PipingHotData/status/1497014703473704965
@@ -140,7 +140,7 @@ rename_with_xwalk <- function(x,
     call = call
   )
 
-  if (!.keep) {
+  if (!keep_all) {
     x <- x[, colnames(x) %in% xwalk]
   }
 
