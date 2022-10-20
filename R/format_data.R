@@ -109,28 +109,40 @@ make_xwalk_list <- function(xwalk) {
 #' @param xwalk a data frame with two columns using the first column as name and
 #'   the second column as value; or a named list. The existing names of x must
 #'   be the values and the new names must be the names.
-#' @param .strict If `TRUE`, require that all values from the xwalk are found in
-#'   the column names of the x data.frame.
+#' @param .strict If `TRUE` (default), require that all values from the xwalk are found in
+#'   the column names of the x data.frame. If `FALSE`, unmatched values from the xwalk are ignored.
+#' @param .keep If `FALSE`, columns that are not named in the xwalk are dropped.
+#'   If `TRUE` (default), all columns are retained. If x is an sf object, the
+#'   geometry column will not be dropped even it is not renamed.
 #' @export
 #' @importFrom tibble deframe
 #' @importFrom dplyr rename_with
 #' @importFrom sfext is_sf
-rename_with_xwalk <- function(x, xwalk = NULL, label = FALSE, .strict = TRUE,
-                              arg = caller_arg(x), call = caller_env()) {
+rename_with_xwalk <- function(x,
+                              xwalk = NULL,
+                              label = FALSE,
+                              .strict = TRUE,
+                              .keep = TRUE,
+                              arg = caller_arg(x),
+                              call = caller_env()) {
   # From https://twitter.com/PipingHotData/status/1497014703473704965
   # https://stackoverflow.com/questions/20987295/rename-multiple-columns-by-names/41343022#41343022
   xwalk <- make_xwalk_list(xwalk)
-  xwalk_in_x <- xwalk %in% colnames(x)
+  xwalk_in_x <- rlang::has_name(x, xwalk)
 
   cli_abort_ifnot(
     c("{.arg xwalk} values must all be column names in {.arg x}.",
       "i" = "{.val {xwalk[xwalk_in_x]}} can't be found in {.arg x} column names.",
       "*" = "Set {.arg .strict} to {.code FALSE} to ignore missing values."
     ),
-    condition = all(xwalk_in_x) && .strict,
+    condition = (all(xwalk_in_x) && .strict) | !.strict,
     arg = arg,
     call = call
   )
+
+  if (!.keep) {
+    x <- x[, colnames(x) %in% xwalk]
+  }
 
   if (sfext::is_sf(x) && (attributes(x)$sf_column %in% xwalk)) {
     sf_col <- as.character(names(xwalk[xwalk == attributes(x)$sf_column]))

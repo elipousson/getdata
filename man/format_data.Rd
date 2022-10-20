@@ -26,6 +26,7 @@ rename_with_xwalk(
   xwalk = NULL,
   label = FALSE,
   .strict = TRUE,
+  .keep = TRUE,
   arg = caller_arg(x),
   call = caller_env()
 )
@@ -72,8 +73,12 @@ columns using the original names. Defaults to \code{FALSE}.}
 
 \item{...}{Additional parameters passed to \link{format_sf_data}}
 
-\item{.strict}{If \code{TRUE}, require that all values from the xwalk are found in
-the column names of the x data.frame.}
+\item{.strict}{If \code{TRUE} (default), require that all values from the xwalk are found in
+the column names of the x data.frame. If \code{FALSE}, unmatched values from the xwalk are ignored.}
+
+\item{.keep}{If \code{FALSE}, columns that are not named in the xwalk are dropped.
+If \code{TRUE} (default), all columns are retained. If x is an sf object, the
+geometry column will not be dropped even it is not renamed.}
 }
 \value{
 The input data frame or simple feature object with formatting
