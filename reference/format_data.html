@@ -91,7 +91,7 @@ documented at <code><a href="format_address_data.html">format_address_data()</a>
 <span>  xwalk <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  .strict <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  .keep <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keep_all <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  arg <span class="op">=</span> <span class="fu">caller_arg</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
 <span>  call <span class="op">=</span> <span class="fu">caller_env</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -167,9 +167,9 @@ columns using the original names. Defaults to <code>FALSE</code>.</p></dd>
 the column names of the x data.frame. If <code>FALSE</code>, unmatched values from the xwalk are ignored.</p></dd>
 
 
-<dt>.keep</dt>
+<dt>keep_all</dt>
 <dd><p>If <code>FALSE</code>, columns that are not named in the xwalk are dropped.
-If <code>TRUE</code> (default), all columns are retained. If x is an sf object, the
+If <code>TRUE</code> (default), all columns are retained. If x is an <code>sf</code> object, the
 geometry column will not be dropped even it is not renamed.</p></dd>
 
 </dl></div>
