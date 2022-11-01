@@ -89,13 +89,21 @@ format_data <- function(x,
 
 #' @noRd
 #' @importFrom tibble deframe
-make_xwalk_list <- function(xwalk) {
-  if (is.data.frame(xwalk) && (ncol(xwalk) == 2)) {
-    return(as.list(tibble::deframe(xwalk)))
+make_xwalk_list <- function(xwalk, nm = c("label", "name")) {
+  if (is.data.frame(xwalk)) {
+    if (sfext::is_sf(xwalk)) {
+      xwalk <- sf::st_drop_geometry(xwalk)
+    }
+
+    if (ncol(xwalk) == 2) {
+      return(as.list(tibble::deframe(xwalk)))
+    } else if (all(nm %in% colnames(xwalk))) {
+      return(rlang::set_names(as.list(xwalk[[nm[1]]]), xwalk[[nm[2]]]))
+    }
   }
 
   cli_abort_ifnot(
-    message = c("{.arg xwalk} must be a {.cls list} or two column {.cls data.frame}.",
+    message = c("{.arg xwalk} must be a {.cls list}, a two column {.cls data.frame}, or a {.cls data.frame} with column names {.val {nm}}.",
       "i" = "The provided {.arg xwalk} has class {.cls {class(xwalk)}}."
     ),
     condition = is_named(xwalk),
@@ -109,11 +117,12 @@ make_xwalk_list <- function(xwalk) {
 #' @param xwalk a data frame with two columns using the first column as name and
 #'   the second column as value; or a named list. The existing names of x must
 #'   be the values and the new names must be the names.
-#' @param .strict If `TRUE` (default), require that all values from the xwalk are found in
-#'   the column names of the x data.frame. If `FALSE`, unmatched values from the xwalk are ignored.
-#' @param keep_all If `FALSE`, columns that are not named in the xwalk are dropped.
-#'   If `TRUE` (default), all columns are retained. If x is an `sf` object, the
-#'   geometry column will not be dropped even it is not renamed.
+#' @param .strict If `TRUE` (default), require that all values from the xwalk
+#'   are found in the column names of the x data.frame. If `FALSE`, unmatched
+#'   values from the xwalk are ignored.
+#' @param keep_all If `FALSE`, columns that are not named in the xwalk are
+#'   dropped. If `TRUE` (default), all columns are retained. If x is an `sf`
+#'   object, the geometry column will not be dropped even it is not renamed.
 #' @export
 #' @importFrom tibble deframe
 #' @importFrom dplyr rename_with
@@ -172,6 +181,7 @@ rename_with_xwalk <- function(x,
 #'   `TRUE`, xwalk is passed to [label_with_xwalk()] with label = "var" to label
 #'   columns using the original names. Defaults to `FALSE`.
 #' @rdname format_data
+#' @export
 label_with_xwalk <- function(x, xwalk = NULL, label = "var", ...) {
   is_pkg_installed("labelled")
 
@@ -181,6 +191,31 @@ label_with_xwalk <- function(x, xwalk = NULL, label = "var", ...) {
   } else {
     labelled::set_value_labels(x, .labels = make_xwalk_list(xwalk), ...)
   }
+}
+
+#' @name make_variable_dictionary
+#' @param .labels Replaces labels column created by
+#'   [labelled::generate_dictionary()] if column is all `NA` (no existing labels
+#'   assigned); defaults to `NULL`.
+#' @param .definitions Character vector of definitions appended to dictionary
+#'   data frame. Must be in the same order as the variables in the provided data
+#'   frame x.
+#' @rdname format_data
+#' @export
+make_variable_dictionary <- function(x, .labels = NULL, .definitions = NULL) {
+  is_pkg_installed("labelled")
+
+  dict <- labelled::generate_dictionary(x)
+
+  if (all(is.na(dict$label)) && (length(.labels) == ncol(x))) {
+    dict$label <- .labels
+  }
+
+  if (!is.null(.definitions)) {
+    dict$definitions <- .definitions
+  }
+
+  dict
 }
 
 #' @name fix_epoch_date

@@ -4,6 +4,7 @@
 \alias{format_data}
 \alias{rename_with_xwalk}
 \alias{label_with_xwalk}
+\alias{make_variable_dictionary}
 \alias{fix_epoch_date}
 \title{Format data frames and simple features using common approaches}
 \usage{
@@ -32,6 +33,8 @@ rename_with_xwalk(
 )
 
 label_with_xwalk(x, xwalk = NULL, label = "var", ...)
+
+make_variable_dictionary(x, .labels = NULL, .definitions = NULL)
 
 fix_epoch_date(x, .cols = dplyr::contains("date"))
 }
@@ -73,12 +76,21 @@ columns using the original names. Defaults to \code{FALSE}.}
 
 \item{...}{Additional parameters passed to \link{format_sf_data}}
 
-\item{.strict}{If \code{TRUE} (default), require that all values from the xwalk are found in
-the column names of the x data.frame. If \code{FALSE}, unmatched values from the xwalk are ignored.}
+\item{.strict}{If \code{TRUE} (default), require that all values from the xwalk
+are found in the column names of the x data.frame. If \code{FALSE}, unmatched
+values from the xwalk are ignored.}
 
-\item{keep_all}{If \code{FALSE}, columns that are not named in the xwalk are dropped.
-If \code{TRUE} (default), all columns are retained. If x is an \code{sf} object, the
-geometry column will not be dropped even it is not renamed.}
+\item{keep_all}{If \code{FALSE}, columns that are not named in the xwalk are
+dropped. If \code{TRUE} (default), all columns are retained. If x is an \code{sf}
+object, the geometry column will not be dropped even it is not renamed.}
+
+\item{.labels}{Replaces labels column created by
+\code{\link[labelled:look_for]{labelled::generate_dictionary()}} if column is all \code{NA} (no existing labels
+assigned); defaults to \code{NULL}.}
+
+\item{.definitions}{Character vector of definitions appended to dictionary
+data frame. Must be in the same order as the variables in the provided data
+frame x.}
 }
 \value{
 The input data frame or simple feature object with formatting
