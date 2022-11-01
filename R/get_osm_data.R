@@ -217,6 +217,7 @@ has_osm_type_name <- function(x) {
 #' @export
 #' @importFrom dplyr filter between
 #' @importFrom janitor clean_names
+#' @importFrom sfext transform_sf
 get_osm_boundaries <- function(location,
                                level = NULL,
                                lang = "en",
@@ -275,7 +276,7 @@ get_osm_boundaries <- function(location,
 
   boundaries <- boundaries[, !(boundaries_nm %in% drop_nm_cols)]
 
-  sfext::st_transform_ext(x = boundaries, crs = crs)
+  sfext::transform_sf(x = boundaries, crs = crs)
 }
 
 
@@ -400,6 +401,10 @@ get_osm_data_geometry <- function(data,
     }
 
     return(osmdata::unique_osmdata(data))
+  }
+
+  if (!grepl("s$", geometry, perl = TRUE)) {
+    geometry <- paste0(geometry, "s")
   }
 
   geometry <-
