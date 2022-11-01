@@ -46,12 +46,13 @@ character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} retur
 without modification.}
 
 \item{user_id}{The NSID of the user with photos to search. If this parameter
-is NULL passed then all public photos will be searched.}
+is \code{NULL} passed then all public photos will be searched.}
 
 \item{tags}{A vector of tags to search for.}
 
 \item{license_id}{The license id for photos. For possible values see the
-Flickr API method flickr.photos.licenses.getInfo or see details for more information.}
+Flickr API method flickr.photos.licenses.getInfo or see details for more
+information.}
 
 \item{sort}{Supported options include "date-posted","date-taken",
 "interestingness", or "relevance"}
@@ -59,16 +60,17 @@ Flickr API method flickr.photos.licenses.getInfo or see details for more informa
 \item{desc}{If \code{TRUE} return images in descending sort order, if \code{FALSE},
 return in ascending sort order. Ignored if sort is set to "relevance".}
 
-\item{img_size}{Defaults to "s" (small). Options ranging from smallest to
-largest include "sq", "t", "s", "q", "m", "n", "z", "c", "l", and "o"}
+\item{img_size}{Image size; defaults to "s" (small). Options ranging from
+smallest to largest size include "sq" (square), "t", "s", "q", "m", "n",
+"z", "c", "l", and "o" (original).}
 
 \item{extras}{Defaults to "description", "date_taken", "tags", and "geo".}
 
-\item{per_page}{Photos to return per page of search, Default: 100. Maximum
-250 if location is provided or 500 otherwise.}
+\item{per_page}{Photos to return per page of search results, Default: 100.
+Maximum 250 if a location is provided or 500 otherwise.}
 
 \item{page}{If page is greater than length 1, the function uses
-\code{purrr::map_dfr()} to return results for all pages but this may cause
+\code{\link[purrr:map]{purrr::map_dfr()}} to return results for all pages but this may cause
 issues with API access if a large page range is provided. Default: 1}
 
 \item{orientation}{If img_size is length 1, photos are filtered to one or
@@ -76,23 +78,23 @@ more of the supported orientations ("portrait", "landscape", and "square");
 defaults to \code{NULL}.}
 
 \item{geometry}{If \code{TRUE}, include "geo" in extras and convert photos data
-frame to \code{sf} object.}
+frame to \code{sf} object. Passed to geo parameter of \code{\link[FlickrAPI:getPhotoSearch]{FlickrAPI::get_photo_search()}}}
 
 \item{crs}{Coordinate reference system of \code{sf} object to return if geometry
 is \code{TRUE}.}
 
-\item{key}{Flickr API key. If api_key is 'NULL', the \link[FlickrAPI:getPhotoSearch]{FlickrAPI::getPhotoSearch} uses
-\code{\link[FlickrAPI:setFlickrAPIKey]{FlickrAPI::getFlickrAPIKey()}} to use the environment variable "FLICKR_API_KEY" as the
-key. Use \code{\link[=set_access_token]{set_access_token()}} w/ \code{type = "FLICKR_API_KEY"} or \code{\link[FlickrAPI:setFlickrAPIKey]{FlickrAPI::setFlickrAPIKey()}}}
+\item{key}{Flickr API key. If api_key is \code{NULL}, the
+\link[FlickrAPI:getPhotoSearch]{FlickrAPI::getPhotoSearch} uses \code{\link[FlickrAPI:setFlickrAPIKey]{FlickrAPI::getFlickrAPIKey()}} to use the
+environment variable "FLICKR_API_KEY" as the key. Use \code{\link[=set_access_token]{set_access_token()}}
+w/ \code{type = "FLICKR_API_KEY"} or \code{\link[FlickrAPI:setFlickrAPIKey]{FlickrAPI::setFlickrAPIKey()}}}
 }
 \value{
 A data frame with photo information or \code{sf} object with geometry
 based on latitude and longitude of geocoded photos.
 }
 \description{
-Set API key using \code{FlickrAPI::set_flickr_api_key()} or pass to the api_key
-parameter. Currently relies on fork of package at
-\url{https://github.com/elipousson/FlickrAPI}
+Set API key using \code{\link[FlickrAPI:setFlickrAPIKey]{FlickrAPI::set_flickr_api_key()}} or pass to the api_key
+parameter.
 }
 \details{
 License id options:

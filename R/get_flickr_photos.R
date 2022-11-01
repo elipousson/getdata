@@ -1,8 +1,7 @@
 #' Use FlickrAPI to get geotagged photos for a location
 #'
-#' Set API key using `FlickrAPI::set_flickr_api_key()` or pass to the api_key
-#' parameter. Currently relies on fork of package at
-#' <https://github.com/elipousson/FlickrAPI>
+#' Set API key using [FlickrAPI::set_flickr_api_key()] or pass to the api_key
+#' parameter.
 #'
 #' @param location A `sf` or `bbox` object to use in creating bounding box for
 #'   getting photos from Flickr.
@@ -15,23 +14,25 @@
 #' @param desc If `TRUE` return images in descending sort order, if `FALSE`,
 #'   return in ascending sort order. Ignored if sort is set to "relevance".
 #' @param extras Defaults to "description", "date_taken", "tags", and "geo".
-#' @param img_size Defaults to "s" (small). Options ranging from smallest to
-#'   largest include "sq", "t", "s", "q", "m", "n", "z", "c", "l", and "o"
-#' @param per_page Photos to return per page of search, Default: 100. Maximum
-#'   250 if location is provided or 500 otherwise.
+#' @param img_size Image size; defaults to "s" (small). Options ranging from
+#'   smallest to largest size include "sq" (square), "t", "s", "q", "m", "n",
+#'   "z", "c", "l", and "o" (original).
+#' @param per_page Photos to return per page of search results, Default: 100.
+#'   Maximum 250 if a location is provided or 500 otherwise.
 #' @param page If page is greater than length 1, the function uses
-#'   `purrr::map_dfr()` to return results for all pages but this may cause
+#'   [purrr::map_dfr()] to return results for all pages but this may cause
 #'   issues with API access if a large page range is provided. Default: 1
 #' @param orientation If img_size is length 1, photos are filtered to one or
 #'   more of the supported orientations ("portrait", "landscape", and "square");
 #'   defaults to `NULL`.
 #' @param geometry If `TRUE`, include "geo" in extras and convert photos data
-#'   frame to `sf` object.
+#'   frame to `sf` object. Passed to geo parameter of [FlickrAPI::get_photo_search()]
 #' @param crs Coordinate reference system of `sf` object to return if geometry
 #'   is `TRUE`.
-#' @param key Flickr API key. If api_key is 'NULL', the [FlickrAPI::getPhotoSearch] uses
-#'   [FlickrAPI::getFlickrAPIKey()] to use the environment variable "FLICKR_API_KEY" as the
-#'   key. Use [set_access_token()] w/ `type = "FLICKR_API_KEY"` or [FlickrAPI::setFlickrAPIKey()]
+#' @param key Flickr API key. If api_key is `NULL`, the
+#'   [FlickrAPI::getPhotoSearch] uses [FlickrAPI::getFlickrAPIKey()] to use the
+#'   environment variable "FLICKR_API_KEY" as the key. Use [set_access_token()]
+#'   w/ `type = "FLICKR_API_KEY"` or [FlickrAPI::setFlickrAPIKey()]
 #' @inheritParams FlickrAPI::getPhotoSearch
 #' @return A data frame with photo information or `sf` object with geometry
 #'   based on latitude and longitude of geocoded photos.
@@ -58,6 +59,8 @@
 #' @rdname get_flickr_photos
 #' @export
 #' @importFrom purrr map_dfr
+#' @importFrom rlang has_name
+#' @importFrom dplyr mutate
 get_flickr_photos <- function(location = NULL,
                               dist = NULL,
                               diag_ratio = NULL,
@@ -77,7 +80,7 @@ get_flickr_photos <- function(location = NULL,
                               crs = 4326,
                               key = NULL) {
   if (length(page) > 1) {
-    photos <-
+    return(
       purrr::map_dfr(
         page,
         ~ get_flickr_photos(
@@ -101,14 +104,14 @@ get_flickr_photos <- function(location = NULL,
           key = key
         )
       )
-
-    return(photos)
+    )
   }
 
   # Get adjusted bounding box if any adjustment variables provided
   bbox <-
     sfext::st_bbox_ext(
-      x = location,
+      # FIXME: Is the additional as_sf() call needed here?
+      x = sfext::as_sf(location),
       dist = dist,
       diag_ratio = diag_ratio,
       unit = unit,
@@ -133,11 +136,27 @@ get_flickr_photos <- function(location = NULL,
       page = page
     )
 
-  if (length(img_size) == 1) {
+  if (nrow(photos) == 0) {
+    cli_inform(
+      "No photos can be found with the provided parameters."
+    )
+    return(invisible(NULL))
+  }
+
+  if (!is.null(img_size) && (length(img_size) == 1)) {
     photos <-
       get_flickr_photos_orientation(
         photos = photos,
         orientation = orientation
+      )
+  }
+
+  if (all(rlang::has_name(photos, c("owner", "id")))) {
+    photos <-
+      dplyr::mutate(
+        photos,
+        url = glue("https://flickr.com/photos/{owner}/{id}"),
+        .after = owner
       )
   }
 
@@ -159,20 +178,23 @@ get_flickr_photos <- function(location = NULL,
 #' @param orientation Character vector with one or more of the orientation
 #'   options "landscape", "portrait", and "square".
 #' @noRd
+#' @importFrom rlang has_name
 #' @importFrom dplyr rename mutate case_when
 get_flickr_photos_orientation <- function(photos,
                                           orientation = NULL) {
-  photos <-
-    dplyr::mutate(
-      photos,
-      img_orientation = dplyr::case_when(
-        (img_width / img_height) > 1 ~ "landscape",
-        (img_width / img_height) < 1 ~ "portrait",
-        TRUE ~ "square"
-      )
-    )
+  if (rlang::has_name(photos, "img_asp")) {
+      photos <-
+        dplyr::mutate(
+          photos,
+          img_orientation = dplyr::case_when(
+            img_asp > 1 ~ "landscape",
+            img_asp < 1 ~ "portrait",
+            TRUE ~ "square"
+          )
+        )
+  }
 
-  if (is.null(orientation)) {
+  if (is.null(orientation) | !rlang::has_name(photos, "img_orientation")) {
     return(photos)
   }
 
