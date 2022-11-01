@@ -198,7 +198,7 @@ replace_with_xwalk <- function(x,
     if (abb) {
       # Move the abbreviation column to the second column if converting
       # abbreviation to full value
-      dict_cols <- c(2:1)
+      dict_cols <- rev(dict_cols)
     }
 
     dict <- make_xwalk_list(dict[, dict_cols])
@@ -219,7 +219,7 @@ replace_with_xwalk <- function(x,
       dplyr::mutate(
         x,
         dplyr::across(
-          .cols,
+          dplyr::all_of(.cols),
           ~ stringr::str_replace_all(.x, xwalk)
         )
       )
@@ -255,6 +255,7 @@ replace_street_suffixes <- function(x,
 
 #' @name replace_street_dir_prefixes
 #' @rdname replace_with_xwalk
+#' @export
 #' @importFrom dplyr all_of
 replace_street_dir_prefixes <- function(x,
                                         street_dir_prefix = "street_dir_prefix",
