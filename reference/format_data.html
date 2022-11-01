@@ -98,6 +98,8 @@ documented at <code><a href="format_address_data.html">format_address_data()</a>
 <span></span>
 <span><span class="fu">label_with_xwalk</span><span class="op">(</span><span class="va">x</span>, xwalk <span class="op">=</span> <span class="cn">NULL</span>, label <span class="op">=</span> <span class="st">"var"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">make_variable_dictionary</span><span class="op">(</span><span class="va">x</span>, .labels <span class="op">=</span> <span class="cn">NULL</span>, .definitions <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">fix_epoch_date</span><span class="op">(</span><span class="va">x</span>, .cols <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"date"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -163,14 +165,27 @@ columns using the original names. Defaults to <code>FALSE</code>.</p></dd>
 
 
 <dt>.strict</dt>
-<dd><p>If <code>TRUE</code> (default), require that all values from the xwalk are found in
-the column names of the x data.frame. If <code>FALSE</code>, unmatched values from the xwalk are ignored.</p></dd>
+<dd><p>If <code>TRUE</code> (default), require that all values from the xwalk
+are found in the column names of the x data.frame. If <code>FALSE</code>, unmatched
+values from the xwalk are ignored.</p></dd>
 
 
 <dt>keep_all</dt>
-<dd><p>If <code>FALSE</code>, columns that are not named in the xwalk are dropped.
-If <code>TRUE</code> (default), all columns are retained. If x is an <code>sf</code> object, the
-geometry column will not be dropped even it is not renamed.</p></dd>
+<dd><p>If <code>FALSE</code>, columns that are not named in the xwalk are
+dropped. If <code>TRUE</code> (default), all columns are retained. If x is an <code>sf</code>
+object, the geometry column will not be dropped even it is not renamed.</p></dd>
+
+
+<dt>.labels</dt>
+<dd><p>Replaces labels column created by
+<code><a href="http://larmarange.github.io/labelled/reference/look_for.html" class="external-link">labelled::generate_dictionary()</a></code> if column is all <code>NA</code> (no existing labels
+assigned); defaults to <code>NULL</code>.</p></dd>
+
+
+<dt>.definitions</dt>
+<dd><p>Character vector of definitions appended to dictionary
+data frame. Must be in the same order as the variables in the provided data
+frame x.</p></dd>
 
 </dl></div>
     <div class="section level2">
