@@ -230,7 +230,7 @@ req_airtable <- function(base,
       req <-
         httr2::req_url_query(
           req,
-          field =  glue("[{field}]")
+          field = glue("[{field}]")
         )
     }
   }

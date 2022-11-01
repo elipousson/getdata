@@ -138,8 +138,8 @@ get_open_data <- function(data = NULL,
     is_pkg_installed("RSocrata")
     # Download data from Socrata Open Data portal
     data <- dplyr::as_tibble(
-        RSocrata::read.socrata(url = url, app_token = token)
-        )
+      RSocrata::read.socrata(url = url, app_token = token)
+    )
   }
 
   if (clean_names) {

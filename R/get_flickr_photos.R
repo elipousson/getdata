@@ -183,15 +183,15 @@ get_flickr_photos <- function(location = NULL,
 get_flickr_photos_orientation <- function(photos,
                                           orientation = NULL) {
   if (rlang::has_name(photos, "img_asp")) {
-      photos <-
-        dplyr::mutate(
-          photos,
-          img_orientation = dplyr::case_when(
-            img_asp > 1 ~ "landscape",
-            img_asp < 1 ~ "portrait",
-            TRUE ~ "square"
-          )
+    photos <-
+      dplyr::mutate(
+        photos,
+        img_orientation = dplyr::case_when(
+          img_asp > 1 ~ "landscape",
+          img_asp < 1 ~ "portrait",
+          TRUE ~ "square"
         )
+      )
   }
 
   if (is.null(orientation) | !rlang::has_name(photos, "img_orientation")) {

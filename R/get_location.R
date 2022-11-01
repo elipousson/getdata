@@ -102,10 +102,10 @@ get_location <- function(type,
 
   location <-
     switch(params,
-    "name" = filter_name(type, name = name, name_col = name_col),
-    "id" = filter_name(type, name = id, name_col = id_col),
-    "location" = filter_location(type, location = location)
-  )
+      "name" = filter_name(type, name = name, name_col = name_col),
+      "id" = filter_name(type, name = id, name_col = id_col),
+      "location" = filter_location(type, location = location)
+    )
 
   col <- NULL
   # FIXME: There should be an option for setting the col value

@@ -188,10 +188,10 @@ req_wiki_query <- function(lang = NULL,
   }
 
   httr2::req_url_query(
-      req,
-      gslimit = limit,
-      format = format
-    )
+    req,
+    gslimit = limit,
+    format = format
+  )
 }
 
 #' Perform query and get response
