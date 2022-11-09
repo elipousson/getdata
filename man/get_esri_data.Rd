@@ -24,6 +24,7 @@ get_esri_data(
   token = NULL,
   progress = TRUE,
   quiet = FALSE,
+  .name_repair = janitor::make_clean_names,
   ...
 )
 
@@ -34,6 +35,8 @@ get_esri_layers(
   nm = NULL,
   token = NULL,
   clean_names = TRUE,
+  quiet = FALSE,
+  .name_repair = janitor::make_clean_names,
   ...
 )
 
@@ -41,9 +44,9 @@ get_esri_metadata(url, token = NULL, meta = NULL, clean_names = TRUE)
 }
 \arguments{
 \item{url}{FeatureServer or MapServer url to retrieve data from. Passed to
-\code{url} parameter of \link[esri2sf:esri2sf]{esri2sf::esri2sf} or \link[esri2sf:esri2sf]{esri2sf::esri2df} functions. For
-\link{get_esri_layers}, the optional url must be a service url which is the base
-url for one or more layer urls.}
+\code{url} parameter of \code{\link[esri2sf:esri2sf]{esri2sf::esri2sf()}} or \code{\link[esri2sf:esri2sf]{esri2sf::esri2df()}} functions.
+For \code{\link[=get_esri_layers]{get_esri_layers()}}, the optional url must be a service url which is
+the base url for one or more layer urls.}
 
 \item{location}{\code{sf}, \code{sfc}, or \code{bbox} object (or other object convertible
 with \code{\link[=as_bbox]{as_bbox()}}. Optional.}
@@ -86,13 +89,32 @@ returned metadata value. Ignored for non-character values, e.g. \code{meta = "id
 \item{progress}{Show progress bar from \code{\link[cli:cli_progress_along]{cli::cli_progress_along()}} if \code{TRUE}.
 Default \code{FALSE}.}
 
+\item{quiet}{If \code{TRUE}, use \code{\link[=suppressMessages]{suppressMessages()}} to prevent the printing of
+messages about the requested layer. Defaults to \code{FALSE}.}
+
+\item{.name_repair}{Treatment of problematic column names:
+\itemize{
+\item \code{"minimal"}: No name repair or checks, beyond basic existence,
+\item \code{"unique"}: Make sure names are unique and not empty,
+\item \code{"check_unique"}: (default value), no name repair, but check they are
+\code{unique},
+\item \code{"universal"}: Make the names \code{unique} and syntactic
+\item a function: apply custom name repair (e.g., \code{.name_repair = make.names}
+for names in the style of base R).
+\item A purrr-style anonymous function, see \code{\link[rlang:as_function]{rlang::as_function()}}
+}
+
+This argument is passed on as \code{repair} to \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}}.
+See there for more details on these terms and the strategies used
+to enforce them.}
+
 \item{...}{
   Arguments passed on to \code{\link[esri2sf:esri2sf]{esri2sf::esri2sf}}
   \describe{
     \item{\code{outFields}}{vector of fields you want to include. default is \code{NULL} for
 all fields.}
-    \item{\code{replaceDomainInfo}}{If \code{TRUE}, add domain information to the return data frame.
-Default \code{FALSE}.}
+    \item{\code{replaceDomainInfo}}{If \code{TRUE}, add domain information to the return data
+frame. Default \code{FALSE}.}
   }}
 
 \item{layers}{Either a vector with URLs, a named list of urls, or a numeric
@@ -104,11 +126,10 @@ vector; defaults to \code{NULL}. Optional if url is a}
 e.g. "name" to return layer name. Defaults to \code{NULL}.}
 }
 \description{
-Wraps the \link[esri2sf:esri2sf]{esri2sf::esri2sf} and \link[esri2sf:esri2sf]{esri2sf::esri2df} function to download an
-ArcGIS FeatureServer or MapServer. Supports spatial filtering with bounding
-box based on location and filtering by location name (if location name column
-is provided). As of July 2022, this package suggests the
-\href{https://github.com/elipousson/esri2sf/}{elipousson/esri2sf} fork using httr2
-but I expect to see this fork merged back into the main package in the
-future.
+Wraps the \code{\link[esri2sf:esri2sf]{esri2sf::esri2sf()}} and \code{\link[esri2sf:esri2sf]{esri2sf::esri2df()}} functions to download
+an ArcGIS FeatureServer or MapServer. Supports spatial filtering with
+bounding box based on location and filtering by location name (if location
+name column is provided). As of fall 2022, this package suggests the
+\href{https://github.com/elipousson/esri2sf/}{elipousson/esri2sf} fork using
+httr2.
 }

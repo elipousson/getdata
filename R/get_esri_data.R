@@ -1,18 +1,17 @@
 #' Use esri2sf to get data from an ArcGIS FeatureServer or MapServer for a
 #' location
 #'
-#' Wraps the [esri2sf::esri2sf] and [esri2sf::esri2df] function to download an
-#' ArcGIS FeatureServer or MapServer. Supports spatial filtering with bounding
-#' box based on location and filtering by location name (if location name column
-#' is provided). As of July 2022, this package suggests the
-#' [elipousson/esri2sf](https://github.com/elipousson/esri2sf/) fork using httr2
-#' but I expect to see this fork merged back into the main package in the
-#' future.
+#' Wraps the [esri2sf::esri2sf()] and [esri2sf::esri2df()] functions to download
+#' an ArcGIS FeatureServer or MapServer. Supports spatial filtering with
+#' bounding box based on location and filtering by location name (if location
+#' name column is provided). As of fall 2022, this package suggests the
+#' [elipousson/esri2sf](https://github.com/elipousson/esri2sf/) fork using
+#' httr2.
 #'
 #' @param url FeatureServer or MapServer url to retrieve data from. Passed to
-#'   `url` parameter of [esri2sf::esri2sf] or [esri2sf::esri2df] functions. For
-#'   [get_esri_layers], the optional url must be a service url which is the base
-#'   url for one or more layer urls.
+#'   `url` parameter of [esri2sf::esri2sf()] or [esri2sf::esri2df()] functions.
+#'   For [get_esri_layers()], the optional url must be a service url which is
+#'   the base url for one or more layer urls.
 #' @param location `sf`, `sfc`, or `bbox` object (or other object convertible
 #'   with [as_bbox()]. Optional.
 #' @param where where query string passed to esri2sf, Default: `NULL`
@@ -44,13 +43,17 @@ get_esri_data <- function(url,
                           token = NULL,
                           progress = TRUE,
                           quiet = FALSE,
+                          .name_repair = janitor::make_clean_names,
                           ...) {
   is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
-
   meta <- get_esri_metadata(url, token)
   table <- any(c(is.null(meta$geometryType), (meta$geometryType == "")))
 
   bbox <- NULL
+
+  if (!clean_names) {
+    .name_repair <- "check_unique"
+  }
 
   if (!is.null(where)) {
     where <- glue("({where})")
@@ -95,6 +98,7 @@ get_esri_data <- function(url,
         token = token,
         where = where,
         progress = progress,
+        .name_repair = .name_repair,
         quiet = quiet,
         ...
       )
@@ -107,6 +111,7 @@ get_esri_data <- function(url,
         bbox = bbox,
         progress = progress,
         crs = crs,
+        .name_repair = .name_repair,
         quiet = quiet,
         ...
       )
@@ -123,13 +128,10 @@ get_esri_data <- function(url,
       )
   }
 
-  if (!clean_names) {
-    return(data)
-  }
-
   # TODO: Expand support for format_data parameters especially
   # label_with_xwalk using alias from the esri layer metadata
-  format_data(data, clean_names = clean_names)
+  # format_data(data, clean_names = clean_names)
+  data
 }
 
 #' Get multiple ArcGIS feature server layers
@@ -150,6 +152,8 @@ get_esri_layers <- function(location = NULL,
                             nm = NULL,
                             token = NULL,
                             clean_names = TRUE,
+                            quiet = FALSE,
+                            .name_repair = janitor::make_clean_names,
                             ...) {
   is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
 
@@ -179,6 +183,8 @@ get_esri_layers <- function(location = NULL,
           nm = layer_list$name,
           token = token,
           clean_names = clean_names,
+          quiet = quiet,
+          .name_repair = .name_repair,
           ...
         )
 
@@ -235,6 +241,8 @@ get_esri_layers <- function(location = NULL,
         name_col = params$name_col,
         coords = params$coords,
         clean_names = clean_names,
+        quiet = quiet,
+        .name_repair = .name_repair,
         progress = params$progress %||% TRUE
       )
     )
