@@ -19,18 +19,18 @@
 #' In those cases, the ... parameters are passed on the getdata functions rather
 #' than the static map function.
 #'
-#' For [get_static_bingmap], parameter names are modified from
-#' [bingmapr::get_map_image] for consistency, so the bearing parameter passed to
+#' For [get_static_bingmap()], parameter names are modified from
+#' [bingmapr::get_map_image()] for consistency, so the bearing parameter passed to
 #' orientation and token is passed to key.
 #'
 #' @name get_static_map
 #' @param dist Buffer distance passed to buffer_dist parameter of
-#'   [mapboxapi::static_mapbox()] or to [sfext::st_buffer_ext] for
-#'   [get_static_bingmap].
+#'   [mapboxapi::static_mapbox()] or to [sfext::st_buffer_ext()] for
+#'   [get_static_bingmap()].
 #' @param unit Unit of `dist` argument. Defaults to "meters".
-#' @param type For [get_osm_static_mapbox], type of feature with id; ("node",
-#'   "way", or "relation"); for [get_location_static_mapbox], type of location
-#'   (see [get_location] for details.
+#' @param type For [get_osm_static_mapbox()], type of feature with id; ("node",
+#'   "way", or "relation"); for [get_location_static_mapbox()], type of location
+#'   (see [get_location()] for details.
 #' @param overlay_location If `TRUE`, use the location (or OpenStreetMap
 #'   feature) as the overlay_sf parameter. Default to `FALSE`. Ignored if
 #'   overlay_sf is provided.
@@ -38,8 +38,8 @@
 #' @param width,height Map width and height; defaults to 600 px width and 400 px
 #'   height.
 #' @param token Optional token or API key. Recommend setting the Bing Maps API
-#'   key using [bingmapr::bing_maps_api_key] and the Mapbox access token with
-#'   [mapboxapi::mb_access_token].
+#'   key using [bingmapr::bing_maps_api_key()] and the Mapbox access token with
+#'   [mapboxapi::mb_access_token()].
 #' @example examples/get_static_mapbox.R
 NULL
 
@@ -93,8 +93,8 @@ get_static_mapbox <- function(location,
 
 #' @name get_osm_static_mapbox
 #' @rdname get_static_map
-#' @export
 #' @inheritParams get_osm_data
+#' @export
 get_osm_static_mapbox <- function(id = NULL,
                                   key = NULL,
                                   level = NULL,
@@ -193,9 +193,10 @@ get_location_static_mapbox <- function(type,
 }
 
 #' @name get_static_bingmap
-#' @inheritParams bingmapr::get_map_image
 #' @rdname get_static_map
+#' @inheritParams bingmapr::get_map_image
 #' @export
+#' @importFrom sfext st_buffer_ext
 get_static_bingmap <- function(location = NULL,
                                dist = NULL,
                                unit = "m",

@@ -90,8 +90,8 @@ WGS84 longitude/latitude coordinates and be in the order
 \code{c(xmin, ymin, xmax, ymax)}.}
 
 \item{dist}{Buffer distance passed to buffer_dist parameter of
-\code{\link[mapboxapi:static_mapbox]{mapboxapi::static_mapbox()}} or to \link[sfext:st_buffer_ext]{sfext::st_buffer_ext} for
-\link{get_static_bingmap}.}
+\code{\link[mapboxapi:static_mapbox]{mapboxapi::static_mapbox()}} or to \code{\link[sfext:st_buffer_ext]{sfext::st_buffer_ext()}} for
+\code{\link[=get_static_bingmap]{get_static_bingmap()}}.}
 
 \item{unit}{Unit of \code{dist} argument. Defaults to "meters".}
 
@@ -124,20 +124,21 @@ height.}
 \item{pitch, bearing}{The map pitch and bearing; defaults to \code{NULL}. pitch can
 range from 0 to 60, and bearing from -360 to 360.}
 
-\item{...}{Additional parameters passed to \link{get_location_data} if type
-is character and index is \code{NULL}.}
+\item{...}{Additional parameters passed to \code{\link[=get_location_data]{get_location_data()}} if type is
+character and index is \code{NULL}.}
 
 \item{id}{OpenStreetMap feature id}
 
 \item{key}{Feature key for overpass API query.}
 
 \item{level}{administrative level (admin_level) of boundary to return;
-defaults to \code{NULL}. See \url{https://wiki.openstreetmap.org/wiki/Key:admin_level}
-for more information. Only used for \link{get_osm_boundaries}.}
+defaults to \code{NULL}. See
+\url{https://wiki.openstreetmap.org/wiki/Key:admin_level} for more information.
+Only used for \code{\link[=get_osm_boundaries]{get_osm_boundaries()}}.}
 
-\item{type}{For \link{get_osm_static_mapbox}, type of feature with id; ("node",
-"way", or "relation"); for \link{get_location_static_mapbox}, type of location
-(see \link{get_location} for details.}
+\item{type}{For \code{\link[=get_osm_static_mapbox]{get_osm_static_mapbox()}}, type of feature with id; ("node",
+"way", or "relation"); for \code{\link[=get_location_static_mapbox]{get_location_static_mapbox()}}, type of location
+(see \code{\link[=get_location]{get_location()}} for details.}
 
 \item{name}{Location name to return.}
 
@@ -150,8 +151,8 @@ id is provided.}
 \item{index}{Optional list used to match type to data, Default: \code{NULL}}
 
 \item{union}{If \code{TRUE}, the location geometry is unioned with
-\link[sf:geos_combine]{sf::st_union} and the names are combined into a single value.
-Default: \code{FALSE}.}
+\code{\link[sf:geos_combine]{sf::st_union()}} and the names are combined into a single value. Default:
+\code{FALSE}.}
 
 \item{imagery}{String with imagery type, Default: 'BirdsEye' Supported values
 include:
@@ -170,8 +171,8 @@ details such as hill shading disabled.
 }}
 
 \item{token}{Optional token or API key. Recommend setting the Bing Maps API
-key using \link[bingmapr:bing_maps_api_key]{bingmapr::bing_maps_api_key} and the Mapbox access token with
-\link[mapboxapi:mb_access_token]{mapboxapi::mb_access_token}.}
+key using \code{\link[bingmapr:bing_maps_api_key]{bingmapr::bing_maps_api_key()}} and the Mapbox access token with
+\code{\link[mapboxapi:mb_access_token]{mapboxapi::mb_access_token()}}.}
 }
 \description{
 Get a static map image using the  \href{https://www.mapbox.com/static-maps}{Mapbox Static Maps API} using \link[mapboxapi:static_mapbox]{mapboxapi::static_mapbox} or
@@ -192,8 +193,8 @@ Variations on get_static_mapbox include
 In those cases, the ... parameters are passed on the getdata functions rather
 than the static map function.
 
-For \link{get_static_bingmap}, parameter names are modified from
-\link[bingmapr:bing_static_map]{bingmapr::get_map_image} for consistency, so the bearing parameter passed to
+For \code{\link[=get_static_bingmap]{get_static_bingmap()}}, parameter names are modified from
+\code{\link[bingmapr:bing_static_map]{bingmapr::get_map_image()}} for consistency, so the bearing parameter passed to
 orientation and token is passed to key.
 }
 \examples{
