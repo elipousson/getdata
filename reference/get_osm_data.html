@@ -83,7 +83,9 @@ by enclosing ways/relations around the center of a location.</p>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>location</dt>
-<dd><p>A <code>sf</code>, <code>sfc</code>, or <code>bbox</code> object.</p></dd>
+<dd><p>A <code>sf</code>, <code>sfc</code>, or <code>bbox</code> object converted to bounding box
+with <code><a href="https://elipousson.github.io/sfext/reference/st_bbox_ext.html" class="external-link">sfext::st_bbox_ext()</a></code> or a character object passed directly to the
+bbox parameter of <code><a href="https://docs.ropensci.org/osmdata/reference/opq.html" class="external-link">osmdata::opq()</a></code>.</p></dd>
 
 
 <dt>dist</dt>
@@ -173,8 +175,9 @@ efficient, with data returned in the <code>osm_points</code> list item.</p></dd>
 
 <dt>level</dt>
 <dd><p>administrative level (admin_level) of boundary to return;
-defaults to <code>NULL</code>. See <a href="https://wiki.openstreetmap.org/wiki/Key:admin_level" class="external-link">https://wiki.openstreetmap.org/wiki/Key:admin_level</a>
-for more information. Only used for get_osm_boundaries.</p></dd>
+defaults to <code>NULL</code>. See
+<a href="https://wiki.openstreetmap.org/wiki/Key:admin_level" class="external-link">https://wiki.openstreetmap.org/wiki/Key:admin_level</a> for more information.
+Only used for <code>get_osm_boundaries()</code>.</p></dd>
 
 
 <dt>lang</dt>

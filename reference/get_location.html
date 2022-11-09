@@ -75,7 +75,7 @@ type to a named list of URLs or sf objects.</p>
     <dl><dt>type</dt>
 <dd><p>Type of location to return. Type can be an sf object, e.g. a data
 frame with multiple neighborhoods or a character string that can be passed
-to <a href="get_location_data.html">get_location_data</a>. If index is provided, character can also be a
+to <code><a href="get_location_data.html">get_location_data()</a></code>. If index is provided, character can also be a
 character string to match the name of a list.</p></dd>
 
 
@@ -100,10 +100,10 @@ id is provided.</p></dd>
 
 <dt>location</dt>
 <dd><p>An address, bounding box (<code>bbox</code>), or simple feature (<code>sf</code>)
-object passed to <a href="https://r-spatial.github.io/sf/reference/st_join.html" class="external-link">sf::st_filter</a>. Any valid address or
-addresses are geocoded with <a href="https://jessecambon.github.io/tidygeocoder/reference/geo.html" class="external-link">tidygeocoder::geo</a>, converted to
-a simple feature object, and then used as a spatial filter. <code>bbox</code> objects
-are converted using <code><a href="https://elipousson.github.io/sfext/reference/sf_bbox_misc.html" class="external-link">sfext::sf_bbox_to_sf()</a></code>. Multiple addresses are supported.</p></dd>
+object passed to <code><a href="https://r-spatial.github.io/sf/reference/st_join.html" class="external-link">sf::st_filter()</a></code>. Any valid address or addresses are
+geocoded with <code><a href="https://jessecambon.github.io/tidygeocoder/reference/geo.html" class="external-link">tidygeocoder::geo()</a></code>, converted to a simple feature object,
+and then used as a spatial filter. <code>bbox</code> objects are converted using
+<code><a href="https://elipousson.github.io/sfext/reference/sf_bbox_misc.html" class="external-link">sfext::sf_bbox_to_sf()</a></code>. Multiple addresses are supported.</p></dd>
 
 
 <dt>index</dt>
@@ -112,8 +112,8 @@ are converted using <code><a href="https://elipousson.github.io/sfext/reference/
 
 <dt>union</dt>
 <dd><p>If <code>TRUE</code>, the location geometry is unioned with
-<a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">sf::st_union</a> and the names are combined into a single value.
-Default: <code>FALSE</code>.</p></dd>
+<code><a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">sf::st_union()</a></code> and the names are combined into a single value. Default:
+<code>FALSE</code>.</p></dd>
 
 
 <dt>crs</dt>
@@ -124,8 +124,7 @@ type of location.</p></dd>
 
 <dt>label</dt>
 <dd><p>Label optionally added to "label" column; must be a length 1 or
-match the number of rows returned based on the other parameters. If <code>union = TRUE</code>,
-using label is recommended. Default: <code>NULL</code></p></dd>
+match the number of rows returned based on the other parameters. If <code>union = TRUE</code>, using label is recommended. Default: <code>NULL</code></p></dd>
 
 
 <dt>class</dt>
@@ -133,8 +132,8 @@ using label is recommended. Default: <code>NULL</code></p></dd>
 
 
 <dt>...</dt>
-<dd><p>Additional parameters passed to <a href="get_location_data.html">get_location_data</a> if type
-is character and index is <code>NULL</code>.</p></dd>
+<dd><p>Additional parameters passed to <code><a href="get_location_data.html">get_location_data()</a></code> if type is
+character and index is <code>NULL</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

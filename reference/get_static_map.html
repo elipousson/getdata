@@ -150,8 +150,8 @@ WGS84 longitude/latitude coordinates and be in the order
 
 <dt>dist</dt>
 <dd><p>Buffer distance passed to buffer_dist parameter of
-<code><a href="https://rdrr.io/pkg/mapboxapi/man/static_mapbox.html" class="external-link">mapboxapi::static_mapbox()</a></code> or to <a href="https://elipousson.github.io/sfext/reference/st_buffer_ext.html" class="external-link">sfext::st_buffer_ext</a> for
-get_static_bingmap.</p></dd>
+<code><a href="https://rdrr.io/pkg/mapboxapi/man/static_mapbox.html" class="external-link">mapboxapi::static_mapbox()</a></code> or to <code><a href="https://elipousson.github.io/sfext/reference/st_buffer_ext.html" class="external-link">sfext::st_buffer_ext()</a></code> for
+<code>get_static_bingmap()</code>.</p></dd>
 
 
 <dt>unit</dt>
@@ -202,8 +202,8 @@ range from 0 to 60, and bearing from -360 to 360.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Additional parameters passed to <a href="get_location_data.html">get_location_data</a> if type
-is character and index is <code>NULL</code>.</p></dd>
+<dd><p>Additional parameters passed to <code><a href="get_location_data.html">get_location_data()</a></code> if type is
+character and index is <code>NULL</code>.</p></dd>
 
 
 <dt>id</dt>
@@ -216,14 +216,15 @@ is character and index is <code>NULL</code>.</p></dd>
 
 <dt>level</dt>
 <dd><p>administrative level (admin_level) of boundary to return;
-defaults to <code>NULL</code>. See <a href="https://wiki.openstreetmap.org/wiki/Key:admin_level" class="external-link">https://wiki.openstreetmap.org/wiki/Key:admin_level</a>
-for more information. Only used for <a href="get_osm_data.html">get_osm_boundaries</a>.</p></dd>
+defaults to <code>NULL</code>. See
+<a href="https://wiki.openstreetmap.org/wiki/Key:admin_level" class="external-link">https://wiki.openstreetmap.org/wiki/Key:admin_level</a> for more information.
+Only used for <code><a href="get_osm_data.html">get_osm_boundaries()</a></code>.</p></dd>
 
 
 <dt>type</dt>
-<dd><p>For get_osm_static_mapbox, type of feature with id; ("node",
-"way", or "relation"); for get_location_static_mapbox, type of location
-(see <a href="get_location.html">get_location</a> for details.</p></dd>
+<dd><p>For <code>get_osm_static_mapbox()</code>, type of feature with id; ("node",
+"way", or "relation"); for <code>get_location_static_mapbox()</code>, type of location
+(see <code><a href="get_location.html">get_location()</a></code> for details.</p></dd>
 
 
 <dt>name</dt>
@@ -246,8 +247,8 @@ id is provided.</p></dd>
 
 <dt>union</dt>
 <dd><p>If <code>TRUE</code>, the location geometry is unioned with
-<a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">sf::st_union</a> and the names are combined into a single value.
-Default: <code>FALSE</code>.</p></dd>
+<code><a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">sf::st_union()</a></code> and the names are combined into a single value. Default:
+<code>FALSE</code>.</p></dd>
 
 
 <dt>imagery</dt>
@@ -268,8 +269,8 @@ details such as hill shading disabled.</p></li>
 
 <dt>token</dt>
 <dd><p>Optional token or API key. Recommend setting the Bing Maps API
-key using <a href="https://elipousson.github.io/bingmapr/reference/bing_maps_api_key.html" class="external-link">bingmapr::bing_maps_api_key</a> and the Mapbox access token with
-<a href="https://rdrr.io/pkg/mapboxapi/man/mb_access_token.html" class="external-link">mapboxapi::mb_access_token</a>.</p></dd>
+key using <code><a href="https://elipousson.github.io/bingmapr/reference/bing_maps_api_key.html" class="external-link">bingmapr::bing_maps_api_key()</a></code> and the Mapbox access token with
+<code><a href="https://rdrr.io/pkg/mapboxapi/man/mb_access_token.html" class="external-link">mapboxapi::mb_access_token()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -279,8 +280,8 @@ key using <a href="https://elipousson.github.io/bingmapr/reference/bing_maps_api
 <code><a href="get_osm_data.html">get_osm_boundaries()</a></code></p></li>
 </ul><p>In those cases, the ... parameters are passed on the getdata functions rather
 than the static map function.</p>
-<p>For get_static_bingmap, parameter names are modified from
-<a href="https://elipousson.github.io/bingmapr/reference/bing_static_map.html" class="external-link">bingmapr::get_map_image</a> for consistency, so the bearing parameter passed to
+<p>For <code>get_static_bingmap()</code>, parameter names are modified from
+<code><a href="https://elipousson.github.io/bingmapr/reference/bing_static_map.html" class="external-link">bingmapr::get_map_image()</a></code> for consistency, so the bearing parameter passed to
 orientation and token is passed to key.</p>
     </div>
 
