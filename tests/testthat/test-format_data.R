@@ -18,7 +18,7 @@ test_that("rename_with_xwalk works", {
 
   # expect two column tibble with colnames County and geometry
   expect_equal(
-    names(rename_with_xwalk(nc, xwalk, .keep = FALSE)),
+    names(rename_with_xwalk(nc, xwalk, keep_all = FALSE)),
     c("County", "geometry")
   )
 })
