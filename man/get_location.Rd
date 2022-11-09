@@ -23,7 +23,7 @@ get_location(
 \arguments{
 \item{type}{Type of location to return. Type can be an sf object, e.g. a data
 frame with multiple neighborhoods or a character string that can be passed
-to \link{get_location_data}. If index is provided, character can also be a
+to \code{\link[=get_location_data]{get_location_data()}}. If index is provided, character can also be a
 character string to match the name of a list.}
 
 \item{name}{Location name to return.}
@@ -38,29 +38,28 @@ match the class of the id_col for type.}
 id is provided.}
 
 \item{location}{An address, bounding box (\code{bbox}), or simple feature (\code{sf})
-object passed to \link[sf:st_join]{sf::st_filter}. Any valid address or
-addresses are geocoded with \link[tidygeocoder:geo]{tidygeocoder::geo}, converted to
-a simple feature object, and then used as a spatial filter. \code{bbox} objects
-are converted using \code{\link[sfext:sf_bbox_misc]{sfext::sf_bbox_to_sf()}}. Multiple addresses are supported.}
+object passed to \code{\link[sf:st_join]{sf::st_filter()}}. Any valid address or addresses are
+geocoded with \code{\link[tidygeocoder:geo]{tidygeocoder::geo()}}, converted to a simple feature object,
+and then used as a spatial filter. \code{bbox} objects are converted using
+\code{\link[sfext:sf_bbox_misc]{sfext::sf_bbox_to_sf()}}. Multiple addresses are supported.}
 
 \item{index}{Optional list used to match type to data, Default: \code{NULL}}
 
 \item{union}{If \code{TRUE}, the location geometry is unioned with
-\link[sf:geos_combine]{sf::st_union} and the names are combined into a single value.
-Default: \code{FALSE}.}
+\code{\link[sf:geos_combine]{sf::st_union()}} and the names are combined into a single value. Default:
+\code{FALSE}.}
 
 \item{crs}{Coordinate reference system to return; defaults to NULL which
 returns data using the same coordinate reference system as the provided
 type of location.}
 
 \item{label}{Label optionally added to "label" column; must be a length 1 or
-match the number of rows returned based on the other parameters. If \code{union = TRUE},
-using label is recommended. Default: \code{NULL}}
+match the number of rows returned based on the other parameters. If \code{union = TRUE}, using label is recommended. Default: \code{NULL}}
 
 \item{class}{Class of object to return; defaults to "sf".}
 
-\item{...}{Additional parameters passed to \link{get_location_data} if type
-is character and index is \code{NULL}.}
+\item{...}{Additional parameters passed to \code{\link[=get_location_data]{get_location_data()}} if type is
+character and index is \code{NULL}.}
 }
 \value{
 A simple feature object from data provided to type.

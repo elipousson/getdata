@@ -6,41 +6,41 @@
 #'
 #' @param type Type of location to return. Type can be an sf object, e.g. a data
 #'   frame with multiple neighborhoods or a character string that can be passed
-#'   to [get_location_data]. If index is provided, character can also be a
+#'   to [get_location_data()]. If index is provided, character can also be a
 #'   character string to match the name of a list.
 #' @param name Location name to return.
 #' @param id Location id to return. id is coerced to character or numeric to
 #'   match the class of the id_col for type.
 #' @param location An address, bounding box (`bbox`), or simple feature (`sf`)
-#'   object passed to [sf::st_filter]. Any valid address or
-#'   addresses are geocoded with [tidygeocoder::geo], converted to
-#'   a simple feature object, and then used as a spatial filter. `bbox` objects
-#'   are converted using [sfext::sf_bbox_to_sf()]. Multiple addresses are supported.
+#'   object passed to [sf::st_filter()]. Any valid address or addresses are
+#'   geocoded with [tidygeocoder::geo()], converted to a simple feature object,
+#'   and then used as a spatial filter. `bbox` objects are converted using
+#'   [sfext::sf_bbox_to_sf()]. Multiple addresses are supported.
 #' @param label Label optionally added to "label" column; must be a length 1 or
-#'   match the number of rows returned based on the other parameters. If `union = TRUE`,
-#'   using label is recommended. Default: `NULL`
+#'   match the number of rows returned based on the other parameters. If `union
+#'   = TRUE`, using label is recommended. Default: `NULL`
 #' @param name_col Column name in type with name values, Default: 'name'
 #'   Required if name provided.
 #' @param id_col Column name in type with id values, Default: 'id'. Required if
 #'   id is provided.
 #' @param index Optional list used to match type to data, Default: `NULL`
 #' @param union If `TRUE`, the location geometry is unioned with
-#'   [sf::st_union] and the names are combined into a single value.
-#'   Default: `FALSE`.
+#'   [sf::st_union()] and the names are combined into a single value. Default:
+#'   `FALSE`.
 #' @param crs Coordinate reference system to return; defaults to NULL which
 #'   returns data using the same coordinate reference system as the provided
 #'   type of location.
 #' @param class Class of object to return; defaults to "sf".
-#' @param ... Additional parameters passed to [get_location_data] if type
-#'   is character and index is `NULL`.
+#' @param ... Additional parameters passed to [get_location_data()] if type is
+#'   character and index is `NULL`.
 #' @return A simple feature object from data provided to type.
 #' @example examples/get_location.R
 #' @rdname get_location
 #' @aliases get_location_type
 #' @export
-#' @importFrom sf st_crs st_filter st_as_sf st_union
+#' @importFrom rlang check_required
 #' @importFrom sfext is_sf st_union_ext as_sf_class
-#' @importFrom dplyr bind_cols
+#' @importFrom dplyr case_when mutate all_of
 get_location <- function(type,
                          name = NULL,
                          name_col = "name",
@@ -124,7 +124,7 @@ get_location <- function(type,
       dplyr::mutate(
         location,
         "label" = label,
-        .after = name_col
+        .after = dplyr::all_of(name_col)
       )
   }
 
@@ -153,6 +153,7 @@ filter_location <- function(data = NULL,
 }
 
 #' @noRd
+#' @importFrom rlang caller_arg caller_env arg_match
 filter_name <- function(x = NULL,
                         name = NULL,
                         name_col = "name",
