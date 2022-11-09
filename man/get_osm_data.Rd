@@ -35,7 +35,9 @@ get_osm_boundaries(
 )
 }
 \arguments{
-\item{location}{A \code{sf}, \code{sfc}, or \code{bbox} object.}
+\item{location}{A \code{sf}, \code{sfc}, or \code{bbox} object converted to bounding box
+with \code{\link[sfext:st_bbox_ext]{sfext::st_bbox_ext()}} or a character object passed directly to the
+bbox parameter of \code{\link[osmdata:opq]{osmdata::opq()}}.}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -95,8 +97,9 @@ efficient, with data returned in the \code{osm_points} list item.}
 \item{type}{type of feature with id; "node", "way", or "relation"}
 
 \item{level}{administrative level (admin_level) of boundary to return;
-defaults to \code{NULL}. See \url{https://wiki.openstreetmap.org/wiki/Key:admin_level}
-for more information. Only used for \link{get_osm_boundaries}.}
+defaults to \code{NULL}. See
+\url{https://wiki.openstreetmap.org/wiki/Key:admin_level} for more information.
+Only used for \code{\link[=get_osm_boundaries]{get_osm_boundaries()}}.}
 
 \item{lang}{Language for boundary names to include in resulting data frame
 (e.g. "en" for English or "es" for Spanish). Default language names should

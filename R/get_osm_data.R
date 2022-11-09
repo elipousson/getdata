@@ -3,7 +3,9 @@
 #' Use `osmdata` functions to query OSM data by adjusted bounding box or
 #' by enclosing ways/relations around the center of a location.
 #'
-#' @param location A `sf`, `sfc`, or `bbox` object.
+#' @param location A `sf`, `sfc`, or `bbox` object converted to bounding box
+#'   with [sfext::st_bbox_ext()] or a character object passed directly to the
+#'   bbox parameter of [osmdata::opq()].
 #' @param key Feature key for overpass API query.
 #' @param value Value of the feature key; can be negated with an initial
 #'   exclamation mark, `value = "!this"`, and can also be a vector, `value =
@@ -33,9 +35,6 @@
 #' @return A simple feature object with features using selected geometry type or
 #'   an `osmdata` object with features from all geometry types.
 #' @export
-#' @importFrom purrr pluck
-#' @importFrom sf st_transform
-#' @importFrom cli cli_alert_info
 get_osm_data <- function(location = NULL,
                          dist = NULL,
                          diag_ratio = NULL,
@@ -147,24 +146,34 @@ get_osm_id <- function(id, type = NULL, crs = NULL, geometry = NULL, osmdata = F
 #' Try to fetch data using osmdata_sf and abort if it returns an error
 #'
 #' @noRd
+#' @importFrom rlang caller_env try_fetch
 try_osmdata_sf <- function(query, call = caller_env()) {
   data <-
     try_fetch(
-      suppressMessages(osmdata::osmdata_sf(
-        query
-      )),
-      error = function(cnd) cli_abort("{.fn osmdata::osmdata_sf} encountered an error.", parent = cnd, call = call)
+      suppressMessages(osmdata::osmdata_sf(query)),
+      error = function(cnd) {
+        cli_abort(
+          "{.fn osmdata::osmdata_sf} encountered an error.",
+          parent = cnd,
+          call = call
+        )
+      }
     )
 
   data
 }
 
-#' Get a list of the OSM id, type, and geometry from a named list or type prefixed id value
+#' Get a list of the OSM id, type, and geometry from a named list or type
+#' prefixed id value
 #'
 #' @noRd
-get_osm_id_type <- function(id, type = NULL, geometry = NULL, call = caller_env()) {
+#' @importFrom rlang caller_env arg_match
+get_osm_id_type <- function(id,
+                            type = NULL,
+                            geometry = NULL,
+                            call = caller_env()) {
   if (is.null(type)) {
-    if (has_osm_type_prefix(id)) {
+    if (starts_with_osm_type(id)) {
       split_id <- strsplit(id, split = "/")
       type <- split_id[[1]][1]
       id <- split_id[[1]][2]
@@ -191,11 +200,11 @@ get_osm_id_type <- function(id, type = NULL, geometry = NULL, call = caller_env(
 #'
 #' @noRd
 is_osm_element <- function(x) {
-  (has_osm_type_prefix(x) | has_osm_type_name(x))
+  starts_with_osm_type(x) | has_osm_type_name(x)
 }
 
 #' @noRd
-has_osm_type_prefix <- function(x) {
+starts_with_osm_type <- function(x) {
   grepl("^node/|^way/|^relation/", x)
 }
 
@@ -205,8 +214,9 @@ has_osm_type_name <- function(x) {
 }
 
 #' @param level administrative level (admin_level) of boundary to return;
-#'   defaults to `NULL`. See <https://wiki.openstreetmap.org/wiki/Key:admin_level>
-#'   for more information. Only used for [get_osm_boundaries].
+#'   defaults to `NULL`. See
+#'   <https://wiki.openstreetmap.org/wiki/Key:admin_level> for more information.
+#'   Only used for [get_osm_boundaries()].
 #' @param lang Language for boundary names to include in resulting data frame
 #'   (e.g. "en" for English or "es" for Spanish). Default language names should
 #'   always be included in results. Defaults to "en". See
@@ -272,7 +282,8 @@ get_osm_boundaries <- function(location,
       value = TRUE
     )
 
-  drop_nm_cols <- nm_cols[!(nm_cols %in% c(nm_prefix, paste(nm_prefix, lang, sep = "_")))]
+  drop_nm_cols <-
+    nm_cols[!(nm_cols %in% c(nm_prefix, paste(nm_prefix, lang, sep = "_")))]
 
   boundaries <- boundaries[, !(boundaries_nm %in% drop_nm_cols)]
 
@@ -283,7 +294,7 @@ get_osm_boundaries <- function(location,
 #' Get OSM data using a bounding box for a location
 #'
 #' @noRd
-get_osm_data_features <- function(location = NULL,
+get_osm_data_features <- function(location,
                                   key,
                                   value,
                                   dist = NULL,
@@ -297,16 +308,20 @@ get_osm_data_features <- function(location = NULL,
                                   osmdata = FALSE) {
   osm_crs <- 4326
 
-  # Get adjusted bounding box if any adjustment variables provided
-  bbox_osm <-
-    st_bbox_ext(
-      x = location,
-      dist = dist,
-      diag_ratio = diag_ratio,
-      unit = unit,
-      asp = asp,
-      crs = osm_crs
-    )
+  if (is_sf(location, ext = TRUE)) {
+    # Get adjusted bounding box if any adjustment variables provided
+    bbox_osm <-
+      st_bbox_ext(
+        x = location,
+        dist = dist,
+        diag_ratio = diag_ratio,
+        unit = unit,
+        asp = asp,
+        crs = osm_crs
+      )
+  } else if (is.character(location)) {
+    bbox_osm <- location
+  }
 
   query <-
     osmdata::opq(
@@ -341,6 +356,7 @@ get_osm_data_features <- function(location = NULL,
 }
 
 #' @noRd
+#' @importFrom sfext sf_to_df
 get_osm_data_enclosing <- function(location,
                                    key,
                                    value,
@@ -387,7 +403,8 @@ get_osm_data_enclosing <- function(location,
 #'
 #' @noRd
 #' @importFrom purrr pluck
-#' @importFrom sf st_transform
+#' @importFrom sfext st_transform_ext
+#' @importFrom rlang caller_env arg_match
 get_osm_data_geometry <- function(data,
                                   geometry = NULL,
                                   crs = NULL,
@@ -396,7 +413,8 @@ get_osm_data_geometry <- function(data,
   if (osmdata | is.null(geometry)) {
     if (is.null(geometry) && !osmdata) {
       cli_warn(
-        "{.arg geometry} is {.code NULL}. Setting {.arg osmdata} to {.val TRUE}."
+        "{.arg geometry} is {.code NULL}.
+        Setting {.arg osmdata} to {.val TRUE}."
       )
     }
 
@@ -437,17 +455,21 @@ get_osm_data_geometry <- function(data,
 get_osm_value <- function(key = NULL, value = NULL) {
   check_null(key)
 
-  if (is.null(value) && (key != "building")) {
-    cli_warn("Setting missing {.arg value} to {.val all}")
-    value <- "all"
+  is_building_key <- key == "building"
+
+  if (!is_building_key) {
+    if (is.null(value)) {
+      cli_warn("Setting missing {.arg value} to {.val all}")
+      value <- "all"
+    }
+
+    if (value == "all") {
+      return(osmdata::available_tags(key))
+    }
   }
 
-  if (key == "building" && (is.null(value) | (value == "all"))) {
+  if (is_building_key && (is.null(value) | (value == "all"))) {
     return(osm_building_tags)
-  }
-
-  if (value == "all") {
-    return(osmdata::available_tags(key))
   }
 
   value
