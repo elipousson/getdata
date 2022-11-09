@@ -56,6 +56,11 @@ abbreviations with full street suffix names.}
 \item{case}{Case to use for text in new columns or in modified values.
 Options include "lower", "upper", "title", or "sentence". Defaults to
 \code{NULL} which leaves the case as is.}
+
+\item{street_suffix}{Street suffix column to apply replacement function to.}
+
+\item{street_dir_prefix}{Street direction prefix column to apply replacement
+function to.}
 }
 \description{
 Use \code{\link[stringr:str_replace]{stringr::str_replace_all()}} to replace values in a character vector or

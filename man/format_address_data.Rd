@@ -29,6 +29,8 @@ bind_address_col(
 )
 }
 \arguments{
+\item{x}{A data frame to bind the address columns to.}
+
 \item{bldg_num, street_dir_prefix, street_name, street_suffix}{Column names to
 use for address information required to generate a block name and number.}
 
@@ -47,6 +49,9 @@ as the block separator and the first as the column identifier prefix.}
 Options include "lower", "upper", "title", or "sentence". Defaults to
 \code{NULL} which leaves the case as is.}
 
+\item{...}{Additional parameters passed to \code{\link[dplyr:mutate]{dplyr::mutate()}} intended for use
+in filling missing values, e.g. state = "MD" to add a missing state column.}
+
 \item{street}{Street address column name, (e.g. 100 Holliday St) Default:
 'street_address'.}
 
@@ -61,11 +66,11 @@ for city, county, and state data.}
 \description{
 getdata has two helpers for working with address data:
 \itemize{
-\item \link{bind_address_col} bind a provided value for city, county, and state to a
+\item \code{\link[=bind_address_col]{bind_address_col()}} bind a provided value for city, county, and state to a
 data frame (to supplement address data with consistent values for these
 variables). This function is useful for converting partial street addresses
 with a consistent values for state, county, or city into full addresses
-\item \link{bind_block_col} requires a data frame with columns named "bldg_num",
+\item \code{\link[=bind_block_col]{bind_block_col()}} requires a data frame with columns named "bldg_num",
 "street_dir_prefix", "street_name", and "street_type" and binds derived
 values for whether a building is on the even or odd side of a block and
 create a block segment and a block face (including the even/odd identifier).

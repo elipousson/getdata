@@ -220,6 +220,7 @@ make_variable_dictionary <- function(x, .labels = NULL, .definitions = NULL) {
 
 #' @name fix_epoch_date
 #' @rdname format_data
+#' @param .cols tidyselect for columns to apply epoch date fixing function to.
 #' @export
 #' @importFrom dplyr mutate across contains
 fix_epoch_date <- function(x, .cols = dplyr::contains("date")) {

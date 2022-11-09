@@ -3,11 +3,11 @@
 #' @description
 #' getdata has two helpers for working with address data:
 #'
-#'  - [bind_address_col] bind a provided value for city, county, and state to a
+#'  - [bind_address_col()] bind a provided value for city, county, and state to a
 #'  data frame (to supplement address data with consistent values for these
 #'  variables). This function is useful for converting partial street addresses
 #'  with a consistent values for state, county, or city into full addresses
-#' - [bind_block_col] requires a data frame with columns named "bldg_num",
+#' - [bind_block_col()] requires a data frame with columns named "bldg_num",
 #' "street_dir_prefix", "street_name", and "street_type" and binds derived
 #' values for whether a building is on the even or odd side of a block and
 #' create a block segment and a block face (including the even/odd identifier).
@@ -111,6 +111,7 @@ bind_block_col <- function(x,
 
 #' @name bind_address_col
 #' @rdname format_address_data
+#' @param x A data frame to bind the address columns to.
 #' @param street Street address column name, (e.g. 100 Holliday St) Default:
 #'   'street_address'.
 #' @param address Full address column name. If city and state or city and county
@@ -119,6 +120,8 @@ bind_block_col <- function(x,
 #'   ignored.
 #' @param address_cols Named list specifying the additional column names to use
 #'   for city, county, and state data.
+#' @param ... Additional parameters passed to [dplyr::mutate()] intended for use
+#'   in filling missing values, e.g. state = "MD" to add a missing state column.
 #' @export
 #' @importFrom dplyr mutate
 bind_address_col <- function(x, ...,
@@ -185,6 +188,7 @@ bind_address_col <- function(x, ...,
 #' @export
 #' @importFrom rlang is_character
 #' @importFrom dplyr mutate
+#' @importFrom utils modifyList
 replace_with_xwalk <- function(x,
                                .cols = NULL,
                                xwalk = NULL,
@@ -207,7 +211,7 @@ replace_with_xwalk <- function(x,
       xwalk <- dict
     } else {
       xwalk <- make_xwalk_list(xwalk)
-      xwalk <- modifyList(dict, xwalk)
+      xwalk <- utils::modifyList(dict, xwalk)
     }
   }
 
@@ -236,6 +240,7 @@ replace_with_xwalk <- function(x,
 
 #' @name replace_street_suffixes
 #' @rdname replace_with_xwalk
+#' @param street_suffix Street suffix column to apply replacement function to.
 #' @export
 #' @importFrom dplyr all_of
 replace_street_suffixes <- function(x,
@@ -255,6 +260,8 @@ replace_street_suffixes <- function(x,
 
 #' @name replace_street_dir_prefixes
 #' @rdname replace_with_xwalk
+#' @param street_dir_prefix Street direction prefix column to apply replacement
+#'   function to.
 #' @export
 #' @importFrom dplyr all_of
 replace_street_dir_prefixes <- function(x,

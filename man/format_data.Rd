@@ -91,6 +91,8 @@ assigned); defaults to \code{NULL}.}
 \item{.definitions}{Character vector of definitions appended to dictionary
 data frame. Must be in the same order as the variables in the provided data
 frame x.}
+
+\item{.cols}{tidyselect for columns to apply epoch date fixing function to.}
 }
 \value{
 The input data frame or simple feature object with formatting
