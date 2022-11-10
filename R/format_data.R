@@ -221,6 +221,7 @@ make_variable_dictionary <- function(x, .labels = NULL, .definitions = NULL) {
 #' @name fix_epoch_date
 #' @rdname format_data
 #' @param .cols tidyselect for columns to apply epoch date fixing function to.
+#'   Defaults to `dplyr::contains("date")`.
 #' @export
 #' @importFrom dplyr mutate across contains
 fix_epoch_date <- function(x, .cols = dplyr::contains("date")) {
@@ -240,6 +241,8 @@ chr_colnames <- function(x) {
   names(x)[vapply(x, is.character, TRUE)]
 }
 
+#' Trim and squish across any character columns
+#'
 #' @name str_trim_squish_across
 #' @noRd
 #' @importFrom dplyr mutate across if_else
@@ -249,7 +252,7 @@ str_trim_squish_across <- function(x) {
   dplyr::mutate(
     x,
     dplyr::across(
-      dplyr::any_of(chr_colnames(x)),
+      dplyr::all_of(chr_colnames(x)),
       ~ dplyr::if_else(
         is.na(.x) | is.null(.x),
         .x,
