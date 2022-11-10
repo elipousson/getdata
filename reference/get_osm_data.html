@@ -81,7 +81,10 @@ directly for more detailed control over queries
 <span>  geometry <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  osmdata <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  enclosing <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  nodes_only <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  nodes_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  key_exact <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  value_exact <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  match_case <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">get_osm_id</span><span class="op">(</span><span class="va">id</span>, type <span class="op">=</span> <span class="cn">NULL</span>, crs <span class="op">=</span> <span class="cn">NULL</span>, geometry <span class="op">=</span> <span class="cn">NULL</span>, osmdata <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -141,8 +144,10 @@ passed to the osmdata package are from a preset list extracted from
 
 
 <dt>features</dt>
-<dd><p>Character vector of key-value pairs with keys and values
-enclosed in escape-formatted quotations (see examples).</p></dd>
+<dd><p>A named list with the format <code>list("&lt;key&gt;" = "&lt;value&gt;")</code> or a
+character vector of key-value pairs with keys and values enclosed in
+escape-formatted quotations (see <code><a href="https://docs.ropensci.org/osmdata/reference/add_osm_features.html" class="external-link">osmdata::add_osm_features()</a></code>) for
+examples of the latter option.</p></dd>
 
 
 <dt>id</dt>
@@ -191,6 +196,20 @@ nodes only. Queries are built by default to return all nodes, ways, and
 relation, but this can be very inefficient for node-only queries.
 Setting this value to <code>TRUE</code> for such cases makes queries more
 efficient, with data returned in the <code>osm_points</code> list item.</p></dd>
+
+
+<dt>key_exact</dt>
+<dd><p>If FALSE, <code>key</code> is not interpreted exactly; see
+<a href="https://wiki.openstreetmap.org/wiki/Overpass_API" class="external-link">https://wiki.openstreetmap.org/wiki/Overpass_API</a></p></dd>
+
+
+<dt>value_exact</dt>
+<dd><p>If FALSE, <code>value</code> is not interpreted exactly</p></dd>
+
+
+<dt>match_case</dt>
+<dd><p>If FALSE, matching for both <code>key</code> and <code>value</code> is
+not sensitive to case</p></dd>
 
 
 <dt>level</dt>
