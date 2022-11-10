@@ -167,7 +167,7 @@ bind_address_col <- function(x, ...,
 #' (with [dplyr::across()]) in select columns from a data.frame.
 #' [replace_street_dir_prefixes()] and [replace_street_suffixes()] pass
 #' reference data ([street_dir_prefixes] and [street_suffixes]) to the dict
-#' parameter to support formatting addresses with [bind_block_cols()].
+#' parameter to support formatting addresses with [bind_block_col()].
 #'
 #' @param x A data.frame or character vector. If x is a character vector, .cols
 #'   is optional. If x is a data.frame, x is required.

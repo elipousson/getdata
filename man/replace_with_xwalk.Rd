@@ -67,5 +67,5 @@ Use \code{\link[stringr:str_replace]{stringr::str_replace_all()}} to replace val
 (with \code{\link[dplyr:across]{dplyr::across()}}) in select columns from a data.frame.
 \code{\link[=replace_street_dir_prefixes]{replace_street_dir_prefixes()}} and \code{\link[=replace_street_suffixes]{replace_street_suffixes()}} pass
 reference data (\link{street_dir_prefixes} and \link{street_suffixes}) to the dict
-parameter to support formatting addresses with \code{\link[=bind_block_cols]{bind_block_cols()}}.
+parameter to support formatting addresses with \code{\link[=bind_block_col]{bind_block_col()}}.
 }
