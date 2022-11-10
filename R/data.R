@@ -8,6 +8,24 @@
 #' @format A character vector with length of 84
 "osm_building_tags"
 
+
+#' Common OpenStreetMap tags
+#'
+#' A subset of tags scraped from the OpenStreetMap Wiki page on Map features:
+#' <https://wiki.openstreetmap.org/wiki/Map_features>. Only those tags with a
+#' url are included in this reference table.
+#'
+#' @format A data frame with 272 rows and 5 variables:
+#' \describe{
+#'   \item{\code{key}}{Key}
+#'   \item{\code{value}}{Value}
+#'   \item{\code{description}}{Description of tag/usage}
+#'   \item{\code{category}}{Category}
+#'   \item{\code{url}}{OSM Wiki url}
+#'}
+"osm_common_tags"
+
+
 #' Street suffix abbreviations
 #'
 #' A data frame based on Appendix C1 Street Suffix Abbreviations from the U.S.
