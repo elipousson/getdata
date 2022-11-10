@@ -35,8 +35,12 @@
 #'   geometry is set automatically based enclosing with "relation" using
 #'   "multipolygons" and "way" using "polygons" geometry.
 #' @inheritParams osmdata::opq
-#' @inheritParams osmdata::add_osm_features
-#' @inheritParams sfext::format_data
+#' @param features A named list with the format `list("<key>" = "<value>")` or a
+#'   character vector of key-value pairs with keys and values enclosed in
+#'   escape-formatted quotations (see [osmdata::add_osm_features()]) for
+#'   examples of the latter option.
+#' @inheritParams format_data
+#' @inheritParams osmdata::add_osm_feature
 #' @return A simple feature object with features using selected geometry type or
 #'   an `osmdata` object with features from all geometry types.
 #' @export
@@ -54,8 +58,11 @@ get_osm_data <- function(location = NULL,
                          geometry = NULL,
                          osmdata = FALSE,
                          enclosing = NULL,
-                         nodes_only = FALSE) {
-  is_pkg_installed("osmdata")
+                         nodes_only = FALSE,
+                         key_exact = TRUE,
+                         value_exact = TRUE,
+                         match_case = TRUE) {
+  osm_data_attribution()
 
   if (!is.null(id)) {
     return(
@@ -71,54 +78,38 @@ get_osm_data <- function(location = NULL,
 
   if (is.null(features)) {
     value <- get_osm_value(key, value)
-  } else if (!is.character(features)) {
-    cli_abort(
-      "{.arg features} must be {.code NULL} or a {.cls character} vector."
-    )
   }
 
-  if (nodes_only) {
-    geometry <- geometry %||% "points"
-  }
-
-  cli_inform(
-    c(
-      "i" = "OpenStreetMap data is licensed under the Open Database License
-      (ODbL). Attribution is required if you reuse this data.",
-      "*" = "Learn more about the ODbL and OSM attribution requirements at
-      {.url https://www.openstreetmap.org/copyright}"
-    ),
-    .frequency = "regularly",
-    .frequency_id = "get_osm_data_attribution"
-  )
-
-  if (is.null(enclosing)) {
+  if (!is.null(enclosing)) {
     return(
-      get_osm_data_features(
+      get_osm_data_enclosing(
         location = location,
-        dist = dist,
-        diag_ratio = diag_ratio,
-        unit = unit,
-        asp = asp,
         key = key,
         value = value,
-        features = features,
+        enclosing = enclosing,
         crs = crs,
         geometry = geometry,
-        osmdata = osmdata,
-        nodes_only = nodes_only
+        osmdata = osmdata
       )
     )
   }
 
-  get_osm_data_enclosing(
+  get_osm_data_features(
     location = location,
+    dist = dist,
+    diag_ratio = diag_ratio,
+    unit = unit,
+    asp = asp,
     key = key,
     value = value,
-    enclosing = enclosing,
+    features = features,
     crs = crs,
     geometry = geometry,
-    osmdata = osmdata
+    osmdata = osmdata,
+    nodes_only = nodes_only,
+    key_exact = key_exact,
+    value_exact = value_exact,
+    match_case = match_case
   )
 }
 
@@ -137,7 +128,7 @@ get_osm_id <- function(id,
                        crs = NULL,
                        geometry = NULL,
                        osmdata = FALSE) {
-  is_pkg_installed("osmdata")
+  osm_data_attribution()
 
   if (length(id) > 1) {
     return(
@@ -263,6 +254,8 @@ get_osm_boundaries <- function(location,
                                enclosing = "relation",
                                geometry = NULL,
                                osmdata = FALSE) {
+  osm_data_attribution()
+
   boundaries <-
     get_osm_data_enclosing(
       location = location,
@@ -324,7 +317,7 @@ get_osm_boundaries <- function(location,
 #' @noRd
 get_osm_data_features <- function(location,
                                   key,
-                                  value,
+                                  value = NULL,
                                   dist = NULL,
                                   diag_ratio = NULL,
                                   unit = NULL,
@@ -333,7 +326,12 @@ get_osm_data_features <- function(location,
                                   geometry = NULL,
                                   nodes_only = FALSE,
                                   features = NULL,
-                                  osmdata = FALSE) {
+                                  osmdata = FALSE,
+                                  key_exact = TRUE,
+                                  value_exact = TRUE,
+                                  match_case = TRUE,
+                                  call = .envir,
+                                  .envir = parent.frame()) {
   osm_crs <- 4326
 
   if (is_sf(location, ext = TRUE)) {
@@ -351,6 +349,10 @@ get_osm_data_features <- function(location,
     bbox_osm <- location
   }
 
+  if (nodes_only) {
+    geometry <- geometry %||% "points"
+  }
+
   query <-
     osmdata::opq(
       bbox = bbox_osm,
@@ -363,9 +365,23 @@ get_osm_data_features <- function(location,
       osmdata::add_osm_feature(
         opq = query,
         key = key,
-        value = value
+        value = value,
+        key_exact = key_exact,
+        value_exact = value_exact,
+        match_case = match_case
       )
   } else {
+    if (is.list(features) && rlang::is_named(features)) {
+      features <- paste0('\"', names(features), '\"=\"', features, '\"')
+    } else if (!is.character(features)) {
+      cli_abort(
+        "{.arg features} must be {.code NULL}, a {.cls character} vector,
+        or a named {.cls list}.",
+        call = call,
+        .envir = .envir
+      )
+    }
+
     query <-
       osmdata::add_osm_features(
         opq = query,
@@ -503,4 +519,22 @@ get_osm_value <- function(key = NULL, value = NULL) {
   }
 
   value
+}
+
+#' Display OpenStreetMap data attribution reminder
+#'
+#' @noRd
+osm_data_attribution <- function(.frequency = "regularly",
+                                 .frequency_id = "get_osm_data_attribution") {
+  is_pkg_installed("osmdata")
+  cli_inform(
+    c(
+      "i" = "OpenStreetMap data is licensed under the Open Database License
+      (ODbL). Attribution is required if you use this data.",
+      "*" = "Learn more about the ODbL and OSM attribution requirements at
+      {.url https://www.openstreetmap.org/copyright}"
+    ),
+    .frequency = .frequency,
+    .frequency_id = .frequency_id
+  )
 }

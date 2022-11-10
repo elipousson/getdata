@@ -21,7 +21,10 @@ get_osm_data(
   geometry = NULL,
   osmdata = FALSE,
   enclosing = NULL,
-  nodes_only = FALSE
+  nodes_only = FALSE,
+  key_exact = TRUE,
+  value_exact = TRUE,
+  match_case = TRUE
 )
 
 get_osm_id(id, type = NULL, crs = NULL, geometry = NULL, osmdata = FALSE)
@@ -64,8 +67,10 @@ exclamation mark, \code{value = "!this"}, and can also be a vector, \code{value 
 passed to the osmdata package are from a preset list extracted from
 \code{\link[osmdata:available_tags]{osmdata::available_tags()}}.}
 
-\item{features}{Character vector of key-value pairs with keys and values
-enclosed in escape-formatted quotations (see examples).}
+\item{features}{A named list with the format \code{list("<key>" = "<value>")} or a
+character vector of key-value pairs with keys and values enclosed in
+escape-formatted quotations (see \code{\link[osmdata:add_osm_features]{osmdata::add_osm_features()}}) for
+examples of the latter option.}
 
 \item{id}{OpenStreetMap feature id with or without a type id prefix. If
 multiple id values are provided, they must use a single consistent value
@@ -100,6 +105,14 @@ nodes only. Queries are built by default to return all nodes, ways, and
 relation, but this can be very inefficient for node-only queries.
 Setting this value to \code{TRUE} for such cases makes queries more
 efficient, with data returned in the \code{osm_points} list item.}
+
+\item{key_exact}{If FALSE, \code{key} is not interpreted exactly; see
+\url{https://wiki.openstreetmap.org/wiki/Overpass_API}}
+
+\item{value_exact}{If FALSE, \code{value} is not interpreted exactly}
+
+\item{match_case}{If FALSE, matching for both \code{key} and \code{value} is
+not sensitive to case}
 
 \item{level}{administrative level (admin_level) of boundary to return;
 defaults to \code{NULL}. See
