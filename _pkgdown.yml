@@ -14,6 +14,7 @@ reference:
   - '`get_gsheet_data`'
   - '`get_open_data`'
   - '`get_osm_data`'
+  - '`osm_common_tags`'
   - '`osm_building_tags`'
   - '`get_tigris_data`'
   - '`get_wiki_data`'
