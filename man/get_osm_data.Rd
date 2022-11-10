@@ -15,6 +15,8 @@ get_osm_data(
   key,
   value = NULL,
   features = NULL,
+  id = NULL,
+  type = NULL,
   crs = NULL,
   geometry = NULL,
   osmdata = FALSE,
@@ -65,6 +67,13 @@ passed to the osmdata package are from a preset list extracted from
 \item{features}{Character vector of key-value pairs with keys and values
 enclosed in escape-formatted quotations (see examples).}
 
+\item{id}{OpenStreetMap feature id with or without a type id prefix. If
+multiple id values are provided, they must use a single consistent value
+for geometry.}
+
+\item{type}{Type of feature for the id; "node", "way", or "relation".
+Optional if id includes a type prefix.}
+
 \item{crs}{Coordinate reference system for output data; if \code{NULL}, the data
 remains in the Open Street Map coordinate reference system 4326. Default:
 \code{NULL}.}
@@ -92,10 +101,6 @@ relation, but this can be very inefficient for node-only queries.
 Setting this value to \code{TRUE} for such cases makes queries more
 efficient, with data returned in the \code{osm_points} list item.}
 
-\item{id}{OpenStreetMap feature id}
-
-\item{type}{type of feature with id; "node", "way", or "relation"}
-
 \item{level}{administrative level (admin_level) of boundary to return;
 defaults to \code{NULL}. See
 \url{https://wiki.openstreetmap.org/wiki/Key:admin_level} for more information.
@@ -112,6 +117,11 @@ A simple feature object with features using selected geometry type or
 an \code{osmdata} object with features from all geometry types.
 }
 \description{
-Use \code{osmdata} functions to query OSM data by adjusted bounding box or
-by enclosing ways/relations around the center of a location.
+Use \code{osmdata} functions to query the overpass API and access OSM data by
+adjusted bounding box or by enclosing ways/relations around the center of a
+location. For more information on key and value options, refer to the
+\code{osm_common_tags} reference table or the OSM Wiki
+\url{https://wiki.openstreetmap.org/wiki/Map_features}. Use the \code{osmdata} package
+directly for more detailed control over queries
+\url{https://docs.ropensci.org/osmdata/}
 }

@@ -1,7 +1,12 @@
 #' Use osmdata to get Open Street Map data for a location
 #'
-#' Use `osmdata` functions to query OSM data by adjusted bounding box or
-#' by enclosing ways/relations around the center of a location.
+#' Use `osmdata` functions to query the overpass API and access OSM data by
+#' adjusted bounding box or by enclosing ways/relations around the center of a
+#' location. For more information on key and value options, refer to the
+#' `osm_common_tags` reference table or the OSM Wiki
+#' <https://wiki.openstreetmap.org/wiki/Map_features>. Use the `osmdata` package
+#' directly for more detailed control over queries
+#' <https://docs.ropensci.org/osmdata/>
 #'
 #' @param location A `sf`, `sfc`, or `bbox` object converted to bounding box
 #'   with [sfext::st_bbox_ext()] or a character object passed directly to the
@@ -43,6 +48,8 @@ get_osm_data <- function(location = NULL,
                          key,
                          value = NULL,
                          features = NULL,
+                         id = NULL,
+                         type = NULL,
                          crs = NULL,
                          geometry = NULL,
                          osmdata = FALSE,
@@ -50,11 +57,23 @@ get_osm_data <- function(location = NULL,
                          nodes_only = FALSE) {
   is_pkg_installed("osmdata")
 
+  if (!is.null(id)) {
+    return(
+      get_osm_id(
+        id = id,
+        type = type,
+        crs = crs,
+        geometry = geometry,
+        osmdata = osmdata
+      )
+    )
+  }
+
   if (is.null(features)) {
     value <- get_osm_value(key, value)
-  } else {
-    stopifnot(
-      "features must be NULL or a character vector" = is.character(features)
+  } else if (!is.character(features)) {
+    cli_abort(
+      "{.arg features} must be {.code NULL} or a {.cls character} vector."
     )
   }
 
@@ -64,10 +83,12 @@ get_osm_data <- function(location = NULL,
 
   cli_inform(
     c(
-      "i" = "OpenStreetMap data is licensed under the Open Database License (ODbL) which requires attribution.",
-      "*" = "Learn more about the ODbL and OSM attribution requirements at {.url https://www.openstreetmap.org/copyright}"
+      "i" = "OpenStreetMap data is licensed under the Open Database License
+      (ODbL). Attribution is required if you reuse this data.",
+      "*" = "Learn more about the ODbL and OSM attribution requirements at
+      {.url https://www.openstreetmap.org/copyright}"
     ),
-    .frequency = "once",
+    .frequency = "regularly",
     .frequency_id = "get_osm_data_attribution"
   )
 
@@ -104,11 +125,18 @@ get_osm_data <- function(location = NULL,
 
 #' @rdname get_osm_data
 #' @name get_osm_id
-#' @param id OpenStreetMap feature id
-#' @param type type of feature with id; "node", "way", or "relation"
+#' @param id OpenStreetMap feature id with or without a type id prefix. If
+#'   multiple id values are provided, they must use a single consistent value
+#'   for geometry.
+#' @param type Type of feature for the id; "node", "way", or "relation".
+#'   Optional if id includes a type prefix.
 #' @export
 #' @importFrom purrr map_dfr
-get_osm_id <- function(id, type = NULL, crs = NULL, geometry = NULL, osmdata = FALSE) {
+get_osm_id <- function(id,
+                       type = NULL,
+                       crs = NULL,
+                       geometry = NULL,
+                       osmdata = FALSE) {
   is_pkg_installed("osmdata")
 
   if (length(id) > 1) {
@@ -413,8 +441,10 @@ get_osm_data_geometry <- function(data,
   if (osmdata | is.null(geometry)) {
     if (is.null(geometry) && !osmdata) {
       cli_warn(
-        "{.arg geometry} is {.code NULL}.
-        Setting {.arg osmdata} to {.val TRUE}."
+        c("{.arg geometry} is {.code NULL}.",
+          "i" = "Setting {.arg osmdata} to {.val TRUE} and returning
+         a list of unique features with all geometry types."
+        )
       )
     }
 
