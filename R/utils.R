@@ -10,7 +10,8 @@
 utils::globalVariables(
   c(
     "admin_level", "bldg_num_even_odd", "block_num",
-    "crs", "name", "nm", "street", "x"
+    "crs", "name", "nm", "street", "x", "city", "county",
+    "file_name", "owner", "state", "subLayerIds"
   )
 )
 
