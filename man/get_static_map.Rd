@@ -6,7 +6,7 @@
 \alias{get_osm_static_mapbox}
 \alias{get_location_static_mapbox}
 \alias{get_static_bingmap}
-\title{Use {mapboxapi} or {bingmapr} to get a static map image}
+\title{Use mapboxapi or bingmapr to get a static map image}
 \usage{
 get_static_mapbox(
   location,
@@ -127,7 +127,9 @@ range from 0 to 60, and bearing from -360 to 360.}
 \item{...}{Additional parameters passed to \code{\link[=get_location_data]{get_location_data()}} if type is
 character and index is \code{NULL}.}
 
-\item{id}{OpenStreetMap feature id}
+\item{id}{OpenStreetMap feature id with or without a type id prefix. If
+multiple id values are provided, they must use a single consistent value
+for geometry.}
 
 \item{key}{Feature key for overpass API query.}
 

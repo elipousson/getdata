@@ -1,4 +1,4 @@
-#' Use {mapboxapi} or {bingmapr} to get a static map image
+#' Use mapboxapi or bingmapr to get a static map image
 #'
 #' Get a static map image using the  [Mapbox Static Maps
 #' API](https://www.mapbox.com/static-maps) using [mapboxapi::static_mapbox] or
