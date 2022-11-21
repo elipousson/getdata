@@ -126,7 +126,9 @@ placeholder and is not currently implemented. Default: <code>NULL</code></p></dd
 
 
 <dt>max_records</dt>
-<dd><p>Maximum number of records to return, Default: <code>NULL</code></p></dd>
+<dd><p>Maximum number of records to return, Default: <code>NULL</code>. If
+max_records is larger than 100, the offset parameter is used to return
+multiple pages of a results in a single dataframe.</p></dd>
 
 
 <dt>per_page</dt>
