@@ -24,6 +24,7 @@ Imports:
     sf,
     sfext (>= 0.0.0.9001),
     tibble,
+    tidyr,
     utils
 Suggests: 
     bingmapr (>= 0.1.0),
@@ -43,7 +44,6 @@ Suggests:
     stringr,
     testthat (>= 3.0.0),
     tidygeocoder,
-    tidyr,
     tigris,
     units,
     withr

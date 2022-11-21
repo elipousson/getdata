@@ -19,19 +19,21 @@ get_access_token(token = NULL, type = NULL, call = caller_env())
 }
 \arguments{
 \item{token}{An access token or API key; required for \code{\link[=set_access_token]{set_access_token()}}.
-If token is not provided; type is required for \code{\link[=get_access_token]{get_access_token()}}.}
+If token is not provided; type is required for \code{\link[=get_access_token]{get_access_token()}}. Length
+1 character vector or list. If named, the name of the token is used in
+place of type.}
 
 \item{overwrite}{If \code{TRUE}, overwrite existing token; Default: \code{FALSE}}
 
 \item{install}{If \code{TRUE}, install token for use in future sessions; Default:
 \code{FALSE}}
 
-\item{type}{Name of token; defaults to \code{NULL}.}
+\item{type}{Name of token; defaults to \code{NULL}. Optional if token is named.}
 
-\item{call}{Passed as the call parameter for \link[cli:cli_abort]{cli::cli_abort} to improve
+\item{call}{Passed as the call parameter for \code{\link[cli:cli_abort]{cli::cli_abort()}} to improve
 error messages when function is used internally.}
 }
 \description{
-Based on the \link[mapboxapi:mb_access_token]{mapboxapi::mb_access_token} function from the {mapboxapi}
+Based on the \code{\link[mapboxapi:mb_access_token]{mapboxapi::mb_access_token()}} function from the {mapboxapi}
 package by Kyle Walker.
 }
