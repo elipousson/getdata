@@ -57,7 +57,9 @@ placeholder and is not currently implemented. Default: \code{NULL}}
 
 \item{desc}{If \code{TRUE}, sort in descending order, Default: \code{FALSE}}
 
-\item{max_records}{Maximum number of records to return, Default: \code{NULL}}
+\item{max_records}{Maximum number of records to return, Default: \code{NULL}. If
+max_records is larger than 100, the offset parameter is used to return
+multiple pages of a results in a single dataframe.}
 
 \item{per_page}{Max records to return per page, Default: \code{NULL}}
 

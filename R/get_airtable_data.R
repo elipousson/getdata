@@ -20,7 +20,9 @@
 #'   placeholder and is not currently implemented. Default: `NULL`
 #' @param sort Field to sort by, Default: `NULL`
 #' @param desc If `TRUE`, sort in descending order, Default: `FALSE`
-#' @param max_records Maximum number of records to return, Default: `NULL`
+#' @param max_records Maximum number of records to return, Default: `NULL`. If
+#'   max_records is larger than 100, the offset parameter is used to return
+#'   multiple pages of a results in a single dataframe.
 #' @param per_page Max records to return per page, Default: `NULL`
 #' @param cell_format Cell format for "Link to another record" fields (either
 #'   "json" (unique ID) or "string" (displayed character string)), Default:
@@ -97,7 +99,11 @@ get_airtable_data <- function(base,
     )
 
   data <-
-    resp_airtable(req, list = list)
+    resp_airtable(
+      req,
+      list = list,
+      max_records = max_records
+    )
 
   if (list == "resp") {
     return(data)
@@ -260,6 +266,10 @@ req_auth_airtable <- function(req,
 
 #' Perform request and get data based on list
 #' @noRd
+#' @importFrom httr2 resp_body_json req_url_query
+#' @importFrom tidyr pivot_wider
+#' @importFrom tibble enframe as_tibble
+#' @importFrom dplyr bind_rows
 resp_airtable <- function(req,
                           simplifyVector = TRUE,
                           list = "records",
@@ -277,9 +287,30 @@ resp_airtable <- function(req,
   }
 
   # Add offset checks
-  switch(list,
-    "resp" = resp,
-    "record" = tidyr::pivot_wider(tibble::enframe(resp[[list]])),
-    "records" = tibble::as_tibble(resp[[list]][["fields"]])
+  data <-
+    switch(list,
+      "resp" = resp,
+      "record" = tidyr::pivot_wider(tibble::enframe(resp[[list]])),
+      "records" = tibble::as_tibble(resp[[list]][["fields"]])
+    )
+
+  if ((max_records <= 100) | is.null(resp$offset)) {
+    return(data)
+  }
+
+  offset_req <-
+    httr2::req_url_query(
+      req,
+      offset = resp$offset
+    )
+
+  dplyr::bind_rows(
+    data,
+    resp_airtable(
+      offset_req,
+      simplifyVector,
+      list,
+      max_records = max_records - 100
+    )
   )
 }
