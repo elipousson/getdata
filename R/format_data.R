@@ -17,20 +17,25 @@
 #'   old_var_name)`, or a two column data frame with the first column being the
 #'   new variable names and the second column being the old variable names;
 #'   defaults to `NULL`.
-#' @param clean_names If `TRUE`, pass data frame to [janitor::clean_names];
+#' @param clean_names If `TRUE`, set .name_repair to [janitor::make_clean_names()];
 #'   defaults to `TRUE`.
-#' @param replace_na_with A named list to pass to [tidyr::replace_na]; defaults
+#' @param .name_repair Defaults to "check_unique"
+#' @param replace_na_with A named list to pass to [tidyr::replace_na()]; defaults
 #'   to `NULL`.
-#' @param replace_with_na A named list to pass to [naniar::replace_with_na];
+#' @param replace_with_na A named list to pass to [naniar::replace_with_na()];
 #'   defaults to `NULL`.
 #' @param replace_empty_char_with_na If `TRUE`, replace "" with `NA` using
-#'   [naniar::replace_with_na_if], Default: `TRUE`
+#'   [naniar::replace_with_na_if()], Default: `TRUE`
 #' @param format_sf If `TRUE`, pass x and additional parameters to
-#'   [format_sf_data].
-#' @param fix_date If `FALSE`, fix UNIX epoch dates (common issue with dates from
-#'   FeatureServer and MapServer sources) using the [fix_epoch_date] function,
-#'   Default: `TRUE`
-#' @param ... Additional parameters passed to [format_sf_data]
+#'   [format_sf_data()].
+#' @param fix_date If `FALSE`, fix UNIX epoch dates (common issue with dates
+#'   from FeatureServer and MapServer sources) using the [fix_epoch_date()]
+#'   function, Default: `TRUE`
+#' @param remove_empty If not `NULL`, pass values ("rows", "cols" or c("rows",
+#'   "cols") (default)) to the which parameter of [janitor::remove_empty()]
+#' @param remove_constant If `TRUE`, pass data to janitor::remove_constant()
+#'   using default parameters.
+#' @param ... Additional parameters passed to [format_sf_data()]
 #' @return The input data frame or simple feature object with formatting
 #'   functions applied.
 #'
@@ -41,22 +46,29 @@ format_data <- function(x,
                         var_names = NULL,
                         xwalk = NULL,
                         clean_names = TRUE,
+                        .name_repair = "check_unique",
                         replace_na_with = NULL,
                         replace_with_na = NULL,
                         replace_empty_char_with_na = FALSE,
                         fix_date = FALSE,
                         label = FALSE,
+                        remove_empty = c("rows", "cols"),
+                        remove_constant = FALSE,
                         format_sf = FALSE,
                         ...) {
   x <- str_trim_squish_across(x)
 
   if (!is.null(var_names) | !is.null(xwalk)) {
-    xwalk <- xwalk %|% var_names
+    xwalk <- xwalk %||% var_names
     x <- rename_with_xwalk(x, xwalk = xwalk, label = label)
   }
 
   if (clean_names) {
-    x <- janitor::clean_names(x, "snake")
+    .name_repair <- janitor::make_clean_names
+  }
+
+  if (!is.null(.name_repair)) {
+    x <- use_name_repair(x, .name_repair)
   }
 
   if (!is.null(replace_na_with)) {
@@ -74,6 +86,14 @@ format_data <- function(x,
     if (replace_empty_char_with_na) {
       x <- naniar::replace_with_na_if(x, is.character, ~ .x == "")
     }
+  }
+
+  if (!is.null(remove_empty)) {
+    x <- janitor::remove_empty(x, which = remove_empty)
+  }
+
+  if (remove_constant) {
+    x <- janitor::remove_constant(x)
   }
 
   if (fix_date) {
@@ -97,7 +117,9 @@ make_xwalk_list <- function(xwalk, nm = c("label", "name")) {
 
     if (ncol(xwalk) == 2) {
       return(as.list(tibble::deframe(xwalk)))
-    } else if (all(nm %in% colnames(xwalk))) {
+    }
+
+    if (all(nm %in% colnames(xwalk))) {
       return(rlang::set_names(as.list(xwalk[[nm[1]]]), xwalk[[nm[2]]]))
     }
   }
