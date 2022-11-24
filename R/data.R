@@ -22,7 +22,7 @@
 #'   \item{\code{description}}{Description of tag/usage}
 #'   \item{\code{category}}{Category}
 #'   \item{\code{url}}{OSM Wiki url}
-#'}
+#' }
 "osm_common_tags"
 
 

@@ -9,7 +9,7 @@ osm_tags_links <- osm_tags_tables$links[[1]] %>%
     into = c("baseurl", "key", "value"),
     sep = "%3A|=",
     remove = FALSE
-    ) %>%
+  ) %>%
   dplyr::select(-c(baseurl, text))
 
 osm_common_tags <-
