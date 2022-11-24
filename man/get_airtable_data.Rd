@@ -2,6 +2,7 @@
 % Please edit documentation in R/get_airtable_data.R
 \name{get_airtable_data}
 \alias{get_airtable_data}
+\alias{get_airtable_metadata}
 \title{Get data from an Airtable base and optionally convert to a sf object}
 \usage{
 get_airtable_data(
@@ -20,7 +21,6 @@ get_airtable_data(
   locale = NULL,
   fields_by_id = FALSE,
   offset = NULL,
-  list = "records",
   geometry = FALSE,
   location = NULL,
   dist = getOption("getdata.dist"),
@@ -33,10 +33,17 @@ get_airtable_data(
   remove_coords = TRUE,
   address = getOption("getdata.address", "address"),
   geo = FALSE,
-  clean_names = TRUE,
-  label = TRUE,
+  name_repair = janitor::make_clean_names,
   token = NULL,
-  type = "AIRTABLE_API_KEY"
+  type = "AIRTABLE_TOKEN",
+  resp_type = "records"
+)
+
+get_airtable_metadata(
+  base = NULL,
+  token = NULL,
+  type = "AIRTABLE_TOKEN",
+  resp_type = "tables"
 )
 }
 \arguments{
@@ -73,14 +80,11 @@ multiple pages of a results in a single dataframe.}
 
 \item{offset}{Offset parameter, Default: \code{NULL}}
 
-\item{list}{Data type to return, Default: "records". Set list to "resp" to
-return the API response without any additional formatting or conversion.}
-
 \item{geometry}{If \code{TRUE}, convert data into a simple feature object.
 Defaults to \code{FALSE}.}
 
 \item{location}{sf object. If multiple areas are provided, they are unioned
-into a single sf object using \link[sf:geos_combine]{sf::st_union}}
+into a single sf object using \code{\link[sf:geos_combine]{sf::st_union()}}}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -117,15 +121,14 @@ after converting a data frame to simple feature object; defaults to
 \item{geo}{If \code{TRUE}, use \code{\link[sfext:address_to_sf]{address_to_sf()}} to geocode address column; defaults
 to \code{FALSE}.}
 
-\item{clean_names}{If \code{TRUE}, clean names provided to nm or created based on
-value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as
-provided.}
-
-\item{label}{label is optionally used by \link{map_location_data} to name the data
-objects in the list returned by the function.}
+\item{name_repair}{Defaults to "check_unique"}
 
 \item{token, type}{API token and type, token defaults to \code{NULL} and type to
-\code{"AIRTABLE_API_KEY"} (same as \code{get_access_token(type = "AIRTABLE_API_KEY")})}
+\code{"AIRTABLE_TOKEN"} (same as \code{get_access_token(type = "AIRTABLE_TOKEN")}).}
+
+\item{resp_type}{Response type to return, Default: "records". Set resp_type
+to "resp" to return the API response without any additional formatting or
+conversion.}
 }
 \description{
 Get data from an Airtable base using the Airtable API and the httr2 package.
@@ -133,10 +136,15 @@ If the base includes coordinate fields/columns, optionally convert the data
 to a simple feature object using \code{\link[sfext:sf_to_df]{sfext::df_to_sf()}} if \code{geometry = TRUE}.
 }
 \details{
-This function requires an Airtable API key which you can set using
-\verb{set_access_token(token = <YOUR_API_KEY>, type = "AIRTABLE_API_KEY")}
+This function an Airtable personal access token which you can create at
+\url{https://airtable.com/create/tokens} and save to your local environment with
+\verb{set_access_token(token = <YOUR_PERSONAL_ACCESS_TOKEN>, type = "AIRTABLE_TOKEN")}. The function previously required an Airtable API key
+which you can set using \verb{set_access_token(token = <YOUR_API_KEY>, type = "AIRTABLE_API_KEY")}. However, Airtable is in the process of deprecating user
+API keys.
+
+\code{\link[=get_airtable_data]{get_airtable_data()}} requires a scope that includes \code{data.records:read} and
+\code{\link[=get_airtable_metadata]{get_airtable_metadata()}} a scope including \code{schema.bases:read}.
 
 Learn more about the Airtable API
-\url{https://support.airtable.com/hc/en-us/articles/203313985-Public-REST-API} or
-access the API for your Airtable base \url{https://airtable.com/api}
+\url{https://airtable.com/developers/web/api/introduction}
 }

@@ -4,12 +4,19 @@
 #' If the base includes coordinate fields/columns, optionally convert the data
 #' to a simple feature object using [sfext::df_to_sf()] if `geometry = TRUE`.
 #'
-#' This function requires an Airtable API key which you can set using
-#' `set_access_token(token = <YOUR_API_KEY>, type = "AIRTABLE_API_KEY")`
+#' This function an Airtable personal access token which you can create at
+#' <https://airtable.com/create/tokens> and save to your local environment with
+#' `set_access_token(token = <YOUR_PERSONAL_ACCESS_TOKEN>, type =
+#' "AIRTABLE_TOKEN")`. The function previously required an Airtable API key
+#' which you can set using `set_access_token(token = <YOUR_API_KEY>, type =
+#' "AIRTABLE_API_KEY")`. However, Airtable is in the process of deprecating user
+#' API keys.
+#'
+#' [get_airtable_data()] requires a scope that includes `data.records:read` and
+#' [get_airtable_metadata()] a scope including `schema.bases:read`.
 #'
 #' Learn more about the Airtable API
-#' <https://support.airtable.com/hc/en-us/articles/203313985-Public-REST-API> or
-#' access the API for your Airtable base <https://airtable.com/api>
+#' <https://airtable.com/developers/web/api/introduction>
 #'
 #' @param base Airtable base identifier. Required.
 #' @param table Airtable table name or identifier. Required.
@@ -31,18 +38,18 @@
 #' @param fields_by_id If `TRUE`, return fields by id, Default: `FALSE`
 #' @param offset Offset parameter, Default: `NULL`
 #' @param token,type API token and type, token defaults to `NULL` and type to
-#'   `"AIRTABLE_API_KEY"` (same as `get_access_token(type =
-#'   "AIRTABLE_API_KEY")`)
+#'   `"AIRTABLE_TOKEN"` (same as `get_access_token(type =
+#'   "AIRTABLE_TOKEN")`).
 #' @param geometry If `TRUE`, convert data into a simple feature object.
 #'   Defaults to `FALSE`.
-#' @param list Data type to return, Default: "records". Set list to "resp" to
-#'   return the API response without any additional formatting or conversion.
+#' @param resp_type Response type to return, Default: "records". Set resp_type
+#'   to "resp" to return the API response without any additional formatting or
+#'   conversion.
 #' @inheritParams sfext::df_to_sf
 #' @inheritParams get_location_data
 #' @inheritParams format_data
 #' @rdname get_airtable_data
 #' @export
-#' @importFrom dplyr as_tibble
 #' @importFrom sfext df_to_sf
 get_airtable_data <- function(base,
                               table,
@@ -60,7 +67,6 @@ get_airtable_data <- function(base,
                               locale = NULL,
                               fields_by_id = FALSE,
                               offset = NULL,
-                              list = "records",
                               geometry = FALSE,
                               location = NULL,
                               dist = getOption("getdata.dist"),
@@ -73,10 +79,11 @@ get_airtable_data <- function(base,
                               remove_coords = TRUE,
                               address = getOption("getdata.address", "address"),
                               geo = FALSE,
-                              clean_names = TRUE,
-                              label = TRUE,
+                              name_repair = janitor::make_clean_names,
+                              # label = FALSE,
                               token = NULL,
-                              type = "AIRTABLE_API_KEY") {
+                              type = "AIRTABLE_TOKEN",
+                              resp_type = "records") {
   req <-
     req_airtable(
       base = base,
@@ -101,26 +108,26 @@ get_airtable_data <- function(base,
   data <-
     resp_airtable(
       req,
-      list = list,
+      resp_type = resp_type,
       max_records = max_records
     )
 
-  if (list == "resp") {
+  if (resp_type == "resp") {
     return(data)
   }
 
-  if (label) {
-    labels <- names(data)
-  } else {
-    labels <- NULL
-  }
+  # if (label) {
+  #   labels <- names(data)
+  # } else {
+  #   labels <- NULL
+  # }
 
   data <-
     format_data(
-      dplyr::as_tibble(data),
+      data,
       fix_date = FALSE,
-      clean_names = clean_names,
-      label = label # ,
+      .name_repair = name_repair # ,
+      # label = label # ,
       # labels = labels
     )
 
@@ -150,6 +157,30 @@ get_airtable_data <- function(base,
 }
 
 
+
+#' @name get_airtable_metadata
+#' @rdname get_airtable_data
+#' @export
+get_airtable_metadata <- function(base = NULL,
+                                  token = NULL,
+                                  type = "AIRTABLE_TOKEN",
+                                  resp_type = "tables") {
+  base_url <- "https://api.airtable.com/v0/meta/bases/"
+  req <- httr2::request(base_url)
+
+  check_required(base)
+  check_starts_with(base, "app")
+
+  req <-
+    httr2::req_url_path_append(
+      req, base, resp_type
+    )
+
+  req <- req_auth_airtable(req, type = type)
+
+  resp_airtable(req, resp_type = resp_type)
+}
+
 #' List or retrieve records from an Airtable base
 #'
 #' @noRd
@@ -170,11 +201,9 @@ req_airtable <- function(base,
                          filter = NULL,
                          desc = FALSE,
                          cell_format = NULL,
-                         offset = NULL) {
-  req <-
-    httr2::request(
-      "https://api.airtable.com/v0/"
-    )
+                         offset = NULL,
+                         base_url = "https://api.airtable.com/v0/") {
+  req <- httr2::request(base_url)
 
   check_required(base)
   check_starts_with(base, "app")
@@ -244,37 +273,40 @@ req_airtable <- function(base,
   req_auth_airtable(req, token, type)
 }
 
-#' Set rate limit, set user agent, and authenticate Airtable request with key/token
+#' Set rate limit, set user agent, and authenticate Airtable request with
+#' key/token
 #'
 #' @noRd
 req_auth_airtable <- function(req,
                               token = NULL,
                               type = "AIRTABLE_API_KEY",
+                              rate = 5 / 1,
                               realm = NULL) {
   req <-
-    httr2::req_throttle(
+    httr2::req_auth_bearer_token(
       req = req,
-      rate = 5 / 1,
-      realm = realm
+      token = get_access_token(token = token, type = type)
     )
 
-  httr2::req_auth_bearer_token(
+  httr2::req_throttle(
     req = req,
-    token = get_access_token(token = token, type = type)
+    rate = rate,
+    realm = realm
   )
 }
 
-#' Perform request and get data based on list
+#' Perform request and get data based on response type
+#'
 #' @noRd
 #' @importFrom httr2 resp_body_json req_url_query
-#' @importFrom tidyr pivot_wider
+#' @importFrom rlang is_empty has_name
 #' @importFrom tibble enframe as_tibble
 #' @importFrom dplyr bind_rows
 resp_airtable <- function(req,
                           simplifyVector = TRUE,
-                          list = "records",
+                          resp_type = "records",
                           max_records = 100) {
-  list <- match.arg(list, c("resp", "fields", "records"))
+  resp_type <- match.arg(resp_type, c("resp", "fields", "records", "tables"))
 
   resp <-
     httr2::resp_body_json(
@@ -282,19 +314,40 @@ resp_airtable <- function(req,
       simplifyVector = simplifyVector
     )
 
-  if (list == "record") {
+  if (resp_type == "record") {
     is_pkg_installed("tidyr")
+  }
+
+  if (resp_type != "resp") {
+    resp <- resp[[resp_type]]
+
+    cli_abort_ifnot(
+      c("{resp_type} can't be found for this request:",
+        "i" = "{.url {req$url}}"
+      ),
+      condition = !rlang::is_empty(resp)
+    )
   }
 
   # Add offset checks
   data <-
-    switch(list,
+    switch(name,
       "resp" = resp,
-      "record" = tidyr::pivot_wider(tibble::enframe(resp[[list]])),
-      "records" = tibble::as_tibble(resp[[list]][["fields"]])
+      "record" = tidyr::pivot_wider(tibble::enframe(resp)),
+      "records" = tibble::as_tibble(resp[["fields"]]),
+      "tables" = tibble::as_tibble(resp)
     )
 
-  if ((max_records <= 100) | is.null(resp$offset)) {
+  skip_offset <-
+    any(
+      c(
+        is.null(max_records),
+        max_records <= 100,
+        !rlang::has_name(resp, "offset")
+      )
+    )
+
+  if (skip_offset) {
     return(data)
   }
 
@@ -309,7 +362,7 @@ resp_airtable <- function(req,
     resp_airtable(
       offset_req,
       simplifyVector,
-      list,
+      resp_type,
       max_records = max_records - 100
     )
   )
