@@ -83,17 +83,3 @@ set_pkg_options <- function(...,
     cli_ul_items(update_opts)
   }
 }
-
-#' @noRd
-#' @importFrom cli cli_ul cli_li cli_end
-cli_ul_items <- function(items) {
-  items <- sapply(items, as.character)
-  cli::cli_ul()
-  sapply(
-    seq_along(items),
-    function(x) {
-      cli::cli_li("{.code {names(items)[[x]]}}: {.val {items[[x]]}}")
-    }
-  )
-  cli::cli_end()
-}
