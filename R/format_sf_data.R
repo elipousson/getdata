@@ -41,8 +41,8 @@
 #' @example examples/format_sf_data.R
 #' @rdname format_sf_data
 #' @export
-#' @importFrom sfext is_sf is_same_crs st_erase as_sf
-#' @importFrom sf st_is_valid st_make_valid st_transform st_simplify
+#' @importFrom sfext as_sf check_sf st_transform_ext
+#' @importFrom sf st_is_valid st_make_valid st_simplify
 format_sf_data <- function(x,
                            crs = getOption("getdata.crs", default = 3857),
                            erase_data = NULL,
@@ -55,7 +55,7 @@ format_sf_data <- function(x,
     x <- sfext::as_sf(x)
   }
 
-  check_sf(x, ext = TRUE)
+  sfext::check_sf(x, ext = TRUE)
 
   if (!all(sf::st_is_valid(x))) {
     x <- sf::st_make_valid(x)
@@ -86,12 +86,14 @@ format_sf_data <- function(x,
 
 #' @name erase_data
 #' @rdname format_sf_data
+#' @importFrom sfext check_sf st_erase
+#' @importFrom sf st_is_valid st_make_valid
 erase_data <- function(x, erase_data = NULL) {
   if (is.null(erase_data)) {
     return(x)
   }
 
-  check_sf(erase_data, ext = TRUE)
+  sfext::check_sf(erase_data, ext = TRUE)
 
   if (!all(sf::st_is_valid(erase_data))) {
     erase_data <- sf::st_make_valid(erase_data)
