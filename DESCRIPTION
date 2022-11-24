@@ -5,7 +5,8 @@ Version: 0.1.0
 Authors@R: 
     person("Eli", "Pousson", , "eli.pousson@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-8280-1706"))
-Description: Download and format spatial and non-spatial data with simple filtering by location.
+Description: Download and format spatial and non-spatial data with simple
+    filtering by location.
 License: MIT + file LICENSE
 URL: https://github.com/elipousson/getdata,
     https://elipousson.github.io/getdata/
@@ -24,14 +25,12 @@ Imports:
     sf,
     sfext (>= 0.0.0.9001),
     tibble,
-    tidyr,
     utils
 Suggests: 
     bingmapr (>= 0.1.0),
     covr,
     esri2sf,
     FlickrAPI (>= 0.1.0.1),
-    fs,
     googlesheets4,
     knitr,
     labelled,
@@ -44,13 +43,14 @@ Suggests:
     stringr,
     testthat (>= 3.0.0),
     tidygeocoder,
+    tidyr,
     tigris,
     units,
     withr
 Remotes: 
-    elipousson/sfext,
+    elipousson/bingmapr,
     elipousson/esri2sf,
-    elipousson/bingmapr
+    elipousson/sfext
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8
