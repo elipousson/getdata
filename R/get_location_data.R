@@ -1,31 +1,33 @@
 #' Get data for a location
 #'
 #' Returns data for a selected location or a list of locations (for
-#' [map_location_data]). If data is a character string, the parameter is passed
-#' to [sfext::read_sf_url], [sfext::read_sf_path], or [sfext::read_sf_pkg]. This
-#' function uses [sfext::st_filter_ext()] to filter, crop, or trim data to the
-#' provided location. location can also be an an address.
+#' [map_location_data()]). If data is a character string, the parameter is
+#' passed to [sfext::read_sf_url()], [sfext::read_sf_path()], or
+#' [sfext::read_sf_pkg()]. This function uses [sfext::st_filter_ext()] to
+#' filter, crop, or trim data to the provided location. location can also be an
+#' an address.
 #'
 #' This function previously supported county geoid, state name, abbreviation, or
-#' geoid as a location. Currently, recommend using [get_tigris_data] and passing
-#' a `sf` object to location.
+#' geoid as a location. Currently, recommend using [get_tigris_data()] and
+#' passing a `sf` object to location.
 #'
 #' @details Working with sf lists for data and locations:
 #'
-#'   [map_location_data] makes it easier to work with `sf` lists. It supports data
-#'   as a character vector, data as an `sf` list when location is a single object,
-#'   location as a character vector or `sf` list (including lists of `bbox` or `sfc`
-#'   objects), or when both data and location are lists (such as a list created
-#'   by [make_location_data_list]).
+#'   [map_location_data()] makes it easier to work with `sf` lists. It supports
+#'   data as a character vector, data as an `sf` list when location is a single
+#'   object, location as a character vector or `sf` list (including lists of
+#'   `bbox` or `sfc` objects), or when both data and location are lists (such as
+#'   a list created by [make_location_data_list()]).
 #'
 #' @param location sf object. If multiple areas are provided, they are unioned
-#'   into a single sf object using [sf::st_union]
+#'   into a single sf object using [sf::st_union()]
 #' @inheritParams sfext::st_bbox_ext
 #' @param data Character string (e.g. url, file path, or name of data from
 #'   package), a `sf`, `sfc`, or `bbox`  object including data in area.
 #' @param package Name of the package to search for data.
-#' @param filetype File type to use if passing parameters to [sfext::read_sf_download]
-#'   or [sfext::read_sf_pkg] (required for extdata and cached data).
+#' @param filetype File type to use if passing parameters to
+#'   [sfext::read_sf_download()] or [sfext::read_sf_pkg()] (required for extdata
+#'   and cached data).
 #' @param fn Function to apply to data after filtering by location but before
 #'   returning from function.
 #' @inheritParams sfext::st_filter_ext
@@ -38,15 +40,16 @@
 #'   must be `NULL`, to set package based on index. If list is not `NULL` and
 #'   location and/or data as character or numeric values, the location and data
 #'   are assumed to be index values for the index list. The index parameter
-#'   supports nested lists created by [make_location_data_list] (using only the
-#'   default key names of "location" and "data"). This feature has not be fully
-#'   tested and may result in errors or unexpected results.
-#' @param label label is optionally used by [map_location_data] to name the data
-#'   objects in the list returned by the function.
+#'   supports nested lists created by [make_location_data_list()] (using only
+#'   the default key names of "location" and "data"). This feature has not be
+#'   fully tested and may result in errors or unexpected results.
+#' @param label label is optionally used by [map_location_data()] to name the
+#'   data objects in the list returned by the function.
 #' @inheritParams sfext::as_sf_class
 #' @inheritParams format_data
-#' @param ... additional parameters passed to [sfext::read_sf_path], [sfext::read_sf_url], or
-#'   [sfext::read_sf_pkg] and [sfext::st_filter_ext]
+#' @param ... additional parameters passed to [sfext::read_sf_path()],
+#'   [sfext::read_sf_url()], or [sfext::read_sf_pkg()] and
+#'   [sfext::st_filter_ext()]
 #' @rdname get_location_data
 #' @export
 #' @importFrom sf st_crs st_crop st_transform st_intersection st_filter
@@ -71,8 +74,9 @@ get_location_data <- function(location = NULL,
                               clean_names = FALSE,
                               ...) {
   if (!is.null(index) && is.list(index)) {
-    # FIXME: This is set to work with 1 or 2 level list indices with naming conventions that match make_location_data_list
-    # This should be clearly documented as alternate index naming conventions supported if possible
+    # FIXME: This is set to work with 1 or 2 level list indices with naming
+    # conventions that match make_location_data_list This should be clearly
+    # documented as alternate index naming conventions supported if possible
     if (("package" %in% names(index)) && is.null(package)) {
       package <- unique(index$package) # could use data as an index
       check_character(package, n = 1)
@@ -103,7 +107,7 @@ get_location_data <- function(location = NULL,
         sfext::is_bbox(data) ~ "bbox",
         is.data.frame(data) ~ "df",
         is_url(data) ~ "url",
-        is.character(data) && fs::file_exists(data) ~ "path",
+        is.character(data) && file.exists(data) ~ "path",
         !is.null(package) ~ "pkg",
         TRUE ~ "other"
       )
@@ -114,7 +118,10 @@ get_location_data <- function(location = NULL,
         "bbox" = sfext::as_sf(data, ...),
         "url" = sfext::read_sf_url(url = data, bbox = bbox, ...),
         "path" = sfext::read_sf_path(path = data, bbox = bbox, ...),
-        "pkg" = sfext::read_sf_pkg(data = data, bbox = bbox, package = package, filetype = filetype, ...)
+        "pkg" = sfext::read_sf_pkg(
+          data = data, bbox = bbox, package = package,
+          filetype = filetype, ...
+        )
       )
   }
 
@@ -182,7 +189,9 @@ map_location_data <- function(location = NULL,
   if (!is.list(data) && (length(data) > 1)) {
     data <- as.list(data)
 
-    # FIXME: The addition of a index parameter to get_location_data should allow the use of the index as a secondary source of name data for map_location_data
+    # FIXME: The addition of a index parameter to get_location_data should allow
+    # the use of the index as a secondary source of name data for
+    # map_location_data
     if (!is_named(data)) {
       if (!is.null(label)) {
         label <- janitor::make_clean_names(label)
@@ -255,7 +264,8 @@ map_location_data <- function(location = NULL,
           index = index
         )
       )
-  } else if (is.list(data) && is.list(location) && (length(data) == length(location))) {
+  } else if (is.list(data) && is.list(location) &&
+    (length(data) == length(location))) {
     data <-
       purrr::map2(
         location,
@@ -312,7 +322,8 @@ get_index_param <- function(index = NULL,
     return(location)
   }
 
-  # Return data from index list if provided (may include character (e.g. url, file path, data name if in package), bbox, sfc, or sf objects)
+  # Return data from index list if provided (may include character (e.g. url,
+  # file path, data name if in package), bbox, sfc, or sf objects)
   if (!is.null(data)) {
     if ((is.character(data) || is.numeric(data))) {
       if (has_name(index, "data")) {
