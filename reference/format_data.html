@@ -77,11 +77,14 @@ documented at <code><a href="format_address_data.html">format_address_data()</a>
 <span>  var_names <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  xwalk <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  clean_names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  .name_repair <span class="op">=</span> <span class="st">"check_unique"</span>,</span>
 <span>  replace_na_with <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  replace_with_na <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  replace_empty_char_with_na <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  fix_date <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  remove_empty <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rows"</span>, <span class="st">"cols"</span><span class="op">)</span>,</span>
+<span>  remove_constant <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  format_sf <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
@@ -122,29 +125,33 @@ be the values and the new names must be the names.</p></dd>
 
 
 <dt>clean_names</dt>
-<dd><p>If <code>TRUE</code>, pass data frame to <a href="https://rdrr.io/pkg/janitor/man/clean_names.html" class="external-link">janitor::clean_names</a>;
+<dd><p>If <code>TRUE</code>, set .name_repair to <code><a href="https://rdrr.io/pkg/janitor/man/make_clean_names.html" class="external-link">janitor::make_clean_names()</a></code>;
 defaults to <code>TRUE</code>.</p></dd>
 
 
+<dt>.name_repair</dt>
+<dd><p>Defaults to "check_unique"</p></dd>
+
+
 <dt>replace_na_with</dt>
-<dd><p>A named list to pass to <a href="https://tidyr.tidyverse.org/reference/replace_na.html" class="external-link">tidyr::replace_na</a>; defaults
+<dd><p>A named list to pass to <code><a href="https://tidyr.tidyverse.org/reference/replace_na.html" class="external-link">tidyr::replace_na()</a></code>; defaults
 to <code>NULL</code>.</p></dd>
 
 
 <dt>replace_with_na</dt>
-<dd><p>A named list to pass to <a href="https://rdrr.io/pkg/naniar/man/replace_with_na.html" class="external-link">naniar::replace_with_na</a>;
+<dd><p>A named list to pass to <code><a href="https://rdrr.io/pkg/naniar/man/replace_with_na.html" class="external-link">naniar::replace_with_na()</a></code>;
 defaults to <code>NULL</code>.</p></dd>
 
 
 <dt>replace_empty_char_with_na</dt>
 <dd><p>If <code>TRUE</code>, replace "" with <code>NA</code> using
-<a href="https://rdrr.io/pkg/naniar/man/replace_with_na_if.html" class="external-link">naniar::replace_with_na_if</a>, Default: <code>TRUE</code></p></dd>
+<code><a href="https://rdrr.io/pkg/naniar/man/replace_with_na_if.html" class="external-link">naniar::replace_with_na_if()</a></code>, Default: <code>TRUE</code></p></dd>
 
 
 <dt>fix_date</dt>
-<dd><p>If <code>FALSE</code>, fix UNIX epoch dates (common issue with dates from
-FeatureServer and MapServer sources) using the fix_epoch_date function,
-Default: <code>TRUE</code></p></dd>
+<dd><p>If <code>FALSE</code>, fix UNIX epoch dates (common issue with dates
+from FeatureServer and MapServer sources) using the <code>fix_epoch_date()</code>
+function, Default: <code>TRUE</code></p></dd>
 
 
 <dt>label</dt>
@@ -155,13 +162,23 @@ Default: <code>TRUE</code></p></dd>
 columns using the original names. Defaults to <code>FALSE</code>.</p></dd>
 
 
+<dt>remove_empty</dt>
+<dd><p>If not <code>NULL</code>, pass values ("rows", "cols" or c("rows",
+"cols") (default)) to the which parameter of <code><a href="https://rdrr.io/pkg/janitor/man/remove_empty.html" class="external-link">janitor::remove_empty()</a></code></p></dd>
+
+
+<dt>remove_constant</dt>
+<dd><p>If <code>TRUE</code>, pass data to janitor::remove_constant()
+using default parameters.</p></dd>
+
+
 <dt>format_sf</dt>
 <dd><p>If <code>TRUE</code>, pass x and additional parameters to
-<a href="format_sf_data.html">format_sf_data</a>.</p></dd>
+<code><a href="format_sf_data.html">format_sf_data()</a></code>.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Additional parameters passed to <a href="format_sf_data.html">format_sf_data</a></p></dd>
+<dd><p>Additional parameters passed to <code><a href="format_sf_data.html">format_sf_data()</a></code></p></dd>
 
 
 <dt>.strict</dt>
