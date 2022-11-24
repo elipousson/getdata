@@ -24,7 +24,7 @@ get_wiki_data(
 }
 \arguments{
 \item{location}{sf object. If multiple areas are provided, they are unioned
-into a single sf object using \link[sf:geos_combine]{sf::st_union}}
+into a single sf object using \code{\link[sf:geos_combine]{sf::st_union()}}}
 
 \item{radius}{If \code{TRUE}, use dist as a buffer around the center of the
 location; defaults to \code{FALSE}}

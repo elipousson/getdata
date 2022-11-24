@@ -48,7 +48,7 @@ not provided to \link[sfext:read_sf_ext]{sfext::read_sf_gsheet}.}
 "drop", "wkt", "centroid", "point", Default: 'centroid'.}
 
 \item{location}{sf object. If multiple areas are provided, they are unioned
-into a single sf object using \link[sf:geos_combine]{sf::st_union}}
+into a single sf object using \code{\link[sf:geos_combine]{sf::st_union()}}}
 
 \item{dist}{buffer distance in units. Optional.}
 

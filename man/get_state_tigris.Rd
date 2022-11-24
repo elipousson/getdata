@@ -36,7 +36,7 @@ the default for tigris functions). This parameter is \emph{not} used when type
 is set to blocks, roads, primary secondary roads, area water, linear water,
 landmarks, or zctas.}
 
-\item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names};
+\item{clean_names}{If \code{TRUE}, set .name_repair to \code{\link[janitor:make_clean_names]{janitor::make_clean_names()}};
 defaults to \code{TRUE}.}
 
 \item{cache}{If \code{TRUE}, set \code{options(tigris_use_cache = TRUE)} to cache

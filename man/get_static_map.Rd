@@ -212,7 +212,7 @@ orientation and token is passed to key.
     )
   )
 
-  nc <- read_sf_path(system.file("shape/nc.shp", package = "sf"))
+  nc <- sfext::read_sf_path(system.file("shape/nc.shp", package = "sf"))
 
   get_location_static_mapbox(
     type = nc,

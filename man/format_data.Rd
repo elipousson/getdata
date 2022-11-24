@@ -13,11 +13,14 @@ format_data(
   var_names = NULL,
   xwalk = NULL,
   clean_names = TRUE,
+  .name_repair = "check_unique",
   replace_na_with = NULL,
   replace_with_na = NULL,
   replace_empty_char_with_na = FALSE,
   fix_date = FALSE,
   label = FALSE,
+  remove_empty = c("rows", "cols"),
+  remove_constant = FALSE,
   format_sf = FALSE,
   ...
 )
@@ -49,21 +52,23 @@ defaults to \code{NULL}.}
 the second column as value; or a named list. The existing names of x must
 be the values and the new names must be the names.}
 
-\item{clean_names}{If \code{TRUE}, pass data frame to \link[janitor:clean_names]{janitor::clean_names};
+\item{clean_names}{If \code{TRUE}, set .name_repair to \code{\link[janitor:make_clean_names]{janitor::make_clean_names()}};
 defaults to \code{TRUE}.}
 
-\item{replace_na_with}{A named list to pass to \link[tidyr:replace_na]{tidyr::replace_na}; defaults
+\item{.name_repair}{Defaults to "check_unique"}
+
+\item{replace_na_with}{A named list to pass to \code{\link[tidyr:replace_na]{tidyr::replace_na()}}; defaults
 to \code{NULL}.}
 
-\item{replace_with_na}{A named list to pass to \link[naniar:replace_with_na]{naniar::replace_with_na};
+\item{replace_with_na}{A named list to pass to \code{\link[naniar:replace_with_na]{naniar::replace_with_na()}};
 defaults to \code{NULL}.}
 
 \item{replace_empty_char_with_na}{If \code{TRUE}, replace "" with \code{NA} using
-\link[naniar:replace_with_na_if]{naniar::replace_with_na_if}, Default: \code{TRUE}}
+\code{\link[naniar:replace_with_na_if]{naniar::replace_with_na_if()}}, Default: \code{TRUE}}
 
-\item{fix_date}{If \code{FALSE}, fix UNIX epoch dates (common issue with dates from
-FeatureServer and MapServer sources) using the \link{fix_epoch_date} function,
-Default: \code{TRUE}}
+\item{fix_date}{If \code{FALSE}, fix UNIX epoch dates (common issue with dates
+from FeatureServer and MapServer sources) using the \code{\link[=fix_epoch_date]{fix_epoch_date()}}
+function, Default: \code{TRUE}}
 
 \item{label}{For \code{\link[=label_with_xwalk]{label_with_xwalk()}} use \code{label = "val"} to use
 \code{\link[labelled:val_labels]{labelled::set_value_labels()}} or "var" (default) to use
@@ -71,10 +76,16 @@ Default: \code{TRUE}}
 \code{TRUE}, xwalk is passed to \code{\link[=label_with_xwalk]{label_with_xwalk()}} with label = "var" to label
 columns using the original names. Defaults to \code{FALSE}.}
 
-\item{format_sf}{If \code{TRUE}, pass x and additional parameters to
-\link{format_sf_data}.}
+\item{remove_empty}{If not \code{NULL}, pass values ("rows", "cols" or c("rows",
+"cols") (default)) to the which parameter of \code{\link[janitor:remove_empty]{janitor::remove_empty()}}}
 
-\item{...}{Additional parameters passed to \link{format_sf_data}}
+\item{remove_constant}{If \code{TRUE}, pass data to janitor::remove_constant()
+using default parameters.}
+
+\item{format_sf}{If \code{TRUE}, pass x and additional parameters to
+\code{\link[=format_sf_data]{format_sf_data()}}.}
+
+\item{...}{Additional parameters passed to \code{\link[=format_sf_data]{format_sf_data()}}}
 
 \item{.strict}{If \code{TRUE} (default), require that all values from the xwalk
 are found in the column names of the x data.frame. If \code{FALSE}, unmatched

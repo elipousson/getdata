@@ -51,7 +51,7 @@ map_location_data(
 }
 \arguments{
 \item{location}{sf object. If multiple areas are provided, they are unioned
-into a single sf object using \link[sf:geos_combine]{sf::st_union}}
+into a single sf object using \code{\link[sf:geos_combine]{sf::st_union()}}}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -74,8 +74,9 @@ package), a \code{sf}, \code{sfc}, or \code{bbox}  object including data in area
 
 \item{package}{Name of the package to search for data.}
 
-\item{filetype}{File type to use if passing parameters to \link[sfext:read_sf_ext]{sfext::read_sf_download}
-or \link[sfext:read_sf_ext]{sfext::read_sf_pkg} (required for extdata and cached data).}
+\item{filetype}{File type to use if passing parameters to
+\code{\link[sfext:read_sf_ext]{sfext::read_sf_download()}} or \code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}} (required for extdata
+and cached data).}
 
 \item{fn}{Function to apply to data after filtering by location but before
 returning from function.}
@@ -91,17 +92,17 @@ the source data.}
 
 \item{class}{Class of object to return.}
 
-\item{label}{label is optionally used by \link{map_location_data} to name the data
-objects in the list returned by the function.}
+\item{label}{label is optionally used by \code{\link[=map_location_data]{map_location_data()}} to name the
+data objects in the list returned by the function.}
 
 \item{index}{A list of possible location, data, and (optionally) package
 values. List must be named and include a value named package and package
 must be \code{NULL}, to set package based on index. If list is not \code{NULL} and
 location and/or data as character or numeric values, the location and data
 are assumed to be index values for the index list. The index parameter
-supports nested lists created by \link{make_location_data_list} (using only the
-default key names of "location" and "data"). This feature has not be fully
-tested and may result in errors or unexpected results.}
+supports nested lists created by \code{\link[=make_location_data_list]{make_location_data_list()}} (using only
+the default key names of "location" and "data"). This feature has not be
+fully tested and may result in errors or unexpected results.}
 
 \item{col}{For \link[sfext]{as_sf_list}, the name of the column used to group data if x
 is a sf object or used to group and nest data before passing to x.}
@@ -114,29 +115,31 @@ defaults to \code{NULL}.}
 value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as
 provided.}
 
-\item{...}{additional parameters passed to \link[sfext:read_sf_ext]{sfext::read_sf_path}, \link[sfext:read_sf_ext]{sfext::read_sf_url}, or
-\link[sfext:read_sf_ext]{sfext::read_sf_pkg} and \link[sfext:st_filter_ext]{sfext::st_filter_ext}}
+\item{...}{additional parameters passed to \code{\link[sfext:read_sf_ext]{sfext::read_sf_path()}},
+\code{\link[sfext:read_sf_ext]{sfext::read_sf_url()}}, or \code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}} and
+\code{\link[sfext:st_filter_ext]{sfext::st_filter_ext()}}}
 
 \item{load}{If \code{TRUE} and class is "list", load data to local environment;
 defaults \code{FALSE}.}
 }
 \description{
 Returns data for a selected location or a list of locations (for
-\link{map_location_data}). If data is a character string, the parameter is passed
-to \link[sfext:read_sf_ext]{sfext::read_sf_url}, \link[sfext:read_sf_ext]{sfext::read_sf_path}, or \link[sfext:read_sf_ext]{sfext::read_sf_pkg}. This
-function uses \code{\link[sfext:st_filter_ext]{sfext::st_filter_ext()}} to filter, crop, or trim data to the
-provided location. location can also be an an address.
+\code{\link[=map_location_data]{map_location_data()}}). If data is a character string, the parameter is
+passed to \code{\link[sfext:read_sf_ext]{sfext::read_sf_url()}}, \code{\link[sfext:read_sf_ext]{sfext::read_sf_path()}}, or
+\code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}}. This function uses \code{\link[sfext:st_filter_ext]{sfext::st_filter_ext()}} to
+filter, crop, or trim data to the provided location. location can also be an
+an address.
 }
 \details{
 This function previously supported county geoid, state name, abbreviation, or
-geoid as a location. Currently, recommend using \link{get_tigris_data} and passing
-a \code{sf} object to location.
+geoid as a location. Currently, recommend using \code{\link[=get_tigris_data]{get_tigris_data()}} and
+passing a \code{sf} object to location.
 
 Working with sf lists for data and locations:
 
-\link{map_location_data} makes it easier to work with \code{sf} lists. It supports data
-as a character vector, data as an \code{sf} list when location is a single object,
-location as a character vector or \code{sf} list (including lists of \code{bbox} or \code{sfc}
-objects), or when both data and location are lists (such as a list created
-by \link{make_location_data_list}).
+\code{\link[=map_location_data]{map_location_data()}} makes it easier to work with \code{sf} lists. It supports
+data as a character vector, data as an \code{sf} list when location is a single
+object, location as a character vector or \code{sf} list (including lists of
+\code{bbox} or \code{sfc} objects), or when both data and location are lists (such as
+a list created by \code{\link[=make_location_data_list]{make_location_data_list()}}).
 }
