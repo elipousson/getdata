@@ -15,6 +15,10 @@ utils::globalVariables(
   )
 )
 
+# @staticimports pkg:isstatic
+# is_url is_esri_url is_gsheet_url is_gist_url is_gmap_url
+# is_unit
+
 #' Add default user agent to request and perform request
 #'
 #' @noRd
@@ -58,6 +62,38 @@ use_fn <- function(data, fn = NULL) {
   fn(data)
 }
 
+#' Use .name_repair parameter
+#'
+#' @noRd
+#' @importFrom vctrs vec_as_names
+use_name_repair <- function(data = NULL,
+                            .name_repair = "check_unique",
+                            repair_arg = "name_repair") {
+  names(data) <-
+    vctrs::vec_as_names(
+      names(data),
+      repair = .name_repair,
+      repair_arg = repair_arg
+    )
+
+  data
+}
+
+#' Is this package installed?
+#'
+#' @param pkg Name of a package.
+#' @param repo GitHub repository to use for the package.
+#' @noRd
+is_pkg_installed <- function(pkg, repo = NULL) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    if (!is.null(repo)) {
+      pkg <- repo
+    }
+
+    check_installed(pkg = pkg)
+  }
+}
+
 #' Does the data frame has a column with the same name?
 #'
 #' @name has_same_name_col
@@ -82,7 +118,7 @@ has_same_name_col <- function(x,
   new_col <- paste0(prefix, "_", col)
 
   if (ask && !quiet) {
-    if (!cli_yeah(
+    if (!cli_yesno(
       "The provided data includes an existing column named '{col}'.
     Do you want to proceed and rename this column to {new_col}?"
     )) {
@@ -91,9 +127,9 @@ has_same_name_col <- function(x,
   }
 
   if (!quiet) {
-    cli::cli_alert_success(
-      "The existing column '{col}' to '{new_col}' to avoid
-      overwriting any existing values."
+    cli_inform(
+      c("v" = "Renaming the existing column '{col}' to '{new_col}' to avoid
+      overwriting existing values.")
     )
   }
 
