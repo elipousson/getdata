@@ -52,7 +52,7 @@ format_data <- function(x,
                         replace_empty_char_with_na = FALSE,
                         fix_date = FALSE,
                         label = FALSE,
-                        remove_empty = c("rows", "cols"),
+                        remove_empty = NULL,
                         remove_constant = FALSE,
                         format_sf = FALSE,
                         ...) {
@@ -89,6 +89,7 @@ format_data <- function(x,
   }
 
   if (!is.null(remove_empty)) {
+    remove_empty <- arg_match(remove_empty, c("rows", "cols"), multiple = TRUE)
     x <- janitor::remove_empty(x, which = remove_empty)
   }
 
@@ -107,33 +108,6 @@ format_data <- function(x,
   x
 }
 
-#' @noRd
-#' @importFrom tibble deframe
-make_xwalk_list <- function(xwalk, nm = c("label", "name")) {
-  if (is.data.frame(xwalk)) {
-    if (sfext::is_sf(xwalk)) {
-      xwalk <- sf::st_drop_geometry(xwalk)
-    }
-
-    if (ncol(xwalk) == 2) {
-      return(as.list(tibble::deframe(xwalk)))
-    }
-
-    if (all(nm %in% colnames(xwalk))) {
-      return(rlang::set_names(as.list(xwalk[[nm[1]]]), xwalk[[nm[2]]]))
-    }
-  }
-
-  cli_abort_ifnot(
-    message = c("{.arg xwalk} must be a {.cls list}, a two column {.cls data.frame}, or a {.cls data.frame} with column names {.val {nm}}.",
-      "i" = "The provided {.arg xwalk} has class {.cls {class(xwalk)}}."
-    ),
-    condition = is_named(xwalk),
-  )
-
-  xwalk
-}
-
 #' @name rename_with_xwalk
 #' @rdname format_data
 #' @param xwalk a data frame with two columns using the first column as name and
@@ -146,9 +120,9 @@ make_xwalk_list <- function(xwalk, nm = c("label", "name")) {
 #'   dropped. If `TRUE` (default), all columns are retained. If x is an `sf`
 #'   object, the geometry column will not be dropped even it is not renamed.
 #' @export
-#' @importFrom tibble deframe
-#' @importFrom dplyr rename_with
-#' @importFrom sfext is_sf
+#' @importFrom rlang has_name
+#' @importFrom sfext is_sf rename_sf_col
+#' @importFrom dplyr rename_with any_of
 rename_with_xwalk <- function(x,
                               xwalk = NULL,
                               label = FALSE,
@@ -204,6 +178,7 @@ rename_with_xwalk <- function(x,
 #'   columns using the original names. Defaults to `FALSE`.
 #' @rdname format_data
 #' @export
+#' @importFrom rlang arg_match
 label_with_xwalk <- function(x, xwalk = NULL, label = "var", ...) {
   is_pkg_installed("labelled")
 
@@ -245,7 +220,7 @@ make_variable_dictionary <- function(x, .labels = NULL, .definitions = NULL) {
 #' @param .cols tidyselect for columns to apply epoch date fixing function to.
 #'   Defaults to `dplyr::contains("date")`.
 #' @export
-#' @importFrom dplyr mutate across contains
+#' @importFrom dplyr contains mutate across
 fix_epoch_date <- function(x, .cols = dplyr::contains("date")) {
   dplyr::mutate(
     x,
@@ -254,6 +229,39 @@ fix_epoch_date <- function(x, .cols = dplyr::contains("date")) {
       ~ as.POSIXct(.x / 1000, origin = "1970-01-01")
     )
   )
+}
+
+#' @noRd
+#' @importFrom sfext is_sf
+#' @importFrom sf st_drop_geometry
+#' @importFrom rlang has_length has_name
+#' @importFrom tibble deframe
+make_xwalk_list <- function(xwalk, cols = c("label", "name")) {
+  if (is_named(xwalk) && is.list(xwalk)) {
+    return(xwalk)
+  }
+
+  if (sfext::is_sf(xwalk)) {
+    xwalk <- sf::st_drop_geometry(xwalk)
+  }
+
+  cli_abort_ifnot(
+    c("{.arg xwalk} must be a named {.cls list} or a {.cls data.frame}
+      with two or more columns.",
+      "i" = "The provided {.arg xwalk} has class {.cls {class(xwalk)}}."
+    ),
+    condition = is.data.frame(xwalk) && ncol(xwalk) >= 2
+  )
+
+  cols <- cols %||% c(1, 2)
+
+  cli_abort_ifnot(
+    "{.arg cols} must be a length 2 vector.",
+    condition = rlang::has_length(cols, 2) &&
+      (all(rlang::has_name(xwalk, cols)) | is.numeric(cols))
+  )
+
+  as.list(tibble::deframe(xwalk[, cols]))
 }
 
 #' Helper function for getting names of character columns

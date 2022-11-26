@@ -19,7 +19,7 @@ format_data(
   replace_empty_char_with_na = FALSE,
   fix_date = FALSE,
   label = FALSE,
-  remove_empty = c("rows", "cols"),
+  remove_empty = NULL,
   remove_constant = FALSE,
   format_sf = FALSE,
   ...
