@@ -21,6 +21,7 @@ get_static_mapbox(
   height = 400,
   bearing = NULL,
   pitch = NULL,
+  token = NULL,
   ...
 )
 
@@ -40,6 +41,7 @@ get_osm_static_mapbox(
   height = 400,
   bearing = NULL,
   pitch = NULL,
+  token = NULL,
   ...
 )
 
@@ -63,6 +65,7 @@ get_location_static_mapbox(
   height = 400,
   bearing = NULL,
   pitch = NULL,
+  token = NULL,
   ...
 )
 
@@ -124,6 +127,10 @@ height.}
 \item{pitch, bearing}{The map pitch and bearing; defaults to \code{NULL}. pitch can
 range from 0 to 60, and bearing from -360 to 360.}
 
+\item{token}{Optional token or API key. Recommend setting the Bing Maps API
+key using \code{\link[bingmapr:bing_maps_api_key]{bingmapr::bing_maps_api_key()}} and the Mapbox access token with
+\code{\link[mapboxapi:mb_access_token]{mapboxapi::mb_access_token()}}.}
+
 \item{...}{Additional parameters passed to \code{\link[=get_location_data]{get_location_data()}} if type is
 character and index is \code{NULL}.}
 
@@ -171,10 +178,6 @@ include:
 details such as hill shading disabled.
 \item CanvasGray: A grayscale version of the road maps
 }}
-
-\item{token}{Optional token or API key. Recommend setting the Bing Maps API
-key using \code{\link[bingmapr:bing_maps_api_key]{bingmapr::bing_maps_api_key()}} and the Mapbox access token with
-\code{\link[mapboxapi:mb_access_token]{mapboxapi::mb_access_token()}}.}
 }
 \description{
 Get a static map image using the  \href{https://www.mapbox.com/static-maps}{Mapbox Static Maps API} using \link[mapboxapi:static_mapbox]{mapboxapi::static_mapbox} or

@@ -59,6 +59,7 @@ get_static_mapbox <- function(location,
                               height = 400,
                               bearing = NULL,
                               pitch = NULL,
+                              token = NULL,
                               ...) {
   if (overlay_location && is.null(overlay_sf)) {
     overlay_sf <- location
@@ -86,6 +87,7 @@ get_static_mapbox <- function(location,
     bearing = bearing,
     width = width,
     height = height,
+    access_token = token,
     ...
   )
 }
@@ -110,6 +112,7 @@ get_osm_static_mapbox <- function(id = NULL,
                                   height = 400,
                                   bearing = NULL,
                                   pitch = NULL,
+                                  token = NULL,
                                   ...) {
   if (!is.null(id)) {
     location <-
@@ -134,7 +137,8 @@ get_osm_static_mapbox <- function(id = NULL,
     pitch = pitch,
     bearing = bearing,
     width = width,
-    height = height
+    height = height,
+    token = token
   )
 }
 
@@ -161,6 +165,7 @@ get_location_static_mapbox <- function(type,
                                        height = 400,
                                        bearing = NULL,
                                        pitch = NULL,
+                                       token = NULL,
                                        ...) {
   location <-
     get_location(
@@ -188,6 +193,7 @@ get_location_static_mapbox <- function(type,
     bearing = bearing,
     width = width,
     height = height,
+    token = token,
     ...
   )
 }
