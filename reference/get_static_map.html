@@ -76,6 +76,7 @@ and the Mapbox token with <a href="https://rdrr.io/pkg/mapboxapi/man/mb_access_t
 <span>  height <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>  bearing <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pitch <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  token <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -95,6 +96,7 @@ and the Mapbox token with <a href="https://rdrr.io/pkg/mapboxapi/man/mb_access_t
 <span>  height <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>  bearing <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pitch <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  token <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -118,6 +120,7 @@ and the Mapbox token with <a href="https://rdrr.io/pkg/mapboxapi/man/mb_access_t
 <span>  height <span class="op">=</span> <span class="fl">400</span>,</span>
 <span>  bearing <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pitch <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  token <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -201,6 +204,12 @@ height.</p></dd>
 range from 0 to 60, and bearing from -360 to 360.</p></dd>
 
 
+<dt>token</dt>
+<dd><p>Optional token or API key. Recommend setting the Bing Maps API
+key using <code><a href="https://elipousson.github.io/bingmapr/reference/bing_maps_api_key.html" class="external-link">bingmapr::bing_maps_api_key()</a></code> and the Mapbox access token with
+<code><a href="https://rdrr.io/pkg/mapboxapi/man/mb_access_token.html" class="external-link">mapboxapi::mb_access_token()</a></code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional parameters passed to <code><a href="get_location_data.html">get_location_data()</a></code> if type is
 character and index is <code>NULL</code>.</p></dd>
@@ -267,12 +276,6 @@ include:</p><ul><li><p>Aerial: Aerial imagery.</p></li>
 details such as hill shading disabled.</p></li>
 <li><p>CanvasGray: A grayscale version of the road maps</p></li>
 </ul></dd>
-
-
-<dt>token</dt>
-<dd><p>Optional token or API key. Recommend setting the Bing Maps API
-key using <code><a href="https://elipousson.github.io/bingmapr/reference/bing_maps_api_key.html" class="external-link">bingmapr::bing_maps_api_key()</a></code> and the Mapbox access token with
-<code><a href="https://rdrr.io/pkg/mapboxapi/man/mb_access_token.html" class="external-link">mapboxapi::mb_access_token()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
