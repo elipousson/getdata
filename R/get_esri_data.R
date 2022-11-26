@@ -189,7 +189,11 @@ get_esri_layers <- function(location = NULL,
         )
 
       if (clean_names) {
-        layers <- rlang::set_names(layers, janitor::make_clean_names(names(layers)))
+        layers <-
+          rlang::set_names(
+            layers,
+            janitor::make_clean_names(names(layers))
+          )
       }
 
       return(layers)
@@ -283,7 +287,7 @@ get_layer_list <- function(meta) {
 #'   "id"`.
 #' @export
 #' @importFrom janitor make_clean_names
-#' @importFrom rlang is_character
+#' @importFrom rlang check_required is_character
 get_esri_metadata <- function(url, token = NULL, meta = NULL, clean_names = TRUE) {
   is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
   rlang::check_required(url)
