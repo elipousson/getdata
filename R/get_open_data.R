@@ -277,6 +277,7 @@ get_socrata_data <- function(data = NULL,
     coords = coords,
     geometry = geometry,
     token = token,
+    type = type,
     from_crs = from_crs,
     crs = crs,
     clean_names = clean_names
@@ -304,8 +305,8 @@ list_socrata_data <- function(source_url) {
   resp <- httr2::resp_body_json(req_getdata(req), simplifyVector = TRUE)
 
   datasets <- dplyr::as_tibble(resp$dataset)
-  datasets$issued <- as.POSIXct(list$issued)
-  datasets$modified <- as.POSIXct(list$modified)
+  datasets$issued <- as.POSIXct(datasets$issued)
+  datasets$modified <- as.POSIXct(datasets$modified)
 
   datasets
 }
