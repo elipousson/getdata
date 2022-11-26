@@ -61,6 +61,7 @@
 #' @importFrom purrr map_dfr
 #' @importFrom rlang has_name
 #' @importFrom dplyr mutate
+#' @importFrom tibble tibble
 get_flickr_photos <- function(location = NULL,
                               dist = NULL,
                               diag_ratio = NULL,
@@ -134,6 +135,8 @@ get_flickr_photos <- function(location = NULL,
       per_page = per_page,
       page = page
     )
+
+  photos <- tibble::tibble(photos)
 
   if (nrow(photos) == 0) {
     cli_inform(
