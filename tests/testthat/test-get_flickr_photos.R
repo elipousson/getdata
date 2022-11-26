@@ -1,6 +1,7 @@
 test_that("get_flickr_photos works", {
   location <- get_tigris_data("counties", "MD")
 
+  skip_on_ci()
   withr::with_envvar(
     new = c("TEST_FLICKR_API_KEY" = Sys.getenv("FLICKR_API_KEY")),
     {

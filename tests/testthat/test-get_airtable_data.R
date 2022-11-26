@@ -1,4 +1,5 @@
 test_that("get_airtable_data works", {
+  skip_on_ci()
   withr::with_envvar(
     new = c("TEST_AIRTABLE_TOKEN" = Sys.getenv("AIRTABLE_TOKEN")),
     {
