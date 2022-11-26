@@ -32,7 +32,7 @@ NULL
 #'   [bind_block_col()] and "address" for [bind_address_col()].
 #' @export
 #' @importFrom rlang has_name
-#' @importFrom dplyr mutate across all_of if_else
+#' @importFrom dplyr all_of mutate if_else
 bind_block_col <- function(x,
                            bldg_num = "bldg_num",
                            street_dir_prefix = "street_dir_prefix",
@@ -123,7 +123,8 @@ bind_block_col <- function(x,
 #' @param ... Additional parameters passed to [dplyr::mutate()] intended for use
 #'   in filling missing values, e.g. state = "MD" to add a missing state column.
 #' @export
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate any_of case_when all_of
+#' @importFrom rlang list2 has_name
 bind_address_col <- function(x, ...,
                              case = NULL,
                              street = "street_address",
@@ -186,9 +187,8 @@ bind_address_col <- function(x, ...,
 #'   abbreviations with full street suffix names.
 #' @inheritParams format_address_data
 #' @export
-#' @importFrom rlang is_character
-#' @importFrom dplyr mutate
 #' @importFrom utils modifyList
+#' @importFrom dplyr mutate across all_of
 replace_with_xwalk <- function(x,
                                .cols = NULL,
                                xwalk = NULL,
@@ -197,22 +197,27 @@ replace_with_xwalk <- function(x,
                                case = NULL) {
   is_pkg_installed("stringr")
 
-  if (!is.null(dict)) {
-    dict_cols <- c(1:2)
-    if (abb) {
-      # Move the abbreviation column to the second column if converting
-      # abbreviation to full value
-      dict_cols <- rev(dict_cols)
-    }
+  dict <- dict %||% xwalk
 
-    dict <- make_xwalk_list(dict[, dict_cols])
+  cli_abort_ifnot(
+    "{.arg dict} or {.arg xwalk} must be provided.",
+    condition = !is.null(dict)
+  )
 
-    if (is.null(xwalk)) {
-      xwalk <- dict
-    } else {
-      xwalk <- make_xwalk_list(xwalk)
-      xwalk <- utils::modifyList(dict, xwalk)
-    }
+  cols <- c(1:2)
+  if (abb) {
+    # Move the abbreviation column to the second column if converting
+    # abbreviation to full value
+    cols <- rev(cols)
+  }
+
+  dict <- make_xwalk_list(dict, cols)
+
+  if (is.null(xwalk)) {
+    xwalk <- dict
+  } else {
+    xwalk <- make_xwalk_list(xwalk)
+    xwalk <- utils::modifyList(dict, xwalk)
   }
 
   # stringr::str_replace_all requires a named vector (not a list)
