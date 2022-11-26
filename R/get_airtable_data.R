@@ -331,7 +331,7 @@ resp_airtable <- function(req,
 
   # Add offset checks
   data <-
-    switch(name,
+    switch(resp_type,
       "resp" = resp,
       "record" = tidyr::pivot_wider(tibble::enframe(resp)),
       "records" = tibble::as_tibble(resp[["fields"]]),
