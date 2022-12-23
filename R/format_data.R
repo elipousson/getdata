@@ -35,7 +35,14 @@
 #'   "cols") (default)) to the which parameter of [janitor::remove_empty()]
 #' @param remove_constant If `TRUE`, pass data to janitor::remove_constant()
 #'   using default parameters.
+#' @param arg,call Additional parameters used internally with [cli::cli_abort()]
+#'   to improve error messages.
 #' @param ... Additional parameters passed to [format_sf_data()]
+#' @examples
+#' nc <- get_location_data(data = system.file("shape/nc.shp", package = "sf"))
+#'
+#' format_data(nc)
+#'
 #' @return The input data frame or simple feature object with formatting
 #'   functions applied.
 #'
@@ -135,7 +142,7 @@ rename_with_xwalk <- function(x,
   xwalk <- make_xwalk_list(xwalk)
   xwalk_in_x <- rlang::has_name(x, xwalk)
 
-  cli_abort_ifnot(
+  cliExtras::cli_abort_ifnot(
     c("{.arg xwalk} values must all be column names in {.arg x}.",
       "i" = "{.val {xwalk[!xwalk_in_x]}} can't be found in {.arg x} column names.",
       "*" = "Set {.arg .strict} to {.code FALSE} to ignore missing values."
@@ -237,7 +244,7 @@ fix_epoch_date <- function(x, .cols = dplyr::contains("date")) {
 #' @importFrom rlang has_length has_name
 #' @importFrom tibble deframe
 make_xwalk_list <- function(xwalk, cols = c("label", "name")) {
-  if (is_named(xwalk) && is.list(xwalk)) {
+  if (is_named(xwalk) && is.list(xwalk) && !is.data.frame(xwalk)) {
     return(xwalk)
   }
 
@@ -245,7 +252,7 @@ make_xwalk_list <- function(xwalk, cols = c("label", "name")) {
     xwalk <- sf::st_drop_geometry(xwalk)
   }
 
-  cli_abort_ifnot(
+  cliExtras::cli_abort_ifnot(
     c("{.arg xwalk} must be a named {.cls list} or a {.cls data.frame}
       with two or more columns.",
       "i" = "The provided {.arg xwalk} has class {.cls {class(xwalk)}}."
@@ -255,7 +262,7 @@ make_xwalk_list <- function(xwalk, cols = c("label", "name")) {
 
   cols <- cols %||% c(1, 2)
 
-  cli_abort_ifnot(
+  cliExtras::cli_abort_ifnot(
     "{.arg cols} must be a length 2 vector.",
     condition = rlang::has_length(cols, 2) &&
       (all(rlang::has_name(xwalk, cols)) | is.numeric(cols))
@@ -333,14 +340,13 @@ str_to_case_across <- function(x, .cols = dplyr::everything(), case = NULL) {
     return(x)
   }
 
-  x <-
-    dplyr::mutate(
-      x,
-      dplyr::across(
-        .cols,
-        ~ switch_case(.x, case)
-      )
+  dplyr::mutate(
+    x,
+    dplyr::across(
+      .cols,
+      ~ switch_case(.x, case)
     )
+  )
 }
 
 #' @noRd
