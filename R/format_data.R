@@ -83,16 +83,14 @@ format_data <- function(x,
     x <- tidyr::replace_na(x, replace = replace_na_with)
   }
 
-  if (!is.null(replace_with_na) || replace_empty_char_with_na) {
+  if (!is.null(replace_with_na)) {
     is_pkg_installed("naniar")
+    x <- naniar::replace_with_na(x, replace = replace_with_na)
+  }
 
-    if (!is.null(replace_with_na)) {
-      x <- naniar::replace_with_na(x, replace = replace_with_na)
-    }
-
-    if (replace_empty_char_with_na) {
-      x <- naniar::replace_with_na_if(x, is.character, ~ .x == "")
-    }
+  if (replace_empty_char_with_na) {
+    is_pkg_installed("naniar")
+    x <- naniar::replace_with_na_if(x, is.character, ~ .x == "")
   }
 
   if (!is.null(remove_empty)) {
