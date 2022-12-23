@@ -27,6 +27,7 @@ reference:
   - '`street_suffixes`'
 - title: Additional data access utilities
   contents:
+  - '`as_date_range`'
   - '`set_access_token`'
   - '`set_pkg_options`'
 - title: Additional utilities for locations
