@@ -70,7 +70,7 @@ smallest to largest size include "sq" (square), "t", "s", "q", "m", "n",
 Maximum 250 if a location is provided or 500 otherwise.}
 
 \item{page}{If page is greater than length 1, the function uses
-\code{\link[purrr:map]{purrr::map_dfr()}} to return results for all pages but this may cause
+\code{\link[purrr:map_dfr]{purrr::map_dfr()}} to return results for all pages but this may cause
 issues with API access if a large page range is provided. Default: 1}
 
 \item{orientation}{If img_size is length 1, photos are filtered to one or
