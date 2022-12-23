@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/elipousson/getdata",
   "issueTracker": "https://github.com/elipousson/getdata/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.1.0",
+  "version": "0.1.0.9000",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -116,6 +116,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=labelled"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "lubridate",
+      "name": "lubridate",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=lubridate"
     },
     {
       "@type": "SoftwareApplication",
@@ -296,6 +308,13 @@
     },
     "3": {
       "@type": "SoftwareApplication",
+      "identifier": "cliExtras",
+      "name": "cliExtras",
+      "version": ">= 0.1.0",
+      "sameAs": "https://github.com/elipousson/cliExtras"
+    },
+    "4": {
+      "@type": "SoftwareApplication",
       "identifier": "dplyr",
       "name": "dplyr",
       "provider": {
@@ -306,7 +325,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dplyr"
     },
-    "4": {
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "glue",
       "name": "glue",
@@ -318,7 +337,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=glue"
     },
-    "5": {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "httr2",
       "name": "httr2",
@@ -330,7 +349,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=httr2"
     },
-    "6": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "janitor",
       "name": "janitor",
@@ -342,7 +361,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=janitor"
     },
-    "7": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "magrittr",
       "name": "magrittr",
@@ -354,7 +373,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=magrittr"
     },
-    "8": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "purrr",
       "name": "purrr",
@@ -366,7 +385,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=purrr"
     },
-    "9": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -378,7 +397,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "10": {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "sf",
       "name": "sf",
@@ -390,14 +409,14 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=sf"
     },
-    "11": {
+    "12": {
       "@type": "SoftwareApplication",
       "identifier": "sfext",
       "name": "sfext",
       "version": ">= 0.0.0.9001",
       "sameAs": "https://github.com/elipousson/sfext"
     },
-    "12": {
+    "13": {
       "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
@@ -409,16 +428,24 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tibble"
     },
-    "13": {
+    "14": {
       "@type": "SoftwareApplication",
       "identifier": "utils",
       "name": "utils"
     },
+    "15": {
+      "@type": "SoftwareApplication",
+      "identifier": "vctrs",
+      "name": "vctrs",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=vctrs"
+    },
     "SystemRequirements": null
   },
-  "fileSize": "285.855KB",
-  "readme": "https://github.com/elipousson/getdata/blob/main/README.md",
-  "contIntegration": "https://app.codecov.io/gh/elipousson/getdata?branch=main",
-  "developmentStatus": ["https://lifecycle.r-lib.org/articles/stages.html#experimental", "https://www.repostatus.org/#active"],
-  "keywords": ["r", "rstats", "r-package", "rspatial"]
+  "fileSize": "301.274KB"
 }
