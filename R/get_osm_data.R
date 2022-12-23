@@ -401,6 +401,7 @@ get_osm_data_features <- function(location,
 
 #' @noRd
 #' @importFrom sfext sf_to_df
+#' @importFrom rlang caller_env arg_match
 get_osm_data_enclosing <- function(location,
                                    key,
                                    value,
@@ -409,7 +410,7 @@ get_osm_data_enclosing <- function(location,
                                    geometry = NULL,
                                    osmdata = FALSE,
                                    call = caller_env()) {
-  enclosing <- arg_match(enclosing, c("relation", "way"), error_call = call)
+  enclosing <- rlang::arg_match(enclosing, c("relation", "way"), error_call = call)
   coords <- sfext::sf_to_df(location, crs = 4326)
 
   query <-
@@ -446,7 +447,6 @@ get_osm_data_enclosing <- function(location,
 #' Get geometry from osmdata list
 #'
 #' @noRd
-#' @importFrom purrr pluck
 #' @importFrom sfext st_transform_ext
 #' @importFrom rlang caller_env arg_match
 get_osm_data_geometry <- function(data,
@@ -486,11 +486,7 @@ get_osm_data_geometry <- function(data,
 
   geometry <- paste0("osm_", geometry)
 
-  data <-
-    purrr::pluck(
-      data,
-      var = geometry
-    )
+  data <- data[[geometry]]
 
   sfext::st_transform_ext(data, crs)
 }
