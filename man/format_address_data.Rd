@@ -13,20 +13,13 @@ bind_block_col(
   street_name = "street_name",
   street_suffix = "street_type",
   replace_suffix = FALSE,
+  street_col = NULL,
   block_col = NULL,
   .after = street_suffix,
   case = NULL
 )
 
-bind_address_col(
-  x,
-  ...,
-  case = NULL,
-  street = "street_address",
-  address = "address",
-  address_cols = list(city = "city", county = "county", state = "state"),
-  .after = NULL
-)
+bind_address_col(x, ..., case = NULL, .cols = NULL, .after = NULL)
 }
 \arguments{
 \item{x}{A data frame to bind the address columns to.}
@@ -36,6 +29,9 @@ use for address information required to generate a block name and number.}
 
 \item{replace_suffix}{If \code{TRUE}, replace values in street_suffix column with
 abbreviations from \link{street_suffixes}.}
+
+\item{street_col}{String to use for street address column added based on
+component column values.}
 
 \item{block_col}{String to use as prefix for block identifier columns and
 separator between block number and street. Set to "block" when \code{NULL}
@@ -52,16 +48,13 @@ Options include "lower", "upper", "title", or "sentence". Defaults to
 \item{...}{Additional parameters passed to \code{\link[dplyr:mutate]{dplyr::mutate()}} intended for use
 in filling missing values, e.g. state = "MD" to add a missing state column.}
 
-\item{street}{Street address column name, (e.g. 100 Holliday St) Default:
-'street_address'.}
-
-\item{address}{Full address column name. If city and state or city and county
+\item{.cols}{Named list specifying the additional column names to use for
+city, county, and state data. "street" is used for street address column
+name, (e.g. 100 Holliday St) Default: 'street_address'. "address" is used
+for full address column name. If "city" and "state" or "city" and "county"
 are provided, a combined address column is added to the data.frame using
-the street address column. If both county and city are provided, county is
+the "address" column name. If both county and city are provided, county is
 ignored.}
-
-\item{address_cols}{Named list specifying the additional column names to use
-for city, county, and state data.}
 }
 \description{
 getdata has two helpers for working with address data:
@@ -75,4 +68,25 @@ with a consistent values for state, county, or city into full addresses
 values for whether a building is on the even or odd side of a block and
 create a block segment and a block face (including the even/odd identifier).
 }
+}
+\examples{
+address_df <-
+  data.frame(
+    "bldg_num" = c("100", "1415", "600"),
+    "street_dir_prefix" = c(NA, NA, "N"),
+    "street_name" = c("Holiday", "Key", "Charles"),
+    "street_type" = c("Street", "Highway", "St")
+  )
+
+address_df <-
+  bind_block_col(
+    x = address_df,
+    street_col = "street_address"
+  )
+
+bind_address_col(
+  address_df,
+  city = "Baltimore",
+  state = "MD"
+)
 }

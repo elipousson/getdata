@@ -95,6 +95,9 @@ values from the xwalk are ignored.}
 dropped. If \code{TRUE} (default), all columns are retained. If x is an \code{sf}
 object, the geometry column will not be dropped even it is not renamed.}
 
+\item{arg, call}{Additional parameters used internally with \code{\link[cli:cli_abort]{cli::cli_abort()}}
+to improve error messages.}
+
 \item{.labels}{Replaces labels column created by
 \code{\link[labelled:look_for]{labelled::generate_dictionary()}} if column is all \code{NA} (no existing labels
 assigned); defaults to \code{NULL}.}
@@ -122,4 +125,10 @@ columns
 
 The address functions previously included with \code{\link[=format_data]{format_data()}} are now
 documented at \code{\link[=format_address_data]{format_address_data()}}.
+}
+\examples{
+nc <- get_location_data(data = system.file("shape/nc.shp", package = "sf"))
+
+format_data(nc)
+
 }
