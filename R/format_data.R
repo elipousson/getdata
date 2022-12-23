@@ -230,7 +230,7 @@ fix_epoch_date <- function(x, .cols = dplyr::contains("date")) {
   dplyr::mutate(
     x,
     dplyr::across(
-      .cols,
+      dplyr::any_of(.cols),
       ~ as.POSIXct(.x / 1000, origin = "1970-01-01")
     )
   )
@@ -305,7 +305,7 @@ str_empty_to_blank_across <- function(x, .cols = dplyr::everything(), blank = ""
   dplyr::mutate(
     x,
     dplyr::across(
-      .cols,
+      dplyr::all_of(.cols),
       ~ dplyr::if_else(
         is.na(.x) | is.null(.x),
         blank,
@@ -323,7 +323,7 @@ str_squish_across <- function(x, .cols = dplyr::everything()) {
   dplyr::mutate(
     x,
     dplyr::across(
-      .cols,
+      dplyr::all_of(.cols),
       ~ gsub("\\s\\s+", " ", .x, perl = TRUE)
     )
   )
@@ -341,7 +341,7 @@ str_to_case_across <- function(x, .cols = dplyr::everything(), case = NULL) {
   dplyr::mutate(
     x,
     dplyr::across(
-      .cols,
+      dplyr::all_of(.cols),
       ~ switch_case(.x, case)
     )
   )

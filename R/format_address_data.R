@@ -62,7 +62,10 @@ bind_block_col <- function(x,
   }
 
   if (replace_suffix) {
-    x <- replace_street_suffixes(x, street_suffix = street_suffix)
+    x <- replace_street_suffixes(
+      x,
+      street_suffix = dplyr::all_of(street_suffix)
+    )
   }
 
   x <-
@@ -72,12 +75,11 @@ bind_block_col <- function(x,
     )
 
   block_col <- block_col %||% "block"
+  block_sep <- block_col
 
   if (length(block_col) > 1) {
     block_sep <- block_col[[2]]
     block_col <- block_col[[1]]
-  } else {
-    block_sep <- block_col
   }
 
   block_col_labels <-
@@ -93,8 +95,11 @@ bind_block_col <- function(x,
             .na = ""
           ),
           "  ", " "
-        )
+        ),
+        .after = dplyr::all_of(.after)
       )
+
+    .after <- street_col
   }
 
   x <- dplyr::mutate(
@@ -118,7 +123,7 @@ bind_block_col <- function(x,
         paste0("(", .data[[block_col_labels[[2]]]], ")")
       ), ""
     ),
-    .after = street_suffix
+    .after = dplyr::all_of(.after)
   )
 
   x <- str_to_case_across(x, dplyr::all_of(block_col_labels), case)

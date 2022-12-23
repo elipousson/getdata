@@ -158,7 +158,7 @@ get_flickr_photos <- function(location = NULL,
       dplyr::mutate(
         photos,
         url = glue("https://flickr.com/photos/{owner}/{id}"),
-        .after = owner
+        .after = dplyr::all_of("owner")
       )
   }
 

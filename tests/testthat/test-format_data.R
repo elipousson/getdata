@@ -22,3 +22,16 @@ test_that("rename_with_xwalk works", {
     c("County", "geometry")
   )
 })
+
+test_that("assorted format functions work", {
+  expect_equal(
+    fix_epoch_date(
+      data.frame(
+        "date" = c(1000000000, 900000000),
+        "name" = c("A", "B"),
+        "num" = c(1, 2)
+      )
+    )$date,
+    as.POSIXct(c("1970-01-12 08:46:40", "1970-01-11 05:00:00"), origin = "1970-01-01")
+  )
+})

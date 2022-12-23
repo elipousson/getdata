@@ -1,4 +1,4 @@
-test_that("multiplication works", {
+test_that("format_address_data works", {
   address_df <-
     data.frame(
       "bldg_num" = c("100", "1415", "600"),
