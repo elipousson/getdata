@@ -12,7 +12,9 @@ replace_with_xwalk(
   xwalk = NULL,
   dict = NULL,
   abb = TRUE,
-  case = NULL
+  case = NULL,
+  .strict = TRUE,
+  ignore_case = TRUE
 )
 
 replace_street_suffixes(
@@ -56,6 +58,11 @@ abbreviations with full street suffix names.}
 \item{case}{Case to use for text in new columns or in modified values.
 Options include "lower", "upper", "title", or "sentence". Defaults to
 \code{NULL} which leaves the case as is.}
+
+\item{.strict}{If \code{TRUE} (default), match whole strings by appending "^" to
+the front and "$" to the end of each pattern in the xwalk.}
+
+\item{ignore_case}{Passed to \code{\link[stringr:modifiers]{stringr::regex()}}}
 
 \item{street_suffix}{Street suffix column to apply replacement function to.}
 

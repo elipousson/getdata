@@ -86,15 +86,15 @@ bind_block_col <- function(x,
   if (!is.null(street_col)) {
     x <-
       dplyr::mutate(
-      x,
-      "{street_col}" := str_replace(
-        glue::glue(
-          "{as.character(.data[[address_cols[1]]])} {.data[[address_cols[2]]]} {.data[[address_cols[3]]]} {.data[[address_cols[4]]]}",
-          .na = ""
-        ),
-        "  ", " "
+        x,
+        "{street_col}" := str_replace(
+          glue::glue(
+            "{as.character(.data[[address_cols[1]]])} {.data[[address_cols[2]]]} {.data[[address_cols[3]]]} {.data[[address_cols[4]]]}",
+            .na = ""
+          ),
+          "  ", " "
+        )
       )
-    )
   }
 
   x <- dplyr::mutate(
@@ -107,7 +107,8 @@ bind_block_col <- function(x,
       !is.na(.data[[block_col_labels[[1]]]]),
       paste(
         .data[[block_col_labels[[1]]]], block_sep,
-        .data[[street_dir_prefix]], .data[[street_name]], .data[[street_suffix]]
+        .data[[street_dir_prefix]], .data[[street_name]],
+        .data[[street_suffix]]
       ), ""
     ),
     "{block_col_labels[[4]]}" := dplyr::if_else(
@@ -174,10 +175,10 @@ bind_address_col <- function(x, ...,
   if (rlang::has_name(x, .cols$city)) {
     return(
       dplyr::mutate(
-      x,
-      "{.cols$address}" := glue("{.data[[.cols$street]]}, {.data[[.cols$city]]} {.data[[.cols$state]]}"),
-      .after = dplyr::all_of(.cols$state)
-    )
+        x,
+        "{.cols$address}" := glue("{.data[[.cols$street]]}, {.data[[.cols$city]]} {.data[[.cols$state]]}"),
+        .after = dplyr::all_of(.cols$state)
+      )
     )
   }
 
@@ -213,19 +214,25 @@ bind_address_col <- function(x, ...,
 #'   hold the original values. For example, for [replace_street_suffixes()], If
 #'   `TRUE`, replace full suffix names with abbreviations. If `FALSE`, replace
 #'   abbreviations with full street suffix names.
+#' @param .strict If `TRUE` (default), match whole strings by appending "^" to
+#'   the front and "$" to the end of each pattern in the xwalk.
+#' @param ignore_case Passed to [stringr::regex()]
 #' @inheritParams format_address_data
 #' @example examples/replace_with_xwalk.R
 #' @export
 #' @importFrom cliExtras cli_abort_ifnot
 #' @importFrom utils modifyList
-#' @importFrom dplyr mutate across all_of
+#' @importFrom rlang set_names
 #' @importFrom cli cli_warn
+#' @importFrom dplyr mutate across all_of
 replace_with_xwalk <- function(x,
                                .cols = NULL,
                                xwalk = NULL,
                                dict = NULL,
                                abb = TRUE,
-                               case = NULL) {
+                               case = NULL,
+                               .strict = TRUE,
+                               ignore_case = TRUE) {
   is_pkg_installed("stringr")
 
   dict <- dict %||% xwalk
@@ -236,6 +243,7 @@ replace_with_xwalk <- function(x,
   )
 
   xwalk_cols <- c(1:2)
+
   if (abb) {
     # Move the abbreviation column to the second column if converting
     # abbreviation to full value
@@ -244,36 +252,38 @@ replace_with_xwalk <- function(x,
 
   dict <- make_xwalk_list(dict, xwalk_cols)
 
-  if (is.null(xwalk)) {
-    xwalk <- dict
-  } else {
-    xwalk <- make_xwalk_list(xwalk)
-    xwalk <- utils::modifyList(dict, xwalk)
+  if (!is.null(xwalk)) {
+    xwalk <- utils::modifyList(dict, make_xwalk_list(xwalk))
+  }
+
+  xwalk <- xwalk %||% dict
+
+  if (.strict) {
+    xwalk <- rlang::set_names(xwalk, paste0("^", names(xwalk), "$"))
   }
 
   # stringr::str_replace_all requires a named vector (not a list)
   xwalk <- unlist(xwalk)
 
   if (is.data.frame(x)) {
-    xwalk <- xwalk[tolower(names(xwalk)) %in% tolower(x[, .cols])]
     x <-
       dplyr::mutate(
         x,
         dplyr::across(
           dplyr::all_of(.cols),
-          ~ stringr::str_replace_all(.x, stringr::regex(xwalk, ignore_case = TRUE))
+          ~ stringr::str_replace_all(
+            .x,
+            stringr::regex(xwalk, ignore_case = ignore_case)
+          )
         )
       )
-  } else if (is.character(x)) {
-    # FIXME: This deals with one annoying bug but feels fragile
-    xwalk <- xwalk[tolower(names(xwalk)) %in% tolower(x)]
+  }
 
-    if (length(xwalk) == 0) {
-      cli::cli_warn("No matching values found.")
-      return(x)
-    }
-
-    x <- stringr::str_replace_all(x, stringr::regex(xwalk, ignore_case = TRUE))
+  if (is.character(x)) {
+    x <- stringr::str_replace_all(
+      x,
+      stringr::regex(xwalk, ignore_case = ignore_case)
+    )
   }
 
   if (is.null(case)) {
