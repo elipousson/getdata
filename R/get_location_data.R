@@ -164,7 +164,8 @@ get_location_data <- function(location = NULL,
 #'   defaults `FALSE`.
 #' @export
 #' @importFrom janitor make_clean_names
-#' @importFrom purrr set_names map_chr map map2 discard
+#' @importFrom purrr map_chr map map2 discard
+#' @importFrom rlang set_names
 map_location_data <- function(location = NULL,
                               dist = NULL,
                               diag_ratio = NULL,
@@ -198,7 +199,7 @@ map_location_data <- function(location = NULL,
       }
 
       data <-
-        purrr::set_names(
+        rlang::set_names(
           data,
           nm = purrr::map_chr(
             data,
@@ -218,7 +219,32 @@ map_location_data <- function(location = NULL,
     location <- as.list(location)
   }
 
-  if (is.list(data)) {
+  if (is.list(data) && is.list(location) &&
+      (length(data) == length(location))) {
+    data <-
+      purrr::map2(
+        location,
+        data,
+        ~ get_location_data(
+          location = .x,
+          dist = dist,
+          diag_ratio = diag_ratio,
+          unit = unit,
+          asp = asp,
+          data = .y,
+          package = package,
+          filetype = filetype,
+          fn = fn,
+          crop = crop,
+          trim = trim,
+          from_crs = from_crs,
+          crs = crs,
+          name_col = params$name_col,
+          name = params$name,
+          index = index
+        )
+      )
+  } else if (is.list(data)) {
     data <-
       purrr::map(
         data,
@@ -252,31 +278,6 @@ map_location_data <- function(location = NULL,
           unit = unit,
           asp = asp,
           data = data,
-          package = package,
-          filetype = filetype,
-          fn = fn,
-          crop = crop,
-          trim = trim,
-          from_crs = from_crs,
-          crs = crs,
-          name_col = params$name_col,
-          name = params$name,
-          index = index
-        )
-      )
-  } else if (is.list(data) && is.list(location) &&
-    (length(data) == length(location))) {
-    data <-
-      purrr::map2(
-        location,
-        data,
-        ~ get_location_data(
-          location = .x,
-          dist = dist,
-          diag_ratio = diag_ratio,
-          unit = unit,
-          asp = asp,
-          data = .y,
           package = package,
           filetype = filetype,
           fn = fn,
