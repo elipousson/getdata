@@ -2,6 +2,11 @@ test_that("get_location works", {
   nc <- sf::st_read(system.file("shape/nc.shp", package = "sf"))
   nc <- sf::st_transform(nc, 3857)
 
+  expect_identical(
+    get_location(nc),
+    nc
+  )
+
   # Check if type as sf object with name/id lookup works
   expect_s3_class(
     get_location(type = nc, name = "Warren", name_col = "NAME"),
