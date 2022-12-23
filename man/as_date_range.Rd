@@ -15,7 +15,13 @@ as_date_range(
   nm = c("start", "end")
 )
 
-date_range_query(x = NULL, year = NULL, .col = "date", ...)
+date_range_query(
+  x = NULL,
+  year = NULL,
+  .col = "date",
+  ...,
+  nm = c("start", "end")
+)
 }
 \arguments{
 \item{x}{Date range as character vector in format of \code{c("<start date>", "<end date>")}. If length 1 and days is not \code{NULL}, return a range based on
