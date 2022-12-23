@@ -12,6 +12,31 @@ test_that("get_location_data works", {
     "sf"
   )
 
+  expect_equal(
+    nrow(
+      get_location_data(
+        location = nc[1, ],
+        crop = FALSE,
+        trim = TRUE,
+        data = nc
+      )
+    ),
+    4
+  )
+
+  expect_equal(
+    nrow(
+      get_location_data(
+        location = nc[1, ],
+        dist = 10,
+        unit = "mi",
+        crop = FALSE,
+        data = nc
+      )
+    ),
+    5
+  )
+
   expect_s3_class(
     get_location_data(
       location = get_location(
