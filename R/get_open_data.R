@@ -36,8 +36,10 @@
 #' @inheritParams format_data
 #' @example examples/get_open_data.R
 #' @export
-#' @importFrom cli cli_abort
-#' @importFrom janitor clean_names
+#' @importFrom cliExtras cli_abort_ifnot
+#' @importFrom sfext st_bbox_ext df_to_sf
+#' @importFrom cli cli_inform cli_dl
+#' @importFrom dplyr as_tibble
 get_open_data <- function(data = NULL,
                           source_url = NULL,
                           source_type = "socrata",
@@ -59,16 +61,16 @@ get_open_data <- function(data = NULL,
                           from_crs = 4326,
                           crs = NULL,
                           clean_names = TRUE) {
-  source_type <- tolower(source_type)
-
-  cli_abort_ifnot(
+  cliExtras::cli_abort_ifnot(
     c(
       "{.arg source_url} must be a valid URL or, if {.arg data} is a url, {.arg source_url} must be NULL."
     ),
     condition = is_url(source_url) | (is_url(data) && is.null(source_url))
   )
 
-  cli_abort_ifnot(
+  source_type <- tolower(source_type)
+
+  cliExtras::cli_abort_ifnot(
     c("{.arg source_type} must be {.val socarata}.",
       "i" = "Socrata is currently the only supported open data source for this function.",
       " " = "Other open data access options (e.g. CKAN, Flat Data) may be added in the future."
@@ -76,14 +78,14 @@ get_open_data <- function(data = NULL,
     condition = (source_type == "socrata")
   )
 
-  if (source_type == "socrata") {
-    if (data == "list") {
-      return(list_socrata_data(source_url))
-    }
+  if ((source_type == "socrata") && (data == "list")) {
+    return(list_socrata_data(source_url))
   }
 
-  # Get an API key
-  token <- get_access_token(token = token, type = type)
+  # Get an API key if type is provided
+  if (!is.null(type)) {
+    token <- get_access_token(token = token, type = type)
+  }
 
   # FIXME: Check on how to access the point or polygon data types via SODA
   # See <https://dev.socrata.com/docs/datatypes/point.html> for more information
