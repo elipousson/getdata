@@ -54,7 +54,7 @@ as_date_range <- function(x = NULL,
     x <- c(x, x + lubridate::days(days))
   }
 
-  rlang::set_names(c(min(x), max(x)), nm)
+  rlang::set_names(list(min(x), max(x)), nm)
 }
 
 #' @name date_range_query
@@ -67,5 +67,5 @@ date_range_query <- function(x = NULL,
                              .col = "date",
                              ...) {
   x <- paste0("'", as_date_range(x, year, ...), "'")
-  glue::glue("({.col} >= {x[1]}) AND ({.col} <= {x[2]})")
+  glue::glue("({.col} >= {x$start}) AND ({.col} <= {x$end})")
 }
