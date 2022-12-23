@@ -15,6 +15,7 @@ Depends:
     R (>= 2.10)
 Imports: 
     cli,
+    cliExtras (>= 0.1.0),
     dplyr,
     glue,
     httr2,
@@ -25,7 +26,8 @@ Imports:
     sf,
     sfext (>= 0.0.0.9001),
     tibble,
-    utils
+    utils,
+    vctrs
 Suggests: 
     bingmapr (>= 0.1.0),
     covr,
@@ -34,6 +36,7 @@ Suggests:
     googlesheets4,
     knitr,
     labelled,
+    lubridate,
     mapboxapi,
     naniar,
     osmdata,
@@ -50,10 +53,11 @@ Suggests:
 Remotes: 
     elipousson/bingmapr,
     elipousson/esri2sf,
-    elipousson/sfext
+    elipousson/sfext,
+    elipousson/cliExtras
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
