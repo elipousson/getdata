@@ -68,5 +68,5 @@ date_range_query <- function(x = NULL,
                              ...,
                              nm = c("start", "end")) {
   x <- as_date_range(x, year = year, ..., nm = nm)
-  glue::glue("({.col} >= '{x[[nm[1]]]}') AND ({.col} <= {'x[[nm[2]]]}')")
+  glue::glue("({.col} >= '{x[[nm[1]]]}') AND ({.col} <= '{x[[nm[2]]]}')")
 }
