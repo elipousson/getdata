@@ -38,7 +38,7 @@ get_gsheet_data <- function(url,
       ss <-
         googlesheets4::gs4_find(
           cliExtras::cli_ask("What is the name of the Google Sheet to return?")
-          )
+        )
     }
   }
 

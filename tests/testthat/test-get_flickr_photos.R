@@ -7,7 +7,7 @@ test_that("get_flickr_photos works", {
     {
       expect_s3_class(
         get_flickr_photos(
-          location = location[24,],
+          location = location[24, ],
           user_id = "baltimoreheritage",
           key = Sys.getenv("TEST_FLICKR_API_KEY"),
           per_page = 20
@@ -17,7 +17,7 @@ test_that("get_flickr_photos works", {
 
       expect_s3_class(
         get_flickr_photos(
-          location = location[24,],
+          location = location[24, ],
           user_id = "baltimoreheritage",
           key = Sys.getenv("TEST_FLICKR_API_KEY"),
           per_page = 20,
@@ -28,7 +28,7 @@ test_that("get_flickr_photos works", {
 
       expect_s3_class(
         get_flickr_photos(
-          location = location[24,],
+          location = location[24, ],
           user_id = "baltimoreheritage",
           key = Sys.getenv("TEST_FLICKR_API_KEY"),
           orientation = "landscape",
@@ -39,7 +39,7 @@ test_that("get_flickr_photos works", {
 
       expect_message(
         get_flickr_photos(
-          location = location[1,],
+          location = location[1, ],
           user_id = "baltimoreheritage",
           key = Sys.getenv("TEST_FLICKR_API_KEY")
         ),

@@ -16,19 +16,21 @@ test_that("multiplication works", {
   expect_true(
     all(
       rlang::has_name(
-      address_df,
-      c("block_num", "block_even_odd", "block_segment",
-        "block_face", "street_address")
+        address_df,
+        c(
+          "block_num", "block_even_odd", "block_segment",
+          "block_face", "street_address"
+        )
       )
     )
   )
 
   address_df <-
     bind_address_col(
-    address_df,
-    city = "Baltimore",
-    state = "MD"
-  )
+      address_df,
+      city = "Baltimore",
+      state = "MD"
+    )
 
   expect_true(
     all(
