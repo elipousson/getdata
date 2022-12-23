@@ -29,6 +29,7 @@
 #' @name set_pkg_options
 #' @export
 #' @importFrom purrr discard
+#' @importFrom cliExtras cli_ul_items
 set_pkg_options <- function(...,
                             overwrite = FALSE,
                             .pkg = "getdata") {
@@ -59,7 +60,7 @@ set_pkg_options <- function(...,
       cli_inform(
         c("x" = "The provided options conflict with these existing values:")
       )
-      cli_ul_items(conflict_opts)
+      cliExtras::cli_ul_items(conflict_opts)
       cli_inform(
         c("i" = "Set {.code overwrite = TRUE} to replace these
           {.pkg {pkg_nm}} options.")
@@ -72,7 +73,7 @@ set_pkg_options <- function(...,
       }
     } else {
       cli_inform(c("!" = "Replacing these existing options:"))
-      cli_ul_items(conflict_opts)
+      cliExtras::cli_ul_items(conflict_opts)
     }
   }
 
@@ -80,6 +81,6 @@ set_pkg_options <- function(...,
     options(update_opts)
 
     cli_inform(c("v" = "Updated options for {.pkg {pkg_nm}}:"))
-    cli_ul_items(update_opts)
+    cliExtras::cli_ul_items(update_opts)
   }
 }

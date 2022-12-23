@@ -17,6 +17,9 @@
 #' @param ... Pass location_col and/or data_col to group and nest the data
 #'   provided to location and data. Use col to set both to the same value.
 #' @export
+#' @importFrom sfext as_sf_list
+#' @importFrom dplyr case_when
+#' @importFrom cliExtras cli_warn_ifnot
 make_location_data_list <- function(data = NULL, location = NULL, key = c("location", "data"), ...) {
   stopifnot(
     !is.null(data) && !is.null(location)
@@ -42,7 +45,8 @@ make_location_data_list <- function(data = NULL, location = NULL, key = c("locat
       TRUE ~ list(location, data)
     )
 
-  cli_warn_ifnot("{.arg location} is length {location_len} and {.arg data} is {data_len}.",
+  cliExtras::cli_warn_ifnot(
+    "{.arg location} is length {location_len} and {.arg data} is {data_len}.",
     condition = (len_location == len_data)
   )
 
@@ -55,6 +59,7 @@ make_location_data_list <- function(data = NULL, location = NULL, key = c("locat
 
 
 #' @noRd
+#' @importFrom purrr map map2
 get_location_data_list <- function(data = NULL, location = NULL, nm = NULL, ...) {
   # FIXME: Should this be titled map_location_data_list?
   if (is.null(nm) && !is.null(data)) {

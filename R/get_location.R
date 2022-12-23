@@ -39,6 +39,7 @@
 #' @aliases get_location_type
 #' @export
 #' @importFrom rlang check_required
+#' @importFrom cliExtras cli_abort_ifnot
 #' @importFrom sfext is_sf st_union_ext as_sf_class
 #' @importFrom dplyr case_when mutate all_of
 get_location <- function(type,
@@ -55,13 +56,13 @@ get_location <- function(type,
                          ...) {
   if (is.null(index)) {
     rlang::check_required(type)
-    cli_abort_ifnot(
+    cliExtras::cli_abort_ifnot(
       "{.arg type} must be a {.cls sf} or {.cls character} class but the
       provided {.arg type} has class {.cls {class(type)}}.",
       condition = sfext::is_sf(type) || is.character(type)
     )
   } else {
-    cli_abort_ifnot(
+    cliExtras::cli_abort_ifnot(
       "{.arg index} must be a {.cls list} but the
       provided {.arg index} has class {.cls {class(index)}}.",
       condition = is.list(index)

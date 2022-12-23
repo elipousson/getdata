@@ -25,7 +25,8 @@
 #' @seealso
 #'  - [geonames::GNfindNearbyWikipedia()], [geonames::GNwikipediaBoundingBox()]
 #' @export
-#' @importFrom httr2 request req_url_query req_perform resp_body_json
+#' @importFrom cliExtras cli_abort_ifnot
+#' @importFrom sfext is_sf sf_bbox_diagdist as_bbox convert_dist_units df_to_sf
 get_wiki_data <- function(location,
                           radius = FALSE,
                           primary = NULL,
@@ -41,7 +42,7 @@ get_wiki_data <- function(location,
                           crs = getOption("getdata.unit", 3857),
                           remove_coords = TRUE,
                           clean_names = TRUE) {
-  cli_abort_ifnot(
+  cliExtras::cli_abort_ifnot(
     c("{.arg list} must be {.val geosearch} or {.val resp}.",
       "i" = "Support for additional options may be added in the future."
     ),
@@ -75,7 +76,7 @@ get_wiki_data <- function(location,
 
       gsradius <- as.integer(round(sfext::convert_dist_units(dist, from = unit, to = "meter")))
 
-      cli_abort_ifnot(
+      cliExtras::cli_abort_ifnot(
         "radius {.arg dist} must be greater than 1.",
         condition = (gsradius >= 1)
       )
@@ -122,6 +123,8 @@ get_wiki_data <- function(location,
 #' Create Wikipedia query request
 #'
 #' @noRd
+#' @importFrom httr2 request req_url_query
+#' @importFrom cliExtras cli_abort_ifnot
 req_wiki_query <- function(lang = NULL,
                            gsbbox = NULL,
                            gscoord = NULL,
@@ -138,7 +141,7 @@ req_wiki_query <- function(lang = NULL,
   req <-
     httr2::request(glue("https://{lang}.wikipedia.org/w/api.php"))
 
-  cli_abort_ifnot(
+  cliExtras::cli_abort_ifnot(
     condition = any(!is.null(c(gsbbox, gscoord, gspage)))
   )
 
@@ -197,6 +200,7 @@ req_wiki_query <- function(lang = NULL,
 #' Perform query and get response
 #'
 #' @noRd
+#' @importFrom httr2 resp_body_json
 resp_wiki_query <- function(req,
                             list = "geosearch",
                             simplifyVector = TRUE) {
@@ -223,6 +227,7 @@ resp_wiki_query <- function(req,
 #' Make geospatial coordinate query
 #'
 #' @noRd
+#' @importFrom sfext get_coords
 st_gscoord <- function(location, crs = 4326) {
   center <- sfext::get_coords(location, crs = crs)
   glue("{center$lat}|{center$lon}")
@@ -231,6 +236,7 @@ st_gscoord <- function(location, crs = 4326) {
 #' Make geospatial bbox query
 #'
 #' @noRd
+#' @importFrom sfext st_bbox_ext
 st_gsbbox <- function(location, dist = NULL, diag_ratio = NULL, asp = NULL, unit = "meter", crs = 4326) {
   bbox <-
     sfext::st_bbox_ext(

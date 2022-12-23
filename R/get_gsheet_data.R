@@ -10,6 +10,7 @@
 #'   not provided to [sfext::read_sf_gsheet].
 #' @export
 #' @importFrom rlang is_missing
+#' @importFrom cliExtras cli_ask
 get_gsheet_data <- function(url,
                             sheet = NULL,
                             ss = NULL,
@@ -35,7 +36,9 @@ get_gsheet_data <- function(url,
       ss <- url
     } else if (ask) {
       ss <-
-        googlesheets4::gs4_find(cli_ask("What is the name of the Google Sheet to return?"))
+        googlesheets4::gs4_find(
+          cliExtras::cli_ask("What is the name of the Google Sheet to return?")
+          )
     }
   }
 

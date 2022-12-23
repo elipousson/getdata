@@ -15,6 +15,9 @@ utils::globalVariables(
   )
 )
 
+# @staticimports pkg:stringstatic
+# str_replace
+
 # @staticimports pkg:isstatic
 # is_url is_esri_url is_gsheet_url is_gist_url is_gmap_url
 # is_unit
@@ -100,6 +103,7 @@ is_pkg_installed <- function(pkg, repo = NULL) {
 #' @noRd
 #' @importFrom rlang has_name
 #' @importFrom cli cli_abort cli_alert_success
+#' @importFrom cliExtras cli_yesno
 #' @importFrom dplyr rename
 has_same_name_col <- function(x,
                               col = NULL,
@@ -118,7 +122,7 @@ has_same_name_col <- function(x,
   new_col <- paste0(prefix, "_", col)
 
   if (ask && !quiet) {
-    if (!cli_yesno(
+    if (!cliExtras::cli_yesno(
       "The provided data includes an existing column named '{col}'.
     Do you want to proceed and rename this column to {new_col}?"
     )) {
