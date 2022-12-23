@@ -22,6 +22,8 @@ NULL
 #' @rdname format_address_data
 #' @param bldg_num,street_dir_prefix,street_name,street_suffix Column names to
 #'   use for address information required to generate a block name and number.
+#' @param street_col String to use for street address column added based on
+#'   component column values.
 #' @param block_col String to use as prefix for block identifier columns and
 #'   separator between block number and street. Set to "block" when `NULL`
 #'   (default). If length 2 (e.g. c("blk", "block")), the second value is used
@@ -31,6 +33,7 @@ NULL
 #' @param .after passed to [dplyr::mutate()] defaults to street_suffix for
 #'   [bind_block_col()] and "address" for [bind_address_col()].
 #' @export
+#' @example examples/format_address_data.R
 #' @importFrom rlang has_name
 #' @importFrom dplyr all_of mutate if_else
 bind_block_col <- function(x,
@@ -39,13 +42,14 @@ bind_block_col <- function(x,
                            street_name = "street_name",
                            street_suffix = "street_type",
                            replace_suffix = FALSE,
+                           street_col = NULL,
                            block_col = NULL,
                            .after = street_suffix,
                            case = NULL) {
   address_cols <- c(bldg_num, street_dir_prefix, street_name, street_suffix)
   x_missing_cols <- address_cols[!rlang::has_name(x, address_cols)]
 
-  cli_abort_ifnot(
+  cliExtras::cli_abort_ifnot(
     c("{.arg x} must have columns named {.val {address_cols}}.",
       "i" = "{.arg x} is missing {length(x_missing_cols)} column{?s}
       {.val {x_missing_cols}}"
@@ -78,6 +82,20 @@ bind_block_col <- function(x,
 
   block_col_labels <-
     paste0(block_col, "_", c("num", "even_odd", "segment", "face"))
+
+  if (!is.null(street_col)) {
+    x <-
+      dplyr::mutate(
+      x,
+      "{street_col}" := str_replace(
+        glue::glue(
+          "{as.character(.data[[address_cols[1]]])} {.data[[address_cols[2]]]} {.data[[address_cols[3]]]} {.data[[address_cols[4]]]}",
+          .na = ""
+        ),
+        "  ", " "
+      )
+    )
+  }
 
   x <- dplyr::mutate(
     x,
@@ -112,14 +130,13 @@ bind_block_col <- function(x,
 #' @name bind_address_col
 #' @rdname format_address_data
 #' @param x A data frame to bind the address columns to.
-#' @param street Street address column name, (e.g. 100 Holliday St) Default:
-#'   'street_address'.
-#' @param address Full address column name. If city and state or city and county
+#' @param .cols Named list specifying the additional column names to use for
+#'   city, county, and state data. "street" is used for street address column
+#'   name, (e.g. 100 Holliday St) Default: 'street_address'. "address" is used
+#'   for full address column name. If "city" and "state" or "city" and "county"
 #'   are provided, a combined address column is added to the data.frame using
-#'   the street address column. If both county and city are provided, county is
+#'   the "address" column name. If both county and city are provided, county is
 #'   ignored.
-#' @param address_cols Named list specifying the additional column names to use
-#'   for city, county, and state data.
 #' @param ... Additional parameters passed to [dplyr::mutate()] intended for use
 #'   in filling missing values, e.g. state = "MD" to add a missing state column.
 #' @export
@@ -127,38 +144,49 @@ bind_block_col <- function(x,
 #' @importFrom rlang list2 has_name
 bind_address_col <- function(x, ...,
                              case = NULL,
-                             street = "street_address",
-                             address = "address",
-                             address_cols = list(
-                               city = "city",
-                               county = "county",
-                               state = "state"
-                             ),
+                             .cols = NULL,
                              .after = NULL) {
-  x <- dplyr::mutate(x, ..., .after = .after %||% street)
+  .cols <-
+    modifyList(
+      .cols %||% list(),
+      list(
+        street = "street_address",
+        address = "address",
+        city = "city",
+        county = "county",
+        state = "state"
+      )
+    )
 
-  params <- rlang::list2(...)
+  x <- dplyr::mutate(x, ..., .after = .after %||% .cols$street)
 
   x <-
     str_to_case_across(
       x,
-      dplyr::any_of(city, county, state),
+      dplyr::any_of(.cols$city, .cols$county, .cols$state),
       case
     )
 
-  has_city <- rlang::has_name(params, address_cols$city)
-  has_county <- rlang::has_name(params, address_cols$county)
+  if (!all(rlang::has_name(x, c(.cols$street, .cols$state)))) {
+    return(x)
+  }
 
-  if (rlang::has_name(params, address_cols$state) && any(c(has_city, has_county))) {
-    x <-
+  if (rlang::has_name(x, .cols$city)) {
+    return(
       dplyr::mutate(
-        x,
-        "{address}" := dplyr::case_when(
-          has_city ~ glue("{.data[[street]]}, {.data[[address_cols$city]]} {.data[[address_cols$state]]}"),
-          has_county ~ glue("{.data[[street]]}, {.data[[address_cols$county]]} {.data[[address_cols$state]]}")
-        ),
-        .after = dplyr::all_of(address_cols$state)
-      )
+      x,
+      "{.cols$address}" := glue("{.data[[.cols$street]]}, {.data[[.cols$city]]} {.data[[.cols$state]]}"),
+      .after = dplyr::all_of(.cols$state)
+    )
+    )
+  }
+
+  if (rlang::has_name(x, .cols$county)) {
+    dplyr::mutate(
+      x,
+      "{.cols$address}" := glue("{.data[[.cols$street]]}, {.data[[.cols$county]]} {.data[[.cols$state]]}"),
+      .after = dplyr::all_of(.cols$state)
+    )
   }
 }
 
@@ -186,9 +214,12 @@ bind_address_col <- function(x, ...,
 #'   `TRUE`, replace full suffix names with abbreviations. If `FALSE`, replace
 #'   abbreviations with full street suffix names.
 #' @inheritParams format_address_data
+#' @example examples/replace_with_xwalk.R
 #' @export
+#' @importFrom cliExtras cli_abort_ifnot
 #' @importFrom utils modifyList
 #' @importFrom dplyr mutate across all_of
+#' @importFrom cli cli_warn
 replace_with_xwalk <- function(x,
                                .cols = NULL,
                                xwalk = NULL,
@@ -199,19 +230,19 @@ replace_with_xwalk <- function(x,
 
   dict <- dict %||% xwalk
 
-  cli_abort_ifnot(
+  cliExtras::cli_abort_ifnot(
     "{.arg dict} or {.arg xwalk} must be provided.",
     condition = !is.null(dict)
   )
 
-  cols <- c(1:2)
+  xwalk_cols <- c(1:2)
   if (abb) {
     # Move the abbreviation column to the second column if converting
     # abbreviation to full value
-    cols <- rev(cols)
+    xwalk_cols <- rev(xwalk_cols)
   }
 
-  dict <- make_xwalk_list(dict, cols)
+  dict <- make_xwalk_list(dict, xwalk_cols)
 
   if (is.null(xwalk)) {
     xwalk <- dict
@@ -224,23 +255,32 @@ replace_with_xwalk <- function(x,
   xwalk <- unlist(xwalk)
 
   if (is.data.frame(x)) {
+    xwalk <- xwalk[tolower(names(xwalk)) %in% tolower(x[, .cols])]
     x <-
       dplyr::mutate(
         x,
         dplyr::across(
           dplyr::all_of(.cols),
-          ~ stringr::str_replace_all(.x, xwalk)
+          ~ stringr::str_replace_all(.x, stringr::regex(xwalk, ignore_case = TRUE))
         )
       )
   } else if (is.character(x)) {
-    x <- stringr::str_replace_all(x, xwalk)
+    # FIXME: This deals with one annoying bug but feels fragile
+    xwalk <- xwalk[tolower(names(xwalk)) %in% tolower(x)]
+
+    if (length(xwalk) == 0) {
+      cli::cli_warn("No matching values found.")
+      return(x)
+    }
+
+    x <- stringr::str_replace_all(x, stringr::regex(xwalk, ignore_case = TRUE))
   }
 
   if (is.null(case)) {
     return(x)
   }
 
-  switch_case(x, case)
+  switch_case(x, case = case, .cols = .cols)
 }
 
 #' @name replace_street_suffixes
