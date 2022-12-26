@@ -224,14 +224,15 @@ make_variable_dictionary <- function(x, .labels = NULL, .definitions = NULL) {
 #' @rdname format_data
 #' @param .cols tidyselect for columns to apply epoch date fixing function to.
 #'   Defaults to `dplyr::contains("date")`.
+#' @param tz Time zone passed to [as.POSIXct()].
 #' @export
 #' @importFrom dplyr contains mutate across
-fix_epoch_date <- function(x, .cols = dplyr::contains("date")) {
+fix_epoch_date <- function(x, .cols = dplyr::contains("date"), tz = "") {
   dplyr::mutate(
     x,
     dplyr::across(
       dplyr::any_of(.cols),
-      ~ as.POSIXct(.x / 1000, origin = "1970-01-01")
+      ~ as.POSIXct(.x / 1000, origin = "1970-01-01", tz = tz)
     )
   )
 }

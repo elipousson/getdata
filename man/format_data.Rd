@@ -39,7 +39,7 @@ label_with_xwalk(x, xwalk = NULL, label = "var", ...)
 
 make_variable_dictionary(x, .labels = NULL, .definitions = NULL)
 
-fix_epoch_date(x, .cols = dplyr::contains("date"))
+fix_epoch_date(x, .cols = dplyr::contains("date"), tz = "")
 }
 \arguments{
 \item{x}{A tibble or data frame object}
@@ -108,6 +108,8 @@ frame x.}
 
 \item{.cols}{tidyselect for columns to apply epoch date fixing function to.
 Defaults to \code{dplyr::contains("date")}.}
+
+\item{tz}{Time zone passed to \code{\link[=as.POSIXct]{as.POSIXct()}}.}
 }
 \value{
 The input data frame or simple feature object with formatting
