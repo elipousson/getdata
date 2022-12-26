@@ -28,26 +28,23 @@ get_gsheet_data <- function(url,
                             from_crs = 4326,
                             clean_names = TRUE,
                             ...) {
-  is_pkg_installed("googlesheets4")
+  rlang::check_installed("googlesheets4")
 
+  if (is.null(ss) && !is_missing(url)) {
+    ss <- url
+  }
 
-  if (is.null(ss)) {
-    if (!is_missing(url)) {
-      ss <- url
-    } else if (ask) {
-      ss <-
-        googlesheets4::gs4_find(
-          cliExtras::cli_ask("What is the name of the Google Sheet to return?")
-        )
-    }
+  if (is.null(ss) && ask) {
+    ss <-
+      googlesheets4::gs4_find(
+        cliExtras::cli_ask("What is the name of the Google Sheet to return?")
+      )
   }
 
   data <- googlesheets4::read_sheet(ss = ss, sheet = sheet, ...)
 
   if (!geometry) {
-    data <- format_data(data, clean_names = clean_names)
-
-    return(data)
+    return(format_data(data, clean_names = clean_names))
   }
 
   get_location_data(

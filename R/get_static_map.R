@@ -213,7 +213,7 @@ get_static_bingmap <- function(location = NULL,
                                bearing = NULL,
                                token = NULL,
                                ...) {
-  is_pkg_installed("bingmapr")
+  rlang::check_installed("bingmapr")
 
   location <-
     # FIXME: If bingmapr::get_map_image only uses the centroid - does the dist

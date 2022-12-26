@@ -57,7 +57,7 @@ get_tigris_data <- function(type = NULL,
     options(tigris_use_cache = TRUE)
   }
 
-  is_pkg_installed("tigris")
+  rlang::check_installed("tigris")
 
   type <-
     match.arg(

@@ -79,17 +79,17 @@ format_data <- function(x,
   }
 
   if (!is.null(replace_na_with)) {
-    is_pkg_installed("tidyr")
+    rlang::check_installed("tidyr")
     x <- tidyr::replace_na(x, replace = replace_na_with)
   }
 
   if (!is.null(replace_with_na)) {
-    is_pkg_installed("naniar")
+    rlang::check_installed("naniar")
     x <- naniar::replace_with_na(x, replace = replace_with_na)
   }
 
   if (replace_empty_char_with_na) {
-    is_pkg_installed("naniar")
+    rlang::check_installed("naniar")
     x <- naniar::replace_with_na_if(x, is.character, ~ .x == "")
   }
 
@@ -185,7 +185,7 @@ rename_with_xwalk <- function(x,
 #' @export
 #' @importFrom rlang arg_match
 label_with_xwalk <- function(x, xwalk = NULL, label = "var", ...) {
-  is_pkg_installed("labelled")
+  rlang::check_installed("labelled")
 
   label <- rlang::arg_match(label, c("val", "var"))
   if (label == "var") {
@@ -205,7 +205,7 @@ label_with_xwalk <- function(x, xwalk = NULL, label = "var", ...) {
 #' @rdname format_data
 #' @export
 make_variable_dictionary <- function(x, .labels = NULL, .definitions = NULL) {
-  is_pkg_installed("labelled")
+  rlang::check_installed("labelled")
 
   dict <- labelled::generate_dictionary(x)
 
@@ -283,7 +283,7 @@ chr_colnames <- function(x) {
 #' @noRd
 #' @importFrom dplyr mutate across if_else
 str_trim_squish_across <- function(x) {
-  is_pkg_installed("stringr")
+  rlang::check_installed("stringr")
 
   dplyr::mutate(
     x,
@@ -358,7 +358,7 @@ switch_case <- function(x, case = NULL, ...) {
   case <- rlang::arg_match(case, c("lower", "upper", "title", "sentence"))
 
   if (case == "sentence") {
-    is_pkg_installed("stringr")
+    rlang::check_installed("stringr")
   }
 
   switch(case,

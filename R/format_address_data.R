@@ -238,7 +238,7 @@ replace_with_xwalk <- function(x,
                                case = NULL,
                                .strict = TRUE,
                                ignore_case = TRUE) {
-  is_pkg_installed("stringr")
+  rlang::check_installed("stringr")
 
   dict <- dict %||% xwalk
 
