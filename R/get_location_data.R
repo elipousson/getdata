@@ -102,19 +102,22 @@ get_location_data <- function(location = NULL,
     )
 
   if (!sfext::is_sf(data)) {
+
     type <-
       dplyr::case_when(
-        sfext::is_bbox(data) ~ "bbox",
         is.data.frame(data) ~ "df",
+        sfext::is_bbox(data) ~ "bbox",
         is_url(data) ~ "url",
         is.character(data) && file.exists(data) ~ "path",
         !is.null(package) ~ "pkg",
         TRUE ~ "other"
       )
 
+    type <- unique(type)
+
     data <-
       switch(type,
-        "df" = sfext::df_to_sf(x = data, ...),
+        "df" = sfext::df_to_sf(x = data, from_crs = from_crs, ...),
         "bbox" = sfext::as_sf(data, ...),
         "url" = sfext::read_sf_url(url = data, bbox = bbox, ...),
         "path" = sfext::read_sf_path(path = data, bbox = bbox, ...),
@@ -220,7 +223,7 @@ map_location_data <- function(location = NULL,
   }
 
   if (is.list(data) && is.list(location) &&
-      (length(data) == length(location))) {
+    (length(data) == length(location))) {
     data <-
       purrr::map2(
         location,
