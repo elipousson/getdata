@@ -1,6 +1,9 @@
 test_that("get_osm_data works", {
-  location <-
-    get_location(system.file("shape/nc.shp", package = "sf"), name = "Hyde", name_col = "NAME")
+  location <- get_location(
+    system.file("shape/nc.shp", package = "sf"),
+    name = "Hyde",
+    name_col = "NAME"
+  )
   # Use sf object for location
   expect_s3_class(
     get_osm_data(

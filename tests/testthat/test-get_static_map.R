@@ -6,10 +6,10 @@ test_that("get_static_map works", {
       name = "Baltimore city"
     )
 
-  skip_on_ci()
   withr::with_envvar(
     new = c("TEST_BING_MAPS_API_KEY" = Sys.getenv("BING_MAPS_API_KEY")),
     {
+      skip_if_no_token("TEST_BING_MAPS_API_KEY")
       expect_s3_class(
         get_static_bingmap(
           location = location,
@@ -20,10 +20,10 @@ test_that("get_static_map works", {
     }
   )
 
-  skip_on_ci()
   withr::with_envvar(
     new = c("TEST_MAPBOX_PUBLIC_TOKEN" = Sys.getenv("MAPBOX_PUBLIC_TOKEN")),
     {
+      skip_if_no_token("TEST_MAPBOX_PUBLIC_TOKEN")
       expect_s3_class(
         get_static_mapbox(
           location = location,

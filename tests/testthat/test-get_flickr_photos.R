@@ -1,10 +1,10 @@
 test_that("get_flickr_photos works", {
-  location <- get_tigris_data("counties", "MD")
-
-  skip_on_ci()
   withr::with_envvar(
     new = c("TEST_FLICKR_API_KEY" = Sys.getenv("FLICKR_API_KEY")),
     {
+      skip_if_no_token("TEST_FLICKR_API_KEY")
+      location <- get_tigris_data("counties", "MD")
+
       expect_s3_class(
         get_flickr_photos(
           location = location[24, ],

@@ -32,8 +32,12 @@ test_that("assorted format functions work", {
         "date" = c(1000000000, 900000000),
         "name" = c("A", "B"),
         "num" = c(1, 2)
-      )
+      ),
+      tz = "EST"
     )$date,
-    as.POSIXct(c("1970-01-12 08:46:40", "1970-01-11 05:00:00"), origin = "1970-01-01")
+    as.POSIXct(c("1970-01-12 08:46:40", "1970-01-11 05:00:00"),
+      origin = "1970-01-01",
+      tz = "EST"
+    )
   )
 })
