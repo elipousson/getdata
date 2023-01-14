@@ -90,7 +90,7 @@ bind_block_col <- function(x,
       dplyr::mutate(
         x,
         "{street_col}" := str_replace(
-          glue::glue(
+          glue(
             "{as.character(.data[[address_cols[1]]])} {.data[[address_cols[2]]]} {.data[[address_cols[3]]]} {.data[[address_cols[4]]]}",
             .na = ""
           ),

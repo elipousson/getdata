@@ -44,7 +44,7 @@ as_date_range <- function(x = NULL,
   x <-
     x %||% vapply(
       c("{year}-01-01", "{year}-12-31"),
-      glue::glue, NA_character_,
+      glue, NA_character_,
       .envir = rlang::current_env()
     )
 
@@ -69,7 +69,7 @@ date_range_query <- function(x = NULL,
                              ...,
                              nm = c("start", "end")) {
   x <- as_date_range(x, ..., nm = nm)
-  glue::glue("({.col} >= '{x[[nm[1]]]}') AND ({.col} <= '{x[[nm[2]]]}')")
+  glue("({.col} >= '{x[[nm[1]]]}') AND ({.col} <= '{x[[nm[2]]]}')")
 }
 
 #' @name between_date_range
@@ -81,5 +81,5 @@ between_date_range <- function(x = NULL,
                                ...,
                                nm = c("start", "end")) {
   x <- as_date_range(x, ..., nm = nm)
-  glue::glue("({.col} BETWEEN DATE '{x[[nm[1]]]}' AND DATE '{x[[nm[2]]]}')")
+  glue("({.col} BETWEEN DATE '{x[[nm[1]]]}' AND DATE '{x[[nm[2]]]}')")
 }
