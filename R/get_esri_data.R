@@ -47,7 +47,10 @@ get_esri_data <- function(url,
                           ...) {
   is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
   meta <- get_esri_metadata(url, token)
+  # Set table to TRUE for missing geometry type
   table <- any(c(is.null(meta$geometryType), (meta$geometryType == "")))
+  # Set table to FALSE for Group Layer URLs
+  table <- table && meta$type != "Group Layer"
 
   bbox <- NULL
 
@@ -80,10 +83,7 @@ get_esri_data <- function(url,
   if (!is.null(name_col)) {
     name_col <- rlang::arg_match(name_col, meta[["fields"]][["name"]])
 
-    where <- c(
-      where,
-      glue("({name_col} = '{name}')")
-    )
+    where <- c(where, glue("({name_col} = '{name}')"))
   }
 
   if (!is.null(where)) {
