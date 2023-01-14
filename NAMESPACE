@@ -2,6 +2,7 @@
 
 export("%>%")
 export(as_date_range)
+export(between_date_range)
 export(bind_address_col)
 export(bind_block_col)
 export(date_range_query)

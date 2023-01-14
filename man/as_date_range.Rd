@@ -3,6 +3,7 @@
 \name{as_date_range}
 \alias{as_date_range}
 \alias{date_range_query}
+\alias{between_date_range}
 \title{Use lubridate to convert an object to a date range}
 \usage{
 as_date_range(
@@ -15,13 +16,9 @@ as_date_range(
   nm = c("start", "end")
 )
 
-date_range_query(
-  x = NULL,
-  year = NULL,
-  .col = "date",
-  ...,
-  nm = c("start", "end")
-)
+date_range_query(x = NULL, .col = "date", ..., nm = c("start", "end"))
+
+between_date_range(x = NULL, .col = "date", ..., nm = c("start", "end"))
 }
 \arguments{
 \item{x}{Date range as character vector in format of \code{c("<start date>", "<end date>")}. If length 1 and days is not \code{NULL}, return a range based on
@@ -54,7 +51,9 @@ A length 2 list with min and max Date values.
 Use \code{\link[lubridate:as_date]{lubridate::as_date()}} to convert an object to a length 2 list with a
 minimum and maximum date. By default the dates in the list will be named
 named "start" and "end". \code{\link[=date_range_query]{date_range_query()}} is a variation that returns a
-query string that can be passed to the "where" parameter of \code{\link[=get_esri_data]{get_esri_data()}}.
+query string that can be passed to the "where" parameter of
+\code{\link[=get_esri_data]{get_esri_data()}}. \code{\link[=between_date_range]{between_date_range()}} works the same way identical but
+uses the BETWEEN DATE syntax.
 }
 \examples{
 as_date_range("2022-01-01", days = 10)

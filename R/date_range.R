@@ -3,7 +3,9 @@
 #' Use [lubridate::as_date()] to convert an object to a length 2 list with a
 #' minimum and maximum date. By default the dates in the list will be named
 #' named "start" and "end". [date_range_query()] is a variation that returns a
-#' query string that can be passed to the "where" parameter of [get_esri_data()].
+#' query string that can be passed to the "where" parameter of
+#' [get_esri_data()]. [between_date_range()] works the same way identical but
+#' uses the BETWEEN DATE syntax.
 #'
 #' @param x Date range as character vector in format of `c("<start date>", "<end
 #'   date>")`. If length 1 and days is not `NULL`, return a range based on
@@ -63,10 +65,21 @@ as_date_range <- function(x = NULL,
 #' @export
 #' @importFrom glue glue
 date_range_query <- function(x = NULL,
-                             year = NULL,
                              .col = "date",
                              ...,
                              nm = c("start", "end")) {
-  x <- as_date_range(x, year = year, ..., nm = nm)
+  x <- as_date_range(x, ..., nm = nm)
   glue::glue("({.col} >= '{x[[nm[1]]]}') AND ({.col} <= '{x[[nm[2]]]}')")
+}
+
+#' @name between_date_range
+#' @rdname as_date_range
+#' @export
+#' @importFrom glue glue
+between_date_range <- function(x = NULL,
+                               .col = "date",
+                               ...,
+                               nm = c("start", "end")) {
+  x <- as_date_range(x, ..., nm = nm)
+  glue::glue("({.col} BETWEEN DATE '{x[[nm[1]]]}' AND DATE '{x[[nm[2]]]}')")
 }
