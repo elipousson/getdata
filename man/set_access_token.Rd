@@ -12,7 +12,8 @@ set_access_token(
   overwrite = FALSE,
   install = FALSE,
   type = NULL,
-  call = caller_env()
+  call = caller_env(),
+  .frame = parent.frame()
 )
 
 get_access_token(token = NULL, type = NULL, call = caller_env())

@@ -50,9 +50,11 @@ is \code{NULL} passed then all public photos will be searched.}
 
 \item{tags}{A vector of tags to search for.}
 
-\item{license_id}{The license id for photos. For possible values see the
-Flickr API method flickr.photos.licenses.getInfo or see details for more
-information.}
+\item{license_id}{The license id for photos. For possible values, see the
+Flickr API method
+\href{https://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html}{flickr.photos.licenses.getInfo}
+or see details for more information. If license_id is provided, "license"
+is added to extras.}
 
 \item{sort}{Supported options include "date-posted","date-taken",
 "interestingness", or "relevance"}
