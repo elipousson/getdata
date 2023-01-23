@@ -1,5 +1,4 @@
 .onLoad <- function(lib, pkg) {
-  rlang::run_on_load()
   utils::data(
     list = c("osm_building_tags", "street_suffixes", "street_dir_prefixes"),
     package = pkg,
@@ -123,9 +122,9 @@ has_same_name_col <- function(x,
 
   if (ask && !quiet) {
     if (!cliExtras::cli_yesno(
-      "The provided data includes an existing column named '{col}'.
-    Do you want to proceed and rename this column to {new_col}?"
-    )) {
+      c("!" = "The provided data includes an existing column named {.val col}.",
+      " " = "Do you want to proceed and rename this column to {.val new_col}?"
+    ))) {
       cli_abort("Please rename your column to use this function.")
     }
   }
