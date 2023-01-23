@@ -20,14 +20,16 @@ Imports:
     glue,
     httr2,
     janitor,
+    lifecycle,
     magrittr,
     purrr,
-    rlang,
+    rlang (>= 0.4.11),
     sf,
     sfext (>= 0.0.0.9001),
     tibble,
     utils,
-    vctrs
+    vctrs,
+    withr
 Suggests: 
     bingmapr (>= 0.1.0),
     covr,
@@ -41,6 +43,7 @@ Suggests:
     naniar,
     osmdata,
     rappdirs,
+    roxygen2,
     RSocrata,
     smoothr,
     stringr,
@@ -48,13 +51,12 @@ Suggests:
     tidygeocoder,
     tidyr,
     tigris,
-    units,
-    withr
+    units
 Remotes: 
     elipousson/bingmapr,
+    elipousson/cliExtras,
     elipousson/esri2sf,
-    elipousson/sfext,
-    elipousson/cliExtras
+    elipousson/sfext
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8
