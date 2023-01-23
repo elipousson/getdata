@@ -86,13 +86,14 @@ use_name_repair <- function(data = NULL,
 #' @param pkg Name of a package.
 #' @param repo GitHub repository to use for the package.
 #' @noRd
+#' @importFrom rlang check_installed
 is_pkg_installed <- function(pkg, repo = NULL) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
     if (!is.null(repo)) {
       pkg <- repo
     }
 
-    check_installed(pkg = pkg)
+    rlang::check_installed(pkg = pkg)
   }
 }
 
@@ -110,7 +111,7 @@ has_same_name_col <- function(x,
                               ask = FALSE,
                               quiet = FALSE,
                               drop = TRUE) {
-  if (!has_name(x, col)) {
+  if (!rlang::has_name(x, col)) {
     return(x)
   }
 
@@ -122,9 +123,11 @@ has_same_name_col <- function(x,
 
   if (ask && !quiet) {
     if (!cliExtras::cli_yesno(
-      c("!" = "The provided data includes an existing column named {.val col}.",
-      " " = "Do you want to proceed and rename this column to {.val new_col}?"
-    ))) {
+      c(
+        "!" = "The provided data includes an existing column named {.val col}.",
+        " " = "Do you want to proceed and rename this column to {.val new_col}?"
+      )
+    )) {
       cli_abort("Please rename your column to use this function.")
     }
   }

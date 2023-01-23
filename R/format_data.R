@@ -140,14 +140,16 @@ rename_with_xwalk <- function(x,
   xwalk <- make_xwalk_list(xwalk)
   xwalk_in_x <- rlang::has_name(x, xwalk)
 
+  # FIXME: This is not kicking back the expected error - issue may be with cli_abort_ifnot
   cliExtras::cli_abort_ifnot(
-    c("{.arg xwalk} values must all be column names in {.arg x}.",
+    message = c("{.arg xwalk} values must all be column names in {.arg x}.",
       "i" = "{.val {xwalk[!xwalk_in_x]}} can't be found in {.arg x} column names.",
       "*" = "Set {.arg .strict} to {.code FALSE} to ignore missing values."
     ),
     condition = (all(xwalk_in_x) && .strict) | !.strict,
     arg = arg,
-    call = call
+    call = call,
+    .frame = rlang::current_env()
   )
 
   if (!keep_all) {

@@ -1,15 +1,17 @@
+#' @noRd
+#' @importFrom rlang is_null
 check_null <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, null.req = FALSE, call = caller_env(), ...) {
   if (null.req) {
     null.ok <- null.req
   }
 
-  if (is_null(x) && !null.ok) {
+  if (rlang::is_null(x) && !null.ok) {
     cli_abort("{.arg {arg}} must not be NULL.",
       call = call, ...
     )
   }
 
-  if (!is_null(x) && null.req) {
+  if (!rlang::is_null(x) && null.req) {
     cli_abort("{.arg {arg}} must be NULL.",
       call = call, ...
     )
@@ -18,10 +20,12 @@ check_null <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, null.req 
   invisible(return(TRUE))
 }
 
+#' @noRd
+#' @importFrom rlang is_null
 check_character <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = NULL, call = caller_env(), ...) {
   check_null(x, arg, null.ok, call = call)
 
-  if (is_character(x, n = n)) {
+  if (rlang::is_character(x, n = n)) {
     invisible(return(TRUE))
   }
 
@@ -34,10 +38,12 @@ check_character <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = 
   )
 }
 
+#' @noRd
+#' @importFrom rlang is_logical
 check_logical <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = NULL, call = caller_env(), ...) {
   check_null(x, arg, null.ok, call = call)
 
-  if (is_logical(x, n = n)) {
+  if (rlang::is_logical(x, n = n)) {
     invisible(return(TRUE))
   }
 
@@ -50,6 +56,7 @@ check_logical <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = NU
   )
 }
 
+#' @noRd
 check_len <- function(x = NULL, len = 1, arg = caller_arg(x), null.ok = FALSE, call = caller_env(), ...) {
   check_null(x, arg, null.ok, call = call)
 
@@ -72,6 +79,8 @@ check_len <- function(x = NULL, len = 1, arg = caller_arg(x), null.ok = FALSE, c
   )
 }
 
+#' @noRd
+#' @importFrom rlang is_null
 check_grepl <- function(x = NULL, pattern = NULL, arg = caller_arg(x), null.ok = FALSE, ignore.case = FALSE, perl = FALSE, message = NULL, ...) {
   check_null(x, arg, null.ok, call = call)
 
@@ -79,7 +88,7 @@ check_grepl <- function(x = NULL, pattern = NULL, arg = caller_arg(x), null.ok =
     invisible(return(TRUE))
   }
 
-  if (is.null(message)) {
+  if (rlang::is_null(message)) {
     cli_abort(
       "Can't detect pattern {.val {pattern}} in {.arg {arg}}."
     )
@@ -88,6 +97,8 @@ check_grepl <- function(x = NULL, pattern = NULL, arg = caller_arg(x), null.ok =
   cli_abort(message = message)
 }
 
+#' @noRd
+#' @importFrom rlang is_null
 check_starts_with <- function(x = NULL, string = NULL, arg = caller_arg(x), null.ok = FALSE, ignore.case = FALSE, perl = FALSE, message = NULL, ...) {
   check_character(x, arg, null.ok)
 
@@ -95,7 +106,7 @@ check_starts_with <- function(x = NULL, string = NULL, arg = caller_arg(x), null
     invisible(return(TRUE))
   }
 
-  if (is.null(message)) {
+  if (rlang::is_null(message)) {
     cli_abort(
       c("{.arg {arg}} must start with {.val {string}}.",
         "i" = "The provided string is {.val {x}}."
@@ -141,6 +152,7 @@ check_df_rows <- function(x, rows = 1, arg = caller_arg(x), null.ok = FALSE, ...
 }
 
 #' @noRd
+#' @importFrom rlang has_name
 check_df_paper <- function(x, cols = c("width", "height", "orientation", "units"), arg = caller_arg(x), null.ok = FALSE, ...) {
   check_null(x, arg, null.ok)
   check_df(x, arg, null.ok)

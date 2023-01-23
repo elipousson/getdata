@@ -6,8 +6,15 @@
 #' @importFrom cli cli_abort cli_inform cli_warn
 #' @importFrom glue glue
 #' @importFrom glue glue glue_collapse
+#' @importFrom rlang %||%
+#' @importFrom rlang is_logical
+#' @importFrom rlang is_null
 #' @importFrom lifecycle deprecated
-#' @importFrom rlang has_length has_name
-#' @importFrom sfext st_bbox_ext st_filter_ext df_to_sf is_sf as_sf
-#'   relocate_sf_col rename_sf_col
+#' @importFrom sfext st_bbox_ext
+#' @importFrom sfext st_filter_ext
+#' @importFrom sfext df_to_sf
+#' @importFrom sfext is_sf
+#' @importFrom sfext as_sf
+#' @importFrom sfext relocate_sf_col
+#' @importFrom sfext rename_sf_col
 ## usethis namespace: end

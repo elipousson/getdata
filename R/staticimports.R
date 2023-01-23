@@ -9,7 +9,7 @@
 #' @rdname is_url
 #' @noRd
 is_esri_url <- function(x) {
-  is_url(x) && grepl("/MapServer|/FeatureServer", x)
+  all(is_url(x)) && grepl("/MapServer|/FeatureServer", x)
 }
 
 #' - [is_gist_url()]: Is an object a URL for a GitHub Gist?

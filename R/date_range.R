@@ -31,7 +31,7 @@
 #' @return A length 2 list with min and max Date values.
 #' @export
 #' @importFrom glue glue
-#' @importFrom rlang current_env set_names
+#' @importFrom rlang current_env set_names %||%
 as_date_range <- function(x = NULL,
                           year = NULL,
                           days = 90,
@@ -39,7 +39,7 @@ as_date_range <- function(x = NULL,
                           start_date = NULL,
                           end_date = NULL,
                           nm = c("start", "end")) {
-  check_installed("lubridate")
+  rlang::check_installed("lubridate")
 
   x <-
     x %||% vapply(

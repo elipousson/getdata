@@ -41,7 +41,7 @@ Suggests:
     lubridate,
     mapboxapi,
     naniar,
-    osmdata,
+    osmdata (>= 0.1.10),
     rappdirs,
     roxygen2,
     RSocrata,
@@ -56,7 +56,9 @@ Remotes:
     elipousson/bingmapr,
     elipousson/cliExtras,
     elipousson/esri2sf,
-    elipousson/sfext
+    elipousson/sfext,
+    koki25ando/FlickrAPI,
+    ropensci/osmdata,
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8
