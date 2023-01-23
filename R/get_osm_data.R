@@ -371,9 +371,7 @@ get_osm_data_features <- function(location,
         match_case = match_case
       )
   } else {
-    if (is.list(features) && rlang::is_named(features)) {
-      features <- paste0('\"', names(features), '\"=\"', features, '\"')
-    } else if (!is.character(features)) {
+    if (!is.character(features) && !is.list(features)) {
       cli_abort(
         "{.arg features} must be {.code NULL}, a {.cls character} vector,
         or a named {.cls list}.",
