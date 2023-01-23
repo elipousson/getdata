@@ -202,12 +202,16 @@ label_with_xwalk <- function(x, xwalk = NULL, label = "var", ...) {
 #' @param .definitions Character vector of definitions appended to dictionary
 #'   data frame. Must be in the same order as the variables in the provided data
 #'   frame x.
+#' @inheritParams labelled::generate_dictionary
 #' @rdname format_data
 #' @export
-make_variable_dictionary <- function(x, .labels = NULL, .definitions = NULL) {
+make_variable_dictionary <- function(x,
+                                     .labels = NULL,
+                                     .definitions = NULL,
+                                     details = c("basic", "none", "full")) {
   rlang::check_installed("labelled")
 
-  dict <- labelled::generate_dictionary(x)
+  dict <- labelled::generate_dictionary(x, details = details)
 
   if (all(is.na(dict$label)) && (length(.labels) == ncol(x))) {
     dict$label <- .labels
@@ -227,12 +231,24 @@ make_variable_dictionary <- function(x, .labels = NULL, .definitions = NULL) {
 #' @param tz Time zone passed to [as.POSIXct()].
 #' @export
 #' @importFrom dplyr contains mutate across
+#' @importFrom rlang try_fetch
 fix_epoch_date <- function(x, .cols = dplyr::contains("date"), tz = "") {
-  dplyr::mutate(
-    x,
-    dplyr::across(
-      dplyr::any_of(.cols),
-      ~ as.POSIXct(.x / 1000, origin = "1970-01-01", tz = tz)
+  suppressWarnings(
+    dplyr::mutate(
+      x,
+      dplyr::across(
+        dplyr::any_of(.cols),
+        ~ rlang::try_fetch(
+          as.POSIXct(
+            as.numeric(.x) / 1000,
+            origin = "1970-01-01",
+            tz = tz
+          ),
+          error = function(cnd) {
+            NA_complex_
+          }
+        )
+      )
     )
   )
 }

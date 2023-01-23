@@ -37,7 +37,12 @@ rename_with_xwalk(
 
 label_with_xwalk(x, xwalk = NULL, label = "var", ...)
 
-make_variable_dictionary(x, .labels = NULL, .definitions = NULL)
+make_variable_dictionary(
+  x,
+  .labels = NULL,
+  .definitions = NULL,
+  details = c("basic", "none", "full")
+)
 
 fix_epoch_date(x, .cols = dplyr::contains("date"), tz = "")
 }
@@ -105,6 +110,8 @@ assigned); defaults to \code{NULL}.}
 \item{.definitions}{Character vector of definitions appended to dictionary
 data frame. Must be in the same order as the variables in the provided data
 frame x.}
+
+\item{details}{add details about each variable (full details could be time consuming for big data frames, \code{FALSE} is equivalent to \code{"none"} and \code{TRUE} to \code{"full"})}
 
 \item{.cols}{tidyselect for columns to apply epoch date fixing function to.
 Defaults to \code{dplyr::contains("date")}.}
