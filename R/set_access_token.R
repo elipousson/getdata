@@ -16,10 +16,14 @@
 #' @rdname set_access_token
 #' @aliases set_token_type
 #' @export
-#'
 #' @importFrom rlang is_named
 #' @importFrom utils read.table write.table
-set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = NULL, call = caller_env()) {
+set_access_token <- function(token,
+                             overwrite = FALSE,
+                             install = FALSE,
+                             type = NULL,
+                             call = caller_env(),
+                             .frame = parent.frame()) {
   check_required(token)
 
   if (rlang::is_named(token)) {
@@ -33,7 +37,7 @@ set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = N
   if (!install) {
     cli_inform(
       c(
-        "v" = "Token {.val {type}} set to {.val {token}} with {.fn Sys.setenv}.",
+        "v" = "Token {.envvar {type}} set to {.val {token}} with {.fn Sys.setenv}.",
         "*" = "To use the token in future sessions,
         run {.fn set_access_token} using {.arg install = TRUE}."
       )
@@ -51,10 +55,9 @@ set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = N
 
     if (has_type && !overwrite) {
       cli_abort(
-        c("{.val {type}} already exists in your {.file .Renviron}.",
+        c("{.envvar {type}} already exists in your {.file .Renviron}.",
           "*" = "Set {.arg overwrite = TRUE} to replace this token."
-        ),
-        call = call
+        )
       )
     }
 
@@ -85,7 +88,7 @@ set_access_token <- function(token, overwrite = FALSE, install = FALSE, type = N
 
   cli_inform(
     c(
-      "v" = "Token {.val {token}} saved to .Renviron variable {.val {type}}.",
+      "v" = "Token {.val {token}} saved to {.file .Renviron} variable {.envvar {type}}.",
       "*" = 'Restart R or run {.code readRenviron("~/.Renviron")} then use
         {.code Sys.getenv("{type}")} to access the token.'
     )
@@ -110,5 +113,5 @@ get_access_token <- function(token = NULL, type = NULL, call = caller_env()) {
     return(token)
   }
 
-  cli_abort("{.val {type}} can't be found in your .Renviron.", call = call)
+  cli_abort("{.envvar {type}} can't be found in your {.file .Renviron}.")
 }
