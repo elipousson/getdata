@@ -157,6 +157,10 @@ get_esri_layers <- function(location = NULL,
                             ...) {
   is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
 
+  if (is_esri_url(url)) {
+    url <- sub("/$", "", url)
+  }
+
   layers <- layers %||% url
 
   type <-
