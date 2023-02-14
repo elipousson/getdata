@@ -229,8 +229,9 @@ for geometry.</p></dd>
 
 
 <dt>level</dt>
-<dd><p>administrative level (admin_level) of boundary to return;
-defaults to <code>NULL</code>. See
+<dd><p>Numeric administrative level (admin_level) of boundary to
+return; defaults to <code>NULL</code>. If multiple levels are provided, the any admin
+levels between the min and max values of level is returned. See
 <a href="https://wiki.openstreetmap.org/wiki/Key:admin_level" class="external-link">https://wiki.openstreetmap.org/wiki/Key:admin_level</a> for more information.
 Only used for <code><a href="get_osm_data.html">get_osm_boundaries()</a></code>.</p></dd>
 

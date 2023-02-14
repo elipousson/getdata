@@ -131,7 +131,8 @@
 <span>    data <span class="op">=</span> <span class="va">nc</span>,</span>
 <span>    location <span class="op">=</span> <span class="va">location</span>,</span>
 <span>    dist <span class="op">=</span> <span class="fl">0.25</span>,</span>
-<span>    unit <span class="op">=</span> <span class="st">"mi"</span></span>
+<span>    unit <span class="op">=</span> <span class="st">"mi"</span>,</span>
+<span>    crop <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">nearby_counties</span><span class="op">)</span></span>
@@ -151,9 +152,89 @@
 <span><span class="co">#&gt; $ BIR79     &lt;dbl&gt; 1606, 1190, 2753, 4463, 1863, 5189</span></span>
 <span><span class="co">#&gt; $ SID79     &lt;dbl&gt; 3, 2, 6, 17, 0, 7</span></span>
 <span><span class="co">#&gt; $ NWBIR79   &lt;dbl&gt; 1197, 844, 1492, 2980, 950, 2274</span></span>
-<span><span class="co">#&gt; $ geometry  &lt;POLYGON [°]&gt; POLYGON ((-77.89524 36.5529..., POLYGON ((-78.13472 36.2365.…</span></span></code></pre></div>
-<p>A similar approach works with other sources although some may require an API key to work.</p>
+<span><span class="co">#&gt; $ geometry  &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-77.21767 3..., MULTIPOLYGON (((-78.30876 3.…</span></span></code></pre></div>
+<p>This same approach of using names as an attribute query or locations with buffers as a spatial filter works for most functions in this package. You can access data from OpenStreetMap:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">county_parks</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="reference/get_osm_data.html">get_osm_data</a></span><span class="op">(</span></span>
+<span>    location <span class="op">=</span> <span class="va">nearby_counties</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span>,</span>
+<span>    asp <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    key <span class="op">=</span> <span class="st">"leisure"</span>,</span>
+<span>    value <span class="op">=</span> <span class="st">"park"</span>,</span>
+<span>    geometry <span class="op">=</span> <span class="st">"polygons"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ OpenStreetMap data is licensed under the Open Database License (ODbL).</span></span>
+<span><span class="co">#&gt;   Attribution is required if you use this data.</span></span>
+<span><span class="co">#&gt; • Learn more about the ODbL and OSM attribution requirements at</span></span>
+<span><span class="co">#&gt;   &lt;]8;;https://www.openstreetmap.org/copyrighthttps://www.openstreetmap.org/copyright]8;;&gt;</span></span>
+<span><span class="co">#&gt; This message is displayed once every 8 hours.</span></span>
+<span></span>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">county_parks</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Rows: 41</span></span>
+<span><span class="co">#&gt; Columns: 26</span></span>
+<span><span class="co">#&gt; $ osm_id                    &lt;chr&gt; "33006375", "33006525", "33006552", "3300661…</span></span>
+<span><span class="co">#&gt; $ name                      &lt;chr&gt; "Dwight Hall Recreation Park", "Rochelle Par…</span></span>
+<span><span class="co">#&gt; $ `NHD:FCode`               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ `NHD:FDate`               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ `NHD:FTYPE`               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ access                    &lt;chr&gt; "yes", "yes", "yes", "yes", "yes", "yes", "y…</span></span>
+<span><span class="co">#&gt; $ `addr:city`               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ `addr:housenumber`        &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ `addr:postcode`           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ `addr:state`              &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ `addr:street`             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ area                      &lt;chr&gt; NA, NA, "yes", NA, NA, NA, NA, NA, NA, "yes"…</span></span>
+<span><span class="co">#&gt; $ ele                       &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ `gnis:county_id`          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ `gnis:created`            &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ `gnis:feature_id`         &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ `gnis:state_id`           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ leisure                   &lt;chr&gt; "park", "park", "park", "park", "park", "par…</span></span>
+<span><span class="co">#&gt; $ `name:etymology:wikidata` &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ `nconemap:OWNER`          &lt;chr&gt; "GASTON", "ROANOKE RAPIDS", "ROANOKE RAPIDS"…</span></span>
+<span><span class="co">#&gt; $ opening_hours             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ operator                  &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ ownership                 &lt;chr&gt; "municipal", "municipal", "municipal", "muni…</span></span>
+<span><span class="co">#&gt; $ phone                     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
+<span><span class="co">#&gt; $ source                    &lt;chr&gt; "NCOnemap", "NCOnemap", "NCOnemap", "NCOnema…</span></span>
+<span><span class="co">#&gt; $ geometry                  &lt;POLYGON [°]&gt; POLYGON ((-77.64057 36.4935..., POLY…</span></span></code></pre></div>
+<p>You can also access data from any public ArcGIS MapServer or FeatureServer layers:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">nps_park_url</span> <span class="op">&lt;-</span> <span class="st">"https://carto.nationalmap.gov/arcgis/rest/services/govunits/MapServer/29"</span></span>
+<span></span>
+<span><span class="va">nps_park</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="reference/get_esri_data.html">get_esri_data</a></span><span class="op">(</span></span>
+<span>    url <span class="op">=</span> <span class="va">nps_park_url</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"Cape Lookout National Seashore"</span>,</span>
+<span>    name_col <span class="op">=</span> <span class="st">"NAME"</span>,</span>
+<span>    quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">nps_park</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Rows: 1</span></span>
+<span><span class="co">#&gt; Columns: 20</span></span>
+<span><span class="co">#&gt; $ objectid              &lt;int&gt; 6706</span></span>
+<span><span class="co">#&gt; $ permanent_identifier  &lt;chr&gt; "d9eec3c0-ae13-4ef9-a17b-dc4858cd39d4"</span></span>
+<span><span class="co">#&gt; $ source_featureid      &lt;chr&gt; "CALO"</span></span>
+<span><span class="co">#&gt; $ source_datasetid      &lt;chr&gt; "{562524A1-7D6A-40EA-AA44-2E9AEF4488EB}"</span></span>
+<span><span class="co">#&gt; $ source_datadesc       &lt;chr&gt; "National Park Boundaries 3/2020"</span></span>
+<span><span class="co">#&gt; $ source_originator     &lt;chr&gt; "National Park Service"</span></span>
+<span><span class="co">#&gt; $ data_security         &lt;int&gt; 5</span></span>
+<span><span class="co">#&gt; $ distribution_policy   &lt;chr&gt; "E4"</span></span>
+<span><span class="co">#&gt; $ loaddate              &lt;dbl&gt; 1.586355e+12</span></span>
+<span><span class="co">#&gt; $ gnis_id               &lt;chr&gt; "1000889"</span></span>
+<span><span class="co">#&gt; $ name                  &lt;chr&gt; "Cape Lookout National Seashore"</span></span>
+<span><span class="co">#&gt; $ areasqkm              &lt;dbl&gt; 115.005</span></span>
+<span><span class="co">#&gt; $ ftype                 &lt;int&gt; 674</span></span>
+<span><span class="co">#&gt; $ fcode                 &lt;int&gt; 67400</span></span>
+<span><span class="co">#&gt; $ admintype             &lt;int&gt; 1</span></span>
+<span><span class="co">#&gt; $ ownerormanagingagency &lt;int&gt; 13</span></span>
+<span><span class="co">#&gt; $ shape_length          &lt;dbl&gt; 233295.3</span></span>
+<span><span class="co">#&gt; $ shape_area            &lt;dbl&gt; 171056451</span></span>
+<span><span class="co">#&gt; $ gnis_name             &lt;chr&gt; "Cape Lookout National Seashore"</span></span>
+<span><span class="co">#&gt; $ geoms                 &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((-8468201 41...</span></span></code></pre></div>
+<p>In some cases, an API key may be required for functions to work:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Get Q2 2020 vehicle crash data for Cecil County, Maryland</span></span>
 <span><span class="fu"><a href="reference/get_open_data.html">get_open_data</a></span><span class="op">(</span></span>
 <span>  source_url <span class="op">=</span> <span class="st">"https://opendata.maryland.gov"</span>,</span>
@@ -164,6 +245,52 @@
 <span>  token <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"MARYLAND_OPEN_DATA_API_KEY"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>You must set or provide an API token or key for <code><a href="reference/get_open_data.html">get_open_data()</a></code>, <code><a href="reference/get_airtable_data.html">get_airtable_data()</a></code>, <code><a href="reference/get_flickr_photos.html">get_flickr_photos()</a></code> to work. <code>get_ghseet_data()</code> will require user authentication (handled automatically by the {googlesheets4} package).</p>
+</div>
+<div class="section level2">
+<h2 id="helper-and-utility-functions">Helper and utility functions<a class="anchor" aria-label="anchor" href="#helper-and-utility-functions"></a>
+</h2>
+<p>The package also includes a handful of helper and wrapper functions designed that can be used for formatting, labelling, and other tasks.</p>
+<p>For example, you can use <code><a href="reference/format_data.html">fix_epoch_date()</a></code> to convert columns with <a href="https://en.wikipedia.org/wiki/Unix_time" class="external-link">UNIX time</a> numeric values to POSIXct values:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">nps_park</span><span class="op">[[</span><span class="st">"loaddate"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt; [1] 1.586355e+12</span></span>
+<span></span>
+<span><span class="va">nps_park</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/format_data.html">fix_epoch_date</a></span><span class="op">(</span><span class="va">nps_park</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">nps_park</span><span class="op">[[</span><span class="st">"loaddate"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="co">#&gt; [1] "2020-04-08 10:03:28 EDT"</span></span></code></pre></div>
+<p>You can use <code><a href="reference/format_data.html">make_variable_dictionary()</a></code> to make a custom dictionary:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/format_data.html">make_variable_dictionary</a></span><span class="op">(</span></span>
+<span>  <span class="va">nps_park</span><span class="op">[</span> ,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  .labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Geographic Names Information System identifier"</span>,</span>
+<span>    <span class="st">"Park name"</span>,</span>
+<span>    <span class="st">"Area (sq km)"</span>,</span>
+<span>    <span class="st">"Geometry"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;  pos variable label                                          col_type values</span></span>
+<span><span class="co">#&gt;  1   gnis_id  Geographic Names Information System identifier chr            </span></span>
+<span><span class="co">#&gt;  2   name     Park name                                      chr            </span></span>
+<span><span class="co">#&gt;  3   areasqkm Area (sq km)                                   dbl            </span></span>
+<span><span class="co">#&gt;  4   geoms    Geometry                                       s_MULTIP</span></span></code></pre></div>
+<p>Or you can use <code><a href="reference/format_data.html">rename_with_xwalk()</a></code> to rename columns:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/format_data.html">rename_with_xwalk</a></span><span class="op">(</span></span>
+<span>  <span class="va">nps_park</span><span class="op">[</span> ,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  xwalk <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="st">"gnis"</span> <span class="op">=</span> <span class="st">"gnis_id"</span>,</span>
+<span>    <span class="st">"sq_km"</span> <span class="op">=</span> <span class="st">"areasqkm"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Simple feature collection with 1 feature and 3 fields</span></span>
+<span><span class="co">#&gt; Geometry type: MULTIPOLYGON</span></span>
+<span><span class="co">#&gt; Dimension:     XY</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: -8534392 ymin: 4107119 xmax: -8463797 ymax: 4173979</span></span>
+<span><span class="co">#&gt; Projected CRS: WGS 84 / Pseudo-Mercator</span></span>
+<span><span class="co">#&gt;      gnis                           name   sq_km                          geoms</span></span>
+<span><span class="co">#&gt; 1 1000889 Cape Lookout National Seashore 115.005 MULTIPOLYGON (((-8468201 41...</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

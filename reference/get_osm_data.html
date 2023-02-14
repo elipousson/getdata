@@ -193,12 +193,14 @@ geometry is set automatically based enclosing with "relation" using
 
 
 <dt>nodes_only</dt>
-<dd><p>If <code>TRUE</code>, query OSM nodes only. Some OSM structures such
-as <code>place = "city"</code> or <code>highway = "traffic_signals"</code> are represented by
-nodes only. Queries are built by default to return all nodes, ways, and
-relation, but this can be very inefficient for node-only queries.
-Setting this value to <code>TRUE</code> for such cases makes queries more
-efficient, with data returned in the <code>osm_points</code> list item.</p></dd>
+<dd><p>WARNING: this parameter is equivalent to
+<code>osm_types = "node"</code> and will be DEPRECATED. If <code>TRUE</code>, query OSM nodes
+only. Some OSM structures such as <code>place = "city"</code> or
+<code>highway = "traffic_signals"</code> are represented by nodes only. Queries are
+built by default to return all nodes, ways, and relation, but this can
+be very inefficient for node-only queries. Setting this value to <code>TRUE</code>
+for such cases makes queries more efficient, with data returned in the
+<code>osm_points</code> list item.</p></dd>
 
 
 <dt>key_exact</dt>
@@ -216,8 +218,9 @@ not sensitive to case</p></dd>
 
 
 <dt>level</dt>
-<dd><p>administrative level (admin_level) of boundary to return;
-defaults to <code>NULL</code>. See
+<dd><p>Numeric administrative level (admin_level) of boundary to
+return; defaults to <code>NULL</code>. If multiple levels are provided, the any admin
+levels between the min and max values of level is returned. See
 <a href="https://wiki.openstreetmap.org/wiki/Key:admin_level" class="external-link">https://wiki.openstreetmap.org/wiki/Key:admin_level</a> for more information.
 Only used for <code>get_osm_boundaries()</code>.</p></dd>
 
