@@ -60,8 +60,8 @@ get_wiki_data <- function(location,
     if (is.numeric(radius)) {
       dist <- radius
       cli_inform(
-        "Using {.arg radius} value of {.value dist} for {.arg dist}.",
-        "v" = "Setting {.arg radius} to TRUE."
+        c("Using {.arg radius} value of {.val {dist}} for {.arg dist}.",
+        "v" = "Setting {.arg radius} to TRUE.")
       )
       radius <- TRUE
     }
