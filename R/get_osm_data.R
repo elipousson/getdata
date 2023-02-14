@@ -232,8 +232,9 @@ has_osm_type_name <- function(x) {
   names(x) %in% c("node", "way", "relation")
 }
 
-#' @param level administrative level (admin_level) of boundary to return;
-#'   defaults to `NULL`. See
+#' @param level Numeric administrative level (admin_level) of boundary to
+#'   return; defaults to `NULL`. If multiple levels are provided, the any admin
+#'   levels between the min and max values of level is returned. See
 #'   <https://wiki.openstreetmap.org/wiki/Key:admin_level> for more information.
 #'   Only used for [get_osm_boundaries()].
 #' @param lang Language for boundary names to include in resulting data frame
@@ -247,6 +248,7 @@ has_osm_type_name <- function(x) {
 #' @importFrom dplyr filter between
 #' @importFrom janitor clean_names
 #' @importFrom sfext transform_sf
+#' @importFrom cliExtras cli_abort_ifnot
 get_osm_boundaries <- function(location,
                                level = NULL,
                                lang = "en",
@@ -272,6 +274,15 @@ get_osm_boundaries <- function(location,
   }
 
   if (!is.null(level)) {
+    cliExtras::cli_abort_ifnot(
+      "{.arg level} must be {.cls numeric}." = is.numeric(level)
+    )
+
+    boundaries <- dplyr::mutate(
+      boundaries,
+      admin_level = as.integer(admin_level)
+    )
+
     boundaries <-
       dplyr::filter(
         boundaries,

@@ -140,8 +140,9 @@ for geometry.}
 
 \item{key}{Feature key for overpass API query.}
 
-\item{level}{administrative level (admin_level) of boundary to return;
-defaults to \code{NULL}. See
+\item{level}{Numeric administrative level (admin_level) of boundary to
+return; defaults to \code{NULL}. If multiple levels are provided, the any admin
+levels between the min and max values of level is returned. See
 \url{https://wiki.openstreetmap.org/wiki/Key:admin_level} for more information.
 Only used for \code{\link[=get_osm_boundaries]{get_osm_boundaries()}}.}
 

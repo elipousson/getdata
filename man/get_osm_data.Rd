@@ -99,12 +99,14 @@ ignored and the center of the provided location is used for the query.
 geometry is set automatically based enclosing with "relation" using
 "multipolygons" and "way" using "polygons" geometry.}
 
-\item{nodes_only}{If \code{TRUE}, query OSM nodes only. Some OSM structures such
-as \code{place = "city"} or \code{highway = "traffic_signals"} are represented by
-nodes only. Queries are built by default to return all nodes, ways, and
-relation, but this can be very inefficient for node-only queries.
-Setting this value to \code{TRUE} for such cases makes queries more
-efficient, with data returned in the \code{osm_points} list item.}
+\item{nodes_only}{WARNING: this parameter is equivalent to
+\code{osm_types = "node"} and will be DEPRECATED. If \code{TRUE}, query OSM nodes
+only. Some OSM structures such as \code{place = "city"} or
+\code{highway = "traffic_signals"} are represented by nodes only. Queries are
+built by default to return all nodes, ways, and relation, but this can
+be very inefficient for node-only queries. Setting this value to \code{TRUE}
+for such cases makes queries more efficient, with data returned in the
+\code{osm_points} list item.}
 
 \item{key_exact}{If FALSE, \code{key} is not interpreted exactly; see
 \url{https://wiki.openstreetmap.org/wiki/Overpass_API}}
@@ -114,8 +116,9 @@ efficient, with data returned in the \code{osm_points} list item.}
 \item{match_case}{If FALSE, matching for both \code{key} and \code{value} is
 not sensitive to case}
 
-\item{level}{administrative level (admin_level) of boundary to return;
-defaults to \code{NULL}. See
+\item{level}{Numeric administrative level (admin_level) of boundary to
+return; defaults to \code{NULL}. If multiple levels are provided, the any admin
+levels between the min and max values of level is returned. See
 \url{https://wiki.openstreetmap.org/wiki/Key:admin_level} for more information.
 Only used for \code{\link[=get_osm_boundaries]{get_osm_boundaries()}}.}
 

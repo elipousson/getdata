@@ -33,7 +33,7 @@ test_that("get_osm_data works", {
   expect_s3_class(
     get_osm_boundaries(
       location = location,
-      level = 1
+      level = c(2, 4)
     ),
     "sf"
   )

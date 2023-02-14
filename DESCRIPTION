@@ -57,8 +57,7 @@ Remotes:
     elipousson/cliExtras,
     elipousson/esri2sf,
     elipousson/sfext,
-    koki25ando/FlickrAPI,
-    ropensci/osmdata,
+    koki25ando/FlickrAPI
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8
