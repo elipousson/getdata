@@ -80,13 +80,45 @@ nearby_counties <-
     data = nc,
     location = location,
     dist = 0.25,
-    unit = "mi"
+    unit = "mi",
+    crop = FALSE
   )
 
 glimpse(nearby_counties)
 ```
 
-A similar approach works with other sources although some may require an API key to work.
+This same approach of using names as an attribute query or locations with buffers as a spatial filter works for most functions in this package. You can access data from OpenStreetMap:
+
+```{r}
+county_parks <-
+  get_osm_data(
+    location = nearby_counties[1, ],
+    asp = 1,
+    key = "leisure",
+    value = "park",
+    geometry = "polygons"
+  )
+
+glimpse(county_parks)
+```
+
+You can also access data from any public ArcGIS MapServer or FeatureServer layers:
+
+```{r}
+nps_park_url <- "https://carto.nationalmap.gov/arcgis/rest/services/govunits/MapServer/29"
+
+nps_park <-
+  get_esri_data(
+    url = nps_park_url,
+    name = "Cape Lookout National Seashore",
+    name_col = "NAME",
+    quiet = TRUE
+  )
+
+glimpse(nps_park)
+```
+
+In some cases, an API key may be required for functions to work:
 
 ```{r get_open_data, eval = FALSE}
 ## Get Q2 2020 vehicle crash data for Cecil County, Maryland
@@ -101,3 +133,44 @@ get_open_data(
 ```
 
 You must set or provide an API token or key for `get_open_data()`, `get_airtable_data()`, `get_flickr_photos()` to work. `get_ghseet_data()` will require user authentication (handled automatically by the {googlesheets4} package).
+
+## Helper and utility functions
+
+The package also includes a handful of helper and wrapper functions designed that can be used for formatting, labelling, and other tasks.
+
+For example, you can use `fix_epoch_date()` to convert columns with [UNIX time](https://en.wikipedia.org/wiki/Unix_time) numeric values to POSIXct values:
+
+```{r}
+nps_park[["loaddate"]]
+
+nps_park <- fix_epoch_date(nps_park)
+
+nps_park[["loaddate"]]
+```
+
+You can use `make_variable_dictionary()` to make a custom dictionary:
+
+```{r}
+make_variable_dictionary(
+  nps_park[ ,c(10:12)],
+  .labels = c(
+    "Geographic Names Information System identifier",
+    "Park name",
+    "Area (sq km)",
+    "Geometry"
+  )
+)
+```
+
+Or you can use `rename_with_xwalk()` to rename columns:
+
+```{r}
+rename_with_xwalk(
+  nps_park[ ,c(10:12)],
+  xwalk = list(
+    "gnis" = "gnis_id",
+    "sq_km" = "areasqkm"
+  )
+)
+```
+

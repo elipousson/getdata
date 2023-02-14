@@ -31,30 +31,29 @@ analysis. Using data access functions from {sfext} and additional API
 wrapper functions, this package supports data access for sources
 including:
 
--   ArcGIS FeatureServer and MapServer layers (using
-    [{esri2sf}](https://github.com/yonghah/esri2sf))
--   U.S. Census Bureau data (using
-    [{tigris}](https://github.com/walkerke/tigris))
--   OpenStreetMap (using
-    [{osmdata}](https://docs.ropensci.org/osmdata/))
--   Socrata Open Data resources (using
-    [{RSocrata](https://github.com/Chicago/RSocrata)})
--   Google Sheets (using
-    [{googlesheets4}](https://googlesheets4.tidyverse.org/))
--   Flickr photos (using
-    [{FlickrAPI}](https://koki25ando.github.io/FlickrAPI/))
--   Static map images from Mapbox (using
-    [{mapboxapi}](https://walker-data.com/mapboxapi/))
--   Airtable bases (using {httr2} and the [Airtable
-    API](https://airtable.com/api))
--   Wikipedia articles (using {httr2} and the [Wikipedia Geosearch
-    API](https://www.mediawiki.org/wiki/Extension:GeoData))
--   Other spatial data sources including Google MyMaps, GitHub gists,
-    and any data source already supported by
-    [sf::read_sf()](https://r-spatial.github.io/sf/reference/st_read.html)
-    (see
-    [sfext::read_sf_ext()](https://elipousson.github.io/sfext/reference/read_sf_ext.html)
-    for more details)
+- ArcGIS FeatureServer and MapServer layers (using
+  [{esri2sf}](https://github.com/yonghah/esri2sf))
+- U.S. Census Bureau data (using
+  [{tigris}](https://github.com/walkerke/tigris))
+- OpenStreetMap (using [{osmdata}](https://docs.ropensci.org/osmdata/))
+- Socrata Open Data resources (using
+  [{RSocrata](https://github.com/Chicago/RSocrata)})
+- Google Sheets (using
+  [{googlesheets4}](https://googlesheets4.tidyverse.org/))
+- Flickr photos (using
+  [{FlickrAPI}](https://koki25ando.github.io/FlickrAPI/))
+- Static map images from Mapbox (using
+  [{mapboxapi}](https://walker-data.com/mapboxapi/))
+- Airtable bases (using {httr2} and the [Airtable
+  API](https://airtable.com/api))
+- Wikipedia articles (using {httr2} and the [Wikipedia Geosearch
+  API](https://www.mediawiki.org/wiki/Extension:GeoData))
+- Other spatial data sources including Google MyMaps, GitHub gists, and
+  any data source already supported by
+  [sf::read_sf()](https://r-spatial.github.io/sf/reference/st_read.html)
+  (see
+  [sfext::read_sf_ext()](https://elipousson.github.io/sfext/reference/read_sf_ext.html)
+  for more details)
 
 The advantage of using {getdata} is that it provides a consistent
 interface for using a location to create a bounding box for spatial
@@ -148,7 +147,8 @@ nearby_counties <-
     data = nc,
     location = location,
     dist = 0.25,
-    unit = "mi"
+    unit = "mi",
+    crop = FALSE
   )
 
 glimpse(nearby_counties)
@@ -168,11 +168,99 @@ glimpse(nearby_counties)
 #> $ BIR79     <dbl> 1606, 1190, 2753, 4463, 1863, 5189
 #> $ SID79     <dbl> 3, 2, 6, 17, 0, 7
 #> $ NWBIR79   <dbl> 1197, 844, 1492, 2980, 950, 2274
-#> $ geometry  <POLYGON [°]> POLYGON ((-77.89524 36.5529..., POLYGON ((-78.13472 36.2365.…
+#> $ geometry  <MULTIPOLYGON [°]> MULTIPOLYGON (((-77.21767 3..., MULTIPOLYGON (((-78.30876 3.…
 ```
 
-A similar approach works with other sources although some may require an
-API key to work.
+This same approach of using names as an attribute query or locations
+with buffers as a spatial filter works for most functions in this
+package. You can access data from OpenStreetMap:
+
+``` r
+county_parks <-
+  get_osm_data(
+    location = nearby_counties[1, ],
+    asp = 1,
+    key = "leisure",
+    value = "park",
+    geometry = "polygons"
+  )
+#> ℹ OpenStreetMap data is licensed under the Open Database License (ODbL).
+#>   Attribution is required if you use this data.
+#> • Learn more about the ODbL and OSM attribution requirements at
+#>   <]8;;https://www.openstreetmap.org/copyrighthttps://www.openstreetmap.org/copyright]8;;>
+#> This message is displayed once every 8 hours.
+
+glimpse(county_parks)
+#> Rows: 41
+#> Columns: 26
+#> $ osm_id                    <chr> "33006375", "33006525", "33006552", "3300661…
+#> $ name                      <chr> "Dwight Hall Recreation Park", "Rochelle Par…
+#> $ `NHD:FCode`               <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ `NHD:FDate`               <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ `NHD:FTYPE`               <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ access                    <chr> "yes", "yes", "yes", "yes", "yes", "yes", "y…
+#> $ `addr:city`               <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ `addr:housenumber`        <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ `addr:postcode`           <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ `addr:state`              <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ `addr:street`             <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ area                      <chr> NA, NA, "yes", NA, NA, NA, NA, NA, NA, "yes"…
+#> $ ele                       <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ `gnis:county_id`          <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ `gnis:created`            <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ `gnis:feature_id`         <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ `gnis:state_id`           <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ leisure                   <chr> "park", "park", "park", "park", "park", "par…
+#> $ `name:etymology:wikidata` <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ `nconemap:OWNER`          <chr> "GASTON", "ROANOKE RAPIDS", "ROANOKE RAPIDS"…
+#> $ opening_hours             <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ operator                  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ ownership                 <chr> "municipal", "municipal", "municipal", "muni…
+#> $ phone                     <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ source                    <chr> "NCOnemap", "NCOnemap", "NCOnemap", "NCOnema…
+#> $ geometry                  <POLYGON [°]> POLYGON ((-77.64057 36.4935..., POLY…
+```
+
+You can also access data from any public ArcGIS MapServer or
+FeatureServer layers:
+
+``` r
+nps_park_url <- "https://carto.nationalmap.gov/arcgis/rest/services/govunits/MapServer/29"
+
+nps_park <-
+  get_esri_data(
+    url = nps_park_url,
+    name = "Cape Lookout National Seashore",
+    name_col = "NAME",
+    quiet = TRUE
+  )
+
+glimpse(nps_park)
+#> Rows: 1
+#> Columns: 20
+#> $ objectid              <int> 6706
+#> $ permanent_identifier  <chr> "d9eec3c0-ae13-4ef9-a17b-dc4858cd39d4"
+#> $ source_featureid      <chr> "CALO"
+#> $ source_datasetid      <chr> "{562524A1-7D6A-40EA-AA44-2E9AEF4488EB}"
+#> $ source_datadesc       <chr> "National Park Boundaries 3/2020"
+#> $ source_originator     <chr> "National Park Service"
+#> $ data_security         <int> 5
+#> $ distribution_policy   <chr> "E4"
+#> $ loaddate              <dbl> 1.586355e+12
+#> $ gnis_id               <chr> "1000889"
+#> $ name                  <chr> "Cape Lookout National Seashore"
+#> $ areasqkm              <dbl> 115.005
+#> $ ftype                 <int> 674
+#> $ fcode                 <int> 67400
+#> $ admintype             <int> 1
+#> $ ownerormanagingagency <int> 13
+#> $ shape_length          <dbl> 233295.3
+#> $ shape_area            <dbl> 171056451
+#> $ gnis_name             <chr> "Cape Lookout National Seashore"
+#> $ geoms                 <MULTIPOLYGON [m]> MULTIPOLYGON (((-8468201 41...
+```
+
+In some cases, an API key may be required for functions to work:
 
 ``` r
 ## Get Q2 2020 vehicle crash data for Cecil County, Maryland
@@ -190,3 +278,60 @@ You must set or provide an API token or key for `get_open_data()`,
 `get_airtable_data()`, `get_flickr_photos()` to work.
 `get_ghseet_data()` will require user authentication (handled
 automatically by the {googlesheets4} package).
+
+## Helper and utility functions
+
+The package also includes a handful of helper and wrapper functions
+designed that can be used for formatting, labelling, and other tasks.
+
+For example, you can use `fix_epoch_date()` to convert columns with
+[UNIX time](https://en.wikipedia.org/wiki/Unix_time) numeric values to
+POSIXct values:
+
+``` r
+nps_park[["loaddate"]]
+#> [1] 1.586355e+12
+
+nps_park <- fix_epoch_date(nps_park)
+
+nps_park[["loaddate"]]
+#> [1] "2020-04-08 10:03:28 EDT"
+```
+
+You can use `make_variable_dictionary()` to make a custom dictionary:
+
+``` r
+make_variable_dictionary(
+  nps_park[ ,c(10:12)],
+  .labels = c(
+    "Geographic Names Information System identifier",
+    "Park name",
+    "Area (sq km)",
+    "Geometry"
+  )
+)
+#>  pos variable label                                          col_type values
+#>  1   gnis_id  Geographic Names Information System identifier chr            
+#>  2   name     Park name                                      chr            
+#>  3   areasqkm Area (sq km)                                   dbl            
+#>  4   geoms    Geometry                                       s_MULTIP
+```
+
+Or you can use `rename_with_xwalk()` to rename columns:
+
+``` r
+rename_with_xwalk(
+  nps_park[ ,c(10:12)],
+  xwalk = list(
+    "gnis" = "gnis_id",
+    "sq_km" = "areasqkm"
+  )
+)
+#> Simple feature collection with 1 feature and 3 fields
+#> Geometry type: MULTIPOLYGON
+#> Dimension:     XY
+#> Bounding box:  xmin: -8534392 ymin: 4107119 xmax: -8463797 ymax: 4173979
+#> Projected CRS: WGS 84 / Pseudo-Mercator
+#>      gnis                           name   sq_km                          geoms
+#> 1 1000889 Cape Lookout National Seashore 115.005 MULTIPOLYGON (((-8468201 41...
+```
