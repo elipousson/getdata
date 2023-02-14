@@ -85,6 +85,7 @@ Details on SoQL queries are found in the Socrata API documentation
 <span>  from_crs <span class="op">=</span> <span class="fl">4326</span>,</span>
 <span>  crs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  clean_names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  .name_repair <span class="op">=</span> <span class="fu">janitor</span><span class="fu">::</span><span class="va"><a href="https://sfirke.github.io/janitor/reference/make_clean_names.html" class="external-link">make_clean_names</a></span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -223,6 +224,11 @@ the source data.</p></dd>
 <dd><p>If <code>TRUE</code>, clean names provided to nm or created based on
 value of col using <a href="https://sfirke.github.io/janitor/reference/clean_names.html" class="external-link">janitor::clean_names</a>. If <code>FALSE</code>, use names as
 provided.</p></dd>
+
+
+<dt>quiet</dt>
+<dd><p>If <code>TRUE</code>, suppress messages when downloading data. Defaults to
+<code>FALSE</code>.</p></dd>
 
 
 <dt>.name_repair</dt>
