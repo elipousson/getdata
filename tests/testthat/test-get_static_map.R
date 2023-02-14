@@ -31,6 +31,21 @@ test_that("get_static_map works", {
         ),
         "magick-image"
       )
+      expect_s3_class(
+        get_location_static_mapbox(
+          type = location,
+          token = Sys.getenv("TEST_MAPBOX_PUBLIC_TOKEN")
+        ),
+        "magick-image"
+      )
+      expect_s3_class(
+        get_osm_static_mapbox(
+          id = "relation/133345",
+          overlay_location = FALSE,
+          token = Sys.getenv("TEST_MAPBOX_PUBLIC_TOKEN")
+        ),
+        "magick-image"
+      )
     }
   )
 })

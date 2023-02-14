@@ -10,7 +10,8 @@ test_that("get_flickr_photos works", {
           location = location[24, ],
           user_id = "baltimoreheritage",
           key = Sys.getenv("TEST_FLICKR_API_KEY"),
-          per_page = 20
+          per_page = 20,
+          geometry = FALSE
         ),
         "tbl_df"
       )
@@ -20,8 +21,8 @@ test_that("get_flickr_photos works", {
           location = location[24, ],
           user_id = "baltimoreheritage",
           key = Sys.getenv("TEST_FLICKR_API_KEY"),
-          per_page = 20,
-          page = 2
+          per_page = 10,
+          page = c(1:3)
         ),
         "tbl_df"
       )
