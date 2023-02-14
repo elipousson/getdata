@@ -532,7 +532,7 @@ get_osm_value <- function(key = NULL, value = NULL) {
 osm_data_attribution <- function(.frequency = "regularly",
                                  .frequency_id = "get_osm_data_attribution") {
   rlang::check_installed("osmdata")
-  cli_inform(
+  cli::cli_inform(
     c(
       "i" = "OpenStreetMap data is licensed under the Open Database License
       (ODbL). Attribution is required if you use this data.",

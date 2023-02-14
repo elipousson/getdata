@@ -3,7 +3,9 @@
 
 ## usethis namespace: start
 #' @import rlang
-#' @importFrom cli cli_abort cli_inform cli_warn
+#' @importFrom cli cli_abort
+#' @importFrom cli cli_inform
+#' @importFrom cli cli_warn
 #' @importFrom glue glue
 #' @importFrom glue glue glue_collapse
 #' @importFrom rlang %||%

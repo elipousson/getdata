@@ -59,7 +59,7 @@ get_wiki_data <- function(location,
   if (sfext::is_sf(location, ext = TRUE)) {
     if (is.numeric(radius)) {
       dist <- radius
-      cli_inform(
+      cli::cli_inform(
         c("Using {.arg radius} value of {.val {dist}} for {.arg dist}.",
         "v" = "Setting {.arg radius} to TRUE.")
       )

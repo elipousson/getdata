@@ -139,7 +139,7 @@ get_flickr_photos <- function(location = NULL,
   photos <- tibble::tibble(photos)
 
   if (nrow(photos) == 0) {
-    cli_inform(
+    cli::cli_inform(
       "No photos can be found with the provided parameters."
     )
     return(invisible(NULL))

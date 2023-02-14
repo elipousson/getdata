@@ -133,7 +133,7 @@ has_same_name_col <- function(x,
   }
 
   if (!quiet) {
-    cli_inform(
+    cli::cli_inform(
       c("v" = "Renaming the existing column '{col}' to '{new_col}' to avoid
       overwriting existing values.")
     )

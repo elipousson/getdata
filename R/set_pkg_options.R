@@ -57,11 +57,11 @@ set_pkg_options <- function(...,
 
   if (!is.null(conflict_opts)) {
     if (!overwrite) {
-      cli_inform(
+      cli::cli_inform(
         c("x" = "The provided options conflict with these existing values:")
       )
       cliExtras::cli_ul_items(conflict_opts)
-      cli_inform(
+      cli::cli_inform(
         c("i" = "Set {.code overwrite = TRUE} to replace these
           {.pkg {pkg_nm}} options.")
       )
@@ -72,7 +72,7 @@ set_pkg_options <- function(...,
         update_opts <- NULL
       }
     } else {
-      cli_inform(c("!" = "Replacing these existing options:"))
+      cli::cli_inform(c("!" = "Replacing these existing options:"))
       cliExtras::cli_ul_items(conflict_opts)
     }
   }
@@ -80,7 +80,7 @@ set_pkg_options <- function(...,
   if (!is.null(update_opts)) {
     options(update_opts)
 
-    cli_inform(c("v" = "Updated options for {.pkg {pkg_nm}}:"))
+    cli::cli_inform(c("v" = "Updated options for {.pkg {pkg_nm}}:"))
     cliExtras::cli_ul_items(update_opts)
   }
 }
