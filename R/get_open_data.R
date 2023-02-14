@@ -34,6 +34,8 @@
 #'   token in .Renvironment). A token may be required to access data from
 #'   Socrata and other open data portals but can be stored as an environment
 #'   variable with [set_access_token].
+#' @param quiet If `TRUE`, suppress messages when downloading data. Defaults to
+#'   `FALSE`.
 #' @inheritParams get_location_data
 #' @inheritParams sfext::df_to_sf
 #' @inheritParams format_data
@@ -41,7 +43,7 @@
 #' @export
 #' @importFrom cliExtras cli_abort_ifnot
 #' @importFrom sfext st_bbox_ext df_to_sf
-#' @importFrom cli cli_inform cli_dl
+#' @importFrom cli cli_alert_info cli_dl
 #' @importFrom dplyr as_tibble
 get_open_data <- function(data = NULL,
                           source_url = NULL,
@@ -64,6 +66,7 @@ get_open_data <- function(data = NULL,
                           from_crs = 4326,
                           crs = NULL,
                           clean_names = TRUE,
+                          quiet = FALSE,
                           .name_repair = janitor::make_clean_names) {
   cliExtras::cli_abort_ifnot(
     c(
@@ -71,6 +74,12 @@ get_open_data <- function(data = NULL,
     ),
     condition = is_url(source_url) | (is_url(data) && is.null(source_url))
   )
+
+  if (isTRUE(quiet)) {
+    existing_handler <- getOption("cli.default_handler")
+    options(cli.default_handler = suppressMessages)
+    on.exit(options(cli.default_handler = existing_handler), add = TRUE)
+  }
 
   source_type <- tolower(source_type)
 
@@ -112,7 +121,7 @@ get_open_data <- function(data = NULL,
           data = data
         )
 
-      cli::cli_inform(
+      cli::cli_alert_info(
         "Downloading {.val {meta$name}} from {.url {meta$dataUri}}"
       )
 

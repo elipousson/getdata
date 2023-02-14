@@ -29,6 +29,7 @@ get_open_data(
   from_crs = 4326,
   crs = NULL,
   clean_names = TRUE,
+  quiet = FALSE,
   .name_repair = janitor::make_clean_names
 )
 
@@ -128,6 +129,9 @@ the source data.}
 \item{clean_names}{If \code{TRUE}, clean names provided to nm or created based on
 value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as
 provided.}
+
+\item{quiet}{If \code{TRUE}, suppress messages when downloading data. Defaults to
+\code{FALSE}.}
 
 \item{.name_repair}{Defaults to "check_unique"}
 }
