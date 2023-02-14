@@ -28,7 +28,8 @@ get_open_data(
   type = NULL,
   from_crs = 4326,
   crs = NULL,
-  clean_names = TRUE
+  clean_names = TRUE,
+  .name_repair = janitor::make_clean_names
 )
 
 get_socrata_data(
@@ -71,14 +72,17 @@ for the open data portal.}
 \item{source_type}{Data source type; defaults to "socrata" which is currently
 the only supported option.}
 
-\item{select}{SODA $select parameter. Set of columns to be returned, equivalent
-to a SELECT in SQL. \url{https://dev.socrata.com/docs/queries/select.html}}
+\item{select}{Names of of columns to return or transformed, equivalent to a
+SELECT in SQL. Passed to SODA $select parameter, see
+\url{https://dev.socrata.com/docs/queries/select.html} for more information.}
 
-\item{where}{SODA $where parameter. Filters the rows to be returned, equivalent
-to WHERE in SQL. \url{https://dev.socrata.com/docs/queries/where.html}}
+\item{where}{Condition to filters the rows to return, equivalent to WHERE in
+SQL. Passed to the SODA $where parameter, see
+\url{https://dev.socrata.com/docs/queries/where.html} for more information.}
 
-\item{query}{SODA $query parameter. A full SoQL query string, all as one
-parameter. \url{https://dev.socrata.com/docs/queries/query.html}}
+\item{query}{A full SoQL query string, all as one
+parameter. Passed to the SODA $query parameter, see
+\url{https://dev.socrata.com/docs/queries/query.html} for more information.}
 
 \item{location}{sf object. If multiple areas are provided, they are unioned
 into a single sf object using \code{\link[sf:geos_combine]{sf::st_union()}}}
@@ -124,6 +128,8 @@ the source data.}
 \item{clean_names}{If \code{TRUE}, clean names provided to nm or created based on
 value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as
 provided.}
+
+\item{.name_repair}{Defaults to "check_unique"}
 }
 \description{
 get_socrata_data is get_open_data with source_type set to "socrata" (the only

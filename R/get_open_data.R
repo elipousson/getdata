@@ -18,12 +18,15 @@
 #' @inheritParams sfext::st_bbox_ext
 #' @param name,name_col Name of column in Socrata data resource with
 #'   location names (e.g. County) and name of location to return.
-#' @param select SODA $select parameter. Set of columns to be returned, equivalent
-#'   to a SELECT in SQL. <https://dev.socrata.com/docs/queries/select.html>
-#' @param where SODA $where parameter. Filters the rows to be returned, equivalent
-#'   to WHERE in SQL. <https://dev.socrata.com/docs/queries/where.html>
-#' @param query SODA $query parameter. A full SoQL query string, all as one
-#'   parameter. <https://dev.socrata.com/docs/queries/query.html>
+#' @param select Names of of columns to return or transformed, equivalent to a
+#'   SELECT in SQL. Passed to SODA $select parameter, see
+#'   <https://dev.socrata.com/docs/queries/select.html> for more information.
+#' @param where Condition to filters the rows to return, equivalent to WHERE in
+#'   SQL. Passed to the SODA $where parameter, see
+#'   <https://dev.socrata.com/docs/queries/where.html> for more information.
+#' @param query A full SoQL query string, all as one
+#'   parameter. Passed to the SODA $query parameter, see
+#'   <https://dev.socrata.com/docs/queries/query.html> for more information.
 #' @param location_col Name of a "location" or "point" type column in a Socrata dataset.
 #' @param geometry If `TRUE` and coords are provided, return a
 #'   `sf` object. Default `FALSE`.
@@ -60,7 +63,8 @@ get_open_data <- function(data = NULL,
                           type = NULL,
                           from_crs = 4326,
                           crs = NULL,
-                          clean_names = TRUE) {
+                          clean_names = TRUE,
+                          .name_repair = janitor::make_clean_names) {
   cliExtras::cli_abort_ifnot(
     c(
       "{.arg source_url} must be a valid URL or, if {.arg data} is a url, {.arg source_url} must be NULL."
@@ -72,8 +76,8 @@ get_open_data <- function(data = NULL,
 
   cliExtras::cli_abort_ifnot(
     c("{.arg source_type} must be {.val socarata}.",
-      "i" = "Socrata is currently the only supported open data source for this function.",
-      " " = "Other open data access options (e.g. CKAN, Flat Data) may be added in the future."
+      "i" = "Socrata is currently the only supported open data source for this function.
+      Other open data access options (e.g. CKAN, Flat Data) may be added in the future."
     ),
     condition = (source_type == "socrata")
   )
@@ -145,8 +149,11 @@ get_open_data <- function(data = NULL,
   }
 
   if (clean_names) {
-    data <-
-      janitor::clean_names(data)
+    .name_repair <- janitor::make_clean_names
+  }
+
+  if (!is.null(.name_repair)) {
+    data <- use_name_repair(data, .name_repair)
   }
 
   if (!geometry) {
@@ -171,7 +178,7 @@ make_socrata_url <- function(data = NULL,
   # FIXME: Rewrite this to work with httr2
   # Make parameter calls
   if (!is.null(select)) {
-    select <- paste0("$select=", select)
+    select <- paste0("$select=", paste0(select, collapse = ","))
   }
 
   if (!is.null(where)) {
