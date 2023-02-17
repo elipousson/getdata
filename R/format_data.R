@@ -288,13 +288,6 @@ make_xwalk_list <- function(xwalk, cols = c("label", "name")) {
   as.list(tibble::deframe(xwalk[, cols]))
 }
 
-#' Helper function for getting names of character columns
-#'
-#' @noRd
-chr_colnames <- function(x) {
-  names(x)[vapply(x, is.character, TRUE)]
-}
-
 #' Trim and squish across any character columns
 #'
 #' @name str_trim_squish_across
@@ -306,7 +299,7 @@ str_trim_squish_across <- function(x) {
   dplyr::mutate(
     x,
     dplyr::across(
-      dplyr::all_of(chr_colnames(x)),
+      dplyr::where(is.character),
       ~ dplyr::if_else(
         is.na(.x) | is.null(.x),
         .x,
