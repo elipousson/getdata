@@ -38,8 +38,8 @@ replace_street_dir_prefixes(
 is optional. If x is a data.frame, x is required.}
 
 \item{.cols}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> Columns to transform.
-Because \code{across()} is used within functions like \code{summarise()} and
-\code{mutate()}, you can't select or compute upon grouping variables.}
+You can't select grouping columns because they are already automatically
+handled by the verb (i.e. \code{\link[dplyr:summarise]{summarise()}} or \code{\link[dplyr:mutate]{mutate()}}).}
 
 \item{xwalk, dict}{Named list or data frame with a minimum of two columns
 where one column contains the replacement values and the other the values
