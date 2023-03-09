@@ -25,6 +25,7 @@ get_location_data(
   col = NULL,
   var_names = NULL,
   clean_names = FALSE,
+  range = NULL,
   ...
 )
 
@@ -46,6 +47,7 @@ map_location_data(
   label = NULL,
   load = FALSE,
   index = NULL,
+  range = NULL,
   ...
 )
 }
@@ -114,6 +116,14 @@ defaults to \code{NULL}.}
 \item{clean_names}{If \code{TRUE}, clean names provided to nm or created based on
 value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as
 provided.}
+
+\item{range}{For \code{\link[sfext:lonlat_to_sfc]{lonlat_to_sfc()}}, an object that is coercible to a \code{bbox}
+object or a length 4 vector with names xmin, xmax, ymin, and ymax. If a
+coordinate pair falls outside the latitude/longitude range defined by the
+vector but inside the range if reversed, the coordinates are assumed to be
+in lat/lon order and are switched to lon/lat order before being converted
+to a point. Defaults to \code{c("xmin" = -180, "ymin" = -50, "xmax" = 180, "ymax" = 60)}. Note that this default setting will reverse valid
+coordinates north of Anchorage, Alaska or south of New Zealand.}
 
 \item{...}{additional parameters passed to \code{\link[sfext:read_sf_ext]{sfext::read_sf_path()}},
 \code{\link[sfext:read_sf_ext]{sfext::read_sf_url()}}, or \code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}} and

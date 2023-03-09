@@ -45,8 +45,9 @@
 #'   fully tested and may result in errors or unexpected results.
 #' @param label label is optionally used by [map_location_data()] to name the
 #'   data objects in the list returned by the function.
-#' @inheritParams sfext::as_sf_class
+#' @inheritParams sfext::as_sf
 #' @inheritParams format_data
+#' @inheritParams sfext::lonlat_to_sfc
 #' @param ... additional parameters passed to [sfext::read_sf_path()],
 #'   [sfext::read_sf_url()], or [sfext::read_sf_pkg()] and
 #'   [sfext::st_filter_ext()]
@@ -72,6 +73,7 @@ get_location_data <- function(location = NULL,
                               col = NULL,
                               var_names = NULL,
                               clean_names = FALSE,
+                              range = NULL,
                               ...) {
   if (!is.null(index) && is.list(index)) {
     # FIXME: This is set to work with 1 or 2 level list indices with naming
@@ -87,7 +89,7 @@ get_location_data <- function(location = NULL,
   }
 
   if (!is.null(location) && !sfext::is_sf(location)) {
-    location <- sfext::as_sf(location)
+    location <- sfext::as_sf(location, range = range)
   }
 
   # Get adjusted bounding box using any adjustment variables provided
@@ -102,7 +104,6 @@ get_location_data <- function(location = NULL,
     )
 
   if (!sfext::is_sf(data)) {
-
     type <-
       dplyr::case_when(
         is.data.frame(data) ~ "df",
@@ -167,7 +168,6 @@ get_location_data <- function(location = NULL,
 #'   defaults `FALSE`.
 #' @export
 #' @importFrom janitor make_clean_names
-#' @importFrom purrr map_chr map map2 discard
 #' @importFrom rlang set_names
 map_location_data <- function(location = NULL,
                               dist = NULL,
@@ -186,6 +186,7 @@ map_location_data <- function(location = NULL,
                               label = NULL,
                               load = FALSE,
                               index = NULL,
+                              range = NULL,
                               ...) {
   # FIXME: This triggers an alert with lintr but it is used
   params <- list2(...)
@@ -204,7 +205,7 @@ map_location_data <- function(location = NULL,
       data <-
         rlang::set_names(
           data,
-          nm = purrr::map_chr(
+          nm = map_chr(
             data,
             ~ paste0(
               c(
@@ -225,7 +226,7 @@ map_location_data <- function(location = NULL,
   if (is.list(data) && is.list(location) &&
     (length(data) == length(location))) {
     data <-
-      purrr::map2(
+      map2(
         location,
         data,
         ~ get_location_data(
@@ -244,12 +245,13 @@ map_location_data <- function(location = NULL,
           crs = crs,
           name_col = params$name_col,
           name = params$name,
-          index = index
+          index = index,
+          range = range
         )
       )
   } else if (is.list(data)) {
     data <-
-      purrr::map(
+      map(
         data,
         ~ get_location_data(
           location = location,
@@ -272,7 +274,7 @@ map_location_data <- function(location = NULL,
       )
   } else if (is.list(location)) {
     data <-
-      purrr::map(
+      map(
         location,
         ~ get_location_data(
           location = .x,
@@ -290,12 +292,13 @@ map_location_data <- function(location = NULL,
           crs = crs,
           name_col = params$name_col,
           name = params$name,
+          index = index,
           index = index
         )
       )
   }
 
-  data <- purrr::discard(data, ~ nrow(.x) == 0)
+  data <- discard(data, ~ nrow(.x) == 0)
   data <- sfext::as_sf_class(x = data, class = class, crs = crs) # , ...)
 
   if (load && sfext::is_sf_list(data, named = TRUE)) {
