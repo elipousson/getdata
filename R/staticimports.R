@@ -9,7 +9,7 @@
 #' @rdname is_url
 #' @noRd
 is_esri_url <- function(x) {
-  all(is_url(x)) && grepl("/MapServer|/FeatureServer", x)
+  is_url(x) & grepl("/MapServer|/FeatureServer", x)
 }
 
 #' - [is_gist_url()]: Is an object a URL for a GitHub Gist?
@@ -62,48 +62,9 @@ is_url <- function(x) {
 # Imported from pkg:stringstatic
 # ======================================================================
 
-#' Replace matched patterns in a string
-#'
-#' Dependency-free drop-in alternative for `stringr::str_replace()`.
-#'
-#' @source Adapted from the [stringr](https://stringr.tidyverse.org/) package.
-#'
-#' @param string Input vector.
-#'   Either a character vector, or something coercible to one.
-#'
-#' @param pattern Pattern to look for.
-#'
-#'   The default interpretation is a regular expression,
-#'   as described in [base::regex].
-#'   Control options with [regex()].
-#'
-#'   Match a fixed string (i.e. by comparing only bytes), using [fixed()].
-#'   This is fast, but approximate.
-#'
-#' @param replacement A character vector of replacements.
-#'   Should be either length one, or the same length as `string` or `pattern`.
-#'   References of the form `\1`, `\2`, etc. will be replaced with the contents
-#'   of the respective matched group (created by `()`).
-#'
-#'   To replace the complete string with `NA`,
-#'   use `replacement = NA_character_`.
-#'
-#'   Using a function for `replacement` is not yet supported.
-#'
-#' @return A character vector.
-#' @noRd
 str_replace <- function(string, pattern, replacement) {
-	ignore.case <- isTRUE(attr(pattern, "options")$case_insensitive)
-	is_fixed <- !ignore.case && inherits(pattern, "fixed")
-
-	sub <- Vectorize(sub, c("pattern", "replacement", "x"), USE.NAMES = FALSE)
-
-	sub(
-		pattern,
-		replacement,
-		x = string,
-		ignore.case = ignore.case,
-		perl = !is_fixed,
-		fixed = is_fixed
+	is_fixed <- inherits(pattern, "stringr_fixed")
+	Vectorize(sub, c("pattern", "replacement", "x"), USE.NAMES = FALSE)(
+		pattern, replacement, x = string, perl = !is_fixed, fixed = is_fixed
 	)
 }
