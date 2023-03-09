@@ -1,4 +1,3 @@
-
 #' Use googlesheets4 to get a data frame or simple feature data from a Google Sheet
 #'
 #' @param url A Google Sheets url

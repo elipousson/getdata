@@ -61,7 +61,8 @@ get_wiki_data <- function(location,
       dist <- radius
       cli::cli_inform(
         c("Using {.arg radius} value of {.val {dist}} for {.arg dist}.",
-        "v" = "Setting {.arg radius} to TRUE.")
+          "v" = "Setting {.arg radius} to TRUE."
+        )
       )
       radius <- TRUE
     }
