@@ -122,7 +122,6 @@ get_osm_data <- function(location = NULL,
 #' @param type Type of feature for the id; "node", "way", or "relation".
 #'   Optional if id includes a type prefix.
 #' @export
-#' @importFrom purrr map_dfr
 get_osm_id <- function(id,
                        type = NULL,
                        crs = NULL,
@@ -132,14 +131,16 @@ get_osm_id <- function(id,
 
   if (length(id) > 1) {
     return(
-      purrr::map_dfr(
-        id,
-        ~ get_osm_id(
-          id = .x,
-          type = type,
-          crs = crs,
-          geometry = geometry,
-          osmdata = FALSE
+      vctrs::vec_rbind(
+        map(
+          id,
+          ~ get_osm_id(
+            id = .x,
+            type = type,
+            crs = crs,
+            geometry = geometry,
+            osmdata = FALSE
+          )
         )
       )
     )

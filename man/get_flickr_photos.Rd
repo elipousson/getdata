@@ -71,9 +71,9 @@ smallest to largest size include "sq" (square), "t", "s", "q", "m", "n",
 \item{per_page}{Photos to return per page of search results, Default: 100.
 Maximum 250 if a location is provided or 500 otherwise.}
 
-\item{page}{If page is greater than length 1, the function uses
-\code{\link[purrr:map_dfr]{purrr::map_dfr()}} to return results for all pages but this may cause
-issues with API access if a large page range is provided. Default: 1}
+\item{page}{Page to return. If page is greater than length 1, loop over all
+pages. This may cause issues with API access if a large page range is
+provided. Default: 1}
 
 \item{orientation}{If img_size is length 1, photos are filtered to one or
 more of the supported orientations ("portrait", "landscape", and "square");

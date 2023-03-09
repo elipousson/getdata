@@ -28,7 +28,6 @@
 #' @param .pkg Package name to append to option name.
 #' @name set_pkg_options
 #' @export
-#' @importFrom purrr discard
 #' @importFrom cliExtras cli_ul_items
 set_pkg_options <- function(...,
                             overwrite = FALSE,
@@ -42,7 +41,7 @@ set_pkg_options <- function(...,
 
   # Get existing options matching new_opts
   existing_opts <- sapply(nm_opts, getOption)
-  existing_opts <- purrr::discard(existing_opts, is.null)
+  existing_opts <- discard(existing_opts, is.null)
 
   existing_nm <- names(existing_opts)
   conflict_nm <- existing_nm %in% nm_opts

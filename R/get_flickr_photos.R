@@ -19,9 +19,9 @@
 #'   "z", "c", "l", and "o" (original).
 #' @param per_page Photos to return per page of search results, Default: 100.
 #'   Maximum 250 if a location is provided or 500 otherwise.
-#' @param page If page is greater than length 1, the function uses
-#'   [purrr::map_dfr()] to return results for all pages but this may cause
-#'   issues with API access if a large page range is provided. Default: 1
+#' @param page Page to return. If page is greater than length 1, loop over all
+#'   pages. This may cause issues with API access if a large page range is
+#'   provided. Default: 1
 #' @param orientation If img_size is length 1, photos are filtered to one or
 #'   more of the supported orientations ("portrait", "landscape", and "square");
 #'   defaults to `NULL`.
@@ -58,7 +58,6 @@
 #'  [FlickrAPI::getPhotoSearch()]
 #' @rdname get_flickr_photos
 #' @export
-#' @importFrom purrr map_dfr
 #' @importFrom rlang has_name
 #' @importFrom dplyr mutate
 #' @importFrom tibble tibble
@@ -80,28 +79,32 @@ get_flickr_photos <- function(location = NULL,
                               geometry = TRUE,
                               crs = 4326,
                               key = NULL) {
+  rlang::check_installed("FlickrAPI")
+
   if (length(page) > 1) {
     return(
-      purrr::map_dfr(
-        page,
-        ~ get_flickr_photos(
-          location = location,
-          dist = dist,
-          diag_ratio = diag_ratio,
-          unit = unit,
-          asp = asp,
-          user_id = user_id,
-          tags = tags,
-          img_size = img_size,
-          license_id = license_id,
-          sort = sort,
-          extras = extras,
-          per_page = per_page,
-          page = .x,
-          orientation = orientation,
-          geometry = geometry,
-          crs = crs,
-          key = key
+      vctrs::vec_rbind(
+        map(
+          page,
+          ~ get_flickr_photos(
+            location = location,
+            dist = dist,
+            diag_ratio = diag_ratio,
+            unit = unit,
+            asp = asp,
+            user_id = user_id,
+            tags = tags,
+            img_size = img_size,
+            license_id = license_id,
+            sort = sort,
+            extras = extras,
+            per_page = per_page,
+            page = .x,
+            orientation = orientation,
+            geometry = geometry,
+            crs = crs,
+            key = key
+          )
         )
       )
     )
@@ -119,8 +122,6 @@ get_flickr_photos <- function(location = NULL,
       crs = 4326
     )
 
-  is_pkg_installed(pkg = "FlickrAPI", repo = "koki25ando/FlickrAPI")
-
   photos <-
     FlickrAPI::get_photo_search(
       api_key = key,
@@ -136,7 +137,7 @@ get_flickr_photos <- function(location = NULL,
       page = page
     )
 
-  photos <- tibble::tibble(photos)
+  photos <- tibble::as_tibble(photos)
 
   if (nrow(photos) == 0) {
     cli::cli_inform(

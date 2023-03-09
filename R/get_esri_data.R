@@ -45,7 +45,7 @@ get_esri_data <- function(url,
                           quiet = FALSE,
                           .name_repair = janitor::make_clean_names,
                           ...) {
-  is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
+  check_dev_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
   meta <- get_esri_metadata(url, token)
   # Set table to TRUE for missing geometry type
   table <- any(c(is.null(meta$geometryType), (meta$geometryType == "")))
@@ -145,7 +145,6 @@ get_esri_data <- function(url,
 #' @importFrom dplyr case_when
 #' @importFrom rlang has_name list2 set_names
 #' @importFrom janitor make_clean_names
-#' @importFrom purrr map_chr map
 get_esri_layers <- function(location = NULL,
                             layers = NULL,
                             url = NULL,
@@ -155,7 +154,7 @@ get_esri_layers <- function(location = NULL,
                             quiet = FALSE,
                             .name_repair = janitor::make_clean_names,
                             ...) {
-  is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
+  check_dev_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
 
   if (is_esri_url(url)) {
     url <- sub("/$", "", url)
@@ -222,7 +221,7 @@ get_esri_layers <- function(location = NULL,
     }
   } else {
     nm <- nm %||%
-      purrr::map_chr(
+      map_chr(
         layer_urls,
         ~ get_esri_metadata(.x, token, meta = "name", clean_names = clean_names)
       )
@@ -233,7 +232,7 @@ get_esri_layers <- function(location = NULL,
   params <- rlang::list2(...)
 
   data <-
-    purrr::map(
+    map(
       layer_urls,
       ~ get_esri_data(
         url = .x,
@@ -293,7 +292,7 @@ get_layer_list <- function(meta) {
 #' @importFrom janitor make_clean_names
 #' @importFrom rlang check_required is_character
 get_esri_metadata <- function(url, token = NULL, meta = NULL, clean_names = TRUE) {
-  is_pkg_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
+  check_dev_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
   rlang::check_required(url)
 
   metadata <- esri2sf::esrimeta(url, token)

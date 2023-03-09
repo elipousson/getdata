@@ -87,15 +87,12 @@ use_name_repair <- function(data = NULL,
 #' @param repo GitHub repository to use for the package.
 #' @noRd
 #' @importFrom rlang check_installed
-is_pkg_installed <- function(pkg, repo = NULL) {
-  if (!requireNamespace(pkg, quietly = TRUE)) {
-    if (!is.null(repo)) {
-      pkg <- repo
-    }
-
-    rlang::check_installed(pkg = pkg)
+check_dev_installed <- function(pkg = NULL, repo = NULL) {
+  if (!is.null(pkg) && !rlang::is_installed(pkg = pkg)) {
+    rlang::check_installed(pkg = repo %||% pkg)
   }
 }
+
 
 #' Does the data frame has a column with the same name?
 #'

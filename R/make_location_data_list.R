@@ -1,4 +1,3 @@
-
 #' Make a list of data and corresponding locations
 #'
 #' This function converts data and location into lists of sf objects using
@@ -59,7 +58,6 @@ make_location_data_list <- function(data = NULL, location = NULL, key = c("locat
 
 
 #' @noRd
-#' @importFrom purrr map map2
 get_location_data_list <- function(data = NULL, location = NULL, nm = NULL, ...) {
   # FIXME: Should this be titled map_location_data_list?
   if (is.null(nm) && !is.null(data)) {
@@ -79,7 +77,7 @@ get_location_data_list <- function(data = NULL, location = NULL, nm = NULL, ...)
     }
 
     data <-
-      purrr::map(
+      map(
         location,
         ~ get_location_data(
           location = .x,
@@ -94,7 +92,7 @@ get_location_data_list <- function(data = NULL, location = NULL, nm = NULL, ...)
 
     # Get multiple data for a single locations
     data <-
-      purrr::map(
+      map(
         data,
         ~ get_location_data(
           location = location[[1]],
@@ -104,7 +102,7 @@ get_location_data_list <- function(data = NULL, location = NULL, nm = NULL, ...)
       )
   } else if (length(location) == length(data)) {
     data <-
-      purrr::map2(
+      map2(
         location,
         data,
         ~ get_location_data(
