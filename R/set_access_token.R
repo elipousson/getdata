@@ -22,8 +22,7 @@ set_access_token <- function(token,
                              overwrite = FALSE,
                              install = FALSE,
                              type = NULL,
-                             call = caller_env(),
-                             .frame = parent.frame()) {
+                             call = caller_env()) {
   check_required(token)
 
   if (rlang::is_named(token)) {
