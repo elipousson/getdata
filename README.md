@@ -302,7 +302,7 @@ You can use `make_variable_dictionary()` to make a custom dictionary:
 
 ``` r
 make_variable_dictionary(
-  nps_park[ ,c(10:12)],
+  nps_park[, c(10:12)],
   .labels = c(
     "Geographic Names Information System identifier",
     "Park name",
@@ -321,7 +321,7 @@ Or you can use `rename_with_xwalk()` to rename columns:
 
 ``` r
 rename_with_xwalk(
-  nps_park[ ,c(10:12)],
+  nps_park[, c(10:12)],
   xwalk = list(
     "gnis" = "gnis_id",
     "sq_km" = "areasqkm"
