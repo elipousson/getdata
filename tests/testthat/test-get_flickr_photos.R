@@ -13,7 +13,7 @@ test_that("get_flickr_photos works", {
           per_page = 20,
           geometry = FALSE
         ),
-        "tbl_df"
+        "data.frame"
       )
 
       expect_s3_class(
@@ -24,7 +24,7 @@ test_that("get_flickr_photos works", {
           per_page = 10,
           page = c(1:3)
         ),
-        "tbl_df"
+        "data.frame"
       )
 
       expect_s3_class(
@@ -35,7 +35,7 @@ test_that("get_flickr_photos works", {
           orientation = "landscape",
           per_page = 20
         ),
-        "tbl_df"
+        "data.frame"
       )
 
       expect_message(
