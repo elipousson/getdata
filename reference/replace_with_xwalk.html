@@ -100,8 +100,8 @@ is optional. If x is a data.frame, x is required.</p></dd>
 
 <dt>.cols</dt>
 <dd><p>&lt;<code><a href="https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html" class="external-link">tidy-select</a></code>&gt; Columns to transform.
-Because <code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across()</a></code> is used within functions like <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise()</a></code> and
-<code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code>, you can't select or compute upon grouping variables.</p></dd>
+You can't select grouping columns because they are already automatically
+handled by the verb (i.e. <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise()</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code>).</p></dd>
 
 
 <dt>xwalk, dict</dt>

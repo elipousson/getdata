@@ -262,7 +262,7 @@
 <p>You can use <code><a href="reference/format_data.html">make_variable_dictionary()</a></code> to make a custom dictionary:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/format_data.html">make_variable_dictionary</a></span><span class="op">(</span></span>
-<span>  <span class="va">nps_park</span><span class="op">[</span> ,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  <span class="va">nps_park</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>  .labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="st">"Geographic Names Information System identifier"</span>,</span>
 <span>    <span class="st">"Park name"</span>,</span>
@@ -278,7 +278,7 @@
 <p>Or you can use <code><a href="reference/format_data.html">rename_with_xwalk()</a></code> to rename columns:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/format_data.html">rename_with_xwalk</a></span><span class="op">(</span></span>
-<span>  <span class="va">nps_park</span><span class="op">[</span> ,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  <span class="va">nps_park</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>  xwalk <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="st">"gnis"</span> <span class="op">=</span> <span class="st">"gnis_id"</span>,</span>
 <span>    <span class="st">"sq_km"</span> <span class="op">=</span> <span class="st">"areasqkm"</span></span>

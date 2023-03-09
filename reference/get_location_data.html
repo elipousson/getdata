@@ -86,6 +86,7 @@ an address.</p>
 <span>  col <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  var_names <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  clean_names <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  range <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -107,6 +108,7 @@ an address.</p>
 <span>  label <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  load <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  index <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  range <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -214,6 +216,16 @@ defaults to <code>NULL</code>.</p></dd>
 <dd><p>If <code>TRUE</code>, clean names provided to nm or created based on
 value of col using <a href="https://sfirke.github.io/janitor/reference/clean_names.html" class="external-link">janitor::clean_names</a>. If <code>FALSE</code>, use names as
 provided.</p></dd>
+
+
+<dt>range</dt>
+<dd><p>For <code><a href="https://elipousson.github.io/sfext/reference/lonlat_to_sfc.html" class="external-link">lonlat_to_sfc()</a></code>, an object that is coercible to a <code>bbox</code>
+object or a length 4 vector with names xmin, xmax, ymin, and ymax. If a
+coordinate pair falls outside the latitude/longitude range defined by the
+vector but inside the range if reversed, the coordinates are assumed to be
+in lat/lon order and are switched to lon/lat order before being converted
+to a point. Defaults to <code>c("xmin" = -180, "ymin" = -50, "xmax" = 180, "ymax" = 60)</code>. Note that this default setting will reverse valid
+coordinates north of Anchorage, Alaska or south of New Zealand.</p></dd>
 
 
 <dt>...</dt>
