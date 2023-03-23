@@ -299,7 +299,7 @@ str_trim_squish_across <- function(x) {
   dplyr::mutate(
     x,
     dplyr::across(
-      dplyr::where(is.character),
+      tidyselect::where(is.character),
       ~ dplyr::if_else(
         is.na(.x) | is.null(.x),
         .x,
