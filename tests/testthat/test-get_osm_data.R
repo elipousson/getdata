@@ -31,6 +31,18 @@ test_that("get_osm_data works", {
     "sf"
   )
   expect_s3_class(
+    get_osm_data(
+      id = c("way/79235072", "way/70517965")
+    ),
+    "sf"
+  )
+  expect_s3_class(
+    get_osm_data(
+      id = c("way" = 79235072)
+    ),
+    "sf"
+  )
+  expect_s3_class(
     get_osm_boundaries(
       location = location,
       level = c(2, 4)

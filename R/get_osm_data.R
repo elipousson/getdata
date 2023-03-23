@@ -130,8 +130,8 @@ get_osm_id <- function(id,
   osm_data_attribution()
 
   if (length(id) > 1) {
-    return(
-      vctrs::vec_rbind(
+    data <-
+      dplyr::bind_rows(
         map(
           id,
           ~ get_osm_id(
@@ -143,7 +143,8 @@ get_osm_id <- function(id,
           )
         )
       )
-    )
+
+    return(data)
   }
 
   id_type <- get_osm_id_type(id = id, type = type, geometry = geometry)
