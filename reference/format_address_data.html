@@ -91,13 +91,23 @@ create a block segment and a block face (including the even/odd identifier).</p>
 <span>  case <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">bind_address_col</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, case <span class="op">=</span> <span class="cn">NULL</span>, .cols <span class="op">=</span> <span class="cn">NULL</span>, .after <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">bind_address_col</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, case <span class="op">=</span> <span class="cn">NULL</span>, .cols <span class="op">=</span> <span class="cn">NULL</span>, .after <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">bind_location_text_col</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  text_col <span class="op">=</span> <span class="st">"text"</span>,</span>
+<span>  address_pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Ave."</span>, <span class="st">"Avenue"</span>, <span class="st">"St."</span>, <span class="st">"Street"</span>, <span class="st">"Rd."</span>, <span class="st">"Road"</span><span class="op">)</span>,</span>
+<span>  block_face_pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sides\\)"</span>, <span class="st">"side\\)"</span>, <span class="st">"[:space:]block"</span>, <span class="st">"-block"</span>, <span class="st">"blocks"</span><span class="op">)</span>,</span>
+<span>  street_corridor_pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"between(?=.+and)"</span>, <span class="st">"from(?=.+to)"</span><span class="op">)</span>,</span>
+<span>  .cols <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
-<dd><p>A data frame to bind the address columns to.</p></dd>
+<dd><p>A data.frame with a column name matching col and no column names
+matching the list passed to .cols (or the default values listed below).</p></dd>
 
 
 <dt>bldg_num, street_dir_prefix, street_name, street_suffix</dt>
@@ -139,15 +149,36 @@ in filling missing values, e.g. state = "MD" to add a missing state column.</p><
 
 
 <dt>.cols</dt>
-<dd><p>Named list specifying the additional column names to use for
-city, county, and state data. "street" is used for street address column
-name, (e.g. 100 Holliday St) Default: 'street_address'. "address" is used
-for full address column name. If "city" and "state" or "city" and "county"
-are provided, a combined address column is added to the data.frame using
-the "address" column name. If both county and city are provided, county is
-ignored.</p></dd>
+<dd><p>Column names to add. Defaults to is_address, is_block_face,
+is_street_corridor, and block_side. x must not have any column names matching the
+names found in .cols.</p></dd>
+
+
+<dt>text_col</dt>
+<dd><p>Column name containing the information to check for location
+details, Default: 'text'</p></dd>
+
+
+<dt>address_pattern</dt>
+<dd><p>A character vector of regex patterns to return TRUE for is_address.</p></dd>
+
+
+<dt>block_face_pattern</dt>
+<dd><p>A character vector of regex patterns to return TRUE for is_block_face.</p></dd>
+
+
+<dt>street_corridor_pattern</dt>
+<dd><p>A character vector of regex patterns to return TRUE for is_street_corridor.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>A data.frame with new indicator columns for address and block_face
+and a column indicating whether the text references a particular cardinal
+direction in describing a block.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -165,23 +196,49 @@ ignored.</p></dd>
 <span class="r-in"><span>    street_col <span class="op">=</span> <span class="st">"street_address"</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">bind_address_col</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">address_df</span>,</span></span>
-<span class="r-in"><span>  city <span class="op">=</span> <span class="st">"Baltimore"</span>,</span></span>
-<span class="r-in"><span>  state <span class="op">=</span> <span class="st">"MD"</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">address_df</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   bldg_num street_dir_prefix street_name street_type     street_address</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      100                       Holiday      Street 100 Holiday Street</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     1415                           Key     Highway   1415 Key Highway</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      600                 N     Charles          St   600 N Charles St</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        city state                          address block_num block_even_odd</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Baltimore    MD 100 Holiday Street, Baltimore MD       100           Even</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Baltimore    MD   1415 Key Highway, Baltimore MD      1400            Odd</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Baltimore    MD   600 N Charles St, Baltimore MD       600           Even</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              block_segment                      block_face</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 block Holiday Street 100 block Holiday Street (Even)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1400 block Key Highway    1400 block Key Highway (Odd)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   600 block N Charles St   600 block N Charles St (Even)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   block_num block_even_odd            block_segment</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       100           Even 100 block Holiday Street</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        block_face</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 100 block Holiday Street (Even)</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">address_df</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu">bind_address_col</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">address_df</span>,</span></span>
+<span class="r-in"><span>    city <span class="op">=</span> <span class="st">"Baltimore"</span>,</span></span>
+<span class="r-in"><span>    state <span class="op">=</span> <span class="st">"MD"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">address_df</span><span class="op">[</span><span class="fl">2</span>,<span class="op">]</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   bldg_num street_dir_prefix street_name street_type   street_address block_num</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     1415                           Key     Highway 1415 Key Highway      1400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   block_even_odd          block_segment                   block_face      city</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2            Odd 1400 block Key Highway 1400 block Key Highway (Odd) Baltimore</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   state                        address</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    MD 1415 Key Highway, Baltimore MD</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">location_df</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"text"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="st">"100 Holiday St."</span>,</span></span>
+<span class="r-in"><span>      <span class="st">"1400 block Key Highway (north side)"</span>,</span></span>
+<span class="r-in"><span>      <span class="st">"Charles St. from E. Centre St. to E. Madison St."</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">location_df</span> <span class="op">&lt;-</span> <span class="fu">bind_location_text_col</span><span class="op">(</span><span class="va">location_df</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">location_df</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                               text is_address is_block_face</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                                  100 Holiday St.       TRUE         FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              1400 block Key Highway (north side)       TRUE          TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Charles St. from E. Centre St. to E. Madison St.       TRUE         FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   is_street_corridor block_side</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              FALSE       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              FALSE      north</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3               TRUE       &lt;NA&gt;</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
