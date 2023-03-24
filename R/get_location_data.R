@@ -25,9 +25,9 @@
 #' @param data Character string (e.g. url, file path, or name of data from
 #'   package), a `sf`, `sfc`, or `bbox`  object including data in area.
 #' @param package Name of the package to search for data.
-#' @param filetype File type to use if passing parameters to
-#'   [sfext::read_sf_download()] or [sfext::read_sf_pkg()] (required for extdata
-#'   and cached data).
+#' @param fileext,filetype File extension or type to use if passing parameters
+#'   to [sfext::read_sf_download()] or [sfext::read_sf_pkg()] (required for
+#'   extdata and cached data).
 #' @param fn Function to apply to data after filtering by location but before
 #'   returning from function.
 #' @inheritParams sfext::st_filter_ext
@@ -61,6 +61,7 @@ get_location_data <- function(location = NULL,
                               asp = getOption("getdata.asp"),
                               data = NULL,
                               package = getOption("getdata.package"),
+                              fileext = getOption("getdata.fileext", default = "gpkg"),
                               filetype = getOption("getdata.filetype", default = "gpkg"),
                               fn = NULL,
                               crop = TRUE,
@@ -75,6 +76,7 @@ get_location_data <- function(location = NULL,
                               clean_names = FALSE,
                               range = NULL,
                               ...) {
+  fileext <- fileext %||% filetype
   if (!is.null(index) && is.list(index)) {
     # FIXME: This is set to work with 1 or 2 level list indices with naming
     # conventions that match make_location_data_list This should be clearly
@@ -128,7 +130,7 @@ get_location_data <- function(location = NULL,
         "path" = sfext::read_sf_path(path = data, bbox = bbox, ...),
         "pkg" = sfext::read_sf_pkg(
           data = data, bbox = bbox, package = package,
-          filetype = filetype, ...
+          fileext = fileext, ...
         )
       )
   }
@@ -180,6 +182,7 @@ map_location_data <- function(location = NULL,
                               asp = NULL,
                               data = NULL,
                               package = NULL,
+                              fileext = "gpkg",
                               filetype = "gpkg",
                               fn = NULL,
                               crop = TRUE,
@@ -192,6 +195,7 @@ map_location_data <- function(location = NULL,
                               index = NULL,
                               range = NULL,
                               ...) {
+  fileext <- fileext %||% filetype
   # FIXME: This triggers an alert with lintr but it is used
   params <- list2(...)
 
@@ -241,7 +245,7 @@ map_location_data <- function(location = NULL,
           asp = asp,
           data = .y,
           package = package,
-          filetype = filetype,
+          fileext = fileext,
           fn = fn,
           crop = crop,
           trim = trim,
@@ -265,7 +269,7 @@ map_location_data <- function(location = NULL,
           asp = asp,
           data = .x,
           package = package,
-          filetype = filetype,
+          fileext = fileext,
           fn = fn,
           crop = crop,
           trim = trim,
@@ -288,7 +292,7 @@ map_location_data <- function(location = NULL,
           asp = asp,
           data = data,
           package = package,
-          filetype = filetype,
+          fileext = fileext,
           fn = fn,
           crop = crop,
           trim = trim,

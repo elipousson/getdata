@@ -13,6 +13,7 @@ get_location_data(
   asp = getOption("getdata.asp"),
   data = NULL,
   package = getOption("getdata.package"),
+  fileext = getOption("getdata.fileext", default = "gpkg"),
   filetype = getOption("getdata.filetype", default = "gpkg"),
   fn = NULL,
   crop = TRUE,
@@ -37,6 +38,7 @@ map_location_data(
   asp = NULL,
   data = NULL,
   package = NULL,
+  fileext = "gpkg",
   filetype = "gpkg",
   fn = NULL,
   crop = TRUE,
@@ -76,9 +78,9 @@ package), a \code{sf}, \code{sfc}, or \code{bbox}  object including data in area
 
 \item{package}{Name of the package to search for data.}
 
-\item{filetype}{File type to use if passing parameters to
-\code{\link[sfext:read_sf_ext]{sfext::read_sf_download()}} or \code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}} (required for extdata
-and cached data).}
+\item{fileext, filetype}{File extension or type to use if passing parameters
+to \code{\link[sfext:read_sf_ext]{sfext::read_sf_download()}} or \code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}} (required for
+extdata and cached data).}
 
 \item{fn}{Function to apply to data after filtering by location but before
 returning from function.}
