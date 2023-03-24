@@ -1,17 +1,17 @@
 #' @noRd
 #' @importFrom rlang is_null
-check_null <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, null.req = FALSE, call = caller_env(), ...) {
-  if (null.req) {
-    null.ok <- null.req
+check_null <- function(x = NULL, arg = caller_arg(x), allow_null = FALSE, req_null = FALSE, call = caller_env(), ...) {
+  if (req_null) {
+    allow_null <- req_null
   }
 
-  if (rlang::is_null(x) && !null.ok) {
+  if (rlang::is_null(x) && !allow_null) {
     cli_abort("{.arg {arg}} must not be NULL.",
       call = call, ...
     )
   }
 
-  if (!rlang::is_null(x) && null.req) {
+  if (!rlang::is_null(x) && req_null) {
     cli_abort("{.arg {arg}} must be NULL.",
       call = call, ...
     )
@@ -22,8 +22,8 @@ check_null <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, null.req 
 
 #' @noRd
 #' @importFrom rlang is_null
-check_character <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = NULL, call = caller_env(), ...) {
-  check_null(x, arg, null.ok, call = call)
+check_character <- function(x = NULL, arg = caller_arg(x), allow_null = FALSE, n = NULL, call = caller_env(), ...) {
+  check_null(x, arg, allow_null, call = call)
 
   if (rlang::is_character(x, n = n)) {
     invisible(return(TRUE))
@@ -40,8 +40,8 @@ check_character <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = 
 
 #' @noRd
 #' @importFrom rlang is_logical
-check_logical <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = NULL, call = caller_env(), ...) {
-  check_null(x, arg, null.ok, call = call)
+check_logical <- function(x = NULL, arg = caller_arg(x), allow_null = FALSE, n = NULL, call = caller_env(), ...) {
+  check_null(x, arg, allow_null, call = call)
 
   if (rlang::is_logical(x, n = n)) {
     invisible(return(TRUE))
@@ -57,8 +57,8 @@ check_logical <- function(x = NULL, arg = caller_arg(x), null.ok = FALSE, n = NU
 }
 
 #' @noRd
-check_len <- function(x = NULL, len = 1, arg = caller_arg(x), null.ok = FALSE, call = caller_env(), ...) {
-  check_null(x, arg, null.ok, call = call)
+check_len <- function(x = NULL, len = 1, arg = caller_arg(x), allow_null = FALSE, call = caller_env(), ...) {
+  check_null(x, arg, allow_null, call = call)
 
   if ((length(x) >= min(len)) && (length(x) <= max(len))) {
     invisible(return(TRUE))
@@ -81,8 +81,8 @@ check_len <- function(x = NULL, len = 1, arg = caller_arg(x), null.ok = FALSE, c
 
 #' @noRd
 #' @importFrom rlang is_null
-check_grepl <- function(x = NULL, pattern = NULL, arg = caller_arg(x), null.ok = FALSE, ignore.case = FALSE, perl = FALSE, message = NULL, ...) {
-  check_null(x, arg, null.ok, call = call)
+check_grepl <- function(x = NULL, pattern = NULL, arg = caller_arg(x), allow_null = FALSE, ignore.case = FALSE, perl = FALSE, message = NULL, ...) {
+  check_null(x, arg, allow_null, call = call)
 
   if (grepl(pattern, x, ignore.case = ignore.case, perl = perl)) {
     invisible(return(TRUE))
@@ -99,8 +99,8 @@ check_grepl <- function(x = NULL, pattern = NULL, arg = caller_arg(x), null.ok =
 
 #' @noRd
 #' @importFrom rlang is_null
-check_starts_with <- function(x = NULL, string = NULL, arg = caller_arg(x), null.ok = FALSE, ignore.case = FALSE, perl = FALSE, message = NULL, ...) {
-  check_character(x, arg, null.ok)
+check_starts_with <- function(x = NULL, string = NULL, arg = caller_arg(x), allow_null = FALSE, ignore.case = FALSE, perl = FALSE, message = NULL, ...) {
+  check_character(x, arg, allow_null)
 
   if (all(grepl(paste0("^", string), x, ignore.case = ignore.case, perl = perl))) {
     invisible(return(TRUE))
@@ -119,8 +119,8 @@ check_starts_with <- function(x = NULL, string = NULL, arg = caller_arg(x), null
 }
 
 #' @noRd
-check_df <- function(x, arg = caller_arg(x), null.ok = FALSE, ...) {
-  check_null(x, arg, null.ok)
+check_df <- function(x, arg = caller_arg(x), allow_null = FALSE, ...) {
+  check_null(x, arg, allow_null)
 
   if (is.data.frame(x)) {
     invisible(return(TRUE))
@@ -135,9 +135,9 @@ check_df <- function(x, arg = caller_arg(x), null.ok = FALSE, ...) {
 }
 
 #' @noRd
-check_df_rows <- function(x, rows = 1, arg = caller_arg(x), null.ok = FALSE, ...) {
-  check_null(x, arg, null.ok)
-  check_df(x, arg, null.ok)
+check_df_rows <- function(x, rows = 1, arg = caller_arg(x), allow_null = FALSE, ...) {
+  check_null(x, arg, allow_null)
+  check_df(x, arg, allow_null)
 
   if (nrow(x) >= rows) {
     invisible(return(TRUE))
@@ -153,9 +153,9 @@ check_df_rows <- function(x, rows = 1, arg = caller_arg(x), null.ok = FALSE, ...
 
 #' @noRd
 #' @importFrom rlang has_name
-check_df_paper <- function(x, cols = c("width", "height", "orientation", "units"), arg = caller_arg(x), null.ok = FALSE, ...) {
-  check_null(x, arg, null.ok)
-  check_df(x, arg, null.ok)
+check_df_paper <- function(x, cols = c("width", "height", "orientation", "units"), arg = caller_arg(x), allow_null = FALSE, ...) {
+  check_null(x, arg, allow_null)
+  check_df(x, arg, allow_null)
 
   if (all(has_name(x, names))) {
     invisible(return(TRUE))

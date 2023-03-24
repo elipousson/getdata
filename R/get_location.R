@@ -71,7 +71,7 @@ get_location <- function(type,
 
   stopifnot(
     is.character(location) ||
-      sfext::is_sf(location, ext = TRUE, null.ok = TRUE) ||
+      sfext::is_sf(location, ext = TRUE, allow_null = TRUE) ||
       is.numeric(location),
     is.list(index) || is.null(index),
     is.logical(union)
@@ -140,9 +140,9 @@ get_location <- function(type,
 #' @importFrom sfext is_sf as_sf st_filter_ext
 filter_location <- function(data = NULL,
                             location = NULL,
-                            null.ok = TRUE,
+                            allow_null = TRUE,
                             ...) {
-  if (is.null(location) && null.ok) {
+  if (is.null(location) && allow_null) {
     return(data)
   }
 
