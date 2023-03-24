@@ -12,8 +12,26 @@ address_df <-
     street_col = "street_address"
   )
 
-bind_address_col(
-  address_df,
-  city = "Baltimore",
-  state = "MD"
+address_df[1,]
+
+address_df <-
+  bind_address_col(
+    address_df,
+    city = "Baltimore",
+    state = "MD"
+  )
+
+address_df[2,]
+
+location_df <-
+  data.frame(
+    "text" = c(
+      "100 Holiday St.",
+      "1400 block Key Highway (north side)",
+      "Charles St. from E. Centre St. to E. Madison St."
+    )
 )
+
+location_df <- bind_location_text_col(location_df)
+
+location_df

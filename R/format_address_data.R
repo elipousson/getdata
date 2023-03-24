@@ -164,7 +164,12 @@ bind_address_col <- function(x, ...,
       )
     )
 
-  x <- dplyr::mutate(x, ..., .after = .after %||% .cols$street)
+  x <-
+    dplyr::mutate(
+      x,
+      ...,
+      .after = tidyselect::all_of(.after) %||% tidyselect::all_of(.cols$street)
+    )
 
   x <-
     str_to_case_across(
@@ -194,6 +199,90 @@ bind_address_col <- function(x, ...,
       .after = dplyr::all_of(.cols$state)
     )
   }
+}
+
+#' Bind location columns based on text column using stringr package
+#'
+#' @param x A data.frame with a column name matching col and no column names
+#'   matching the list passed to .cols (or the default values listed below).
+#' @param text_col Column name containing the information to check for location
+#'   details, Default: 'text'
+#' @param .cols Column names to add. Defaults to is_address, is_block_face,
+#'   is_street_corridor, and block_side. x must not have any column names matching the
+#'   names found in .cols.
+#' @param address_pattern A character vector of regex patterns to return TRUE for is_address.
+#' @param block_face_pattern A character vector of regex patterns to return TRUE for is_block_face.
+#' @param street_corridor_pattern A character vector of regex patterns to return TRUE for is_street_corridor.
+#' @return A data.frame with new indicator columns for address and block_face
+#'   and a column indicating whether the text references a particular cardinal
+#'   direction in describing a block.
+#' @name bind_location_text_col
+#' @rdname format_address_data
+#' @export
+#' @importFrom rlang check_installed has_name
+#' @importFrom cliExtras cli_abort_if
+#' @importFrom dplyr mutate all_of
+bind_location_text_col <- function(x,
+                                    text_col = "text",
+                                    address_pattern = c("Ave.", "Avenue", "St.", "Street", "Rd.", "Road"),
+                                    block_face_pattern = c("sides\\)", "side\\)", "[:space:]block", "-block", "blocks"),
+                                    street_corridor_pattern = c("between(?=.+and)", "from(?=.+to)"),
+                                    .cols = NULL) {
+  rlang::check_installed("stringr")
+
+  .cols <-
+    modifyList(
+      .cols %||% list(),
+      list(
+        is_address = "is_address",
+        is_block_face = "is_block_face",
+        is_street_corridor = "is_street_corridor",
+        block_side = "block_side"
+      )
+    )
+
+  nm <- names(.cols) %||% .cols
+  x_nm <- rlang::has_name(x, nm)
+
+  cliExtras::cli_abort_if(
+    "{.arg x} must not have any columns named: {.val {names(x)[[x_nm]]}}.",
+    condition = any(x_nm)
+  )
+
+  block_face_pattern <- paste0(block_face_pattern, collapse = "|")
+  address_pattern <- paste0("[:space:]", c(block_face_pattern, address_pattern), collapse = "|")
+  street_corridor_pattern <- paste0(street_corridor_pattern, collapse = "|")
+
+  # block_side_replacement <- rlang::set_names(as.character(block_side_replacement), names(block_side_replacement))
+  block_side_replacement = c(
+    `\\(Even\\)` = "even",
+    `\\(Odd\\)` = "odd",
+    `north side` = "north",
+    `east side` = "east",
+    `south side` = "south",
+    `west side` = "west",
+    `both sides` = "multiple",
+    `.+` = ""
+  )
+
+  dplyr::mutate(
+    x,
+    "{.cols$is_address}" := stringr::str_detect(.data[[text_col]], address_pattern),
+    "{.cols$is_block_face}" := stringr::str_detect(.data[[text_col]], block_face_pattern),
+    "{.cols$is_street_corridor}" := stringr::str_detect(.data[[text_col]], street_corridor_pattern),
+    "{.cols$block_side}" := dplyr::case_when(
+      # stringr::str_detect(.data[[text_col]], "\\(Even\\)") ~ "even",
+      # stringr::str_detect(.data[[text_col]], "\\(Odd\\)") ~ "odd",
+      stringr::str_detect(.data[[text_col]], "south side") ~ "south",
+      stringr::str_detect(.data[[text_col]], "north side") ~ "north",
+      stringr::str_detect(.data[[text_col]], "east side") ~ "east",
+      stringr::str_detect(.data[[text_col]], "west side") ~ "west",
+      stringr::str_detect(.data[[text_col]], "both sides") ~ "multiple",
+      .default = NA_character_
+    ),
+    # stringr::str_replace(.data[[text_col]], names(block_side_replacement), replacement = block_side_replacement)
+    .after = dplyr::all_of(text_col)
+  )
 }
 
 #' Replace values in a character vector or data frame with a crosswalk
