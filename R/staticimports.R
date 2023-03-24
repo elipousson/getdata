@@ -3,6 +3,28 @@
 # Imported from pkg:isstatic
 # ======================================================================
 
+#' Do all items in a list or vector return TRUE from a predicate function?
+#'
+#' @param x A list or vector passed to X parameter of [vapply()].
+#' @inheritParams base::vapply
+#' @inheritDotParams base::vapply -X
+#' @returns `TRUE` if FUN returns `TRUE` for all elements of x or `FALSE` if any
+#'   element returns `FALSE`.
+#' @seealso [isstatic::is_any()]
+#' @noRd
+is_all <- function(x, FUN, ...) {
+  all(vapply(x, FUN, FUN.VALUE = TRUE, ...))
+}
+
+#' - [is_all_null()]: Are all items in a list or vector `NULL` values?
+#'
+#' @name is_all_null
+#' @rdname is_all
+#' @noRd
+is_all_null <- function(x) {
+  is_all(x, is.null)
+}
+
 #' - [is_esri_url()]: Is an object an ArcGIS MapServer or FeatureServer URL?
 #'
 #' @name is_esri_url
@@ -62,8 +84,43 @@ is_url <- function(x) {
 # Imported from pkg:stringstatic
 # ======================================================================
 
+#' Replace matched patterns in a string
+#'
+#' Dependency-free drop-in alternative for `stringr::str_replace()`.
+#'
+#' @source Adapted from the [stringr](https://stringr.tidyverse.org/) package.
+#'
+#' @param string Input vector.
+#'   Either a character vector, or something coercible to one.
+#'
+#' @param pattern Pattern to look for.
+#'
+#'   The default interpretation is a regular expression,
+#'   as described in [base::regex].
+#'   Control options with [regex()].
+#'
+#'   Match a fixed string (i.e. by comparing only bytes), using [fixed()].
+#'   This is fast, but approximate.
+#'
+#' @param replacement A character vector of replacements.
+#'   Should be either length one, or the same length as `string` or `pattern`.
+#'   References of the form `\1`, `\2`, etc. will be replaced with the contents
+#'   of the respective matched group (created by `()`).
+#'
+#'   To replace the complete string with `NA`,
+#'   use `replacement = NA_character_`.
+#'
+#'   Using a function for `replacement` is not yet supported.
+#'
+#' @return A character vector.
+#' @noRd
 str_replace <- function(string, pattern, replacement) {
+	if (length(string) == 0 || length(pattern) == 0 || length(replacement) == 0) {
+		return(character(0))
+	}
+
 	is_fixed <- inherits(pattern, "stringr_fixed")
+
 	Vectorize(sub, c("pattern", "replacement", "x"), USE.NAMES = FALSE)(
 		pattern, replacement, x = string, perl = !is_fixed, fixed = is_fixed
 	)

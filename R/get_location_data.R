@@ -79,7 +79,7 @@ get_location_data <- function(location = NULL,
     # FIXME: This is set to work with 1 or 2 level list indices with naming
     # conventions that match make_location_data_list This should be clearly
     # documented as alternate index naming conventions supported if possible
-    if (("package" %in% names(index)) && is.null(package)) {
+    if (has_name(index, "package") && is.null(package)) {
       package <- unique(index$package) # could use data as an index
       check_character(package, n = 1)
     }
@@ -89,7 +89,11 @@ get_location_data <- function(location = NULL,
   }
 
   if (!is.null(location) && !sfext::is_sf(location)) {
-    location <- sfext::as_sf(location, range = range)
+    if(sfext::is_geo_coords(location)) {
+      location <- sfext::lonlat_to_sfc(location, range)
+    } else {
+      location <- sfext::as_sf(location)
+    }
   }
 
   # Get adjusted bounding box using any adjustment variables provided
@@ -144,7 +148,7 @@ get_location_data <- function(location = NULL,
         trim = TRUE
       )
   } else {
-    if (!all(sapply(c(dist, diag_ratio, asp), is_null))) {
+    if (!is_all_null(list(dist, diag_ratio, asp))) {
       location <- bbox
     }
 

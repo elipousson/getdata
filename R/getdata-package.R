@@ -11,6 +11,7 @@
 #' @importFrom rlang %||%
 #' @importFrom rlang is_logical
 #' @importFrom rlang is_null
+#' @importFrom rlang has_name
 #' @importFrom lifecycle deprecated
 #' @importFrom sfext st_bbox_ext
 #' @importFrom sfext st_filter_ext
