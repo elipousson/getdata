@@ -4,6 +4,7 @@
 \alias{format_address_data}
 \alias{bind_block_col}
 \alias{bind_address_col}
+\alias{bind_location_text_col}
 \title{Format data frames and simple features with address data}
 \usage{
 bind_block_col(
@@ -20,9 +21,19 @@ bind_block_col(
 )
 
 bind_address_col(x, ..., case = NULL, .cols = NULL, .after = NULL)
+
+bind_location_text_col(
+  x,
+  text_col = "text",
+  address_pattern = c("Ave.", "Avenue", "St.", "Street", "Rd.", "Road"),
+  block_face_pattern = c("sides\\\\)", "side\\\\)", "[:space:]block", "-block", "blocks"),
+  street_corridor_pattern = c("between(?=.+and)", "from(?=.+to)"),
+  .cols = NULL
+)
 }
 \arguments{
-\item{x}{A data frame to bind the address columns to.}
+\item{x}{A data.frame with a column name matching col and no column names
+matching the list passed to .cols (or the default values listed below).}
 
 \item{bldg_num, street_dir_prefix, street_name, street_suffix}{Column names to
 use for address information required to generate a block name and number.}
@@ -48,13 +59,23 @@ Options include "lower", "upper", "title", or "sentence". Defaults to
 \item{...}{Additional parameters passed to \code{\link[dplyr:mutate]{dplyr::mutate()}} intended for use
 in filling missing values, e.g. state = "MD" to add a missing state column.}
 
-\item{.cols}{Named list specifying the additional column names to use for
-city, county, and state data. "street" is used for street address column
-name, (e.g. 100 Holliday St) Default: 'street_address'. "address" is used
-for full address column name. If "city" and "state" or "city" and "county"
-are provided, a combined address column is added to the data.frame using
-the "address" column name. If both county and city are provided, county is
-ignored.}
+\item{.cols}{Column names to add. Defaults to is_address, is_block_face,
+is_street_corridor, and block_side. x must not have any column names matching the
+names found in .cols.}
+
+\item{text_col}{Column name containing the information to check for location
+details, Default: 'text'}
+
+\item{address_pattern}{A character vector of regex patterns to return TRUE for is_address.}
+
+\item{block_face_pattern}{A character vector of regex patterns to return TRUE for is_block_face.}
+
+\item{street_corridor_pattern}{A character vector of regex patterns to return TRUE for is_street_corridor.}
+}
+\value{
+A data.frame with new indicator columns for address and block_face
+and a column indicating whether the text references a particular cardinal
+direction in describing a block.
 }
 \description{
 getdata has two helpers for working with address data:
@@ -84,9 +105,27 @@ address_df <-
     street_col = "street_address"
   )
 
-bind_address_col(
-  address_df,
-  city = "Baltimore",
-  state = "MD"
+address_df[1,]
+
+address_df <-
+  bind_address_col(
+    address_df,
+    city = "Baltimore",
+    state = "MD"
+  )
+
+address_df[2,]
+
+location_df <-
+  data.frame(
+    "text" = c(
+      "100 Holiday St.",
+      "1400 block Key Highway (north side)",
+      "Charles St. from E. Centre St. to E. Madison St."
+    )
 )
+
+location_df <- bind_location_text_col(location_df)
+
+location_df
 }

@@ -12,6 +12,7 @@ set_access_token(
   overwrite = FALSE,
   install = FALSE,
   type = NULL,
+  quiet = FALSE,
   call = caller_env()
 )
 
