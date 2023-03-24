@@ -64,7 +64,7 @@ only need a small area. The package also provides a consistent approach
 for handling API tokens and keys and for caching data locally (see
 [set_access_token()](https://elipousson.github.io/getdata/reference/set_access_token.html)
 or
-[sfext::get_data_dir()](https://elipousson.github.io/sfext/reference/get_data_dir.html)
+[filenamr::get_data_dir()](https://elipousson.github.io/sfext/reference/get_data_dir.html)
 for more details).
 
 The related {sfext} package allows {getdata} to supports the easy
