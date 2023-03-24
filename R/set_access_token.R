@@ -22,8 +22,10 @@ set_access_token <- function(token,
                              overwrite = FALSE,
                              install = FALSE,
                              type = NULL,
+                             quiet = FALSE,
                              call = caller_env()) {
   check_required(token)
+  cliExtras::cli_quiet(quiet)
 
   if (rlang::is_named(token)) {
     type <- type %||% names(token)
@@ -34,7 +36,7 @@ set_access_token <- function(token,
   check_character(type, n = 1)
 
   if (!install) {
-    cli::cli_inform(
+    cli::cli_bullets(
       c(
         "v" = "Token {.envvar {type}} set to {.val {token}} with {.fn Sys.setenv}.",
         "*" = "To use the token in future sessions,
@@ -64,8 +66,8 @@ set_access_token <- function(token,
     backup <- file.path(home, ".Renviron_backup")
     file.copy(renv, backup)
 
-    cli::cli_inform(
-      c("v" = "{.file .Renviron} backed up to {.path {backup}}.")
+    cli::cli_alert_success(
+      "{.file .Renviron} backed up to {.path {backup}}."
     )
 
     if (has_type) {
@@ -85,7 +87,7 @@ set_access_token <- function(token,
   # Append access token to .Renviron file
   write(glue("{type}=\'{token}\'"), renv, sep = "\n", append = TRUE)
 
-  cli::cli_inform(
+  cli::cli_bullets(
     c(
       "v" = "Token {.val {token}} saved to {.file .Renviron} variable {.envvar {type}}.",
       "*" = 'Restart R or run {.code readRenviron("~/.Renviron")} then use
