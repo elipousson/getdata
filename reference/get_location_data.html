@@ -148,7 +148,12 @@ without modification.</p></dd>
 
 <dt>data</dt>
 <dd><p>Character string (e.g. url, file path, or name of data from
-package), a <code>sf</code>, <code>sfc</code>, or <code>bbox</code>  object including data in area.</p></dd>
+package) for a spatial data or a <code>sf</code>, <code>sfc</code>, or <code>bbox</code>  object with
+geometry overlapping the location. If data is <code>NULL</code>, all unnamed
+parameters are passed to <code><a href="https://elipousson.github.io/sfext/reference/read_sf_ext.html" class="external-link">sfext::read_sf_ext()</a></code> with a bbox based on
+location. If data is not <code>NULL</code> and not a data.frame, url, file path, or
+bbox, conversion to a sf object will still always be attempted with
+<code><a href="https://elipousson.github.io/sfext/reference/as_sf.html" class="external-link">sfext::as_sf()</a></code>.</p></dd>
 
 
 <dt>package</dt>
@@ -231,9 +236,9 @@ coordinates north of Anchorage, Alaska or south of New Zealand.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>additional parameters passed to <code><a href="https://elipousson.github.io/sfext/reference/read_sf_ext.html" class="external-link">sfext::read_sf_path()</a></code>,
-<code><a href="https://elipousson.github.io/sfext/reference/read_sf_ext.html" class="external-link">sfext::read_sf_url()</a></code>, or <code><a href="https://elipousson.github.io/sfext/reference/read_sf_ext.html" class="external-link">sfext::read_sf_pkg()</a></code> and
-<code><a href="https://elipousson.github.io/sfext/reference/st_filter_ext.html" class="external-link">sfext::st_filter_ext()</a></code></p></dd>
+<dd><p>Additional parameters passed to <code><a href="https://elipousson.github.io/sfext/reference/read_sf_ext.html" class="external-link">sfext::read_sf_path()</a></code>,
+<code><a href="https://elipousson.github.io/sfext/reference/read_sf_ext.html" class="external-link">sfext::read_sf_url()</a></code>, <code><a href="https://elipousson.github.io/sfext/reference/read_sf_ext.html" class="external-link">sfext::read_sf_pkg()</a></code>, <code><a href="https://elipousson.github.io/sfext/reference/as_sf.html" class="external-link">sfext::as_sf()</a></code> (with
+bbox), or <code><a href="https://elipousson.github.io/sfext/reference/read_sf_ext.html" class="external-link">sfext::read_sf_ext()</a></code> (with no other parameters).</p></dd>
 
 
 <dt>load</dt>
