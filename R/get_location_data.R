@@ -23,7 +23,12 @@
 #'   into a single sf object using [sf::st_union()]
 #' @inheritParams sfext::st_bbox_ext
 #' @param data Character string (e.g. url, file path, or name of data from
-#'   package), a `sf`, `sfc`, or `bbox`  object including data in area.
+#'   package) for a spatial data or a `sf`, `sfc`, or `bbox`  object with
+#'   geometry overlapping the location. If data is `NULL`, all unnamed
+#'   parameters are passed to [sfext::read_sf_ext()] with a bbox based on
+#'   location. If data is not `NULL` and not a data.frame, url, file path, or
+#'   bbox, conversion to a sf object will still always be attempted with
+#'   [sfext::as_sf()].
 #' @param package Name of the package to search for data.
 #' @param fileext,filetype File extension or type to use if passing parameters
 #'   to [sfext::read_sf_download()] or [sfext::read_sf_pkg()] (required for
@@ -48,12 +53,13 @@
 #' @inheritParams sfext::as_sf
 #' @inheritParams format_data
 #' @inheritParams sfext::lonlat_to_sfc
-#' @param ... additional parameters passed to [sfext::read_sf_path()],
-#'   [sfext::read_sf_url()], or [sfext::read_sf_pkg()] and
-#'   [sfext::st_filter_ext()]
+#' @param ... Additional parameters passed to [sfext::read_sf_path()],
+#'   [sfext::read_sf_url()], [sfext::read_sf_pkg()], [sfext::as_sf()] (with
+#'   bbox), or [sfext::read_sf_ext()] (with no other parameters).
 #' @rdname get_location_data
 #' @export
 #' @importFrom sf st_crs st_crop st_transform st_intersection st_filter
+#' @importFrom rlang is_string
 get_location_data <- function(location = NULL,
                               dist = getOption("getdata.dist"),
                               diag_ratio = getOption("getdata.diag_ratio"),
@@ -91,7 +97,7 @@ get_location_data <- function(location = NULL,
   }
 
   if (!is.null(location) && !sfext::is_sf(location)) {
-    if(sfext::is_geo_coords(location)) {
+    if (sfext::is_geo_coords(location)) {
       location <- sfext::lonlat_to_sfc(location, range)
     } else {
       location <- sfext::as_sf(location)
@@ -115,8 +121,9 @@ get_location_data <- function(location = NULL,
         is.data.frame(data) ~ "df",
         sfext::is_bbox(data) ~ "bbox",
         is_url(data) ~ "url",
-        is.character(data) && file.exists(data) ~ "path",
-        !is.null(package) ~ "pkg",
+        rlang::is_string(data) && file.exists(data) ~ "path",
+        !is.null(data) && !is.null(package) ~ "pkg",
+        !is.null(data) ~ "sf",
         TRUE ~ "other"
       )
 
@@ -131,7 +138,9 @@ get_location_data <- function(location = NULL,
         "pkg" = sfext::read_sf_pkg(
           data = data, bbox = bbox, package = package,
           fileext = fileext, ...
-        )
+        ),
+        "sf" = sfext::as_sf(data, ...),
+        "other" = sfext::read_sf_ext(..., bbox = bbox)
       )
   }
 

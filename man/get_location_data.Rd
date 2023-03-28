@@ -74,7 +74,12 @@ character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} retur
 without modification.}
 
 \item{data}{Character string (e.g. url, file path, or name of data from
-package), a \code{sf}, \code{sfc}, or \code{bbox}  object including data in area.}
+package) for a spatial data or a \code{sf}, \code{sfc}, or \code{bbox}  object with
+geometry overlapping the location. If data is \code{NULL}, all unnamed
+parameters are passed to \code{\link[sfext:read_sf_ext]{sfext::read_sf_ext()}} with a bbox based on
+location. If data is not \code{NULL} and not a data.frame, url, file path, or
+bbox, conversion to a sf object will still always be attempted with
+\code{\link[sfext:as_sf]{sfext::as_sf()}}.}
 
 \item{package}{Name of the package to search for data.}
 
@@ -127,9 +132,9 @@ in lat/lon order and are switched to lon/lat order before being converted
 to a point. Defaults to \code{c("xmin" = -180, "ymin" = -50, "xmax" = 180, "ymax" = 60)}. Note that this default setting will reverse valid
 coordinates north of Anchorage, Alaska or south of New Zealand.}
 
-\item{...}{additional parameters passed to \code{\link[sfext:read_sf_ext]{sfext::read_sf_path()}},
-\code{\link[sfext:read_sf_ext]{sfext::read_sf_url()}}, or \code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}} and
-\code{\link[sfext:st_filter_ext]{sfext::st_filter_ext()}}}
+\item{...}{Additional parameters passed to \code{\link[sfext:read_sf_ext]{sfext::read_sf_path()}},
+\code{\link[sfext:read_sf_ext]{sfext::read_sf_url()}}, \code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}}, \code{\link[sfext:as_sf]{sfext::as_sf()}} (with
+bbox), or \code{\link[sfext:read_sf_ext]{sfext::read_sf_ext()}} (with no other parameters).}
 
 \item{load}{If \code{TRUE} and class is "list", load data to local environment;
 defaults \code{FALSE}.}
