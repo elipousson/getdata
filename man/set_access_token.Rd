@@ -31,8 +31,13 @@ place of type.}
 
 \item{type}{Name of token; defaults to \code{NULL}. Optional if token is named.}
 
-\item{call}{Passed as the call parameter for \code{\link[cli:cli_abort]{cli::cli_abort()}} to improve
-error messages when function is used internally.}
+\item{quiet}{If \code{TRUE}, suppress informational messages when setting access
+token. Defaults to \code{FALSE}.}
+
+\item{call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \description{
 Based on the \code{\link[mapboxapi:mb_access_token]{mapboxapi::mb_access_token()}} function from the {mapboxapi}

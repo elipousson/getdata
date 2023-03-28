@@ -11,8 +11,9 @@
 #' @param install If `TRUE`, install token for use in future sessions; Default:
 #'   `FALSE`
 #' @param type Name of token; defaults to `NULL`. Optional if token is named.
-#' @param call Passed as the call parameter for [cli::cli_abort()] to improve
-#'   error messages when function is used internally.
+#' @param quiet If `TRUE`, suppress informational messages when setting access
+#'   token. Defaults to `FALSE`.
+#' @inheritParams rlang::args_error_context
 #' @rdname set_access_token
 #' @aliases set_token_type
 #' @export
