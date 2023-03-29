@@ -277,7 +277,9 @@ make_xwalk_list <- function(xwalk, cols = c("label", "name")) {
     condition = is.data.frame(xwalk) && ncol(xwalk) >= 2
   )
 
-  cols <- cols %||% c(1, 2)
+  if (!all(rlang::has_name(xwalk, cols))) {
+    cols <- c(1, 2)
+  }
 
   cliExtras::cli_abort_ifnot(
     "{.arg cols} must be a length 2 vector.",
