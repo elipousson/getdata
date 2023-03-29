@@ -59,7 +59,7 @@
 #' @rdname get_location_data
 #' @export
 #' @importFrom sf st_crs st_crop st_transform st_intersection st_filter
-#' @importFrom rlang is_string
+#' @importFrom rlang is_string list2 `!!!`
 get_location_data <- function(location = NULL,
                               dist = getOption("getdata.dist"),
                               diag_ratio = getOption("getdata.diag_ratio"),
@@ -116,31 +116,29 @@ get_location_data <- function(location = NULL,
     )
 
   if (!sfext::is_sf(data)) {
-    type <-
-      dplyr::case_when(
-        is.data.frame(data) ~ "df",
-        sfext::is_bbox(data) ~ "bbox",
-        is_url(data) ~ "url",
-        rlang::is_string(data) && file.exists(data) ~ "path",
-        !is.null(data) && !is.null(package) ~ "pkg",
-        !is.null(data) ~ "sf",
-        TRUE ~ "other"
-      )
 
-    type <- unique(type)
+    type <- "ext"
+
+    if (!is.null(data)) {
+      type <-
+        dplyr::case_when(
+         is_url(data) ~ "url",
+         rlang::is_string(data) && file.exists(data) ~ "path",
+         !is.null(package) ~ "pkg",
+         is.data.frame(data) ~ "df",
+          .default = "sf"
+        )
+    }
 
     data <-
       switch(type,
-        "df" = sfext::df_to_sf(x = data, from_crs = from_crs, ...),
-        "bbox" = sfext::as_sf(data, ...),
         "url" = sfext::read_sf_url(url = data, bbox = bbox, ...),
         "path" = sfext::read_sf_path(path = data, bbox = bbox, ...),
-        "pkg" = sfext::read_sf_pkg(
-          data = data, bbox = bbox, package = package,
-          fileext = fileext, ...
-        ),
+        "pkg" = sfext::read_sf_pkg(data = data, bbox = bbox,
+                                   package = package, fileext = fileext, ...),
         "sf" = sfext::as_sf(data, ...),
-        "other" = sfext::read_sf_ext(..., bbox = bbox)
+        "df" = sfext::df_to_sf(x = data, from_crs = from_crs, ...),
+        "ext" = sfext::read_sf_ext(!!!rlang::list2(...), bbox = bbox)
       )
   }
 
