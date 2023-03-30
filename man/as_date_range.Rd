@@ -26,7 +26,10 @@ check_date_range(x = NULL, ..., limits = NULL)
 }
 \arguments{
 \item{x}{Date range as character vector in format of \code{c("<start date>", "<end date>")}. If length 1 and days is not \code{NULL}, return a range based on
-\code{c(date_range, date_range + lubridate::days(days))}}
+\code{c(date_range, date_range + lubridate::days(days))}. \code{\link[=as_date_range]{as_date_range()}} also
+allows a Date class object or a list of Date class objects. For all other
+functions, x can also be a named list of Date objects with names matching
+nm.}
 
 \item{year}{If date_range is NULL and year is provided, date range is set to
 \code{c("<year>-01-01", "<year>-12-31")}. year is ignored if date_range is

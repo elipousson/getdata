@@ -19,7 +19,7 @@ utils::globalVariables(
 
 # @staticimports pkg:isstatic
 # is_url is_esri_url is_gsheet_url is_gist_url is_gmap_url
-# is_unit is_all_null
+# is_unit is_all_null is_list_of
 
 #' Add default user agent to request and perform request
 #'

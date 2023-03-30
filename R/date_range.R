@@ -1,3 +1,15 @@
+#' @noRd
+is_named_date_range <- function(x,
+                                nm = c("start", "end")) {
+  is_date_range(x, length(nm)) && all(has_name(x, nm))
+}
+
+#' @noRd
+is_date_range <- function(x,
+                          n = NULL) {
+  is_list_of(x, "Date") && has_length(x, n)
+}
+
 #' Use lubridate to convert an object to a date range
 #'
 #' Use [lubridate::as_date()] to convert an object to a length 2 list with a
@@ -10,7 +22,10 @@
 #'
 #' @param x Date range as character vector in format of `c("<start date>", "<end
 #'   date>")`. If length 1 and days is not `NULL`, return a range based on
-#'   `c(date_range, date_range + lubridate::days(days))`
+#'   `c(date_range, date_range + lubridate::days(days))`. [as_date_range()] also
+#'   allows a Date class object or a list of Date class objects. For all other
+#'   functions, x can also be a named list of Date objects with names matching
+#'   nm.
 #' @param year If date_range is NULL and year is provided, date range is set to
 #'   `c("<year>-01-01", "<year>-12-31")`. year is ignored if date_range is
 #'   provided.
@@ -58,7 +73,9 @@ as_date_range <- function(x = NULL,
 
   x <- x %||% c(start_date, end_date)
 
-  x <- lubridate::as_date(x, ...)
+  if (!is_date_range(x) || inherits(x, "Date")) {
+    x <- lubridate::as_date(x, ...)
+  }
 
   if (length(x) == 1 && !is.null(days)) {
     x <- c(x, x + lubridate::days(days))
@@ -80,7 +97,10 @@ date_range_query <- function(x = NULL,
                              .col = "date",
                              ...,
                              nm = c("start", "end")) {
-  x <- as_date_range(x, ..., nm = nm)
+  if (!is_named_date_range(x, nm)) {
+    x <- as_date_range(x, ..., nm = nm)
+  }
+
   glue("({.col} >= '{x[[nm[1]]]}') AND ({.col} <= '{x[[nm[2]]]}')")
 }
 
@@ -88,11 +108,14 @@ date_range_query <- function(x = NULL,
 #' @rdname as_date_range
 #' @export
 #' @importFrom glue glue
+#' @importFrom rlang is_character has_name
 between_date_range <- function(x = NULL,
                                .col = "date",
                                ...,
                                nm = c("start", "end")) {
-  x <- as_date_range(x, ..., nm = nm)
+  if (!is_named_date_range(x, nm)) {
+    x <- as_date_range(x, ..., nm = nm)
+  }
   glue("({.col} BETWEEN DATE '{x[[nm[1]]]}' AND DATE '{x[[nm[2]]]}')")
 }
 
@@ -107,8 +130,12 @@ check_date_range <- function(x = NULL, ..., limits = NULL) {
 
   rlang::check_installed("lubridate")
 
-  x <- lubridate::as_date(x, ...)
-  limits <- lubridate::as_date(limits, ...)
+  if (!is_named_date_range(x, nm)) {
+    x <- as_date_range(x, ..., nm = nm)
+  }
+  if (!is_date_range(limits)) {
+    limits <- lubridate::as_date(limits, ...)
+  }
 
   below_limit <- min(x) < min(limits)
   above_limit <- max(x) > max(limits)

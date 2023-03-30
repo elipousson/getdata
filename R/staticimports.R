@@ -61,6 +61,15 @@ is_gsheet_url <- function(x) {
   grepl("^https://docs.google.com/spreadsheets/", x)
 }
 
+#' Do all items in this list inherit the provided class?
+#'
+#' @param x Object to be tested.
+#' @param what A character vector naming classes.
+#' @noRd
+is_list_of <- function(x, what = NULL) {
+  is.list(x) && all(vapply(x, FUN = inherits, FUN.VALUE = TRUE, what))
+}
+
 #' Is this a unit class object?
 #'
 #' @param x Object to be tested.
