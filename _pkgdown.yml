@@ -25,6 +25,7 @@ reference:
   - starts_with("replace")
   - '`street_dir_prefixes`'
   - '`street_suffixes`'
+  - starts_with("str_")
 - title: Additional data access utilities
   contents:
   - '`as_date_range`'
