@@ -3,16 +3,9 @@
 
 ## usethis namespace: start
 #' @import rlang
-#' @importFrom cli cli_abort
-#' @importFrom cli cli_inform
-#' @importFrom cli cli_warn
-#' @importFrom glue glue
+#' @importFrom rlang .data `:=` `%||%` is_logical is_null has_name is_string
+#' @importFrom cli cli_abort cli_inform cli_warn
 #' @importFrom glue glue glue_collapse
-#' @importFrom rlang %||%
-#' @importFrom rlang is_logical
-#' @importFrom rlang is_null
-#' @importFrom rlang has_name
-#' @importFrom rlang is_string
 #' @importFrom lifecycle deprecated
 #' @importFrom sfext st_bbox_ext
 #' @importFrom sfext st_filter_ext

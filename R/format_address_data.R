@@ -34,7 +34,7 @@ NULL
 #'   [bind_block_col()] and "address" for [bind_address_col()].
 #' @export
 #' @example examples/format_address_data.R
-#' @importFrom rlang has_name
+#' @importFrom rlang has_name .data
 #' @importFrom dplyr all_of mutate if_else
 bind_block_col <- function(x,
                            bldg_num = "bldg_num",
