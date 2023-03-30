@@ -91,7 +91,10 @@ or date range falls within supplied limits.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>Date range as character vector in format of <code>c("&lt;start date&gt;", "&lt;end date&gt;")</code>. If length 1 and days is not <code>NULL</code>, return a range based on
-<code>c(date_range, date_range + lubridate::days(days))</code></p></dd>
+<code>c(date_range, date_range + lubridate::days(days))</code>. <code>as_date_range()</code> also
+allows a Date class object or a list of Date class objects. For all other
+functions, x can also be a named list of Date objects with names matching
+nm.</p></dd>
 
 
 <dt>year</dt>
@@ -167,6 +170,7 @@ both <code>NULL</code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (date &gt;= '2022-01-01') AND (date &lt;= '2022-01-31')</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">check_date_range</span><span class="op">(</span><span class="st">"2022-09-01"</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2022-07-01"</span>, <span class="st">"2022-09-30"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in as_date_range(x, ..., nm = nm):</span> object 'nm' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
