@@ -4,6 +4,7 @@
 \alias{as_date_range}
 \alias{date_range_query}
 \alias{between_date_range}
+\alias{check_date_range}
 \title{Use lubridate to convert an object to a date range}
 \usage{
 as_date_range(
@@ -13,12 +14,15 @@ as_date_range(
   ...,
   start_date = NULL,
   end_date = NULL,
+  limits = NULL,
   nm = c("start", "end")
 )
 
 date_range_query(x = NULL, .col = "date", ..., nm = c("start", "end"))
 
 between_date_range(x = NULL, .col = "date", ..., nm = c("start", "end"))
+
+check_date_range(x = NULL, ..., limits = NULL)
 }
 \arguments{
 \item{x}{Date range as character vector in format of \code{c("<start date>", "<end date>")}. If length 1 and days is not \code{NULL}, return a range based on
@@ -39,8 +43,10 @@ provided.}
 \item{start_date, end_date}{Start and end date used if year and date_range are
 both \code{NULL}.}
 
-\item{nm}{Names to use for returned date range list. Defaults to c("start",
-"end").}
+\item{limits}{Optional range of allowed dates. If dates supplied to
+\code{\link[=as_date_range]{as_date_range()}} falls outside limits range, abort function.}
+
+\item{nm}{Names to use for returned date range list. Defaults to \code{c("start", "end")}.}
 
 \item{.col}{Name of date column to use for query. Defaults to "date".}
 }
@@ -53,7 +59,8 @@ minimum and maximum date. By default the dates in the list will be named
 named "start" and "end". \code{\link[=date_range_query]{date_range_query()}} is a variation that returns a
 query string that can be passed to the "where" parameter of
 \code{\link[=get_esri_data]{get_esri_data()}}. \code{\link[=between_date_range]{between_date_range()}} works the same way identical but
-uses the BETWEEN DATE syntax.
+uses the BETWEEN DATE syntax. \code{\link[=check_date_range]{check_date_range()}} validates whether a date
+or date range falls within supplied limits.
 }
 \examples{
 as_date_range("2022-01-01", days = 10)
@@ -63,5 +70,7 @@ as_date_range(c("2022-01-01", "2022-01-31"))
 as_date_range(year = 2022)
 
 date_range_query(c("2022-01-01", "2022-01-31"))
+
+check_date_range("2022-09-01", limits = c("2022-07-01", "2022-09-30"))
 
 }
