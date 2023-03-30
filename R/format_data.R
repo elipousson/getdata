@@ -277,7 +277,7 @@ make_xwalk_list <- function(xwalk, cols = c("label", "name")) {
     condition = is.data.frame(xwalk) && ncol(xwalk) >= 2
   )
 
-  if (!all(rlang::has_name(xwalk, cols))) {
+  if (!is.numeric(cols) && !all(rlang::has_name(xwalk, cols))) {
     cols <- c(1, 2)
   }
 
@@ -292,9 +292,14 @@ make_xwalk_list <- function(xwalk, cols = c("label", "name")) {
 
 #' Trim and squish across any character columns
 #'
+#' Apply [stringr::str_squish()] and [stringr::str_trim()] to all character
+#' columns in a data.frame.
+#'
 #' @name str_trim_squish_across
-#' @noRd
+#' @param x A data.frame with character columns.
+#' @export
 #' @importFrom dplyr mutate across if_else
+#' @importFrom rlang check_installed
 str_trim_squish_across <- function(x) {
   rlang::check_installed("stringr")
 
