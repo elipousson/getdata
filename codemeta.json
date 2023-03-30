@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/elipousson/getdata",
   "issueTracker": "https://github.com/elipousson/getdata/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.1.0.9000",
+  "version": "0.1.0.9001",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -119,6 +119,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "lifecycle",
+      "name": "lifecycle",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=lifecycle"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "lubridate",
       "name": "lubridate",
       "provider": {
@@ -157,6 +169,7 @@
       "@type": "SoftwareApplication",
       "identifier": "osmdata",
       "name": "osmdata",
+      "version": ">= 0.1.10",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -176,6 +189,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=rappdirs"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "roxygen2",
+      "name": "roxygen2",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=roxygen2"
     },
     {
       "@type": "SoftwareApplication",
@@ -375,20 +400,9 @@
     },
     "9": {
       "@type": "SoftwareApplication",
-      "identifier": "purrr",
-      "name": "purrr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=purrr"
-    },
-    "10": {
-      "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
+      "version": ">= 0.4.11",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -397,7 +411,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "11": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "sf",
       "name": "sf",
@@ -409,14 +423,14 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=sf"
     },
-    "12": {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "sfext",
       "name": "sfext",
       "version": ">= 0.0.0.9001",
       "sameAs": "https://github.com/elipousson/sfext"
     },
-    "13": {
+    "12": {
       "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
@@ -427,6 +441,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=tibble"
+    },
+    "13": {
+      "@type": "SoftwareApplication",
+      "identifier": "tidyselect",
+      "name": "tidyselect",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=tidyselect"
     },
     "14": {
       "@type": "SoftwareApplication",
@@ -447,5 +473,10 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "301.274KB"
+  "fileSize": "334KB",
+  "releaseNotes": "https://github.com/elipousson/getdata/blob/master/NEWS.md",
+  "readme": "https://github.com/elipousson/getdata/blob/main/README.md",
+  "contIntegration": "https://app.codecov.io/gh/elipousson/getdata?branch=main",
+  "developmentStatus": ["https://lifecycle.r-lib.org/articles/stages.html#experimental", "https://www.repostatus.org/#active"],
+  "keywords": ["r", "rstats", "r-package", "rspatial"]
 }
