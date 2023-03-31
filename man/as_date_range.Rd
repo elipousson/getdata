@@ -15,14 +15,21 @@ as_date_range(
   start_date = NULL,
   end_date = NULL,
   limits = NULL,
-  nm = c("start", "end")
+  nm = c("start", "end"),
+  call = caller_env()
 )
 
 date_range_query(x = NULL, .col = "date", ..., nm = c("start", "end"))
 
 between_date_range(x = NULL, .col = "date", ..., nm = c("start", "end"))
 
-check_date_range(x = NULL, ..., limits = NULL)
+check_date_range(
+  x = NULL,
+  ...,
+  limits = NULL,
+  nm = c("start", "end"),
+  call = caller_env()
+)
 }
 \arguments{
 \item{x}{Date range as character vector in format of \code{c("<start date>", "<end date>")}. If length 1 and days is not \code{NULL}, return a range based on
@@ -31,8 +38,8 @@ allows a Date class object or a list of Date class objects. For all other
 functions, x can also be a named list of Date objects with names matching
 nm.}
 
-\item{year}{If date_range is NULL and year is provided, date range is set to
-\code{c("<year>-01-01", "<year>-12-31")}. year is ignored if date_range is
+\item{year}{If date_range is \code{NULL} and year is provided, date range is set
+to \code{c("<year>-01-01", "<year>-12-31")}. year is ignored if date_range is
 provided.}
 
 \item{days}{Default range duration in days to use if date_range is length 1.}
@@ -50,6 +57,11 @@ both \code{NULL}.}
 \code{\link[=as_date_range]{as_date_range()}} falls outside limits range, abort function.}
 
 \item{nm}{Names to use for returned date range list. Defaults to \code{c("start", "end")}.}
+
+\item{call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 
 \item{.col}{Name of date column to use for query. Defaults to "date".}
 }
@@ -74,6 +86,6 @@ as_date_range(year = 2022)
 
 date_range_query(c("2022-01-01", "2022-01-31"))
 
-check_date_range("2022-09-01", limits = c("2022-07-01", "2022-09-30"))
+# check_date_range("2022-09-01", limits = c("2022-07-01", "2022-09-30"))
 
 }

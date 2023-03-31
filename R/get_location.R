@@ -27,7 +27,7 @@
 #' @param union If `TRUE`, the location geometry is unioned with
 #'   [sf::st_union()] and the names are combined into a single value. Default:
 #'   `FALSE`.
-#' @param crs Coordinate reference system to return; defaults to NULL which
+#' @param crs Coordinate reference system to return; defaults to `NULL` which
 #'   returns data using the same coordinate reference system as the provided
 #'   type of location.
 #' @param class Class of object to return; defaults to "sf".

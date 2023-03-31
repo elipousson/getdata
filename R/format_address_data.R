@@ -183,13 +183,13 @@ bind_address_col <- function(x, ...,
   }
 
   if (rlang::has_name(x, .cols$city)) {
-    return(
-      dplyr::mutate(
-        x,
-        "{.cols$address}" := glue("{.data[[.cols$street]]}, {.data[[.cols$city]]} {.data[[.cols$state]]}"),
-        .after = dplyr::all_of(.cols$state)
-      )
+    x <- dplyr::mutate(
+      x,
+      "{.cols$address}" := glue("{.data[[.cols$street]]}, {.data[[.cols$city]]} {.data[[.cols$state]]}"),
+      .after = dplyr::all_of(.cols$state)
     )
+
+    return(x)
   }
 
   if (rlang::has_name(x, .cols$county)) {
@@ -208,26 +208,28 @@ bind_address_col <- function(x, ...,
 #' @param text_col Column name containing the information to check for location
 #'   details, Default: 'text'
 #' @param .cols Column names to add. Defaults to is_address, is_block_face,
-#'   is_street_corridor, and block_side. x must not have any column names matching the
-#'   names found in .cols.
-#' @param address_pattern A character vector of regex patterns to return TRUE for is_address.
-#' @param block_face_pattern A character vector of regex patterns to return TRUE for is_block_face.
-#' @param street_corridor_pattern A character vector of regex patterns to return TRUE for is_street_corridor.
+#'   is_street_corridor, and block_side. x must not have any column names
+#'   matching the names found in .cols.
+#' @param address_pattern A character vector of regex patterns to return `TRUE`
+#'   for is_address.
+#' @param block_face_pattern A character vector of regex patterns to return
+#'   `TRUE` for is_block_face.
+#' @param street_corridor_pattern A character vector of regex patterns to return
+#'   `TRUE` for is_street_corridor.
 #' @return A data.frame with new indicator columns for address and block_face
 #'   and a column indicating whether the text references a particular cardinal
 #'   direction in describing a block.
 #' @name bind_location_text_col
 #' @rdname format_address_data
 #' @export
-#' @importFrom rlang check_installed has_name
 #' @importFrom cliExtras cli_abort_if
 #' @importFrom dplyr mutate all_of
 bind_location_text_col <- function(x,
-                                    text_col = "text",
-                                    address_pattern = c("Ave.", "Avenue", "St.", "Street", "Rd.", "Road"),
-                                    block_face_pattern = c("sides\\)", "side\\)", "[:space:]block", "-block", "blocks"),
-                                    street_corridor_pattern = c("between(?=.+and)", "from(?=.+to)"),
-                                    .cols = NULL) {
+                                   text_col = "text",
+                                   address_pattern = c("Ave.", "Avenue", "St.", "Street", "Rd.", "Road"),
+                                   block_face_pattern = c("sides\\)", "side\\)", "[:space:]block", "-block", "blocks"),
+                                   street_corridor_pattern = c("between(?=.+and)", "from(?=.+to)"),
+                                   .cols = NULL) {
   rlang::check_installed("stringr")
 
   .cols <-
@@ -254,16 +256,16 @@ bind_location_text_col <- function(x,
   street_corridor_pattern <- paste0(street_corridor_pattern, collapse = "|")
 
   # block_side_replacement <- rlang::set_names(as.character(block_side_replacement), names(block_side_replacement))
-  block_side_replacement = c(
-    `\\(Even\\)` = "even",
-    `\\(Odd\\)` = "odd",
-    `north side` = "north",
-    `east side` = "east",
-    `south side` = "south",
-    `west side` = "west",
-    `both sides` = "multiple",
-    `.+` = ""
-  )
+  # block_side_replacement <- c(
+  #   `\\(Even\\)` = "even",
+  #   `\\(Odd\\)` = "odd",
+  #   `north side` = "north",
+  #   `east side` = "east",
+  #   `south side` = "south",
+  #   `west side` = "west",
+  #   `both sides` = "multiple",
+  #   `.+` = ""
+  # )
 
   dplyr::mutate(
     x,

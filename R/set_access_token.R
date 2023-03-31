@@ -25,16 +25,16 @@ set_access_token <- function(token,
                              type = NULL,
                              quiet = FALSE,
                              call = caller_env()) {
-  check_required(token)
-  cliExtras::cli_quiet(quiet)
+  check_required(token, call = call)
+  cli_quiet(quiet)
 
   if (rlang::is_named(token)) {
     type <- type %||% names(token)
     token <- as.character(token)
   }
 
-  check_character(token, n = 1)
-  check_character(type, n = 1)
+  check_character(token, n = 1, call = call)
+  check_character(type, n = 1, call = call)
 
   if (!install) {
     cli::cli_bullets(
@@ -59,7 +59,8 @@ set_access_token <- function(token,
       cli_abort(
         c("{.envvar {type}} already exists in your {.file .Renviron}.",
           "*" = "Set {.arg overwrite = TRUE} to replace this token."
-        )
+        ),
+        call = call
       )
     }
 
@@ -101,13 +102,15 @@ set_access_token <- function(token,
 #' @rdname set_access_token
 #' @aliases get_token_type
 #' @export
-get_access_token <- function(token = NULL, type = NULL, call = caller_env()) {
+get_access_token <- function(token = NULL,
+                             type = NULL,
+                             call = caller_env()) {
   if (!is.null(token)) {
     return(token)
   }
 
-  check_null(x = type)
-  check_character(type, n = 1)
+  check_null(x = type, call = call)
+  check_character(type, n = 1, call = call)
 
   token <- Sys.getenv(type)
 
@@ -115,5 +118,8 @@ get_access_token <- function(token = NULL, type = NULL, call = caller_env()) {
     return(token)
   }
 
-  cli_abort("{.envvar {type}} can't be found in your {.file .Renviron}.")
+  cli_abort(
+    "{.envvar {type}} can't be found in your {.file .Renviron}.",
+    call = call
+    )
 }

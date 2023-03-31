@@ -1,6 +1,9 @@
 test_that("get_open_data works", {
   withr::with_envvar(
-    new = c("TEST_MARYLAND_OPEN_DATA_API_KEY" = Sys.getenv("MARYLAND_OPEN_DATA_API_KEY")),
+    new = c(
+      "TEST_MARYLAND_OPEN_DATA_API_KEY" =
+        Sys.getenv("MARYLAND_OPEN_DATA_API_KEY")
+    ),
     {
       skip_if_no_token("TEST_MARYLAND_OPEN_DATA_API_KEY")
       source_url <- "https://opendata.maryland.gov"

@@ -157,8 +157,8 @@ rename_with_xwalk <- function(x,
     xwalk <- xwalk[xwalk %in% names(x)]
   }
 
-  if (sfext::is_sf(x) && (attributes(x)$sf_column %in% xwalk)) {
-    sf_col <- as.character(names(xwalk[xwalk == attributes(x)$sf_column]))
+  if (sfext::is_sf(x) && (attributes(x)[["sf_column"]] %in% xwalk)) {
+    sf_col <- as.character(names(xwalk[xwalk == attributes(x)[["sf_column"]]]))
     x <- sfext::rename_sf_col(x, sf_col = sf_col)
     xwalk[[sf_col]] <- NULL
   }
@@ -188,13 +188,11 @@ rename_with_xwalk <- function(x,
 #' @importFrom rlang arg_match
 label_with_xwalk <- function(x, xwalk = NULL, label = "var", ...) {
   rlang::check_installed("labelled")
-
-  label <- rlang::arg_match(label, c("val", "var"))
-  if (label == "var") {
-    labelled::set_variable_labels(x, .labels = make_xwalk_list(xwalk), ...)
-  } else {
-    labelled::set_value_labels(x, .labels = make_xwalk_list(xwalk), ...)
-  }
+  label <- rlang::arg_match(label, c("var", "val"))
+  switch(label,
+    "var" = labelled::set_variable_labels(x, .labels = make_xwalk_list(xwalk), ...),
+    "val" = labelled::set_value_labels(x, .labels = make_xwalk_list(xwalk), ...)
+  )
 }
 
 #' @name make_variable_dictionary
@@ -215,12 +213,12 @@ make_variable_dictionary <- function(x,
 
   dict <- labelled::generate_dictionary(x, details = details)
 
-  if (all(is.na(dict$label)) && (length(.labels) == ncol(x))) {
-    dict$label <- .labels
+  if (all(is.na(dict[["label"]])) && has_length(.labels, ncol(x))) {
+    dict[["label"]] <- .labels
   }
 
   if (!is.null(.definitions)) {
-    dict$definitions <- .definitions
+    dict[["definitions"]] <- .definitions
   }
 
   dict
@@ -299,7 +297,6 @@ make_xwalk_list <- function(xwalk, cols = c("label", "name")) {
 #' @param x A data.frame with character columns.
 #' @export
 #' @importFrom dplyr mutate across if_else
-#' @importFrom rlang check_installed
 str_trim_squish_across <- function(x) {
   rlang::check_installed("stringr")
 

@@ -86,7 +86,7 @@ get_esri_data <- function(url,
   }
 
   if (!is.null(where)) {
-    where <- glue_collapse(discard(where, is.na), sep = " AND ")
+    where <- glue::glue_collapse(discard(where, is.na), sep = " AND ")
   }
 
   if (table) {
@@ -180,9 +180,9 @@ get_esri_layers <- function(location = NULL,
       layers <-
         get_esri_layers(
           location = location,
-          layers = layer_list$id,
+          layers = layer_list[["id"]],
           url = gsub("[0-9]+$|[0-9]+/$", "", layers, perl = TRUE),
-          nm = layer_list$name,
+          nm = layer_list[["name"]],
           token = token,
           clean_names = clean_names,
           quiet = quiet,
@@ -237,19 +237,19 @@ get_esri_layers <- function(location = NULL,
         url = .x,
         location = location,
         token = token,
-        dist = params$dist,
-        diag_ratio = params$diag_ratio,
-        asp = params$asp,
-        crs = params$crs %||% getOption("getdata.crs", 3857),
-        unit = params$unit,
-        where = params$where,
-        name = params$name,
-        name_col = params$name_col,
-        coords = params$coords,
+        dist = params[["dist"]],
+        diag_ratio = params[["diag_ratio"]],
+        asp = params[["asp"]],
+        crs = params[["crs"]] %||% getOption("getdata.crs", 3857),
+        unit = params[["unit"]],
+        where = params[["where"]],
+        name = params[["name"]],
+        name_col = params[["name_col"]],
+        coords = params[["coords"]],
         clean_names = clean_names,
         quiet = quiet,
         .name_repair = .name_repair,
-        progress = params$progress %||% TRUE
+        progress = params[["progress"]] %||% TRUE
       )
     )
 
@@ -275,8 +275,8 @@ get_layer_list <- function(meta) {
   }
 
   list(
-    "id" = layer_list$id,
-    "name" = layer_list$name
+    "id" = layer_list[["id"]],
+    "name" = layer_list[["name"]]
   )
 }
 
@@ -327,5 +327,5 @@ get_esri_metadata <- function(url,
     return(metadata)
   }
 
-  use_name_repair(data, .name_repair)
+  use_name_repair(metadata, .name_repair)
 }

@@ -158,7 +158,7 @@ get_osm_id <- function(id,
 
   get_osm_data_geometry(
     data,
-    geometry = id_type$geometry,
+    geometry = id_type[["geometry"]],
     crs = crs,
     osmdata = osmdata
   )
@@ -231,7 +231,7 @@ starts_with_osm_type <- function(x) {
 
 #' @noRd
 has_osm_type_name <- function(x) {
-  names(x) %in% c("node", "way", "relation")
+  any(has_name(x, c("node", "way", "relation")))
 }
 
 #' @param level Numeric administrative level (admin_level) of boundary to

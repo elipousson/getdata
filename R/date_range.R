@@ -26,8 +26,8 @@ is_date_range <- function(x,
 #'   allows a Date class object or a list of Date class objects. For all other
 #'   functions, x can also be a named list of Date objects with names matching
 #'   nm.
-#' @param year If date_range is NULL and year is provided, date range is set to
-#'   `c("<year>-01-01", "<year>-12-31")`. year is ignored if date_range is
+#' @param year If date_range is `NULL` and year is provided, date range is set
+#'   to `c("<year>-01-01", "<year>-12-31")`. year is ignored if date_range is
 #'   provided.
 #' @param days Default range duration in days to use if date_range is length 1.
 #' @param start_date,end_date Start and end date used if year and date_range are
@@ -46,7 +46,7 @@ is_date_range <- function(x,
 #'
 #' date_range_query(c("2022-01-01", "2022-01-31"))
 #'
-#' check_date_range("2022-09-01", limits = c("2022-07-01", "2022-09-30"))
+#' # check_date_range("2022-09-01", limits = c("2022-07-01", "2022-09-30"))
 #'
 #' @return A length 2 list with min and max Date values.
 #' @export
@@ -59,7 +59,8 @@ as_date_range <- function(x = NULL,
                           start_date = NULL,
                           end_date = NULL,
                           limits = NULL,
-                          nm = c("start", "end")) {
+                          nm = c("start", "end"),
+                          call = caller_env()) {
   rlang::check_installed("lubridate")
 
   if (!is.null(year)) {
@@ -82,7 +83,7 @@ as_date_range <- function(x = NULL,
   }
 
   if (!is.null(limits)) {
-    check_date_range(x = x, ..., limits = limits)
+    check_date_range(x = x, ..., limits = limits, nm = nm, call = call)
   }
 
   rlang::set_names(list(min(x), max(x)), nm)
@@ -121,9 +122,14 @@ between_date_range <- function(x = NULL,
 
 #' @name check_date_range
 #' @rdname as_date_range
+#' @inheritParams rlang::args_error_context
 #' @export
 #' @importFrom cli cli_vec
-check_date_range <- function(x = NULL, ..., limits = NULL) {
+check_date_range <- function(x = NULL,
+                             ...,
+                             limits = NULL,
+                             nm = c("start", "end"),
+                             call = caller_env()) {
   if (is.null(limits)) {
     return(invisible(NULL))
   }
@@ -133,10 +139,13 @@ check_date_range <- function(x = NULL, ..., limits = NULL) {
   if (!is_named_date_range(x, nm)) {
     x <- as_date_range(x, ..., nm = nm)
   }
+
   if (!is_date_range(limits)) {
     limits <- lubridate::as_date(limits, ...)
   }
 
+  x <- c(x[[1]], x[[2]])
+  limits <-  c(limits[[1]], limits[[2]])
   below_limit <- min(x) < min(limits)
   above_limit <- max(x) > max(limits)
 
@@ -164,7 +173,8 @@ check_date_range <- function(x = NULL, ..., limits = NULL) {
       c("Supplied date range must fall within {.arg limits}: {.val {limits}}.",
         "*" = below_limit,
         "*" = above_limit
-      )
+      ),
+      call = call
     )
   }
 }

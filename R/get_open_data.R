@@ -41,6 +41,7 @@
 #' @inheritParams format_data
 #' @example examples/get_open_data.R
 #' @export
+#' @importFrom janitor make_clean_names
 #' @importFrom cliExtras cli_abort_ifnot
 #' @importFrom sfext st_bbox_ext df_to_sf
 #' @importFrom cli cli_alert_info cli_dl
@@ -75,16 +76,12 @@ get_open_data <- function(data = NULL,
     condition = is_url(source_url) | (is_url(data) && is.null(source_url))
   )
 
-  if (isTRUE(quiet)) {
-    existing_handler <- getOption("cli.default_handler")
-    options(cli.default_handler = suppressMessages)
-    on.exit(options(cli.default_handler = existing_handler), add = TRUE)
-  }
+  cli_quiet(quiet)
 
   source_type <- tolower(source_type)
 
   cliExtras::cli_abort_ifnot(
-    c("{.arg source_type} must be {.val socarata}.",
+    c("{.arg source_type} must be {.val socrata}.",
       "i" = "Socrata is currently the only supported open data source for this function.
       Other open data access options (e.g. CKAN, Flat Data) may be added in the future."
     ),
@@ -322,9 +319,9 @@ list_socrata_data <- function(source_url) {
   req <- httr2::request(paste0(source_url, "/data.json"))
   resp <- httr2::resp_body_json(req_getdata(req), simplifyVector = TRUE)
 
-  datasets <- dplyr::as_tibble(resp$dataset)
-  datasets$issued <- as.POSIXct(datasets$issued)
-  datasets$modified <- as.POSIXct(datasets$modified)
+  datasets <- dplyr::as_tibble(resp[["dataset"]])
+  datasets[["issued"]] <- as.POSIXct(datasets[["issued"]])
+  datasets[["modified"]] <- as.POSIXct(datasets[["modified"]])
 
   datasets
 }

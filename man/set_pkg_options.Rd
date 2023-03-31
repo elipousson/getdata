@@ -11,12 +11,12 @@ set_pkg_options(..., overwrite = FALSE, .pkg = "getdata")
 
 \item{overwrite}{If \code{TRUE}, overwrite any existing option value.}
 
-\item{.pkg}{Package name to append to option name.}
+\item{.pkg}{Package name to append to option name. Defaults to "getdata".}
 }
 \description{
 This function can set named options for a package using the convention of
 "pkg.option". For examples \code{set_pkg_options(crs = 2804, .pkg = "getdata")} sets the option "getdata.crs" to 2804. If "getdata.crs" is
-already set, overwrite must be TRUE to replace the existing value.
+already set, overwrite must be \code{TRUE} to replace the existing value.
 }
 \section{Options for the getdata package}{
 

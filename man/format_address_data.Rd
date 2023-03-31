@@ -60,17 +60,20 @@ Options include "lower", "upper", "title", or "sentence". Defaults to
 in filling missing values, e.g. state = "MD" to add a missing state column.}
 
 \item{.cols}{Column names to add. Defaults to is_address, is_block_face,
-is_street_corridor, and block_side. x must not have any column names matching the
-names found in .cols.}
+is_street_corridor, and block_side. x must not have any column names
+matching the names found in .cols.}
 
 \item{text_col}{Column name containing the information to check for location
 details, Default: 'text'}
 
-\item{address_pattern}{A character vector of regex patterns to return TRUE for is_address.}
+\item{address_pattern}{A character vector of regex patterns to return \code{TRUE}
+for is_address.}
 
-\item{block_face_pattern}{A character vector of regex patterns to return TRUE for is_block_face.}
+\item{block_face_pattern}{A character vector of regex patterns to return
+\code{TRUE} for is_block_face.}
 
-\item{street_corridor_pattern}{A character vector of regex patterns to return TRUE for is_street_corridor.}
+\item{street_corridor_pattern}{A character vector of regex patterns to return
+\code{TRUE} for is_street_corridor.}
 }
 \value{
 A data.frame with new indicator columns for address and block_face

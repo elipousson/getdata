@@ -88,7 +88,7 @@ get_location_data <- function(location = NULL,
     # conventions that match make_location_data_list This should be clearly
     # documented as alternate index naming conventions supported if possible
     if (has_name(index, "package") && is.null(package)) {
-      package <- unique(index$package) # could use data as an index
+      package <- unique(index[["package"]]) # could use data as an index
       check_character(package, n = 1)
     }
 
@@ -116,16 +116,15 @@ get_location_data <- function(location = NULL,
     )
 
   if (!sfext::is_sf(data)) {
-
     type <- "ext"
 
     if (!is.null(data)) {
       type <-
         dplyr::case_when(
-         is_url(data) ~ "url",
-         rlang::is_string(data) && file.exists(data) ~ "path",
-         !is.null(package) ~ "pkg",
-         is.data.frame(data) ~ "df",
+          is_url(data) ~ "url",
+          rlang::is_string(data) && file.exists(data) ~ "path",
+          !is.null(package) ~ "pkg",
+          is.data.frame(data) ~ "df",
           .default = "sf"
         )
     }
@@ -134,8 +133,10 @@ get_location_data <- function(location = NULL,
       switch(type,
         "url" = sfext::read_sf_url(url = data, bbox = bbox, ...),
         "path" = sfext::read_sf_path(path = data, bbox = bbox, ...),
-        "pkg" = sfext::read_sf_pkg(data = data, bbox = bbox,
-                                   package = package, fileext = fileext, ...),
+        "pkg" = sfext::read_sf_pkg(
+          data = data, bbox = bbox,
+          package = package, fileext = fileext, ...
+        ),
         "sf" = sfext::as_sf(data, ...),
         "df" = sfext::df_to_sf(x = data, from_crs = from_crs, ...),
         "ext" = sfext::read_sf_ext(!!!rlang::list2(...), bbox = bbox)
@@ -258,8 +259,8 @@ map_location_data <- function(location = NULL,
           trim = trim,
           from_crs = from_crs,
           crs = crs,
-          name_col = params$name_col,
-          name = params$name,
+          name_col = params[["name_col"]],
+          name = params[["name"]],
           index = index,
           range = range
         )
@@ -282,8 +283,8 @@ map_location_data <- function(location = NULL,
           trim = trim,
           from_crs = from_crs,
           crs = crs,
-          name_col = params$name_col,
-          name = params$name,
+          name_col = params[["name_col"]],
+          name = params[["name"]],
           index = index
         )
       )
@@ -305,8 +306,8 @@ map_location_data <- function(location = NULL,
           trim = trim,
           from_crs = from_crs,
           crs = crs,
-          name_col = params$name_col,
-          name = params$name,
+          name_col = params[["name_col"]],
+          name = params[["name"]],
           index = index,
           index = index
         )
@@ -336,7 +337,7 @@ get_index_param <- function(index = NULL,
   if (!is.null(location)) {
     if ((is.character(data) || is.numeric(data))) {
       if (has_name(index, "location")) {
-        location <- index$location[[location]]
+        location <- index[["location"]][[location]]
       } else {
         location <- index[[location]]
       }
@@ -349,7 +350,7 @@ get_index_param <- function(index = NULL,
   if (!is.null(data)) {
     if ((is.character(data) || is.numeric(data))) {
       if (has_name(index, "data")) {
-        data <- index$data[[data]]
+        data <- index[["data"]][[data]]
       } else {
         data <- index[[data]]
       }

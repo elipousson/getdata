@@ -116,6 +116,8 @@ has_same_name_col <- function(x,
     return(dplyr::select(x, -dplyr::all_of(col)))
   }
 
+  cli_quiet(quiet)
+
   new_col <- paste0(prefix, "_", col)
 
   if (ask && !quiet) {
@@ -129,12 +131,10 @@ has_same_name_col <- function(x,
     }
   }
 
-  if (!quiet) {
-    cli::cli_inform(
-      c("v" = "Renaming the existing column '{col}' to '{new_col}' to avoid
-      overwriting existing values.")
-    )
-  }
+  cli::cli_alert_success(
+    "Renaming the existing column '{col}' to '{new_col}' to avoid overwriting
+    existing values."
+  )
 
   dplyr::rename(x, "{new_col}" := col)
 }

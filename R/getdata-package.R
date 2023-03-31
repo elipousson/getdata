@@ -4,11 +4,13 @@
 ## usethis namespace: start
 #' @importFrom cli cli_abort cli_inform cli_warn
 #' @importFrom DBI ANSI
-#' @importFrom glue glue glue_collapse glue_sql
+#' @importFrom glue glue
+#' @importFrom glue glue_sql
+#' @importFrom glue glue_collapse
 #' @importFrom lifecycle deprecated
-#' @importFrom rlang :=
 #' @importFrom rlang .data `%||%` is_logical is_null has_name is_string
-#' @importFrom rlang list2
+#'   check_installed list2
+#' @importFrom rlang `:=`
 #' @importFrom sfext as_sf
 #' @importFrom sfext df_to_sf
 #' @importFrom sfext is_sf

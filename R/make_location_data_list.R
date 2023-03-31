@@ -58,7 +58,10 @@ make_location_data_list <- function(data = NULL, location = NULL, key = c("locat
 
 
 #' @noRd
-get_location_data_list <- function(data = NULL, location = NULL, nm = NULL, ...) {
+get_location_data_list <- function(data = NULL,
+                                   location = NULL,
+                                   nm = NULL,
+                                   ...) {
   # FIXME: Should this be titled map_location_data_list?
   if (is.null(nm) && !is.null(data)) {
     nm <- names(data)
@@ -67,7 +70,11 @@ get_location_data_list <- function(data = NULL, location = NULL, nm = NULL, ...)
   }
 
   stopifnot(
-    (length(data) == 1) || (length(location) == 1) || (length(location) == length(data))
+    any(c(
+      length(data) == 1,
+      length(location) == 1,
+      length(location) == length(data)
+    ))
   )
 
   # Get data for multiple locations

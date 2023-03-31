@@ -146,7 +146,7 @@ get_flickr_photos <- function(location = NULL,
     return(invisible(NULL))
   }
 
-  if (!is.null(img_size) && (length(img_size) == 1)) {
+  if (!is.null(img_size) && has_length(img_size, 1)) {
     photos <-
       get_flickr_photos_orientation(
         photos = photos,

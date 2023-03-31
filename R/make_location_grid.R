@@ -16,7 +16,8 @@ make_location_grid <- function(location,
                                ...) {
   grid <- sfext::st_make_grid_ext(x = location, unit = unit, ...)
 
-  # FIXME: Would be nice if sfext::st_union_ext also allowed retaining columns where all the values were the same
+  # FIXME: Would be nice if sfext::st_union_ext also allowed retaining columns
+  # where all the values were the same
   location <- sfext::st_union_ext(location, name_col = name_col)
 
   grid <-
