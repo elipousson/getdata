@@ -16,6 +16,7 @@ Depends:
 Imports: 
     cli,
     cliExtras (>= 0.1.0),
+    DBI,
     dplyr,
     glue,
     httr2,

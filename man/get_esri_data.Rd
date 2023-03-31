@@ -40,7 +40,13 @@ get_esri_layers(
   ...
 )
 
-get_esri_metadata(url, token = NULL, meta = NULL, clean_names = TRUE)
+get_esri_metadata(
+  url,
+  token = NULL,
+  meta = NULL,
+  clean_names = TRUE,
+  .name_repair = janitor::make_clean_names
+)
 }
 \arguments{
 \item{url}{FeatureServer or MapServer url to retrieve data from. Passed to
@@ -81,8 +87,9 @@ geometry is 'centroid' or 'point') Default: c("lon", "lat").}
 \item{from_crs}{For \code{\link[sfext:df_to_sf]{df_to_sf()}}, coordinate reference system used by
 coordinates or well known text in data frame.}
 
-\item{clean_names}{If \code{TRUE}, use \code{\link[janitor:make_clean_names]{janitor::make_clean_names()}} on the
-returned metadata value. Ignored for non-character values, e.g. \code{meta = "id"}.}
+\item{clean_names}{If \code{TRUE}, set .name_repair to
+\code{\link[janitor:make_clean_names]{janitor::make_clean_names()}} Ignored when \code{\link[=get_esri_metadata]{get_esri_metadata()}} is not
+returning a data.frame, e.g. \code{meta = "id"}.}
 
 \item{token}{string for authentication token. defaults to \code{NULL}.}
 

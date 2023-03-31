@@ -46,11 +46,11 @@ get_esri_data <- function(url,
                           .name_repair = janitor::make_clean_names,
                           ...) {
   check_dev_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
-  meta <- get_esri_metadata(url, token)
+  meta <- get_esri_metadata(url, token, clean_names = FALSE)
   # Set table to TRUE for missing geometry type
-  table <- any(c(is.null(meta$geometryType), (meta$geometryType == "")))
+  table <- any(c(is.null(meta[["geometryType"]]), (meta[["geometryType"]] == "")))
   # Set table to FALSE for Group Layer URLs
-  table <- table && meta$type != "Group Layer"
+  table <- table && meta[["type"]] != "Group Layer"
 
   bbox <- NULL
 
@@ -82,12 +82,11 @@ get_esri_data <- function(url,
 
   if (!is.null(name_col)) {
     name_col <- rlang::arg_match(name_col, meta[["fields"]][["name"]])
-
-    where <- c(where, glue("({name_col} = '{name}')"))
+    where <- c(where, query_sql(name_col, name))
   }
 
   if (!is.null(where)) {
-    where <- paste(where[!is.na(where)], collapse = " AND ")
+    where <- glue_collapse(discard(where, is.na), sep = " AND ")
   }
 
   if (table) {
@@ -281,17 +280,36 @@ get_layer_list <- function(meta) {
   )
 }
 
+#' @noRd
+#' @importFrom rlang current_env
+query_sql <- function(var, val, op = "IN", ..., .envir = current_env()) {
+  ansi_sql(var, " ", op, " ({val*})", ..., .envir = .envir)
+}
+
+
+#' @noRd
+#' @importFrom DBI ANSI
+#' @importFrom glue glue_sql
+ansi_sql <- function(...,
+                     .con = DBI::ANSI()) {
+  glue_sql(..., .con = .con)
+}
+
 #' @name get_esri_metadata
 #' @rdname get_esri_data
 #' @param meta Name of metadata list value to return from [esri2sf::esrimeta],
 #'   e.g. "name" to return layer name. Defaults to `NULL`.
-#' @param clean_names If `TRUE`, use [janitor::make_clean_names()] on the
-#'   returned metadata value. Ignored for non-character values, e.g. `meta =
-#'   "id"`.
+#' @param clean_names If `TRUE`, set .name_repair to
+#'   [janitor::make_clean_names()] Ignored when [get_esri_metadata()] is not
+#'   returning a data.frame, e.g. `meta = "id"`.
 #' @export
 #' @importFrom janitor make_clean_names
 #' @importFrom rlang check_required is_character
-get_esri_metadata <- function(url, token = NULL, meta = NULL, clean_names = TRUE) {
+get_esri_metadata <- function(url,
+                              token = NULL,
+                              meta = NULL,
+                              clean_names = TRUE,
+                              .name_repair = janitor::make_clean_names) {
   check_dev_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
   rlang::check_required(url)
 
@@ -301,9 +319,13 @@ get_esri_metadata <- function(url, token = NULL, meta = NULL, clean_names = TRUE
     metadata <- metadata[[meta]]
   }
 
-  if (!clean_names | !rlang::is_character(metadata)) {
+  if (clean_names) {
+    .name_repair <- janitor::make_clean_names
+  }
+
+  if (is.null(.name_repair) | !is.data.frame(metadata)) {
     return(metadata)
   }
 
-  janitor::make_clean_names(metadata)
+  use_name_repair(data, .name_repair)
 }
