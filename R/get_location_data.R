@@ -96,7 +96,7 @@ get_location_data <- function(location = NULL,
     data <- get_index_param(index, data = data)
   }
 
-  if (!is.null(location) && !sfext::is_sf(location)) {
+  if (!is_null(location) && !sfext::is_sf(location)) {
     if (sfext::is_geo_coords(location)) {
       location <- sfext::lonlat_to_sfc(location, range)
     } else {
@@ -141,6 +141,10 @@ get_location_data <- function(location = NULL,
         "df" = sfext::df_to_sf(x = data, from_crs = from_crs, ...),
         "ext" = sfext::read_sf_ext(!!!rlang::list2(...), bbox = bbox)
       )
+  }
+
+  if (!sf::st_is_valid(data)) {
+    data <- sf::st_make_valid(data)
   }
 
   if (crop) {
