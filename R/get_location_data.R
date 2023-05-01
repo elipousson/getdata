@@ -143,9 +143,7 @@ get_location_data <- function(location = NULL,
       )
   }
 
-  if (!sf::st_is_valid(data)) {
-    data <- sf::st_make_valid(data)
-  }
+  data <- sfext::st_make_valid_ext(data)
 
   if (crop) {
     data <-
