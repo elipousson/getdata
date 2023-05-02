@@ -7,14 +7,14 @@
 \usage{
 get_airtable_data(
   base,
-  table,
+  table = NULL,
   view = NULL,
-  record = NULL,
+  record = deprecated(),
   fields = NULL,
   filter = NULL,
   sort = NULL,
   desc = FALSE,
-  max_records = NULL,
+  max_records = 100,
   per_page = NULL,
   cell_format = "json",
   tz = NULL,
@@ -36,43 +36,52 @@ get_airtable_data(
   name_repair = janitor::make_clean_names,
   token = NULL,
   type = "AIRTABLE_TOKEN",
-  resp_type = "records"
+  resp_type = deprecated(),
+  ...
 )
 
 get_airtable_metadata(
-  base = NULL,
+  base,
+  table = NULL,
   token = NULL,
   type = "AIRTABLE_TOKEN",
-  resp_type = "tables"
+  resp_type = "tables",
+  fields = FALSE
 )
 }
 \arguments{
-\item{base}{Airtable base identifier. Required.}
+\item{base}{Airtable base id starting with with "app". Optional if url or
+airtable are supplied. If base is an Airtable url, the table and view are
+replaced based on the values parsed from the url. Required.}
 
-\item{table}{Airtable table name or identifier. Required.}
+\item{table}{Airtable table id or name. If table is a table ID it is a string
+starting with "viw". Optional only if base is a url.}
 
-\item{view}{Airtable view identifier, Default: \code{NULL}}
+\item{view}{Airtable view ID, Default: \code{NULL}}
 
-\item{record}{Airtable record identifier, Default: \code{NULL}}
+\item{record}{Airtable record identifier, Default: \code{NULL} Superseded by
+\code{\link[rairtable:read_airtable]{rairtable::read_airtable_record()}} function.}
 
-\item{fields}{Fields to return from Airtable base, Default: \code{NULL}}
+\item{fields}{For \code{\link[=get_airtable_metadata]{get_airtable_metadata()}}, if \code{TRUE}, return the fields
+column from the data.frame with the Airtable response. If only one table is
+provided, fields are returned as a data frame. Ignored if table is \code{NULL}}
 
-\item{filter}{Filter to apply to records, Note: This parameter is a
-placeholder and is not currently implemented. Default: \code{NULL}}
+\item{filter}{Placeholder for filterByFormula API parameter allowing use of
+SQL style queries to filter data. Not yet implemented.}
 
 \item{sort}{Field to sort by, Default: \code{NULL}}
 
 \item{desc}{If \code{TRUE}, sort in descending order, Default: \code{FALSE}}
 
-\item{max_records}{Maximum number of records to return, Default: \code{NULL}. If
-max_records is larger than 100, the offset parameter is used to return
-multiple pages of a results in a single dataframe.}
+\item{max_records}{Maximum number of records to return, Default: \code{NULL}. Must
+be 100 or less.}
 
-\item{per_page}{Max records to return per page, Default: \code{NULL}}
+\item{per_page}{Passed to page_size parameter of
+\code{\link[rairtable:read_airtable]{rairtable::read_airtable_records()}}}
 
 \item{cell_format}{Cell format for "Link to another record" fields (either
 "json" (unique ID) or "string" (displayed character string)), Default:
-'json'}
+"json"}
 
 \item{tz, locale}{Time zone and locale, Defaults: \code{NULL}}
 
@@ -126,14 +135,28 @@ to \code{FALSE}.}
 \item{token, type}{API token and type, token defaults to \code{NULL} and type to
 \code{"AIRTABLE_TOKEN"} (same as \code{get_access_token(type = "AIRTABLE_TOKEN")}).}
 
-\item{resp_type}{Response type to return, Default: "records". Set resp_type
+\item{resp_type}{Response type to return, Reprecated. Previously, set resp_type
 to "resp" to return the API response without any additional formatting or
 conversion.}
+
+\item{...}{
+  Arguments passed on to \code{\link[rairtable:read_airtable]{rairtable::read_airtable_records}}
+  \describe{
+    \item{\code{airtable}}{An \code{airtable} class object. Optional for \code{\link[rairtable:read_airtable]{read_airtable()}} if
+url is supplied. For \code{\link[rairtable:read_airtable_records]{read_airtable_records()}} and
+\code{\link[rairtable:read_airtable_record]{read_airtable_record()}}, support the airtable, url, or a base \emph{and} table
+parameter.}
+    \item{\code{page_size}}{Max records to return per page, Default: \code{NULL}}
+    \item{\code{tz,locale}}{Time zone and locale, Defaults: \code{NULL}}
+  }}
 }
 \description{
-Get data from an Airtable base using the Airtable API and the httr2 package.
-If the base includes coordinate fields/columns, optionally convert the data
-to a simple feature object using \code{\link[sfext:sf_to_df]{sfext::df_to_sf()}} if \code{geometry = TRUE}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Get data from an Airtable base using the Airtable API, a development version
+of the \href{https://github.com/elipousson/rairtable/tree/dev}{rairtable package},
+and the httr2 package. If the base includes coordinate fields/columns,
+optionally convert the data to a simple feature object using
+\code{\link[sfext:sf_to_df]{sfext::df_to_sf()}} if \code{geometry = TRUE}.
 }
 \details{
 This function an Airtable personal access token which you can create at
@@ -144,6 +167,10 @@ API keys.
 
 \code{\link[=get_airtable_data]{get_airtable_data()}} requires a scope that includes \code{data.records:read} and
 \code{\link[=get_airtable_metadata]{get_airtable_metadata()}} a scope including \code{schema.bases:read}.
+
+As of May 2023, this function depends on the dev branch of my fork of the
+rairtable package. I expect this dependency to switch back to the rairtable
+package when the fork is merged.
 
 Learn more about the Airtable API
 \url{https://airtable.com/developers/web/api/introduction}

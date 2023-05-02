@@ -1,8 +1,11 @@
 #' Get data from an Airtable base and optionally convert to a sf object
 #'
-#' Get data from an Airtable base using the Airtable API and the httr2 package.
-#' If the base includes coordinate fields/columns, optionally convert the data
-#' to a simple feature object using [sfext::df_to_sf()] if `geometry = TRUE`.
+#' `r lifecycle::badge("experimental")`
+#' Get data from an Airtable base using the Airtable API, a development version
+#' of the [rairtable package](https://github.com/elipousson/rairtable/tree/dev),
+#' and the httr2 package. If the base includes coordinate fields/columns,
+#' optionally convert the data to a simple feature object using
+#' [sfext::df_to_sf()] if `geometry = TRUE`.
 #'
 #' This function an Airtable personal access token which you can create at
 #' <https://airtable.com/create/tokens> and save to your local environment with
@@ -15,52 +18,52 @@
 #' [get_airtable_data()] requires a scope that includes `data.records:read` and
 #' [get_airtable_metadata()] a scope including `schema.bases:read`.
 #'
+#' As of May 2023, this function depends on the dev branch of my fork of the
+#' rairtable package. I expect this dependency to switch back to the rairtable
+#' package when the fork is merged.
+#'
 #' Learn more about the Airtable API
 #' <https://airtable.com/developers/web/api/introduction>
 #'
-#' @param base Airtable base identifier. Required.
-#' @param table Airtable table name or identifier. Required.
-#' @param view Airtable view identifier, Default: `NULL`
-#' @param record Airtable record identifier, Default: `NULL`
-#' @param fields Fields to return from Airtable base, Default: `NULL`
-#' @param filter Filter to apply to records, Note: This parameter is a
-#'   placeholder and is not currently implemented. Default: `NULL`
-#' @param sort Field to sort by, Default: `NULL`
-#' @param desc If `TRUE`, sort in descending order, Default: `FALSE`
-#' @param max_records Maximum number of records to return, Default: `NULL`. If
-#'   max_records is larger than 100, the offset parameter is used to return
-#'   multiple pages of a results in a single dataframe.
-#' @param per_page Max records to return per page, Default: `NULL`
-#' @param cell_format Cell format for "Link to another record" fields (either
-#'   "json" (unique ID) or "string" (displayed character string)), Default:
-#'   'json'
-#' @param tz,locale Time zone and locale, Defaults: `NULL`
-#' @param fields_by_id If `TRUE`, return fields by id, Default: `FALSE`
+#'
+#' @param base Airtable base id starting with with "app". Optional if url or
+#'   airtable are supplied. If base is an Airtable url, the table and view are
+#'   replaced based on the values parsed from the url. Required.
+#' @param table Airtable table id or name. If table is a table ID it is a string
+#'   starting with "viw". Optional only if base is a url.
+#' @inheritParams rairtable::read_airtable_records
+#' @param per_page Passed to page_size parameter of
+#'   [rairtable::read_airtable_records()]
+#' @param filter Placeholder for filterByFormula API parameter allowing use of
+#'   SQL style queries to filter data. Not yet implemented.
+#' @param record Airtable record identifier, Default: `NULL` Superseded by
+#'   [rairtable::read_airtable_record()] function.
 #' @param offset Offset parameter, Default: `NULL`
 #' @param token,type API token and type, token defaults to `NULL` and type to
 #'   `"AIRTABLE_TOKEN"` (same as `get_access_token(type =
 #'   "AIRTABLE_TOKEN")`).
 #' @param geometry If `TRUE`, convert data into a simple feature object.
 #'   Defaults to `FALSE`.
-#' @param resp_type Response type to return, Default: "records". Set resp_type
+#' @param resp_type Response type to return, Reprecated. Previously, set resp_type
 #'   to "resp" to return the API response without any additional formatting or
 #'   conversion.
 #' @inheritParams sfext::df_to_sf
 #' @inheritParams get_location_data
 #' @inheritParams format_data
+#' @inheritDotParams rairtable::read_airtable_records
 #' @rdname get_airtable_data
 #' @export
 #' @importFrom sfext df_to_sf
 get_airtable_data <- function(base,
-                              table,
+                              table = NULL,
                               view = NULL,
-                              record = NULL,
+                              record = deprecated(),
                               fields = NULL,
                               # filterByFormula = NULL, # SQL style query
                               filter = NULL,
                               sort = NULL,
                               desc = FALSE,
-                              max_records = NULL, # integer
+                              max_records = 100,
                               per_page = NULL,
                               cell_format = "json",
                               tz = NULL,
@@ -83,38 +86,40 @@ get_airtable_data <- function(base,
                               # label = FALSE,
                               token = NULL,
                               type = "AIRTABLE_TOKEN",
-                              resp_type = "records") {
-  req <-
-    req_airtable(
+                              resp_type = deprecated(),
+                              ...) {
+
+  check_installed("rairtable")
+
+  if (is_url(base)) {
+    ids <- rairtable::parse_airtable_url(base)
+    base <- ids$base
+    table <- ids$table
+    view <- ids$view
+  }
+
+  data <-
+    rairtable::read_airtable_records(
       base = base,
       table = table,
-      record = record,
       fields = fields,
-      filter = filter,
       sort = sort,
       desc = desc,
       view = view,
       max_records = max_records,
-      per_page = per_page,
+      page_size = per_page,
       cell_format = cell_format,
       tz = tz,
       locale = locale,
       fields_by_id = fields_by_id,
       offset = offset,
-      token = token,
-      type = type
+      token = get_access_token(
+        token = token,
+        type = type
+      ),
+      type = type,
+      ...
     )
-
-  data <-
-    resp_airtable(
-      req,
-      resp_type = resp_type,
-      max_records = max_records
-    )
-
-  if (resp_type == "resp") {
-    return(data)
-  }
 
   # if (label) {
   #   labels <- names(data)
@@ -160,11 +165,16 @@ get_airtable_data <- function(base,
 
 #' @name get_airtable_metadata
 #' @rdname get_airtable_data
+#' @param fields For [get_airtable_metadata()], if `TRUE`, return the fields
+#'   column from the data.frame with the Airtable response. If only one table is
+#'   provided, fields are returned as a data frame. Ignored if table is `NULL`
 #' @export
-get_airtable_metadata <- function(base = NULL,
+get_airtable_metadata <- function(base,
+                                  table = NULL,
                                   token = NULL,
                                   type = "AIRTABLE_TOKEN",
-                                  resp_type = "tables") {
+                                  resp_type = "tables",
+                                  fields = FALSE) {
   base_url <- "https://api.airtable.com/v0/meta/bases/"
   req <- httr2::request(base_url)
 
@@ -178,99 +188,25 @@ get_airtable_metadata <- function(base = NULL,
 
   req <- req_auth_airtable(req, type = type)
 
-  resp_airtable(req, resp_type = resp_type)
-}
+  resp <- resp_airtable(req, resp_type = resp_type)
 
-#' List or retrieve records from an Airtable base
-#'
-#' @noRd
-#' @importFrom httr2 request req_url_path_append req_url_query
-req_airtable <- function(base,
-                         table,
-                         record = NULL,
-                         view = NULL,
-                         sort = NULL,
-                         max_records = 100,
-                         per_page = NULL,
-                         tz = NULL,
-                         locale = NULL,
-                         token = NULL,
-                         type = "AIRTABLE_API_KEY",
-                         fields_by_id = FALSE,
-                         fields = NULL,
-                         filter = NULL,
-                         desc = FALSE,
-                         cell_format = NULL,
-                         offset = NULL,
-                         base_url = "https://api.airtable.com/v0/") {
-  req <- httr2::request(base_url)
-
-  check_required(base)
-  check_starts_with(base, "app")
-  check_required(table)
-  # check_starts_with(table, "tbl")
-
-  req <-
-    httr2::req_url_path_append(
-      req, base, table
-    )
-
-  if (!is.null(record)) {
-    check_starts_with(record, "rec")
-
-    req <-
-      httr2::req_url_path_append(
-        req, record
-      )
-
-    return(req_auth_airtable(req, token, type))
+  if (is_null(table)) {
+    return(resp)
   }
 
-  if (!is.null(sort)) {
-    sort <- glue('field: "{sort}"')
+  table <- arg_match(table, resp[["id"]], multiple = TRUE)
 
-    if (desc) {
-      sort <- glue('{sort}, direction: "desc"')
-    }
+  table_resp <- resp[resp[["id"]] %in% table, ]
 
-    sort <- glue("[{{sort}}]")
+  if (is_false(fields)) {
+    return(table_resp)
   }
 
-  cellFormat <- match.arg(cell_format, c("json", "string"))
-
-  if (cellFormat == "string") {
-    tz <- Sys.timezone()
-    locale <- Sys.getlocale("LC_TIME")
+  if (nrow(table_resp) == 1) {
+   return(table_resp[["fields"]][[1]])
   }
 
-  if (!fields_by_id) {
-    fields_by_id <- NULL
-  }
-
-  req <-
-    httr2::req_url_query(
-      req,
-      view = view,
-      sort = sort,
-      cellFormat = cellFormat,
-      timeZone = tz,
-      userLocale = locale,
-      maxRecords = max_records,
-      pageSize = per_page,
-      returnFieldsByFieldId = fields_by_id
-    )
-
-  if (!is.null(fields)) {
-    for (field in fields) {
-      req <-
-        httr2::req_url_query(
-          req,
-          field = glue("[{field}]")
-        )
-    }
-  }
-
-  req_auth_airtable(req, token, type)
+  table_resp[["fields"]]
 }
 
 #' Set rate limit, set user agent, and authenticate Airtable request with
@@ -315,7 +251,7 @@ resp_airtable <- function(req,
     )
 
   if (resp_type == "record") {
-    is_pkg_installed("tidyr")
+    rlang::check_installed("tidyr")
   }
 
   if (resp_type != "resp") {
@@ -367,3 +303,4 @@ resp_airtable <- function(req,
     )
   )
 }
+

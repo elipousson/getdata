@@ -21,6 +21,7 @@ Imports:
     glue,
     httr2,
     janitor,
+    lifecycle,
     magrittr,
     rlang (>= 0.4.11),
     sf,
@@ -37,12 +38,11 @@ Suggests:
     googlesheets4,
     knitr,
     labelled,
-    lifecycle,
     lubridate,
     mapboxapi,
     naniar,
     osmdata (>= 0.1.10),
-    rappdirs,
+    rairtable,
     roxygen2,
     RSocrata,
     smoothr,
@@ -58,6 +58,7 @@ Remotes:
     elipousson/cliExtras,
     elipousson/esri2sf,
     elipousson/sfext
+    elipousson/rairtable@dev
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8
