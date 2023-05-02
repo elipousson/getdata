@@ -3,6 +3,7 @@
 # getdata development
 
 * Import rairtable package for `get_airtable_data()`.
+* Implement spatial filters for `get_tigris_data()`
 
 # getdata 0.1.0.9001 (2023-03-29)
 
