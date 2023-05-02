@@ -176,7 +176,7 @@
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=rairtable"
+      "sameAs": "https://github.com/elipousson/rairtable"
     },
     {
       "@type": "SoftwareApplication",
@@ -267,6 +267,7 @@
       "@type": "SoftwareApplication",
       "identifier": "tigris",
       "name": "tigris",
+      "version": ">= 2.0",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -439,7 +440,8 @@
       "@type": "SoftwareApplication",
       "identifier": "sfext",
       "name": "sfext",
-      "version": ">= 0.0.0.9001"
+      "version": ">= 0.0.0.9001",
+      "sameAs": "https://github.com/elipousson/sfext"
     },
     "14": {
       "@type": "SoftwareApplication",
@@ -484,7 +486,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "409.686KB",
+  "fileSize": "346.81KB",
   "releaseNotes": "https://github.com/elipousson/getdata/blob/master/NEWS.md",
   "readme": "https://github.com/elipousson/getdata/blob/main/README.md",
   "contIntegration": "https://app.codecov.io/gh/elipousson/getdata?branch=main",

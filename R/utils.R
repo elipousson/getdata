@@ -21,6 +21,10 @@ utils::globalVariables(
 # is_url is_esri_url is_gsheet_url is_gist_url is_gmap_url
 # is_unit is_all_null is_list_of
 
+
+# Placeholder to ensure lifecycle doesn't show up in check
+lifecycle::deprecate_soft
+
 #' Add default user agent to request and perform request
 #'
 #' @noRd
