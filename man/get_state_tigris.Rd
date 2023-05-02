@@ -7,9 +7,14 @@
 get_tigris_data(
   type = NULL,
   state = getOption("getdata.state"),
+  location = NULL,
+  dist = getOption("getdata.dist"),
+  diag_ratio = getOption("getdata.diag_ratio"),
+  unit = getOption("getdata.unit", "meter"),
+  asp = getOption("getdata.asp"),
+  crs = getOption("getdata.crs", default = 3857),
   name = NULL,
   name_col = c("name", "namelsad", "geoid"),
-  crs = getOption("getdata.crs", default = 3857),
   cb = TRUE,
   clean_names = TRUE,
   cache = TRUE,
@@ -23,12 +28,32 @@ supported options.}
 \item{state}{State name, abbreviation, or GeoID. Required. Defaults to
 getOption("getdata.state").}
 
+\item{location}{A sf, sfc, or bbox object passed to \code{\link[sfext:st_bbox_ext]{sfext::st_bbox_ext()}}
+and used to create the geometry passed to the \code{filter_by} parameter passed
+to the tigris functions.}
+
+\item{dist}{buffer distance in units. Optional.}
+
+\item{diag_ratio}{ratio of diagonal distance of area's bounding box used as
+buffer distance. e.g. if the diagonal distance is 3000 meters and the
+"diag_ratio = 0.1"  a 300 meter will be used. Ignored when \code{dist} is
+provided.}
+
+\item{unit}{Units for buffer. Supported options include "meter", "foot",
+"kilometer", and "mile", "nautical mile" Common abbreviations (e.g. "km"
+instead of "kilometer") are also supported. Distance in units is converted
+to units matching GDAL units for x; defaults to "meter"}
+
+\item{asp}{Aspect ratio of width to height as a numeric value (e.g. 0.33) or
+character (e.g. "1:3"). If numeric, \code{\link[sfext:get_asp]{get_asp()}} returns the same value
+without modification.}
+
+\item{crs}{Coordinate reference system of bounding box to return; defaults to
+\code{NULL} which maintains the crs of the input object.}
+
 \item{name, name_col}{Name and columns to filter by name. name defaults to
 \code{NULL}, and name_col defaults to c("namelsad", "namelsad", "geoid")
 columns.}
-
-\item{crs}{Coordinate reference system for returned data, Default: getOption("getdata.crs", default =
-3857)}
 
 \item{cb}{If \code{TRUE}, download a generalized (1:500k) file. If \code{FALSE},
 download the most detailed TIGER/Line file. Defaults to \code{TRUE} (reverse of

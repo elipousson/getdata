@@ -34,6 +34,10 @@
 #' @param cache If `TRUE`, set `options(tigris_use_cache = TRUE)` to cache
 #'   downloaded tigris data. Ignored if `getOption("tigris_use_cache")` is not
 #'   `NULL`.
+#' @param location A sf, sfc, or bbox object passed to [sfext::st_bbox_ext()]
+#'   and used to create the geometry passed to the `filter_by` parameter passed
+#'   to the tigris functions.
+#' @inheritParams sfext::st_bbox_ext
 #' @inheritParams format_sf_data
 #' @inheritParams format_data
 #' @param ... Additional parameters passed on to tigris functions.
@@ -42,9 +46,14 @@
 #' @export
 get_tigris_data <- function(type = NULL,
                             state = getOption("getdata.state"),
+                            location = NULL,
+                            dist = getOption("getdata.dist"),
+                            diag_ratio = getOption("getdata.diag_ratio"),
+                            unit = getOption("getdata.unit", "meter"),
+                            asp = getOption("getdata.asp"),
+                            crs = getOption("getdata.crs", default = 3857),
                             name = NULL,
                             name_col = c("name", "namelsad", "geoid"),
-                            crs = getOption("getdata.crs", default = 3857),
                             cb = TRUE,
                             clean_names = TRUE,
                             cache = TRUE,
@@ -70,24 +79,33 @@ get_tigris_data <- function(type = NULL,
       )
     )
 
+  filter_by <-
+    sfext::st_bbox_ext(
+      location,
+      dist = dist,
+      diag_ratio = diag_ratio,
+      unit = unit,
+      asp = asp
+    )
+
   data <-
     switch(type,
-      "counties" = tigris::counties(state = state, cb = cb, ...),
-      "census places" = tigris::places(state = state, cb = cb, ...),
-      "congressional districts" = tigris::congressional_districts(state = state, cb = cb, ...),
-      "legislative districts" = tigris::state_legislative_districts(state = state, house = "lower", cb = cb, ...),
-      "senate districts" = tigris::state_legislative_districts(state = state, house = "upper", cb = cb, ...),
-      "county subdivisions" = tigris::county_subdivisions(state = state, cb = cb, ...),
-      "block groups" = tigris::block_groups(state = state, cb = cb, ...),
-      "blocks" = tigris::blocks(state = state, ...),
-      "pumas" = tigris::pumas(state = state, cb = cb, ...),
-      "voting districts" = tigris::voting_districts(state = state, cb = cb, ...),
-      "roads" = tigris::roads(state = state, ...),
-      "primary secondary roads" = tigris::primary_secondary_roads(state = state, ...),
-      "area water" = tigris::area_water(state = state, ...),
-      "linear water" = tigris::linear_water(state = state, ...),
-      "landmarks" = tigris::landmarks(state = state, ...),
-      "zctas" = tigris::zctas(state = state, ...)
+      "counties" = tigris::counties(state = state, cb = cb, filter_by = filter_by, ...),
+      "census places" = tigris::places(state = state, cb = cb, filter_by = filter_by, ...),
+      "congressional districts" = tigris::congressional_districts(state = state, cb = cb, filter_by = filter_by, ...),
+      "legislative districts" = tigris::state_legislative_districts(state = state, house = "lower", cb = cb, filter_by = filter_by, ...),
+      "senate districts" = tigris::state_legislative_districts(state = state, house = "upper", cb = cb, filter_by = filter_by, ...),
+      "county subdivisions" = tigris::county_subdivisions(state = state, cb = cb, filter_by = filter_by, ...),
+      "block groups" = tigris::block_groups(state = state, cb = cb, filter_by = filter_by, ...),
+      "blocks" = tigris::blocks(state = state, filter_by = filter_by, ...),
+      "pumas" = tigris::pumas(state = state, cb = cb, filter_by = filter_by, ...),
+      "voting districts" = tigris::voting_districts(state = state, cb = cb, filter_by = filter_by, ...),
+      "roads" = tigris::roads(state = state, filter_by = filter_by, ...),
+      "primary secondary roads" = tigris::primary_secondary_roads(state = state, filter_by = filter_by, ...),
+      "area water" = tigris::area_water(state = state, filter_by = filter_by, ...),
+      "linear water" = tigris::linear_water(state = state, filter_by = filter_by, ...),
+      "landmarks" = tigris::landmarks(state = state, filter_by = filter_by, ...),
+      "zctas" = tigris::zctas(state = state, filter_by = filter_by, ...)
     )
 
   data <-
