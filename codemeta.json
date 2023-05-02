@@ -14,7 +14,7 @@
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.2.0 Patched (2022-05-23 r82396)",
+  "runtimePlatform": "R version 4.2.3 (2023-03-15)",
   "author": [
     {
       "@type": "Person",
@@ -119,18 +119,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "lifecycle",
-      "name": "lifecycle",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=lifecycle"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "lubridate",
       "name": "lubridate",
       "provider": {
@@ -180,15 +168,15 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "rappdirs",
-      "name": "rappdirs",
+      "identifier": "rairtable",
+      "name": "rairtable",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=rappdirs"
+      "sameAs": "https://CRAN.R-project.org/package=rairtable"
     },
     {
       "@type": "SoftwareApplication",
@@ -340,6 +328,18 @@
     },
     "4": {
       "@type": "SoftwareApplication",
+      "identifier": "DBI",
+      "name": "DBI",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=DBI"
+    },
+    "5": {
+      "@type": "SoftwareApplication",
       "identifier": "dplyr",
       "name": "dplyr",
       "provider": {
@@ -350,7 +350,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dplyr"
     },
-    "5": {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "glue",
       "name": "glue",
@@ -362,7 +362,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=glue"
     },
-    "6": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "httr2",
       "name": "httr2",
@@ -374,7 +374,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=httr2"
     },
-    "7": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "janitor",
       "name": "janitor",
@@ -386,7 +386,19 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=janitor"
     },
-    "8": {
+    "9": {
+      "@type": "SoftwareApplication",
+      "identifier": "lifecycle",
+      "name": "lifecycle",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=lifecycle"
+    },
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "magrittr",
       "name": "magrittr",
@@ -398,7 +410,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=magrittr"
     },
-    "9": {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -411,7 +423,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "10": {
+    "12": {
       "@type": "SoftwareApplication",
       "identifier": "sf",
       "name": "sf",
@@ -423,14 +435,13 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=sf"
     },
-    "11": {
+    "13": {
       "@type": "SoftwareApplication",
       "identifier": "sfext",
       "name": "sfext",
-      "version": ">= 0.0.0.9001",
-      "sameAs": "https://github.com/elipousson/sfext"
+      "version": ">= 0.0.0.9001"
     },
-    "12": {
+    "14": {
       "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
@@ -442,7 +453,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tibble"
     },
-    "13": {
+    "15": {
       "@type": "SoftwareApplication",
       "identifier": "tidyselect",
       "name": "tidyselect",
@@ -454,12 +465,12 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tidyselect"
     },
-    "14": {
+    "16": {
       "@type": "SoftwareApplication",
       "identifier": "utils",
       "name": "utils"
     },
-    "15": {
+    "17": {
       "@type": "SoftwareApplication",
       "identifier": "vctrs",
       "name": "vctrs",
@@ -473,7 +484,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "334KB",
+  "fileSize": "409.686KB",
   "releaseNotes": "https://github.com/elipousson/getdata/blob/master/NEWS.md",
   "readme": "https://github.com/elipousson/getdata/blob/main/README.md",
   "contIntegration": "https://app.codecov.io/gh/elipousson/getdata?branch=main",
