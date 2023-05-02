@@ -9,8 +9,14 @@
 #' @importFrom glue glue_sql
 #' @importFrom glue glue_collapse
 #' @importFrom lifecycle deprecated
-#' @importFrom rlang .data `%||%` is_logical is_null has_name is_string
-#'   check_installed list2
+#' @importFrom rlang .data
+#' @importFrom rlang `%||%`
+#' @importFrom rlang is_logical
+#' @importFrom rlang is_null
+#' @importFrom rlang has_name
+#' @importFrom rlang is_string
+#' @importFrom rlang check_installed
+#' @importFrom rlang list2
 #' @importFrom rlang `:=`
 #' @importFrom sfext as_sf
 #' @importFrom sfext df_to_sf

@@ -51,7 +51,7 @@
 #' @param label label is optionally used by [map_location_data()] to name the
 #'   data objects in the list returned by the function.
 #' @inheritParams sfext::as_sf
-#' @inheritParams sfext::as_sf_class
+#' @inheritParams sfext::as_sf_list
 #' @inheritParams format_data
 #' @inheritParams sfext::lonlat_to_sfc
 #' @param ... Additional parameters passed to [sfext::read_sf_path()],

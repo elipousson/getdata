@@ -169,6 +169,7 @@ get_airtable_data <- function(base,
 #'   column from the data.frame with the Airtable response. If only one table is
 #'   provided, fields are returned as a data frame. Ignored if table is `NULL`
 #' @export
+#' @importFrom rlang is_false
 get_airtable_metadata <- function(base,
                                   table = NULL,
                                   token = NULL,

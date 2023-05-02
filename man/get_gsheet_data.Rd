@@ -82,8 +82,9 @@ to \code{FALSE}.}
 \item{from_crs}{For \code{\link[sfext:df_to_sf]{df_to_sf()}}, coordinate reference system used by
 coordinates or well known text in data frame.}
 
-\item{clean_names}{If \code{TRUE}, set .name_repair to \code{\link[janitor:make_clean_names]{janitor::make_clean_names()}};
-defaults to \code{TRUE}.}
+\item{clean_names}{If \code{TRUE}, clean names provided to nm or created based on
+value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as
+provided.}
 
 \item{...}{Other parameters passed onto methods.}
 }
