@@ -144,6 +144,11 @@ get_location_data <- function(location = NULL,
       )
   }
 
+  if (is_empty(data)) {
+    cli_abort(
+      "{.arg data} can't be found."
+    )
+  }
   data <- sfext::st_make_valid_ext(data)
 
   if (crop) {
