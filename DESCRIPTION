@@ -58,7 +58,7 @@ Remotes:
     elipousson/cliExtras,
     elipousson/esri2sf,
     elipousson/sfext
-    elipousson/rairtable@dev
+    elipousson/rairtable
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Encoding: UTF-8
