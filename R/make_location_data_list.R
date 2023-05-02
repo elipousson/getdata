@@ -19,7 +19,7 @@
 #' @importFrom sfext as_sf_list
 #' @importFrom dplyr case_when
 #' @importFrom cliExtras cli_warn_ifnot
-make_location_data_list <- function(data = NULL, location = NULL, key = c("location", "data"), ...) {
+make_location_data_list <- function(data, location, key = c("location", "data"), ...) {
   stopifnot(
     !is.null(data) && !is.null(location)
   )

@@ -4,12 +4,7 @@
 \alias{make_location_data_list}
 \title{Make a list of data and corresponding locations}
 \usage{
-make_location_data_list(
-  data = NULL,
-  location = NULL,
-  key = c("location", "data"),
-  ...
-)
+make_location_data_list(data, location, key = c("location", "data"), ...)
 }
 \arguments{
 \item{data, location}{A sf object or list of sf objects with data and
