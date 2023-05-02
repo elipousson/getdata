@@ -126,9 +126,8 @@ the source data.}
 \item{crs}{Coordinate reference system of bounding box to return; defaults to
 \code{NULL} which maintains the crs of the input object.}
 
-\item{clean_names}{If \code{TRUE}, clean names provided to nm or created based on
-value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as
-provided.}
+\item{clean_names}{If \code{TRUE}, set .name_repair to \code{\link[janitor:make_clean_names]{janitor::make_clean_names()}};
+defaults to \code{TRUE}.}
 
 \item{quiet}{If \code{TRUE}, suppress messages when downloading data. Defaults to
 \code{FALSE}.}

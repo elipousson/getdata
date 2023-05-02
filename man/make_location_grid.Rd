@@ -32,7 +32,7 @@ serves as a margin as the negative buffer is applied to all cells
 (including those at the edges of the grid).}
     \item{\code{desc}}{If TRUE, reverse standard order of cell id numbering; defaults
 \code{FALSE}}
-    \item{\code{cellsize}}{target cellsize}
+    \item{\code{cellsize}}{numeric of length 1 or 2 with target cellsize: for square or rectangular cells the width and height, for hexagonal cells the distance between opposite edges (edge length is cellsize/sqrt(3)). A length units object can be passed, or an area unit object with area size of the square or hexagonal cell.}
     \item{\code{what}}{"polygons", "corners", "centers"; set to centers automatically if
 style is "circle", "circle_offset" but a buffer is applied to return
 circular polygons.}

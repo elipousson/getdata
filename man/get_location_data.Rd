@@ -113,16 +113,12 @@ supports nested lists created by \code{\link[=make_location_data_list]{make_loca
 the default key names of "location" and "data"). This feature has not be
 fully tested and may result in errors or unexpected results.}
 
-\item{col}{For \link[sfext]{as_sf_list}, the name of the column used to group data if x
-is a sf object or used to group and nest data before passing to x.}
-
 \item{var_names}{A named list following the format, \code{list("New var name" = old_var_name)}, or a two column data frame with the first column being the
 new variable names and the second column being the old variable names;
 defaults to \code{NULL}.}
 
-\item{clean_names}{If \code{TRUE}, clean names provided to nm or created based on
-value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as
-provided.}
+\item{clean_names}{If \code{TRUE}, set .name_repair to \code{\link[janitor:make_clean_names]{janitor::make_clean_names()}};
+defaults to \code{TRUE}.}
 
 \item{range}{For \code{\link[sfext:lonlat_to_sfc]{lonlat_to_sfc()}}, an object that is coercible to a \code{bbox}
 object or a length 4 vector with names xmin, xmax, ymin, and ymax. If a
