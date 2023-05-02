@@ -1,5 +1,9 @@
 <!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
 
+# getdata development
+
+* Import rairtable package for `get_airtable_data()`.
+
 # getdata 0.1.0.9001 (2023-03-29)
 
 * Add new `bind_location_text_col()` and `between_date_range()` functions.
