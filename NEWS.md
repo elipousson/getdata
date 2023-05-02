@@ -1,9 +1,11 @@
-<!-- NEWS.md is maintained by https://cynkra.github.io/fledge, do not edit -->
+<!-- NEWS.md is maintained by https://fledge.cynkra.com, contributors should not edit this file -->
 
-# getdata development
+# getdata 0.1.0.9002 (2023-05-02)
 
-* Import rairtable package for `get_airtable_data()`.
-* Implement spatial filters for `get_tigris_data()`
+- Improve error if `get_location_data()` returns empty data and pass to `sfext::st_make_valid_ext()` before returning data.
+- Implement location filtering for `get_tigris_data()` using tigris (> 2.0) filter_by parameter.
+- Add `check_date_range()` function.
+- Switch `get_airtable_data()` to rairtable package (forked development version).
 
 # getdata 0.1.0.9001 (2023-03-29)
 
