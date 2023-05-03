@@ -132,7 +132,7 @@ get_open_data(
 )
 ```
 
-You must set or provide an API token or key for `get_open_data()`, `get_airtable_data()`, `get_flickr_photos()` to work. `get_ghseet_data()` will require user authentication (handled automatically by the {googlesheets4} package).
+You must set or provide an API token or key for `get_open_data()`, `get_airtable_data()`, `get_flickr_photos()` to work. `get_gsheet_data()` will require user authentication (handled automatically by the {googlesheets4} package).
 
 ## Helper and utility functions
 
