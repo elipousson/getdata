@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">getdata</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9002</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,13 @@
       <small>Source: <a href="https://github.com/elipousson/getdata/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.0.9002" id="getdata-0109002-2023-05-02">getdata 0.1.0.9002 (2023-05-02)<a class="anchor" aria-label="anchor" href="#getdata-0109002-2023-05-02"></a></h2>
+<ul><li>Improve error if <code><a href="../reference/get_location_data.html">get_location_data()</a></code> returns empty data and pass to <code><a href="https://elipousson.github.io/sfext/reference/st_make_valid_ext.html" class="external-link">sfext::st_make_valid_ext()</a></code> before returning data.</li>
+<li>Implement location filtering for <code><a href="../reference/get_state_tigris.html">get_tigris_data()</a></code> using tigris (&gt; 2.0) filter_by parameter.</li>
+<li>Add <code><a href="../reference/as_date_range.html">check_date_range()</a></code> function.</li>
+<li>Switch <code><a href="../reference/get_airtable_data.html">get_airtable_data()</a></code> to rairtable package (forked development version).</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0.9001" id="getdata-0109001-2023-03-29">getdata 0.1.0.9001 (2023-03-29)<a class="anchor" aria-label="anchor" href="#getdata-0109001-2023-03-29"></a></h2>
 <ul><li>Add new <code><a href="../reference/format_address_data.html">bind_location_text_col()</a></code> and <code><a href="../reference/as_date_range.html">between_date_range()</a></code> functions.</li>
