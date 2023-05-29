@@ -57,10 +57,11 @@ replaced based on the values parsed from the url. Required.}
 \item{table}{Airtable table id or name. If table is a table ID it is a string
 starting with "viw". Optional only if base is a url.}
 
-\item{view}{Airtable view ID, Default: \code{NULL}}
+\item{view}{Airtable view ID. View ID values starts with "viw". Optional if
+require_view is \code{FALSE}.}
 
 \item{record}{Airtable record identifier, Default: \code{NULL} Superseded by
-\code{\link[rairtable:read_airtable]{rairtable::read_airtable_record()}} function.}
+\code{\link[rairtable:read_airtable]{rairtable::list_records()}} function.}
 
 \item{fields}{For \code{\link[=get_airtable_metadata]{get_airtable_metadata()}}, if \code{TRUE}, return the fields
 column from the data.frame with the Airtable response. If only one table is
@@ -77,13 +78,15 @@ SQL style queries to filter data. Not yet implemented.}
 be 100 or less.}
 
 \item{per_page}{Passed to page_size parameter of
-\code{\link[rairtable:read_airtable]{rairtable::read_airtable_records()}}}
+\code{\link[rairtable:read_airtable]{rairtable::list_records()}}}
 
-\item{cell_format}{Cell format for "Link to another record" fields (either
-"json" (unique ID) or "string" (displayed character string)), Default:
-"json"}
+\item{cell_format}{Cell format for "Link to another record" fields. Defaults
+to "json" which returns a unique record ID. A "string" cell_format returns
+the displayed character string.}
 
-\item{tz, locale}{Time zone and locale, Defaults: \code{NULL}}
+\item{tz, locale}{Time zone and locale, Defaults to \code{NULL}. If cell_format is
+"string", tz defaults to \code{Sys.timezone()} and locale defaults to
+\code{Sys.getlocale("LC_TIME")}.}
 
 \item{fields_by_id}{If \code{TRUE}, return fields by id, Default: \code{FALSE}}
 
@@ -140,14 +143,16 @@ to "resp" to return the API response without any additional formatting or
 conversion.}
 
 \item{...}{
-  Arguments passed on to \code{\link[rairtable:read_airtable]{rairtable::read_airtable_records}}
+  Arguments passed on to \code{\link[rairtable:read_airtable]{rairtable::list_records}}
   \describe{
     \item{\code{airtable}}{An \code{airtable} class object. Optional for \code{\link[rairtable:read_airtable]{read_airtable()}} if
-url is supplied. For \code{\link[rairtable:read_airtable_records]{read_airtable_records()}} and
-\code{\link[rairtable:read_airtable_record]{read_airtable_record()}}, support the airtable, url, or a base \emph{and} table
+url is supplied. For \code{\link[rairtable:list_records]{list_records()}} and
+\code{\link[rairtable:get_record]{get_record()}}, support the airtable, url, or a base \emph{and} table
 parameter.}
     \item{\code{page_size}}{Max records to return per page, Default: \code{NULL}}
-    \item{\code{tz,locale}}{Time zone and locale, Defaults: \code{NULL}}
+    \item{\code{tz,locale}}{Time zone and locale, Defaults to \code{NULL}. If cell_format is
+"string", tz defaults to \code{Sys.timezone()} and locale defaults to
+\code{Sys.getlocale("LC_TIME")}.}
   }}
 }
 \description{

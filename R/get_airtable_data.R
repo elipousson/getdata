@@ -31,13 +31,13 @@
 #'   replaced based on the values parsed from the url. Required.
 #' @param table Airtable table id or name. If table is a table ID it is a string
 #'   starting with "viw". Optional only if base is a url.
-#' @inheritParams rairtable::read_airtable_records
+#' @inheritParams rairtable::list_records
 #' @param per_page Passed to page_size parameter of
-#'   [rairtable::read_airtable_records()]
+#'   [rairtable::list_records()]
 #' @param filter Placeholder for filterByFormula API parameter allowing use of
 #'   SQL style queries to filter data. Not yet implemented.
 #' @param record Airtable record identifier, Default: `NULL` Superseded by
-#'   [rairtable::read_airtable_record()] function.
+#'   [rairtable::list_records()] function.
 #' @param offset Offset parameter, Default: `NULL`
 #' @param token,type API token and type, token defaults to `NULL` and type to
 #'   `"AIRTABLE_TOKEN"` (same as `get_access_token(type =
@@ -50,7 +50,7 @@
 #' @inheritParams sfext::df_to_sf
 #' @inheritParams get_location_data
 #' @inheritParams format_data
-#' @inheritDotParams rairtable::read_airtable_records
+#' @inheritDotParams rairtable::list_records
 #' @rdname get_airtable_data
 #' @export
 #' @importFrom sfext df_to_sf
@@ -99,7 +99,7 @@ get_airtable_data <- function(base,
   }
 
   data <-
-    rairtable::read_airtable_records(
+    rairtable::list_records(
       base = base,
       table = table,
       fields = fields,

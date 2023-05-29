@@ -57,7 +57,7 @@ Remotes:
     elipousson/bingmapr,
     elipousson/cliExtras,
     elipousson/esri2sf,
-    elipousson/rairtable,
+    elipousson/rairtable@dev,
     elipousson/sfext
 Config/testthat/edition: 3
 Config/testthat/parallel: true
