@@ -47,6 +47,18 @@ get_esri_data <- function(url,
                           ...) {
   check_dev_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
   meta <- get_esri_metadata(url, token, clean_names = FALSE)
+
+  if (has_name(meta, "error")) {
+    error <- meta[["error"]]
+    message <- c(error[["code"]], "i" = error[["message"]])
+
+    if (!is_empty(error[["details"]])) {
+      message <- c(message, as.character(error[["details"]]))
+    }
+
+    cli::cli_abort(message = message)
+  }
+
   # Set table to TRUE for missing geometry type
   table <- any(c(is.null(meta[["geometryType"]]), (meta[["geometryType"]] == "")))
   # Set table to FALSE for Group Layer URLs
