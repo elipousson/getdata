@@ -125,12 +125,13 @@ starting with "viw". Optional only if base is a url.</p></dd>
 
 
 <dt>view</dt>
-<dd><p>Airtable view ID, Default: <code>NULL</code></p></dd>
+<dd><p>Airtable view ID. View ID values starts with "viw". Optional if
+require_view is <code>FALSE</code>.</p></dd>
 
 
 <dt>record</dt>
 <dd><p>Airtable record identifier, Default: <code>NULL</code> Superseded by
-<code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">rairtable::read_airtable_record()</a></code> function.</p></dd>
+<code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">rairtable::list_records()</a></code> function.</p></dd>
 
 
 <dt>fields</dt>
@@ -159,17 +160,19 @@ be 100 or less.</p></dd>
 
 <dt>per_page</dt>
 <dd><p>Passed to page_size parameter of
-<code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">rairtable::read_airtable_records()</a></code></p></dd>
+<code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">rairtable::list_records()</a></code></p></dd>
 
 
 <dt>cell_format</dt>
-<dd><p>Cell format for "Link to another record" fields (either
-"json" (unique ID) or "string" (displayed character string)), Default:
-"json"</p></dd>
+<dd><p>Cell format for "Link to another record" fields. Defaults
+to "json" which returns a unique record ID. A "string" cell_format returns
+the displayed character string.</p></dd>
 
 
 <dt>tz, locale</dt>
-<dd><p>Time zone and locale, Defaults: <code>NULL</code></p></dd>
+<dd><p>Time zone and locale, Defaults to <code>NULL</code>. If cell_format is
+"string", tz defaults to <code><a href="https://rdrr.io/r/base/timezones.html" class="external-link">Sys.timezone()</a></code> and locale defaults to
+<code>Sys.getlocale("LC_TIME")</code>.</p></dd>
 
 
 <dt>fields_by_id</dt>
@@ -261,17 +264,19 @@ conversion.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Arguments passed on to <code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">rairtable::read_airtable_records</a></code></p><dl><dt><code>airtable</code></dt>
+<dd><p>Arguments passed on to <code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">rairtable::list_records</a></code></p><dl><dt><code>airtable</code></dt>
 <dd><p>An <code>airtable</code> class object. Optional for <code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">read_airtable()</a></code> if
-url is supplied. For <code>read_airtable_records()</code> and
-<code>read_airtable_record()</code>, support the airtable, url, or a base <em>and</em> table
+url is supplied. For <code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">list_records()</a></code> and
+<code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">get_record()</a></code>, support the airtable, url, or a base <em>and</em> table
 parameter.</p></dd>
 
     <dt><code>page_size</code></dt>
 <dd><p>Max records to return per page, Default: <code>NULL</code></p></dd>
 
     <dt><code>tz,locale</code></dt>
-<dd><p>Time zone and locale, Defaults: <code>NULL</code></p></dd>
+<dd><p>Time zone and locale, Defaults to <code>NULL</code>. If cell_format is
+"string", tz defaults to <code><a href="https://rdrr.io/r/base/timezones.html" class="external-link">Sys.timezone()</a></code> and locale defaults to
+<code>Sys.getlocale("LC_TIME")</code>.</p></dd>
 
   
 </dl></dd>
