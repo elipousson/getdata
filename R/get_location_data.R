@@ -90,7 +90,7 @@ get_location_data <- function(location = NULL,
     # documented as alternate index naming conventions supported if possible
     if (has_name(index, "package") && is.null(package)) {
       package <- unique(index[["package"]]) # could use data as an index
-      check_character(package, n = 1)
+      check_string(package, allow_empty = FALSE)
     }
 
     location <- get_index_param(index, location = location)

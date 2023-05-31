@@ -135,15 +135,17 @@ req_wiki_query <- function(lang = NULL,
                            list = "geosearch",
                            details = NULL,
                            limit = 50,
-                           format = "json") {
+                           format = "json",
+                           call = caller_env()) {
   # <https://www.mediawiki.org/wiki/Extension:GeoData>
-  check_null(lang)
+  check_string(lang, call = call)
 
   req <-
     httr2::request(glue("https://{lang}.wikipedia.org/w/api.php"))
 
   cliExtras::cli_abort_ifnot(
-    condition = any(!is.null(c(gsbbox, gscoord, gspage)))
+    condition = any(!is.null(c(gsbbox, gscoord, gspage))),
+    call = call
   )
 
   req <-
@@ -158,7 +160,7 @@ req_wiki_query <- function(lang = NULL,
     )
 
   primary <- primary %||% "primary"
-  primary <- arg_match(primary, c("primary", "all", "secondary"))
+  primary <- arg_match(primary, c("primary", "all", "secondary"), error_call = call)
 
   req <-
     httr2::req_url_query(
@@ -171,7 +173,8 @@ req_wiki_query <- function(lang = NULL,
       arg_match(
         details,
         c("name", "type", "dim", "scale", "region", "country", "globe"),
-        multiple = TRUE
+        multiple = TRUE,
+        error_call = call
       )
 
     req <-
@@ -204,7 +207,8 @@ req_wiki_query <- function(lang = NULL,
 #' @importFrom httr2 resp_body_json
 resp_wiki_query <- function(req,
                             list = "geosearch",
-                            simplifyVector = TRUE) {
+                            simplifyVector = TRUE,
+                            call = caller_env()) {
   resp <-
     httr2::resp_body_json(
       resp = req_getdata(req),
@@ -213,7 +217,8 @@ resp_wiki_query <- function(req,
 
   if (has_name(resp, "error")) {
     cli_abort(
-      'Wikipedia {.arg {list}} query can\'t be completed due to an error: {resp[["error"]][["info"]]}.'
+      'Wikipedia {.arg {list}} query can\'t be completed due to an error: {resp[["error"]][["info"]]}.',
+      call = call
     )
   }
 

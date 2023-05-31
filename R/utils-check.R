@@ -1,3 +1,30 @@
+#' Check if object is a list
+#'
+#' @noRd
+#' @importFrom rlang is_list
+check_list <- function(x,
+                       allow_na = FALSE,
+                       allow_null = FALSE,
+                       arg = caller_arg(x),
+                       call = caller_env()) {
+  if (allow_na && is.na(x)) {
+    return(invisible(NULL))
+  }
+
+  if (allow_null && is_null(x)) {
+    return(invisible(NULL))
+  }
+
+  if (!is_list(x)) {
+    stop_input_type(
+      x,
+      what = "a list",
+      allow_na = allow_na, allow_null = allow_null,
+      arg = arg, call = call
+    )
+  }
+}
+
 #' @noRd
 #' @importFrom rlang is_null
 check_null <- function(x = NULL, arg = caller_arg(x), allow_null = FALSE, req_null = FALSE, call = caller_env(), ...) {
@@ -21,62 +48,46 @@ check_null <- function(x = NULL, arg = caller_arg(x), allow_null = FALSE, req_nu
 }
 
 #' @noRd
-#' @importFrom rlang is_null
-check_character <- function(x = NULL, arg = caller_arg(x), allow_null = FALSE, n = NULL, call = caller_env(), ...) {
-  check_null(x, arg, allow_null, call = call)
+check_length <- function(x = NULL,
+                      n = 1,
+                      arg = caller_arg(x),
+                      allow_na = FALSE,
+                      allow_null = TRUE,
+                      call = caller_env(),
+                      ...) {
+  if (allow_na && is.na(x)) {
+    return(invisible(NULL))
 
-  if (rlang::is_character(x, n = n)) {
-    invisible(return(TRUE))
   }
 
-  cli_abort(
-    c("{.arg {arg}} must be a character vector.",
-      "i" = "You've supplied a {class(x)} object."
-    ),
-    call = call,
-    ...
-  )
-}
-
-#' @noRd
-#' @importFrom rlang is_logical
-check_logical <- function(x = NULL, arg = caller_arg(x), allow_null = FALSE, n = NULL, call = caller_env(), ...) {
-  check_null(x, arg, allow_null, call = call)
-
-  if (rlang::is_logical(x, n = n)) {
-    invisible(return(TRUE))
+  if (allow_null && is_null(x)) {
+    return(invisible(NULL))
   }
 
-  cli_abort(
-    c("{.arg {arg}} must be a character vector.",
-      "i" = "You've supplied a {class(x)} object."
-    ),
-    call = call,
-    ...
-  )
-}
+  if (has_length(n, 1)) {
+    if (has_length(x, n)) {
+      return(invisible(NULL))
+    }
 
-#' @noRd
-check_len <- function(x = NULL, len = 1, arg = caller_arg(x), allow_null = FALSE, call = caller_env(), ...) {
-  check_null(x, arg, allow_null, call = call)
-
-  if ((length(x) >= min(len)) && (length(x) <= max(len))) {
-    invisible(return(TRUE))
+    cli_abort(
+      "{.arg {arg}} must be length {n}, not {length(x)}.",
+      call = call,
+      ...
+    )
   }
 
-  if (length(len) > 1) {
-    len <- glue("have a length between {min(len)} and {max(len)}")
-  } else {
-    len <- glue("be length {len}")
-  }
+  if (has_length(n, 2)) {
+    if ((length(x) >= min(n)) && (length(x) <= max(n))) {
+      return(invisible(NULL))
+    }
 
-  cli_abort(
-    c("{.arg {arg}} must {len}.",
-      "i" = "You've supplied a length {length(x)} vector."
-    ),
-    call = call,
-    ...
-  )
+    cli_abort(
+      "{.arg {arg}} must be between length {min(n)} and {max(n)},
+      not {length(x)}.",
+      call = call,
+      ...
+    )
+  }
 }
 
 #' @noRd
@@ -136,8 +147,7 @@ check_df <- function(x, arg = caller_arg(x), allow_null = FALSE, ...) {
 
 #' @noRd
 check_df_rows <- function(x, rows = 1, arg = caller_arg(x), allow_null = FALSE, ...) {
-  check_null(x, arg, allow_null)
-  check_df(x, arg, allow_null)
+  check_data_frame(x, arg = arg, allow_null = allow_null)
 
   if (nrow(x) >= rows) {
     invisible(return(TRUE))

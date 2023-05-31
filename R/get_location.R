@@ -57,24 +57,19 @@ get_location <- function(type,
   if (is.null(index)) {
     rlang::check_required(type)
     cliExtras::cli_abort_ifnot(
-      "{.arg type} must be a {.cls sf} or {.cls character} class but the
-      provided {.arg type} has class {.cls {class(type)}}.",
+      "{.arg type} must be a {.cls sf} object or character vector,
+      not {.obj_type_friendly {type}}.",
       condition = sfext::is_sf(type) || is.character(type)
     )
-  } else {
-    cliExtras::cli_abort_ifnot(
-      "{.arg index} must be a {.cls list} but the
-      provided {.arg index} has class {.cls {class(index)}}.",
-      condition = is.list(index)
-    )
   }
+
+  check_list(index, allow_null = TRUE)
 
   stopifnot(
     is.character(location) ||
       sfext::is_sf(location, ext = TRUE, allow_null = TRUE) ||
       is.numeric(location),
-    is.list(index) || is.null(index),
-    is.logical(union)
+    is_logical(union)
   )
 
   if (is.list(index) && !sfext::is_sf(type)) {
@@ -129,7 +124,11 @@ get_location <- function(type,
       )
   }
 
-  sfext::as_sf_class(location, class = class, crs = crs, col = col)
+  if (!is_null(crs)) {
+    location <- sfext::st_transform_ext(location, crs)
+  }
+
+  sfext::as_sf_class(location, class = class, col = col)
 }
 
 #' Filter by location
@@ -142,7 +141,7 @@ filter_location <- function(data = NULL,
                             location = NULL,
                             allow_null = TRUE,
                             ...) {
-  if (is.null(location) && allow_null) {
+  if (allow_null && is_null(location)) {
     return(data)
   }
 
@@ -160,7 +159,7 @@ filter_name <- function(x = NULL,
                         name_col = "name",
                         arg = rlang::caller_arg(name_col),
                         call = rlang::caller_env()) {
-  if (is.null(name) | is.null(name_col)) {
+  if (is.null(name) || is.null(name_col)) {
     return(x)
   }
 

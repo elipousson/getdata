@@ -33,8 +33,8 @@ set_access_token <- function(token,
     token <- as.character(token)
   }
 
-  check_character(token, n = 1, call = call)
-  check_character(type, n = 1, call = call)
+  check_string(token, allow_empty = FALSE, call = call)
+  check_string(type, allow_empty = FALSE, call = call)
 
   if (!install) {
     cli::cli_bullets(
@@ -109,8 +109,7 @@ get_access_token <- function(token = NULL,
     return(token)
   }
 
-  check_null(x = type, call = call)
-  check_character(type, n = 1, call = call)
+  check_string(type, allow_empty = FALSE, call = call)
 
   token <- Sys.getenv(type)
 

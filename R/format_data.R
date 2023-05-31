@@ -65,7 +65,7 @@ format_data <- function(x,
                         ...) {
   x <- str_trim_squish_across(x)
 
-  if (!is.null(var_names) | !is.null(xwalk)) {
+  if (!is.null(c(var_names, xwalk))) {
     xwalk <- xwalk %||% var_names
     x <- rename_with_xwalk(x, xwalk = xwalk, label = label)
   }
