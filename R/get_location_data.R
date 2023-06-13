@@ -91,9 +91,10 @@ get_location_data <- function(location = NULL,
     # FIXME: This is set to work with 1 or 2 level list indices with naming
     # conventions that match make_location_data_list This should be clearly
     # documented as alternate index naming conventions supported if possible
-    if (has_name(index, "package") && is.null(package)) {
-      package <- unique(index[["package"]]) # could use data as an index
-      check_string(package, allow_empty = FALSE)
+    if (any(has_name(index, c("pkg", "package"))) && is.null(pkg)) {
+      index[["pkg"]] <- index[["pkg"]] %||% index[["package"]]
+      pkg <- unique(index[["pkg"]]) # could use data as an index
+      check_string(pkg, allow_empty = FALSE)
     }
 
     location <- get_index_param(index, location = location)
