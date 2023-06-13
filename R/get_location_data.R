@@ -67,6 +67,7 @@ get_location_data <- function(location = NULL,
                               unit = getOption("getdata.unit", default = "meter"),
                               asp = getOption("getdata.asp"),
                               data = NULL,
+                              pkg = getOption("getdata.package"),
                               package = getOption("getdata.package"),
                               fileext = getOption("getdata.fileext", default = "gpkg"),
                               filetype = getOption("getdata.filetype", default = "gpkg"),
@@ -84,6 +85,8 @@ get_location_data <- function(location = NULL,
                               range = NULL,
                               ...) {
   fileext <- fileext %||% filetype
+  pkg <- pkg %||% package
+
   if (!is.null(index) && is.list(index)) {
     # FIXME: This is set to work with 1 or 2 level list indices with naming
     # conventions that match make_location_data_list This should be clearly
@@ -124,7 +127,7 @@ get_location_data <- function(location = NULL,
         dplyr::case_when(
           is_url(data) ~ "url",
           rlang::is_string(data) && file.exists(data) ~ "path",
-          !is.null(package) ~ "pkg",
+          !is.null(pkg) ~ "pkg",
           is.data.frame(data) ~ "df",
           .default = "sf"
         )
@@ -135,8 +138,7 @@ get_location_data <- function(location = NULL,
         "url" = sfext::read_sf_url(url = data, bbox = bbox, ...),
         "path" = sfext::read_sf_path(path = data, bbox = bbox, ...),
         "pkg" = sfext::read_sf_pkg(
-          data = data, bbox = bbox,
-          package = package, fileext = fileext, ...
+          data = data, bbox = bbox, pkg = pkg, fileext = fileext, ...
         ),
         "sf" = sfext::as_sf(data, ...),
         "df" = sfext::df_to_sf(x = data, from_crs = from_crs, ...),
