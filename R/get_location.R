@@ -125,7 +125,7 @@ get_location <- function(type,
   }
 
   if (!is_null(crs)) {
-    location <- sfext::st_transform_ext(location, crs)
+    location <- sfext::st_transform_ext(location, crs = crs)
   }
 
   sfext::as_sf_class(location, class = class, col = col)
