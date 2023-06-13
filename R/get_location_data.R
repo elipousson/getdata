@@ -316,7 +316,6 @@ map_location_data <- function(location = NULL,
           crs = crs,
           name_col = params[["name_col"]],
           name = params[["name"]],
-          index = index,
           index = index
         )
       )
