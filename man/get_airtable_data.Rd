@@ -70,12 +70,9 @@ provided, fields are returned as a data frame. Ignored if table is \code{NULL}}
 \item{filter}{Placeholder for filterByFormula API parameter allowing use of
 SQL style queries to filter data. Not yet implemented.}
 
-\item{sort}{Field to sort by, Default: \code{NULL}}
+\item{sort}{Field names to sort by. Defaults to \code{NULL}.}
 
-\item{desc}{If \code{TRUE}, sort in descending order, Default: \code{FALSE}}
-
-\item{max_records}{Maximum number of records to return, Default: \code{NULL}. Must
-be 100 or less.}
+\item{max_records}{Maximum number of records to return. Must be 100 or less.}
 
 \item{per_page}{Passed to page_size parameter of
 \code{\link[rairtable:read_airtable]{rairtable::list_records()}}}
@@ -88,7 +85,8 @@ the displayed character string.}
 "string", tz defaults to \code{Sys.timezone()} and locale defaults to
 \code{Sys.getlocale("LC_TIME")}.}
 
-\item{fields_by_id}{If \code{TRUE}, return fields by id, Default: \code{FALSE}}
+\item{fields_by_id}{If \code{TRUE}, use fields IDs for column names in returned
+records. If \code{FALSE} (default), use field names.}
 
 \item{offset}{Offset parameter, Default: \code{NULL}}
 
@@ -133,7 +131,9 @@ after converting a data frame to simple feature object; defaults to
 \item{geo}{If \code{TRUE}, use \code{\link[sfext:address_to_sf]{address_to_sf()}} to geocode address column; defaults
 to \code{FALSE}.}
 
-\item{name_repair}{Defaults to "check_unique"}
+\item{name_repair}{One of "unique" (default), "universal", "check_unique",
+"unique_quiet", or "universal_quiet" passed to \code{\link[vctrs:vec_bind]{vctrs::vec_cbind()}}. See
+\link{vctrs:vec_as_names} for the meaning of these options.}
 
 \item{token, type}{API token and type, token defaults to \code{NULL} and type to
 \code{"AIRTABLE_TOKEN"} (same as \code{get_access_token(type = "AIRTABLE_TOKEN")}).}
@@ -149,10 +149,31 @@ conversion.}
 url is supplied. For \code{\link[rairtable:list_records]{list_records()}} and
 \code{\link[rairtable:get_record]{get_record()}}, support the airtable, url, or a base \emph{and} table
 parameter.}
-    \item{\code{page_size}}{Max records to return per page, Default: \code{NULL}}
+    \item{\code{airtable_id_col}}{Airtable record ID column name assigned to returned
+data frame. Defaults to \code{NULL} which is sets record ID column name to
+\code{getOption("rairtable.id_col", "airtable_record_id")}. For \code{\link[rairtable:list_records]{list_records()}}
+and \code{\link[rairtable:get_record]{get_record()}}, airtable_id_col is not used if metadata is \code{NULL} or
+does not include "id". The record ID column is dropped and converted to
+rownames if id_to_col is \code{FALSE}.}
+    \item{\code{model}}{Optional. A table model from \code{\link[rairtable:get_table_model]{get_table_model()}}. If supplied,
+model is used to validate fields and sort parameters and to arrange columns
+to match the order of the table model.}
+    \item{\code{.name_repair}}{One of "unique" (default), "universal", "check_unique",
+"unique_quiet", or "universal_quiet" passed to \code{\link[vctrs:vec_bind]{vctrs::vec_cbind()}}. See
+\link{vctrs:vec_as_names} for the meaning of these options.}
+    \item{\code{direction}}{A string ("asc" for ascending (default) or "desc" for
+descending) or character vector matching length of sort parameter. Ignored
+if sort is \code{NULL}.}
     \item{\code{tz,locale}}{Time zone and locale, Defaults to \code{NULL}. If cell_format is
 "string", tz defaults to \code{Sys.timezone()} and locale defaults to
 \code{Sys.getlocale("LC_TIME")}.}
+    \item{\code{page_size}}{Maximum number of records to return per page.}
+    \item{\code{metadata}}{Record metadata columns to include with returned data frame.
+Options including "id", "createdTime", and "commentCount". Defaults to
+\code{c("id", "createdTime")}. If metadata is \code{NULL}, no additional fields are
+added to the returned data frame.}
+    \item{\code{simplifyVector}}{Passed to \code{\link[httr2:req_body]{httr2::req_body_json()}}. If \code{FALSE},
+\code{\link[rairtable:get_record]{get_record()}} and \code{\link[rairtable:list_records]{list_records()}} both return named lists of records.}
   }}
 }
 \description{
