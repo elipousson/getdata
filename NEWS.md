@@ -1,5 +1,9 @@
 <!-- NEWS.md is maintained by https://fledge.cynkra.com, contributors should not edit this file -->
 
+# getdata (development)
+
+- Export `make_xwalk_list()` helper function
+
 # getdata 0.1.0.9002 (2023-05-02)
 
 - Improve error if `get_location_data()` returns empty data and pass to `sfext::st_make_valid_ext()` before returning data.
