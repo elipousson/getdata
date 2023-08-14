@@ -24,15 +24,15 @@ If token is not provided; type is required for \code{\link[=get_access_token]{ge
 1 character vector or list. If named, the name of the token is used in
 place of type.}
 
-\item{overwrite}{If \code{TRUE}, overwrite existing token; Default: \code{FALSE}}
+\item{overwrite}{If \code{TRUE}, overwrite any existing token in \code{.Renviron} using
+the same environment variable name. Defaults to \code{FALSE}.}
 
-\item{install}{If \code{TRUE}, install token for use in future sessions; Default:
-\code{FALSE}}
+\item{install}{If \code{TRUE}, this function adds your token to your \code{.Renviron}
+for use in future sessions. Defaults to \code{FALSE}.}
 
-\item{type}{Name of token; defaults to \code{NULL}. Optional if token is named.}
-
-\item{quiet}{If \code{TRUE}, suppress informational messages when setting access
-token. Defaults to \code{FALSE}.}
+\item{quiet}{If \code{TRUE}, suppress messages when setting token by locally
+setting the \code{cli.default_handler} option to \code{\link[=suppressMessages]{suppressMessages()}}. Defaults
+to \code{FALSE}.}
 
 \item{call}{The execution environment of a currently
 running function, e.g. \code{caller_env()}. The function will be
