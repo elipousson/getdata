@@ -1,6 +1,5 @@
 test_that("get_esri_data works", {
-  location <-
-    get_location(
+  location <- get_location(
       type = system.file("shape/nc.shp", package = "sf"),
       name = "Hyde", name_col = "NAME"
     )
@@ -47,8 +46,7 @@ test_that("get_esri_data works", {
 })
 
 test_that("get_esri_layers works", {
-  location <-
-    get_location(
+  location <- get_location(
       type = system.file("shape/nc.shp", package = "sf"),
       name = "Hyde", name_col = "NAME"
     )
@@ -56,8 +54,7 @@ test_that("get_esri_layers works", {
   test_url <-
     "https://services.nconemap.gov/secure/rest/services/NC1Map_Boundaries/FeatureServer"
 
-  test_layers <-
-    get_esri_layers(
+  test_layers <- get_esri_layers(
       location = location,
       url = test_url
     )

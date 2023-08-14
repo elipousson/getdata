@@ -12,6 +12,7 @@ get_location_data(
   unit = getOption("getdata.unit", default = "meter"),
   asp = getOption("getdata.asp"),
   data = NULL,
+  pkg = getOption("getdata.package"),
   package = getOption("getdata.package"),
   fileext = getOption("getdata.fileext", default = "gpkg"),
   filetype = getOption("getdata.filetype", default = "gpkg"),

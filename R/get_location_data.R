@@ -110,41 +110,38 @@ get_location_data <- function(location = NULL,
   }
 
   # Get adjusted bounding box using any adjustment variables provided
-  bbox <-
-    sfext::st_bbox_ext(
-      x = location,
-      dist = dist,
-      diag_ratio = diag_ratio,
-      unit = unit,
-      asp = asp,
-      crs = from_crs
-    )
+  bbox <- sfext::st_bbox_ext(
+    x = location,
+    dist = dist,
+    diag_ratio = diag_ratio,
+    unit = unit,
+    asp = asp,
+    crs = from_crs
+  )
 
   if (!sfext::is_sf(data)) {
     type <- "ext"
 
     if (!is.null(data)) {
-      type <-
-        dplyr::case_when(
-          is_url(data) ~ "url",
-          rlang::is_string(data) && file.exists(data) ~ "path",
-          !is.null(pkg) ~ "pkg",
-          is.data.frame(data) ~ "df",
-          .default = "sf"
-        )
+      type <- dplyr::case_when(
+        is_url(data) ~ "url",
+        rlang::is_string(data) && file.exists(data) ~ "path",
+        !is.null(pkg) ~ "pkg",
+        is.data.frame(data) ~ "df",
+        .default = "sf"
+      )
     }
 
-    data <-
-      switch(type,
-        "url" = sfext::read_sf_url(url = data, bbox = bbox, ...),
-        "path" = sfext::read_sf_path(path = data, bbox = bbox, ...),
-        "pkg" = sfext::read_sf_pkg(
-          data = data, bbox = bbox, pkg = pkg, fileext = fileext, ...
-        ),
-        "sf" = sfext::as_sf(data, ...),
-        "df" = sfext::df_to_sf(x = data, from_crs = from_crs, ...),
-        "ext" = sfext::read_sf_ext(!!!rlang::list2(...), bbox = bbox)
-      )
+    data <- switch(type,
+      "url" = sfext::read_sf_url(url = data, bbox = bbox, ...),
+      "path" = sfext::read_sf_path(path = data, bbox = bbox, ...),
+      "pkg" = sfext::read_sf_pkg(
+        data = data, bbox = bbox, pkg = pkg, fileext = fileext, ...
+      ),
+      "sf" = sfext::as_sf(data, ...),
+      "df" = sfext::df_to_sf(x = data, from_crs = from_crs, ...),
+      "ext" = sfext::read_sf_ext(!!!rlang::list2(...), bbox = bbox)
+    )
   }
 
   if (is_empty(data)) {
@@ -155,29 +152,26 @@ get_location_data <- function(location = NULL,
   data <- sfext::st_make_valid_ext(data)
 
   if (crop) {
-    data <-
-      sfext::st_filter_ext(
-        data,
-        bbox,
-        crop = TRUE
-      )
+    data <- sfext::st_filter_ext(
+      data,
+      bbox,
+      crop = TRUE
+    )
   } else if (trim) {
-    data <-
-      sfext::st_filter_ext(
-        data,
-        location,
-        trim = TRUE
-      )
+    data <- sfext::st_filter_ext(
+      data,
+      location,
+      trim = TRUE
+    )
   } else {
     if (!is_all_null(list(dist, diag_ratio, asp))) {
       location <- bbox
     }
 
-    data <-
-      sfext::st_filter_ext(
-        data,
-        location
-      )
+    data <- sfext::st_filter_ext(
+      data,
+      location
+    )
   }
 
   data <- use_fn(data = data, fn = fn)
@@ -229,20 +223,19 @@ map_location_data <- function(location = NULL,
         label <- janitor::make_clean_names(label)
       }
 
-      data <-
-        rlang::set_names(
+      data <- rlang::set_names(
+        data,
+        nm = map_chr(
           data,
-          nm = map_chr(
-            data,
-            ~ paste0(
-              c(
-                label,
-                janitor::make_clean_names(.x)
-              ),
-              collapse = "_"
-            )
+          ~ paste0(
+            c(
+              label,
+              janitor::make_clean_names(.x)
+            ),
+            collapse = "_"
           )
         )
+      )
     }
   }
 
@@ -252,76 +245,73 @@ map_location_data <- function(location = NULL,
 
   if (is.list(data) && is.list(location) &&
     (length(data) == length(location))) {
-    data <-
-      map2(
-        location,
-        data,
-        ~ get_location_data(
-          location = .x,
-          dist = dist,
-          diag_ratio = diag_ratio,
-          unit = unit,
-          asp = asp,
-          data = .y,
-          package = package,
-          fileext = fileext,
-          fn = fn,
-          crop = crop,
-          trim = trim,
-          from_crs = from_crs,
-          crs = crs,
-          name_col = params[["name_col"]],
-          name = params[["name"]],
-          index = index,
-          range = range
-        )
+    data <- map2(
+      location,
+      data,
+      ~ get_location_data(
+        location = .x,
+        dist = dist,
+        diag_ratio = diag_ratio,
+        unit = unit,
+        asp = asp,
+        data = .y,
+        package = package,
+        fileext = fileext,
+        fn = fn,
+        crop = crop,
+        trim = trim,
+        from_crs = from_crs,
+        crs = crs,
+        name_col = params[["name_col"]],
+        name = params[["name"]],
+        index = index,
+        range = range
       )
+    )
   } else if (is.list(data)) {
-    data <-
-      map(
-        data,
-        ~ get_location_data(
-          location = location,
-          dist = dist,
-          diag_ratio = diag_ratio,
-          unit = unit,
-          asp = asp,
-          data = .x,
-          package = package,
-          fileext = fileext,
-          fn = fn,
-          crop = crop,
-          trim = trim,
-          from_crs = from_crs,
-          crs = crs,
-          name_col = params[["name_col"]],
-          name = params[["name"]],
-          index = index
-        )
+    data <- map(
+      data,
+      ~ get_location_data(
+        location = location,
+        dist = dist,
+        diag_ratio = diag_ratio,
+        unit = unit,
+        asp = asp,
+        data = .x,
+        package = package,
+        fileext = fileext,
+        fn = fn,
+        crop = crop,
+        trim = trim,
+        from_crs = from_crs,
+        crs = crs,
+        name_col = params[["name_col"]],
+        name = params[["name"]],
+        index = index
       )
+    )
   } else if (is.list(location)) {
-    data <-
-      map(
-        location,
-        ~ get_location_data(
-          location = .x,
-          dist = dist,
-          diag_ratio = diag_ratio,
-          unit = unit,
-          asp = asp,
-          data = data,
-          package = package,
-          fileext = fileext,
-          fn = fn,
-          crop = crop,
-          trim = trim,
-          from_crs = from_crs,
-          crs = crs,
-          name_col = params[["name_col"]],
-          name = params[["name"]],
-          index = index
-        )
+    data <- map(
+      location,
+      ~ get_location_data(
+        location = .x,
+        dist = dist,
+        diag_ratio = diag_ratio,
+        unit = unit,
+        asp = asp,
+        data = data,
+        package = package,
+        fileext = fileext,
+        fn = fn,
+        crop = crop,
+        trim = trim,
+        from_crs = from_crs,
+        crs = crs,
+        name_col = params[["name_col"]],
+        name = params[["name"]],
+        index = index
       )
+    )
   }
 
   data <- discard(data, ~ nrow(.x) == 0)
