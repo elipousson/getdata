@@ -1,6 +1,4 @@
-<!-- NEWS.md is maintained by https://fledge.cynkra.com, contributors should not edit this file -->
-
-# getdata (development)
+# getdata (development version)
 
 - Export `make_xwalk_list()` helper function
 
