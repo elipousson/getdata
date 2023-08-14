@@ -167,7 +167,7 @@ get_esri_layers <- function(location = NULL,
                             ...) {
   check_dev_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
 
-  if (is_esri_url(url)) {
+  if (!is.null(url) && is_esri_url(url)) {
     url <- sub("/$", "", url)
   }
 
@@ -178,7 +178,7 @@ get_esri_layers <- function(location = NULL,
       is.numeric(layers) && !is.null(url) && is_esri_url(url) ~ "id",
       all(is.list(layers) && is_named(layers)) ~ "nm_list",
       is.list(layers) ~ "list",
-      is_esri_url(layers) ~ "url"
+      all(is_esri_url(layers)) ~ "url"
     )
 
   type <- unique(type)
