@@ -253,7 +253,12 @@ fix_epoch_date <- function(x, .cols = dplyr::contains("date"), tz = "") {
   )
 }
 
-#' @noRd
+#' Make a crosswalk list for use with [label_with_xwalk()] or
+#' [rename_with_xwalk()]
+#'
+#' @param cols Column names to use for crosswalk.
+#' @returns A named list
+#' @export
 #' @importFrom sfext is_sf
 #' @importFrom sf st_drop_geometry
 #' @importFrom rlang has_length has_name
