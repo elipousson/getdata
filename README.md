@@ -142,14 +142,13 @@ example, `get_location_data()` can return all counties within a
 quarter-mile of Warren County.
 
 ``` r
-nearby_counties <-
-  get_location_data(
-    data = nc,
-    location = location,
-    dist = 0.25,
-    unit = "mi",
-    crop = FALSE
-  )
+nearby_counties <- get_location_data(
+  data = nc,
+  location = location,
+  dist = 0.25,
+  unit = "mi",
+  crop = FALSE
+)
 
 glimpse(nearby_counties)
 #> Rows: 6
@@ -176,23 +175,22 @@ with buffers as a spatial filter works for most functions in this
 package. You can access data from OpenStreetMap:
 
 ``` r
-county_parks <-
-  get_osm_data(
-    location = nearby_counties[1, ],
-    asp = 1,
-    key = "leisure",
-    value = "park",
-    geometry = "polygons"
-  )
+county_parks <- get_osm_data(
+  location = nearby_counties[1, ],
+  asp = 1,
+  key = "leisure",
+  value = "park",
+  geometry = "polygons"
+)
 #> ℹ OpenStreetMap data is licensed under the Open Database License (ODbL).
 #>   Attribution is required if you use this data.
 #> • Learn more about the ODbL and OSM attribution requirements at
-#>   <]8;;https://www.openstreetmap.org/copyrighthttps://www.openstreetmap.org/copyright]8;;>
+#>   <https://www.openstreetmap.org/copyright>
 #> This message is displayed once every 8 hours.
 
 glimpse(county_parks)
 #> Rows: 41
-#> Columns: 26
+#> Columns: 27
 #> $ osm_id                    <chr> "33006375", "33006525", "33006552", "3300661…
 #> $ name                      <chr> "Dwight Hall Recreation Park", "Rochelle Par…
 #> $ `NHD:FCode`               <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
@@ -218,6 +216,7 @@ glimpse(county_parks)
 #> $ ownership                 <chr> "municipal", "municipal", "municipal", "muni…
 #> $ phone                     <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
 #> $ source                    <chr> "NCOnemap", "NCOnemap", "NCOnemap", "NCOnema…
+#> $ wikidata                  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
 #> $ geometry                  <POLYGON [°]> POLYGON ((-77.64057 36.4935..., POLY…
 ```
 
@@ -227,18 +226,17 @@ FeatureServer layers:
 ``` r
 nps_park_url <- "https://carto.nationalmap.gov/arcgis/rest/services/govunits/MapServer/29"
 
-nps_park <-
-  get_esri_data(
-    url = nps_park_url,
-    name = "Cape Lookout National Seashore",
-    name_col = "NAME",
-    quiet = TRUE
-  )
+nps_park <- get_esri_data(
+  url = nps_park_url,
+  name = "Cape Lookout National Seashore",
+  name_col = "NAME",
+  quiet = TRUE
+)
 
 glimpse(nps_park)
 #> Rows: 1
-#> Columns: 20
-#> $ objectid              <int> 6706
+#> Columns: 21
+#> $ objectid              <int> 197631
 #> $ permanent_identifier  <chr> "d9eec3c0-ae13-4ef9-a17b-dc4858cd39d4"
 #> $ source_featureid      <chr> "CALO"
 #> $ source_datasetid      <chr> "{562524A1-7D6A-40EA-AA44-2E9AEF4488EB}"
@@ -257,6 +255,7 @@ glimpse(nps_park)
 #> $ shape_length          <dbl> 233295.3
 #> $ shape_area            <dbl> 171056451
 #> $ gnis_name             <chr> "Cape Lookout National Seashore"
+#> $ globalid              <chr> "{652E570E-C428-4697-AD09-120539C4B71F}"
 #> $ geoms                 <MULTIPOLYGON [m]> MULTIPOLYGON (((-8468201 41...
 ```
 
@@ -276,7 +275,7 @@ get_open_data(
 
 You must set or provide an API token or key for `get_open_data()`,
 `get_airtable_data()`, `get_flickr_photos()` to work.
-`get_ghseet_data()` will require user authentication (handled
+`get_gsheet_data()` will require user authentication (handled
 automatically by the {googlesheets4} package).
 
 ## Helper and utility functions
@@ -310,11 +309,16 @@ make_variable_dictionary(
     "Geometry"
   )
 )
-#>  pos variable label                                          col_type values
-#>  1   gnis_id  Geographic Names Information System identifier chr            
-#>  2   name     Park name                                      chr            
-#>  3   areasqkm Area (sq km)                                   dbl            
-#>  4   geoms    Geometry                                       s_MULTIP
+#>  pos variable label                                          col_type missing
+#>  1   gnis_id  Geographic Names Information System identifier chr      0      
+#>  2   name     Park name                                      chr      0      
+#>  3   areasqkm Area (sq km)                                   dbl      0      
+#>  4   geoms    Geometry                                       s_MULTIP 0      
+#>  values
+#>        
+#>        
+#>        
+#> 
 ```
 
 Or you can use `rename_with_xwalk()` to rename columns:
@@ -327,6 +331,8 @@ rename_with_xwalk(
     "sq_km" = "areasqkm"
   )
 )
+#> Warning in xwalk == .x: longer object length is not a multiple of shorter
+#> object length
 #> Simple feature collection with 1 feature and 3 fields
 #> Geometry type: MULTIPOLYGON
 #> Dimension:     XY
