@@ -103,40 +103,37 @@ get_esri_data <- function(url,
 
   if (table) {
     # Get Table (no geometry) with location name column
-    data <-
-      esri2sf::esri2df(
-        url = url,
-        token = token,
-        where = where,
-        progress = progress,
-        .name_repair = .name_repair,
-        quiet = quiet,
-        ...
-      )
+    data <- esri2sf::esri2df(
+      url = url,
+      token = token,
+      where = where,
+      progress = progress,
+      .name_repair = .name_repair,
+      quiet = quiet,
+      ...
+    )
   } else {
-    data <-
-      esri2sf::esri2sf(
-        url = url,
-        token = token,
-        where = where,
-        bbox = bbox,
-        progress = progress,
-        crs = crs,
-        .name_repair = .name_repair,
-        quiet = quiet,
-        ...
-      )
+    data <- esri2sf::esri2sf(
+      url = url,
+      token = token,
+      where = where,
+      bbox = bbox,
+      progress = progress,
+      crs = crs,
+      .name_repair = .name_repair,
+      quiet = quiet,
+      ...
+    )
   }
 
   if (!is.null(coords) && table) {
     # Convert Table to sf object if coordinate columns exist
-    data <-
-      sfext::df_to_sf(
-        data,
-        coords = coords,
-        from_crs = from_crs,
-        crs = crs
-      )
+    data <- sfext::df_to_sf(
+      data,
+      coords = coords,
+      from_crs = from_crs,
+      crs = crs
+    )
   }
 
   # TODO: Expand support for format_data parameters especially
@@ -154,7 +151,7 @@ get_esri_data <- function(url,
 #' @param nm Name or vector of names to add to the layers; defaults to `NULL`.
 #' @export
 #' @importFrom dplyr case_when
-#' @importFrom rlang has_name list2 set_names
+#' @importFrom rlang has_name list2 set_names is_named
 #' @importFrom janitor make_clean_names
 get_esri_layers <- function(location = NULL,
                             layers = NULL,
@@ -173,13 +170,12 @@ get_esri_layers <- function(location = NULL,
 
   layers <- layers %||% url
 
-  type <-
-    dplyr::case_when(
-      is.numeric(layers) && !is.null(url) && is_esri_url(url) ~ "id",
-      all(is.list(layers) && is_named(layers)) ~ "nm_list",
-      is.list(layers) ~ "list",
-      all(is_esri_url(layers)) ~ "url"
-    )
+  type <- dplyr::case_when(
+    is.numeric(layers) && !is.null(url) && is_esri_url(url) ~ "id",
+    all(is.list(layers) && is_named(layers)) ~ "nm_list",
+    is.list(layers) ~ "list",
+    all(is_esri_url(layers)) ~ "url"
+  )
 
   type <- unique(type)
 
@@ -189,25 +185,23 @@ get_esri_layers <- function(location = NULL,
     if (any(rlang::has_name(meta, c("layers", "subLayers")))) {
       layer_list <- get_layer_list(meta)
 
-      layers <-
-        get_esri_layers(
-          location = location,
-          layers = layer_list[["id"]],
-          url = gsub("[0-9]+$|[0-9]+/$", "", layers, perl = TRUE),
-          nm = layer_list[["name"]],
-          token = token,
-          clean_names = clean_names,
-          quiet = quiet,
-          .name_repair = .name_repair,
-          ...
-        )
+      layers <- get_esri_layers(
+        location = location,
+        layers = layer_list[["id"]],
+        url = gsub("[0-9]+$|[0-9]+/$", "", layers, perl = TRUE),
+        nm = layer_list[["name"]],
+        token = token,
+        clean_names = clean_names,
+        quiet = quiet,
+        .name_repair = .name_repair,
+        ...
+      )
 
       if (clean_names) {
-        layers <-
-          rlang::set_names(
-            layers,
-            janitor::make_clean_names(names(layers))
-          )
+        layers <- rlang::set_names(
+          layers,
+          janitor::make_clean_names(names(layers))
+        )
       }
 
       return(layers)
@@ -216,13 +210,12 @@ get_esri_layers <- function(location = NULL,
 
   layer_urls <- NULL
 
-  layer_urls <-
-    switch(type,
-      "id" = paste0(url, "/", layers),
-      "nm_list" = as.character(layers),
-      "list" = as.character(layers),
-      "url" = layers
-    )
+  layer_urls <- switch(type,
+    "id" = paste0(url, "/", layers),
+    "nm_list" = as.character(layers),
+    "list" = as.character(layers),
+    "url" = layers
+  )
 
   if (type == "nm_list") {
     nm <- nm %||% names(layers)
@@ -242,28 +235,27 @@ get_esri_layers <- function(location = NULL,
 
   params <- rlang::list2(...)
 
-  data <-
-    map(
-      layer_urls,
-      ~ get_esri_data(
-        url = .x,
-        location = location,
-        token = token,
-        dist = params[["dist"]],
-        diag_ratio = params[["diag_ratio"]],
-        asp = params[["asp"]],
-        crs = params[["crs"]] %||% getOption("getdata.crs", 3857),
-        unit = params[["unit"]],
-        where = params[["where"]],
-        name = params[["name"]],
-        name_col = params[["name_col"]],
-        coords = params[["coords"]],
-        clean_names = clean_names,
-        quiet = quiet,
-        .name_repair = .name_repair,
-        progress = params[["progress"]] %||% TRUE
-      )
+  data <- map(
+    layer_urls,
+    ~ get_esri_data(
+      url = .x,
+      location = location,
+      token = token,
+      dist = params[["dist"]],
+      diag_ratio = params[["diag_ratio"]],
+      asp = params[["asp"]],
+      crs = params[["crs"]] %||% getOption("getdata.crs", 3857),
+      unit = params[["unit"]],
+      where = params[["where"]],
+      name = params[["name"]],
+      name_col = params[["name_col"]],
+      coords = params[["coords"]],
+      clean_names = clean_names,
+      quiet = quiet,
+      .name_repair = .name_repair,
+      progress = params[["progress"]] %||% TRUE
     )
+  )
 
   rlang::set_names(data, nm)
 }
@@ -335,7 +327,7 @@ get_esri_metadata <- function(url,
     .name_repair <- janitor::make_clean_names
   }
 
-  if (is.null(.name_repair) | !is.data.frame(metadata)) {
+  if (is.null(.name_repair) || !is.data.frame(metadata)) {
     return(metadata)
   }
 

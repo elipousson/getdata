@@ -68,52 +68,48 @@ get_tigris_data <- function(type = NULL,
 
   rlang::check_installed("tigris")
 
-  type <-
-    match.arg(
-      type,
-      c(
-        "counties", "census places", "congressional districts",
-        "legislative districts", "senate district", "voting districts",
-        "tracts", "block groups", "blocks", "pumas", "zctas",
-        "roads", "primary secondary roads", "area water", "linear water", "landmarks"
-      )
+  type <- match.arg(
+    type,
+    c(
+      "counties", "census places", "congressional districts",
+      "legislative districts", "senate district", "voting districts",
+      "tracts", "block groups", "blocks", "pumas", "zctas",
+      "roads", "primary secondary roads", "area water", "linear water", "landmarks"
     )
+  )
 
-  filter_by <-
-    sfext::st_bbox_ext(
-      location,
-      dist = dist,
-      diag_ratio = diag_ratio,
-      unit = unit,
-      asp = asp
-    )
+  filter_by <- sfext::st_bbox_ext(
+    location,
+    dist = dist,
+    diag_ratio = diag_ratio,
+    unit = unit,
+    asp = asp
+  )
 
-  data <-
-    switch(type,
-      "counties" = tigris::counties(state = state, cb = cb, filter_by = filter_by, ...),
-      "census places" = tigris::places(state = state, cb = cb, filter_by = filter_by, ...),
-      "congressional districts" = tigris::congressional_districts(state = state, cb = cb, filter_by = filter_by, ...),
-      "legislative districts" = tigris::state_legislative_districts(state = state, house = "lower", cb = cb, filter_by = filter_by, ...),
-      "senate districts" = tigris::state_legislative_districts(state = state, house = "upper", cb = cb, filter_by = filter_by, ...),
-      "county subdivisions" = tigris::county_subdivisions(state = state, cb = cb, filter_by = filter_by, ...),
-      "block groups" = tigris::block_groups(state = state, cb = cb, filter_by = filter_by, ...),
-      "blocks" = tigris::blocks(state = state, filter_by = filter_by, ...),
-      "pumas" = tigris::pumas(state = state, cb = cb, filter_by = filter_by, ...),
-      "voting districts" = tigris::voting_districts(state = state, cb = cb, filter_by = filter_by, ...),
-      "roads" = tigris::roads(state = state, filter_by = filter_by, ...),
-      "primary secondary roads" = tigris::primary_secondary_roads(state = state, filter_by = filter_by, ...),
-      "area water" = tigris::area_water(state = state, filter_by = filter_by, ...),
-      "linear water" = tigris::linear_water(state = state, filter_by = filter_by, ...),
-      "landmarks" = tigris::landmarks(state = state, filter_by = filter_by, ...),
-      "zctas" = tigris::zctas(state = state, filter_by = filter_by, ...)
-    )
+  data <- switch(type,
+    "counties" = tigris::counties(state = state, cb = cb, filter_by = filter_by, ...),
+    "census places" = tigris::places(state = state, cb = cb, filter_by = filter_by, ...),
+    "congressional districts" = tigris::congressional_districts(state = state, cb = cb, filter_by = filter_by, ...),
+    "legislative districts" = tigris::state_legislative_districts(state = state, house = "lower", cb = cb, filter_by = filter_by, ...),
+    "senate districts" = tigris::state_legislative_districts(state = state, house = "upper", cb = cb, filter_by = filter_by, ...),
+    "county subdivisions" = tigris::county_subdivisions(state = state, cb = cb, filter_by = filter_by, ...),
+    "block groups" = tigris::block_groups(state = state, cb = cb, filter_by = filter_by, ...),
+    "blocks" = tigris::blocks(state = state, filter_by = filter_by, ...),
+    "pumas" = tigris::pumas(state = state, cb = cb, filter_by = filter_by, ...),
+    "voting districts" = tigris::voting_districts(state = state, cb = cb, filter_by = filter_by, ...),
+    "roads" = tigris::roads(state = state, filter_by = filter_by, ...),
+    "primary secondary roads" = tigris::primary_secondary_roads(state = state, filter_by = filter_by, ...),
+    "area water" = tigris::area_water(state = state, filter_by = filter_by, ...),
+    "linear water" = tigris::linear_water(state = state, filter_by = filter_by, ...),
+    "landmarks" = tigris::landmarks(state = state, filter_by = filter_by, ...),
+    "zctas" = tigris::zctas(state = state, filter_by = filter_by, ...)
+  )
 
-  data <-
-    format_sf_data(
-      data,
-      crs = crs,
-      clean_names = clean_names
-    )
+  data <- format_sf_data(
+    data,
+    crs = crs,
+    clean_names = clean_names
+  )
 
   if (is.null(name)) {
     return(data)

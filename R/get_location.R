@@ -79,29 +79,26 @@ get_location <- function(type,
   if (is.character(type)) {
     # If type is a string
     # Return data if type is a file path, url, or package data
-    type <-
-      get_location_data(
-        data = type,
-        # FIXME: Using name_col in both places may be an issue
-        name_col = name_col,
-        name = name,
-        ...
-      )
+    type <- get_location_data(
+      data = type,
+      # FIXME: Using name_col in both places may be an issue
+      name_col = name_col,
+      name = name,
+      ...
+    )
   }
 
-  params <-
-    dplyr::case_when(
-      is.null(location) && !is.null(name) ~ "name",
-      is.null(location) && !is.null(id) ~ "id",
-      TRUE ~ "location"
-    )
+  params <- dplyr::case_when(
+    is.null(location) && !is.null(name) ~ "name",
+    is.null(location) && !is.null(id) ~ "id",
+    .default = "location"
+  )
 
-  location <-
-    switch(params,
-      "name" = filter_name(type, name = name, name_col = name_col),
-      "id" = filter_name(type, name = id, name_col = id_col),
-      "location" = filter_location(type, location = location)
-    )
+  location <- switch(params,
+    "name" = filter_name(type, name = name, name_col = name_col),
+    "id" = filter_name(type, name = id, name_col = id_col),
+    "location" = filter_location(type, location = location)
+  )
 
   col <- NULL
   # FIXME: There should be an option for setting the col value
@@ -116,12 +113,11 @@ get_location <- function(type,
   }
 
   if (!is.null(label)) {
-    location <-
-      dplyr::mutate(
-        location,
-        "label" = label,
-        .after = dplyr::all_of(name_col)
-      )
+    location <- dplyr::mutate(
+      location,
+      "label" = label,
+      .after = dplyr::all_of(name_col)
+    )
   }
 
   if (!is_null(crs)) {
@@ -163,8 +159,12 @@ filter_name <- function(x = NULL,
     return(x)
   }
 
-  name_col <-
-    rlang::arg_match(name_col, names(x), error_arg = arg, error_call = call)
+  name_col <- rlang::arg_match(
+    name_col,
+    names(x),
+    error_arg = arg,
+    error_call = call
+  )
 
   x[x[[name_col]] %in% name, ]
 }

@@ -49,15 +49,14 @@ check_null <- function(x = NULL, arg = caller_arg(x), allow_null = FALSE, req_nu
 
 #' @noRd
 check_length <- function(x = NULL,
-                      n = 1,
-                      arg = caller_arg(x),
-                      allow_na = FALSE,
-                      allow_null = TRUE,
-                      call = caller_env(),
-                      ...) {
+                         n = 1,
+                         arg = caller_arg(x),
+                         allow_na = FALSE,
+                         allow_null = TRUE,
+                         call = caller_env(),
+                         ...) {
   if (allow_na && is.na(x)) {
     return(invisible(NULL))
-
   }
 
   if (allow_null && is_null(x)) {

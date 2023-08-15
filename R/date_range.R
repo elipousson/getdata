@@ -64,12 +64,11 @@ as_date_range <- function(x = NULL,
   rlang::check_installed("lubridate")
 
   if (!is.null(year)) {
-    x <-
-      x %||% vapply(
-        c("{year}-01-01", "{year}-12-31"),
-        glue, NA_character_,
-        .envir = rlang::current_env()
-      )
+    x <- x %||% vapply(
+      c("{year}-01-01", "{year}-12-31"),
+      glue, NA_character_,
+      .envir = rlang::current_env()
+    )
   }
 
   x <- x %||% c(start_date, end_date)
@@ -145,7 +144,7 @@ check_date_range <- function(x = NULL,
   }
 
   x <- c(x[[1]], x[[2]])
-  limits <-  c(limits[[1]], limits[[2]])
+  limits <- c(limits[[1]], limits[[2]])
   below_limit <- min(x) < min(limits)
   above_limit <- max(x) > max(limits)
 

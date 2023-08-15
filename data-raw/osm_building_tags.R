@@ -1,4 +1,3 @@
-
 osm_building_tags <-
   osmdata::available_tags("building")
 

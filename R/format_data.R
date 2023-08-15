@@ -146,7 +146,7 @@ rename_with_xwalk <- function(x,
       "i" = "{.val {xwalk[!xwalk_in_x]}} can't be found in {.arg x} column names.",
       "*" = "Set {.arg .strict} to {.code FALSE} to ignore missing values."
     ),
-    condition = (all(xwalk_in_x) && .strict) | !.strict,
+    condition = (all(xwalk_in_x) && .strict) || !.strict,
     arg = arg,
     call = call,
     .frame = rlang::current_env()
@@ -163,12 +163,11 @@ rename_with_xwalk <- function(x,
     xwalk[[sf_col]] <- NULL
   }
 
-  x <-
-    dplyr::rename_with(
-      x,
-      ~ names(xwalk)[which(xwalk == .x)],
-      .cols = dplyr::any_of(as.character(xwalk))
-    )
+  x <- dplyr::rename_with(
+    x,
+    ~ names(xwalk)[which(xwalk == .x)],
+    .cols = dplyr::any_of(as.character(xwalk))
+  )
 
   if (!label) {
     return(x)
@@ -261,7 +260,7 @@ fix_epoch_date <- function(x, .cols = dplyr::contains("date"), tz = "") {
 #' @export
 #' @importFrom sfext is_sf
 #' @importFrom sf st_drop_geometry
-#' @importFrom rlang has_length has_name
+#' @importFrom rlang has_length has_name is_named
 #' @importFrom tibble deframe
 make_xwalk_list <- function(xwalk, cols = c("label", "name")) {
   if (is_named(xwalk) && is.list(xwalk) && !is.data.frame(xwalk)) {
@@ -287,7 +286,7 @@ make_xwalk_list <- function(xwalk, cols = c("label", "name")) {
   cliExtras::cli_abort_ifnot(
     "{.arg cols} must be a length 2 vector.",
     condition = rlang::has_length(cols, 2) &&
-      (all(rlang::has_name(xwalk, cols)) | is.numeric(cols))
+      (all(rlang::has_name(xwalk, cols)) || is.numeric(cols))
   )
 
   as.list(tibble::deframe(xwalk[, cols]))

@@ -124,13 +124,13 @@ is_url <- function(x) {
 #' @return A character vector.
 #' @noRd
 str_replace <- function(string, pattern, replacement) {
-	if (length(string) == 0 || length(pattern) == 0 || length(replacement) == 0) {
-		return(character(0))
-	}
+  if (length(string) == 0 || length(pattern) == 0 || length(replacement) == 0) {
+    return(character(0))
+  }
 
-	is_fixed <- inherits(pattern, "stringr_fixed")
+  is_fixed <- inherits(pattern, "stringr_fixed")
 
-	Vectorize(sub, c("pattern", "replacement", "x"), USE.NAMES = FALSE)(
-		pattern, replacement, x = string, perl = !is_fixed, fixed = is_fixed
-	)
+  Vectorize(sub, c("pattern", "replacement", "x"), USE.NAMES = FALSE)(
+    pattern, replacement, x = string, perl = !is_fixed, fixed = is_fixed
+  )
 }

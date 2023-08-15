@@ -130,31 +130,29 @@ get_osm_id <- function(id,
   osm_data_attribution()
 
   if (length(id) > 1) {
-    data <-
-      dplyr::bind_rows(
-        map(
-          id,
-          ~ get_osm_id(
-            id = .x,
-            type = type,
-            crs = crs,
-            geometry = geometry,
-            osmdata = FALSE
-          )
+    data <- dplyr::bind_rows(
+      map(
+        id,
+        ~ get_osm_id(
+          id = .x,
+          type = type,
+          crs = crs,
+          geometry = geometry,
+          osmdata = FALSE
         )
       )
+    )
 
     return(data)
   }
 
   id_type <- get_osm_id_type(id = id, type = type, geometry = geometry)
 
-  data <-
-    try_osmdata_sf(
-      osmdata::opq_string(
-        osmdata::opq_osm_id(type = id_type$type, id = id_type$id)
-      )
+  data <- try_osmdata_sf(
+    osmdata::opq_string(
+      osmdata::opq_osm_id(type = id_type$type, id = id_type$id)
     )
+  )
 
   get_osm_data_geometry(
     data,
@@ -169,17 +167,16 @@ get_osm_id <- function(id,
 #' @noRd
 #' @importFrom rlang caller_env try_fetch
 try_osmdata_sf <- function(query, call = caller_env()) {
-  data <-
-    try_fetch(
-      suppressMessages(osmdata::osmdata_sf(query)),
-      error = function(cnd) {
-        cli_abort(
-          "{.fn osmdata::osmdata_sf} encountered an error.",
-          parent = cnd,
-          call = call
-        )
-      }
-    )
+  data <- try_fetch(
+    suppressMessages(osmdata::osmdata_sf(query)),
+    error = function(cnd) {
+      cli_abort(
+        "{.fn osmdata::osmdata_sf} encountered an error.",
+        parent = cnd,
+        call = call
+      )
+    }
+  )
 
   data
 }
@@ -206,12 +203,11 @@ get_osm_id_type <- function(id,
   type <- arg_match(type, c("node", "way", "relation"), error_call = call)
 
   if (is.null(geometry)) {
-    geometry <-
-      switch(type,
-        "node" = "points",
-        "way" = "polygons",
-        "relation" = "multipolygons"
-      )
+    geometry <- switch(type,
+      "node" = "points",
+      "way" = "polygons",
+      "relation" = "multipolygons"
+    )
   }
 
   list("type" = type, "id" = as.character(id), "geometry" = geometry)
@@ -221,7 +217,7 @@ get_osm_id_type <- function(id,
 #'
 #' @noRd
 is_osm_element <- function(x) {
-  starts_with_osm_type(x) | has_osm_type_name(x)
+  starts_with_osm_type(x) || has_osm_type_name(x)
 }
 
 #' @noRd
@@ -260,16 +256,15 @@ get_osm_boundaries <- function(location,
                                osmdata = FALSE) {
   osm_data_attribution()
 
-  boundaries <-
-    get_osm_data_enclosing(
-      location = location,
-      key = "boundary",
-      value = "administrative",
-      enclosing = enclosing,
-      crs = crs,
-      geometry = geometry,
-      osmdata = osmdata
-    )
+  boundaries <- get_osm_data_enclosing(
+    location = location,
+    key = "boundary",
+    value = "administrative",
+    enclosing = enclosing,
+    crs = crs,
+    geometry = geometry,
+    osmdata = osmdata
+  )
 
   if (osmdata) {
     return(boundaries)
@@ -296,28 +291,25 @@ get_osm_boundaries <- function(location,
 
   boundaries_nm <- names(boundaries)
 
-  nm_prefix <-
-    c(
-      "name",
-      "official_name",
-      "short_name",
-      "alt_name",
-      "alt_short_name",
-      "old_name",
-      "old_short_name",
-      "source_name",
-      "not_official_name"
-    )
+  nm_prefix <- c(
+    "name",
+    "official_name",
+    "short_name",
+    "alt_name",
+    "alt_short_name",
+    "old_name",
+    "old_short_name",
+    "source_name",
+    "not_official_name"
+  )
 
-  nm_cols <-
-    grep(
-      pattern = paste(paste0("^", nm_prefix), collapse = "|"),
-      x = boundaries_nm,
-      value = TRUE
-    )
+  nm_cols <- grep(
+    pattern = paste(paste0("^", nm_prefix), collapse = "|"),
+    x = boundaries_nm,
+    value = TRUE
+  )
 
-  drop_nm_cols <-
-    nm_cols[!(nm_cols %in% c(nm_prefix, paste(nm_prefix, lang, sep = "_")))]
+  drop_nm_cols <- nm_cols[!(nm_cols %in% c(nm_prefix, paste(nm_prefix, lang, sep = "_")))]
 
   boundaries <- boundaries[, !(boundaries_nm %in% drop_nm_cols)]
 
@@ -349,15 +341,14 @@ get_osm_data_features <- function(location,
 
   if (is_sf(location, ext = TRUE)) {
     # Get adjusted bounding box if any adjustment variables provided
-    bbox_osm <-
-      st_bbox_ext(
-        x = location,
-        dist = dist,
-        diag_ratio = diag_ratio,
-        unit = unit,
-        asp = asp,
-        crs = osm_crs
-      )
+    bbox_osm <- st_bbox_ext(
+      x = location,
+      dist = dist,
+      diag_ratio = diag_ratio,
+      unit = unit,
+      asp = asp,
+      crs = osm_crs
+    )
   } else if (is.character(location)) {
     bbox_osm <- location
   }
@@ -366,23 +357,21 @@ get_osm_data_features <- function(location,
     geometry <- geometry %||% "points"
   }
 
-  query <-
-    osmdata::opq(
-      bbox = bbox_osm,
-      nodes_only = nodes_only,
-      timeout = 90
-    )
+  query <- osmdata::opq(
+    bbox = bbox_osm,
+    nodes_only = nodes_only,
+    timeout = 90
+  )
 
   if (is.null(features)) {
-    query <-
-      osmdata::add_osm_feature(
-        opq = query,
-        key = key,
-        value = value,
-        key_exact = key_exact,
-        value_exact = value_exact,
-        match_case = match_case
-      )
+    query <- osmdata::add_osm_feature(
+      opq = query,
+      key = key,
+      value = value,
+      key_exact = key_exact,
+      value_exact = value_exact,
+      match_case = match_case
+    )
   } else {
     if (!is.character(features) && !is.list(features)) {
       cli_abort(
@@ -424,24 +413,22 @@ get_osm_data_enclosing <- function(location,
   enclosing <- rlang::arg_match(enclosing, c("relation", "way"), error_call = call)
   coords <- sfext::sf_to_df(location, crs = 4326)
 
-  query <-
-    try(
-      osmdata::opq_enclosing(
-        lon = coords$lon,
-        lat = coords$lat,
-        key = key,
-        value = value,
-        enclosing = enclosing
-      ),
-      silent = TRUE
-    )
+  query <- try(
+    osmdata::opq_enclosing(
+      lon = coords$lon,
+      lat = coords$lat,
+      key = key,
+      value = value,
+      enclosing = enclosing
+    ),
+    silent = TRUE
+  )
 
   query <- osmdata::opq_string(opq = query)
 
   data <- try_osmdata_sf(query)
 
-  geometry <-
-    geometry %||%
+  geometry <- geometry %||%
     switch(enclosing,
       "relation" = "multipolygons",
       "way" = "polygons"
@@ -465,7 +452,7 @@ get_osm_data_geometry <- function(data,
                                   crs = NULL,
                                   osmdata = FALSE,
                                   call = caller_env()) {
-  if (osmdata | is.null(geometry)) {
+  if (osmdata || is.null(geometry)) {
     if (is.null(geometry) && !osmdata) {
       cli_warn(
         c("{.arg geometry} is {.code NULL}.",
@@ -482,18 +469,17 @@ get_osm_data_geometry <- function(data,
     geometry <- paste0(geometry, "s")
   }
 
-  geometry <-
-    arg_match(
-      geometry,
-      c(
-        "polygons",
-        "points",
-        "lines",
-        "multilines",
-        "multipolygons"
-      ),
-      error_call = call
-    )
+  geometry <- arg_match(
+    geometry,
+    c(
+      "polygons",
+      "points",
+      "lines",
+      "multilines",
+      "multipolygons"
+    ),
+    error_call = call
+  )
 
   geometry <- paste0("osm_", geometry)
 
@@ -521,7 +507,7 @@ get_osm_value <- function(key = NULL, value = NULL) {
     }
   }
 
-  if (is_building_key && (is.null(value) | (value == "all"))) {
+  if (is_building_key && (is.null(value) || (value == "all"))) {
     return(osm_building_tags)
   }
 

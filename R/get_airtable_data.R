@@ -88,7 +88,6 @@ get_airtable_data <- function(base,
                               type = "AIRTABLE_TOKEN",
                               resp_type = deprecated(),
                               ...) {
-
   check_installed("rairtable")
 
   if (is_url(base)) {
@@ -98,28 +97,27 @@ get_airtable_data <- function(base,
     view <- ids$view
   }
 
-  data <-
-    rairtable::list_records(
-      base = base,
-      table = table,
-      fields = fields,
-      sort = sort,
-      desc = desc,
-      view = view,
-      max_records = max_records,
-      page_size = per_page,
-      cell_format = cell_format,
-      tz = tz,
-      locale = locale,
-      fields_by_id = fields_by_id,
-      offset = offset,
-      token = get_access_token(
-        token = token,
-        type = type
-      ),
-      type = type,
-      ...
-    )
+  data <- rairtable::list_records(
+    base = base,
+    table = table,
+    fields = fields,
+    sort = sort,
+    desc = desc,
+    view = view,
+    max_records = max_records,
+    page_size = per_page,
+    cell_format = cell_format,
+    tz = tz,
+    locale = locale,
+    fields_by_id = fields_by_id,
+    offset = offset,
+    token = get_access_token(
+      token = token,
+      type = type
+    ),
+    type = type,
+    ...
+  )
 
   # if (label) {
   #   labels <- names(data)
@@ -127,29 +125,27 @@ get_airtable_data <- function(base,
   #   labels <- NULL
   # }
 
-  data <-
-    format_data(
-      data,
-      fix_date = FALSE,
-      .name_repair = name_repair # ,
-      # label = label # ,
-      # labels = labels
-    )
+  data <- format_data(
+    data,
+    fix_date = FALSE,
+    .name_repair = name_repair # ,
+    # label = label # ,
+    # labels = labels
+  )
 
   if (!geometry) {
     return(data)
   }
 
-  data <-
-    sfext::df_to_sf(
-      data,
-      coords = coords,
-      remove_coords = remove_coords,
-      from_crs = from_crs,
-      address = address,
-      geo = geo,
-      crs = crs
-    )
+  data <- sfext::df_to_sf(
+    data,
+    coords = coords,
+    remove_coords = remove_coords,
+    from_crs = from_crs,
+    address = address,
+    geo = geo,
+    crs = crs
+  )
 
   get_location_data(
     location = location,
@@ -182,10 +178,9 @@ get_airtable_metadata <- function(base,
   check_required(base)
   check_starts_with(base, "app")
 
-  req <-
-    httr2::req_url_path_append(
-      req, base, resp_type
-    )
+  req <- httr2::req_url_path_append(
+    req, base, resp_type
+  )
 
   req <- req_auth_airtable(req, type = type)
 
@@ -204,7 +199,7 @@ get_airtable_metadata <- function(base,
   }
 
   if (nrow(table_resp) == 1) {
-   return(table_resp[["fields"]][[1]])
+    return(table_resp[["fields"]][[1]])
   }
 
   table_resp[["fields"]]
@@ -219,11 +214,10 @@ req_auth_airtable <- function(req,
                               type = "AIRTABLE_API_KEY",
                               rate = 5 / 1,
                               realm = NULL) {
-  req <-
-    httr2::req_auth_bearer_token(
-      req = req,
-      token = get_access_token(token = token, type = type)
-    )
+  req <- httr2::req_auth_bearer_token(
+    req = req,
+    token = get_access_token(token = token, type = type)
+  )
 
   httr2::req_throttle(
     req = req,
@@ -245,11 +239,10 @@ resp_airtable <- function(req,
                           max_records = 100) {
   resp_type <- match.arg(resp_type, c("resp", "fields", "records", "tables"))
 
-  resp <-
-    httr2::resp_body_json(
-      resp = req_getdata(req),
-      simplifyVector = simplifyVector
-    )
+  resp <- httr2::resp_body_json(
+    resp = req_getdata(req),
+    simplifyVector = simplifyVector
+  )
 
   if (resp_type == "record") {
     rlang::check_installed("tidyr")
@@ -267,32 +260,29 @@ resp_airtable <- function(req,
   }
 
   # Add offset checks
-  data <-
-    switch(resp_type,
-      "resp" = resp,
-      "record" = tidyr::pivot_wider(tibble::enframe(resp)),
-      "records" = tibble::as_tibble(resp[["fields"]]),
-      "tables" = tibble::as_tibble(resp)
-    )
+  data <- switch(resp_type,
+    "resp" = resp,
+    "record" = tidyr::pivot_wider(tibble::enframe(resp)),
+    "records" = tibble::as_tibble(resp[["fields"]]),
+    "tables" = tibble::as_tibble(resp)
+  )
 
-  skip_offset <-
-    any(
-      c(
-        is.null(max_records),
-        max_records <= 100,
-        !rlang::has_name(resp, "offset")
-      )
+  skip_offset <- any(
+    c(
+      is.null(max_records),
+      max_records <= 100,
+      !rlang::has_name(resp, "offset")
     )
+  )
 
   if (skip_offset) {
     return(data)
   }
 
-  offset_req <-
-    httr2::req_url_query(
-      req,
-      offset = resp$offset
-    )
+  offset_req <- httr2::req_url_query(
+    req,
+    offset = resp$offset
+  )
 
   dplyr::bind_rows(
     data,
@@ -304,4 +294,3 @@ resp_airtable <- function(req,
     )
   )
 }
-

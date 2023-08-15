@@ -187,7 +187,7 @@ get_location_data <- function(location = NULL,
 #'   defaults `FALSE`.
 #' @export
 #' @importFrom janitor make_clean_names
-#' @importFrom rlang set_names
+#' @importFrom rlang set_names is_named
 map_location_data <- function(location = NULL,
                               dist = NULL,
                               diag_ratio = NULL,

@@ -29,20 +29,18 @@ lifecycle::deprecate_soft
 #'
 #' @noRd
 #' @importFrom httr2 req_user_agent
-req_getdata <-
-  function(req,
-           string = getOption(
-             "getdata.useragent",
-             default = "getdata (https://github.com/elipousson/getdata)"
-           )) {
-    req <-
-      httr2::req_user_agent(
-        req = req,
-        string = string
-      )
+req_getdata <- function(req,
+                        string = getOption(
+                          "getdata.useragent",
+                          default = "getdata (https://github.com/elipousson/getdata)"
+                        )) {
+  req <- httr2::req_user_agent(
+    req = req,
+    string = string
+  )
 
-    httr2::req_perform(req)
-  }
+  httr2::req_perform(req)
+}
 
 
 #' Eval and parse data
@@ -75,12 +73,11 @@ use_fn <- function(data, fn = NULL) {
 use_name_repair <- function(data = NULL,
                             .name_repair = "check_unique",
                             repair_arg = "name_repair") {
-  names(data) <-
-    vctrs::vec_as_names(
-      names(data),
-      repair = .name_repair,
-      repair_arg = repair_arg
-    )
+  names(data) <- vctrs::vec_as_names(
+    names(data),
+    repair = .name_repair,
+    repair_arg = repair_arg
+  )
 
   data
 }

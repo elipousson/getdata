@@ -34,10 +34,9 @@ get_gsheet_data <- function(url,
   }
 
   if (is.null(ss) && ask) {
-    ss <-
-      googlesheets4::gs4_find(
-        cliExtras::cli_ask("What is the name of the Google Sheet to return?")
-      )
+    ss <- googlesheets4::gs4_find(
+      cliExtras::cli_ask("What is the name of the Google Sheet to return?")
+    )
   }
 
   data <- googlesheets4::read_sheet(ss = ss, sheet = sheet, ...)

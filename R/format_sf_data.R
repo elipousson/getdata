@@ -122,7 +122,7 @@ set_join_by_geom_type <- function(x, join = NULL) {
     return(join)
   }
 
-  if (all(sapply(x, sfext::is_polygon) | sapply(x, sfext::is_multipolygon))) {
+  if (all(sapply(x, sfext::is_polygon) || sapply(x, sfext::is_multipolygon))) {
     return(sf::st_intersects)
   }
 

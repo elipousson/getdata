@@ -20,11 +20,10 @@ make_location_grid <- function(location,
   # where all the values were the same
   location <- sfext::st_union_ext(location, name_col = name_col)
 
-  grid <-
-    dplyr::bind_cols(
-      sf::st_drop_geometry(location),
-      grid
-    )
+  grid <- dplyr::bind_cols(
+    sf::st_drop_geometry(location),
+    grid
+  )
 
   sfext::df_to_sf(grid)
 }

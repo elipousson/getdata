@@ -73,7 +73,7 @@ get_open_data <- function(data = NULL,
     c(
       "{.arg source_url} must be a valid URL or, if {.arg data} is a url, {.arg source_url} must be NULL."
     ),
-    condition = is_url(source_url) | (is_url(data) && is.null(source_url))
+    condition = is_url(source_url) || (is_url(data) && is.null(source_url))
   )
 
   cli_quiet(quiet)
@@ -100,23 +100,21 @@ get_open_data <- function(data = NULL,
   # FIXME: Check on how to access the point or polygon data types via SODA
   # See <https://dev.socrata.com/docs/datatypes/point.html> for more information
   # Get adjusted bounding box if any adjustment variables provided
-  bbox <-
-    sfext::st_bbox_ext(
-      x = location,
-      dist = dist,
-      diag_ratio = diag_ratio,
-      unit = unit,
-      asp = asp,
-      crs = from_crs
-    )
+  bbox <- sfext::st_bbox_ext(
+    x = location,
+    dist = dist,
+    diag_ratio = diag_ratio,
+    unit = unit,
+    asp = asp,
+    crs = from_crs
+  )
 
   if (source_type == "socrata") {
     if (!is.null(data)) {
-      meta <-
-        get_socrata_metadata(
-          source_url = source_url,
-          data = data
-        )
+      meta <- get_socrata_metadata(
+        source_url = source_url,
+        data = data
+      )
 
       cli::cli_alert_info(
         "Downloading {.val {meta$name}} from {.url {meta$dataUri}}"
@@ -133,19 +131,18 @@ get_open_data <- function(data = NULL,
       )
     }
 
-    url <-
-      make_socrata_url(
-        data = data,
-        source_url = source_url,
-        select = select,
-        where = where,
-        query = query,
-        bbox = bbox,
-        name_col = name_col,
-        name = name,
-        location_col = location_col,
-        coords = coords
-      )
+    url <- make_socrata_url(
+      data = data,
+      source_url = source_url,
+      select = select,
+      where = where,
+      query = query,
+      bbox = bbox,
+      name_col = name_col,
+      name = name,
+      location_col = location_col,
+      coords = coords
+    )
 
     rlang::check_installed("RSocrata")
     # Download data from Socrata Open Data portal
@@ -202,11 +199,9 @@ make_socrata_url <- function(data = NULL,
 
   if (!is.null(bbox)) {
     if (is.null(location_col)) {
-      where_bbox <-
-        glue("({sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)})")
+      where_bbox <- glue("({sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)})")
     } else {
-      where_bbox <-
-        glue("within_box({location_col},
+      where_bbox <- glue("within_box({location_col},
              {bbox$ymax}, {bbox$xmax}, {bbox$ymin}, {bbox$xmin})")
     }
   }

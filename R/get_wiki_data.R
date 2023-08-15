@@ -60,7 +60,8 @@ get_wiki_data <- function(location,
     if (is.numeric(radius)) {
       dist <- radius
       cli::cli_bullets(
-        c("i" = "Using {.arg radius} value of {.val {dist}} for {.arg dist}.",
+        c(
+          "i" = "Using {.arg radius} value of {.val {dist}} for {.arg dist}.",
           "v" = "Setting {.arg radius} to TRUE."
         )
       )
@@ -89,32 +90,29 @@ get_wiki_data <- function(location,
     gspage <- location
   }
 
-  req <-
-    req_wiki_query(
-      lang = lang,
-      gsbbox = gsbbox,
-      gscoord = gscoord,
-      gsradius = gsradius,
-      gspage = gspage,
-      primary = primary,
-      list = list,
-      details = details,
-      limit = limit
-    )
+  req <- req_wiki_query(
+    lang = lang,
+    gsbbox = gsbbox,
+    gscoord = gscoord,
+    gsradius = gsradius,
+    gspage = gspage,
+    primary = primary,
+    list = list,
+    details = details,
+    limit = limit
+  )
 
-  data <-
-    resp_wiki_query(
-      req,
-      list = list
-    )
+  data <- resp_wiki_query(
+    req,
+    list = list
+  )
 
   if (list == "resp") {
     return(data)
   }
 
   if (geometry) {
-    data <-
-      sfext::df_to_sf(data, crs = crs, remove_coords = remove_coords)
+    data <- sfext::df_to_sf(data, crs = crs, remove_coords = remove_coords)
   }
 
   format_data(data, clean_names = clean_names)
@@ -140,48 +138,43 @@ req_wiki_query <- function(lang = NULL,
   # <https://www.mediawiki.org/wiki/Extension:GeoData>
   check_string(lang, call = call)
 
-  req <-
-    httr2::request(glue("https://{lang}.wikipedia.org/w/api.php"))
+  req <- httr2::request(glue("https://{lang}.wikipedia.org/w/api.php"))
 
   cliExtras::cli_abort_ifnot(
     condition = any(!is.null(c(gsbbox, gscoord, gspage))),
     call = call
   )
 
-  req <-
-    httr2::req_url_query(
-      req,
-      action = "query",
-      list = list,
-      gsbbox = gsbbox,
-      gscoord = gscoord,
-      gsradius = gsradius,
-      gspage = gspage
-    )
+  req <- httr2::req_url_query(
+    req,
+    action = "query",
+    list = list,
+    gsbbox = gsbbox,
+    gscoord = gscoord,
+    gsradius = gsradius,
+    gspage = gspage
+  )
 
   primary <- primary %||% "primary"
   primary <- arg_match(primary, c("primary", "all", "secondary"), error_call = call)
 
-  req <-
-    httr2::req_url_query(
-      req,
-      gsprimary = paste0(primary, collapse = "|")
-    )
+  req <- httr2::req_url_query(
+    req,
+    gsprimary = paste0(primary, collapse = "|")
+  )
 
   if (!is.null(details)) {
-    details <-
-      arg_match(
-        details,
-        c("name", "type", "dim", "scale", "region", "country", "globe"),
-        multiple = TRUE,
-        error_call = call
-      )
+    details <- arg_match(
+      details,
+      c("name", "type", "dim", "scale", "region", "country", "globe"),
+      multiple = TRUE,
+      error_call = call
+    )
 
-    req <-
-      httr2::req_url_query(
-        req,
-        gsprop = details
-      )
+    req <- httr2::req_url_query(
+      req,
+      gsprop = details
+    )
   }
 
   if (limit > 500) {
@@ -209,11 +202,10 @@ resp_wiki_query <- function(req,
                             list = "geosearch",
                             simplifyVector = TRUE,
                             call = caller_env()) {
-  resp <-
-    httr2::resp_body_json(
-      resp = req_getdata(req),
-      simplifyVector = simplifyVector
-    )
+  resp <- httr2::resp_body_json(
+    resp = req_getdata(req),
+    simplifyVector = simplifyVector
+  )
 
   if (has_name(resp, "error")) {
     cli_abort(
@@ -244,15 +236,14 @@ st_gscoord <- function(location, crs = 4326) {
 #' @noRd
 #' @importFrom sfext st_bbox_ext
 st_gsbbox <- function(location, dist = NULL, diag_ratio = NULL, asp = NULL, unit = "meter", crs = 4326) {
-  bbox <-
-    sfext::st_bbox_ext(
-      x = location,
-      dist = dist,
-      diag_ratio = diag_ratio,
-      asp = asp,
-      unit = unit,
-      crs = crs
-    )
+  bbox <- sfext::st_bbox_ext(
+    x = location,
+    dist = dist,
+    diag_ratio = diag_ratio,
+    asp = asp,
+    unit = unit,
+    crs = crs
+  )
 
   # top|left|bottom|right order
   paste0(

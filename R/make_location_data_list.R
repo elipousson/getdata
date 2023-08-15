@@ -37,12 +37,11 @@ make_location_data_list <- function(data, location, key = c("location", "data"),
   len_location <- length(location)
   len_data <- length(data)
 
-  location_data_list <-
-    dplyr::case_when(
-      (len_location == 1) && (len_data > 1) ~ list(rep(location, len_data), data),
-      (len_data == 1) && (len_location > 1) ~ list(location, rep(data, len_location)),
-      TRUE ~ list(location, data)
-    )
+  location_data_list <- dplyr::case_when(
+    (len_location == 1) && (len_data > 1) ~ list(rep(location, len_data), data),
+    (len_data == 1) && (len_location > 1) ~ list(location, rep(data, len_location)),
+    .default = list(location, data)
+  )
 
   cliExtras::cli_warn_ifnot(
     "{.arg location} is length {location_len} and {.arg data} is {data_len}.",
@@ -83,41 +82,38 @@ get_location_data_list <- function(data = NULL,
       data <- data[[1]]
     }
 
-    data <-
-      map(
-        location,
-        ~ get_location_data(
-          location = .x,
-          data = data,
-          ...
-        )
+    data <- map(
+      location,
+      ~ get_location_data(
+        location = .x,
+        data = data,
+        ...
       )
+    )
   } else if ((length(location) == 1)) {
     if (is.list(location)) {
       location <- location[[1]]
     }
 
     # Get multiple data for a single locations
-    data <-
-      map(
-        data,
-        ~ get_location_data(
-          location = location[[1]],
-          data = .x,
-          ...
-        )
+    data <- map(
+      data,
+      ~ get_location_data(
+        location = location[[1]],
+        data = .x,
+        ...
       )
+    )
   } else if (length(location) == length(data)) {
-    data <-
-      map2(
-        location,
-        data,
-        ~ get_location_data(
-          location = .x,
-          data = .y,
-          ...
-        )
+    data <- map2(
+      location,
+      data,
+      ~ get_location_data(
+        location = .x,
+        data = .y,
+        ...
       )
+    )
   }
 
   make_location_data_list(data, location)

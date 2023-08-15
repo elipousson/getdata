@@ -68,11 +68,10 @@ bind_block_col <- function(x,
     )
   }
 
-  x <-
-    str_empty_to_blank_across(
-      x,
-      .cols = dplyr::all_of(c(street_dir_prefix, street_name, street_suffix))
-    )
+  x <- str_empty_to_blank_across(
+    x,
+    .cols = dplyr::all_of(c(street_dir_prefix, street_name, street_suffix))
+  )
 
   block_col <- block_col %||% "block"
   block_sep <- block_col
@@ -82,22 +81,24 @@ bind_block_col <- function(x,
     block_col <- block_col[[1]]
   }
 
-  block_col_labels <-
-    paste0(block_col, "_", c("num", "even_odd", "segment", "face"))
+  block_col_labels <- paste0(
+    block_col,
+    "_",
+    c("num", "even_odd", "segment", "face")
+  )
 
   if (!is.null(street_col)) {
-    x <-
-      dplyr::mutate(
-        x,
-        "{street_col}" := str_replace(
-          glue(
-            "{as.character(.data[[address_cols[1]]])} {.data[[address_cols[2]]]} {.data[[address_cols[3]]]} {.data[[address_cols[4]]]}",
-            .na = ""
-          ),
-          "  ", " "
+    x <- dplyr::mutate(
+      x,
+      "{street_col}" := str_replace(
+        glue(
+          "{as.character(.data[[address_cols[1]]])} {.data[[address_cols[2]]]} {.data[[address_cols[3]]]} {.data[[address_cols[4]]]}",
+          .na = ""
         ),
-        .after = dplyr::all_of(.after)
-      )
+        "  ", " "
+      ),
+      .after = dplyr::all_of(.after)
+    )
 
     .after <- street_col
   }
@@ -152,31 +153,28 @@ bind_address_col <- function(x, ...,
                              case = NULL,
                              .cols = NULL,
                              .after = NULL) {
-  .cols <-
-    modifyList(
-      .cols %||% list(),
-      list(
-        street = "street_address",
-        address = "address",
-        city = "city",
-        county = "county",
-        state = "state"
-      )
+  .cols <- modifyList(
+    .cols %||% list(),
+    list(
+      street = "street_address",
+      address = "address",
+      city = "city",
+      county = "county",
+      state = "state"
     )
+  )
 
-  x <-
-    dplyr::mutate(
-      x,
-      ...,
-      .after = tidyselect::all_of(.after) %||% tidyselect::all_of(.cols$street)
-    )
+  x <- dplyr::mutate(
+    x,
+    ...,
+    .after = tidyselect::all_of(.after) %||% tidyselect::all_of(.cols$street)
+  )
 
-  x <-
-    str_to_case_across(
-      x,
-      dplyr::any_of(.cols$city, .cols$county, .cols$state),
-      case
-    )
+  x <- str_to_case_across(
+    x,
+    dplyr::any_of(.cols$city, .cols$county, .cols$state),
+    case
+  )
 
   if (!all(rlang::has_name(x, c(.cols$street, .cols$state)))) {
     return(x)
@@ -232,16 +230,15 @@ bind_location_text_col <- function(x,
                                    .cols = NULL) {
   rlang::check_installed("stringr")
 
-  .cols <-
-    modifyList(
-      .cols %||% list(),
-      list(
-        is_address = "is_address",
-        is_block_face = "is_block_face",
-        is_street_corridor = "is_street_corridor",
-        block_side = "block_side"
-      )
+  .cols <- modifyList(
+    .cols %||% list(),
+    list(
+      is_address = "is_address",
+      is_block_face = "is_block_face",
+      is_street_corridor = "is_street_corridor",
+      block_side = "block_side"
     )
+  )
 
   nm <- names(.cols) %||% .cols
   x_nm <- rlang::has_name(x, nm)
@@ -362,17 +359,16 @@ replace_with_xwalk <- function(x,
   xwalk <- unlist(xwalk)
 
   if (is.data.frame(x)) {
-    x <-
-      dplyr::mutate(
-        x,
-        dplyr::across(
-          dplyr::all_of(.cols),
-          ~ stringr::str_replace_all(
-            .x,
-            stringr::regex(xwalk, ignore_case = ignore_case)
-          )
+    x <- dplyr::mutate(
+      x,
+      dplyr::across(
+        dplyr::all_of(.cols),
+        ~ stringr::str_replace_all(
+          .x,
+          stringr::regex(xwalk, ignore_case = ignore_case)
         )
       )
+    )
   }
 
   if (is.character(x)) {

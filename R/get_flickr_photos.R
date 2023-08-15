@@ -111,31 +111,29 @@ get_flickr_photos <- function(location = NULL,
   }
 
   # Get adjusted bounding box if any adjustment variables provided
-  bbox <-
-    sfext::st_bbox_ext(
-      # FIXME: Is the additional as_sf() call needed here?
-      x = sfext::as_sf(location),
-      dist = dist,
-      diag_ratio = diag_ratio,
-      unit = unit,
-      asp = asp,
-      crs = 4326
-    )
+  bbox <- sfext::st_bbox_ext(
+    # FIXME: Is the additional as_sf() call needed here?
+    x = sfext::as_sf(location),
+    dist = dist,
+    diag_ratio = diag_ratio,
+    unit = unit,
+    asp = asp,
+    crs = 4326
+  )
 
-  photos <-
-    FlickrAPI::get_photo_search(
-      api_key = key,
-      user_id = user_id,
-      tags = tags,
-      img_size = img_size,
-      geo = geometry,
-      license_id = license_id,
-      sort = sort,
-      bbox = bbox,
-      extras = extras,
-      per_page = per_page,
-      page = page
-    )
+  photos <- FlickrAPI::get_photo_search(
+    api_key = key,
+    user_id = user_id,
+    tags = tags,
+    img_size = img_size,
+    geo = geometry,
+    license_id = license_id,
+    sort = sort,
+    bbox = bbox,
+    extras = extras,
+    per_page = per_page,
+    page = page
+  )
 
   photos <- tibble::as_tibble(photos)
 
@@ -147,20 +145,18 @@ get_flickr_photos <- function(location = NULL,
   }
 
   if (!is.null(img_size) && has_length(img_size, 1)) {
-    photos <-
-      get_flickr_photos_orientation(
-        photos = photos,
-        orientation = orientation
-      )
+    photos <- get_flickr_photos_orientation(
+      photos = photos,
+      orientation = orientation
+    )
   }
 
   if (all(rlang::has_name(photos, c("owner", "id")))) {
-    photos <-
-      dplyr::mutate(
-        photos,
-        url = glue("https://flickr.com/photos/{owner}/{id}"),
-        .after = dplyr::all_of("owner")
-      )
+    photos <- dplyr::mutate(
+      photos,
+      url = glue("https://flickr.com/photos/{owner}/{id}"),
+      .after = dplyr::all_of("owner")
+    )
   }
 
   if (!geometry) {
@@ -186,27 +182,25 @@ get_flickr_photos <- function(location = NULL,
 get_flickr_photos_orientation <- function(photos,
                                           orientation = NULL) {
   if (rlang::has_name(photos, "img_asp")) {
-    photos <-
-      dplyr::mutate(
-        photos,
-        img_orientation = dplyr::case_when(
-          img_asp > 1 ~ "landscape",
-          img_asp < 1 ~ "portrait",
-          TRUE ~ "square"
-        )
+    photos <- dplyr::mutate(
+      photos,
+      img_orientation = dplyr::case_when(
+        img_asp > 1 ~ "landscape",
+        img_asp < 1 ~ "portrait",
+        TRUE ~ "square"
       )
+    )
   }
 
-  if (is.null(orientation) | !rlang::has_name(photos, "img_orientation")) {
+  if (is.null(orientation) || !rlang::has_name(photos, "img_orientation")) {
     return(photos)
   }
 
-  orientation <-
-    match.arg(
-      orientation,
-      c("landscape", "portrait", "square"),
-      several.ok = TRUE
-    )
+  orientation <- match.arg(
+    orientation,
+    c("landscape", "portrait", "square"),
+    several.ok = TRUE
+  )
 
   photos[photos[["img_orientation"]] %in% orientation, ]
 }

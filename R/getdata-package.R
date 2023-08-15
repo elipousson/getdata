@@ -3,6 +3,7 @@
 
 ## usethis namespace: start
 #' @import rlang
+#' @importFrom rlang is_named
 #' @importFrom cli cli_abort cli_inform cli_warn
 #' @importFrom DBI ANSI
 #' @importFrom glue glue
@@ -17,3 +18,4 @@
 #' @importFrom sfext st_bbox_ext
 #' @importFrom sfext st_filter_ext
 ## usethis namespace: end
+NULL
