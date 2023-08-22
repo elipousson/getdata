@@ -7,7 +7,7 @@ is_named_date_range <- function(x,
 #' @noRd
 is_date_range <- function(x,
                           n = NULL) {
-  is_list_of(x, "Date") && has_length(x, n)
+  is_list_all(x, "Date") && has_length(x, n)
 }
 
 #' Use lubridate to convert an object to a date range
@@ -133,7 +133,7 @@ check_date_range <- function(x = NULL,
     return(invisible(NULL))
   }
 
-  rlang::check_installed("lubridate")
+  rlang::check_installed("lubridate", call = call)
 
   if (!is_named_date_range(x, nm)) {
     x <- as_date_range(x, ..., nm = nm)
