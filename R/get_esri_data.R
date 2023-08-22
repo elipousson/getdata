@@ -45,7 +45,6 @@ get_esri_data <- function(url,
                           quiet = FALSE,
                           .name_repair = janitor::make_clean_names,
                           ...) {
-  check_dev_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
   meta <- get_esri_metadata(url, token, clean_names = FALSE)
 
   if (has_name(meta, "error")) {

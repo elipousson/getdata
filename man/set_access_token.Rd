@@ -30,6 +30,9 @@ the same environment variable name. Defaults to \code{FALSE}.}
 \item{install}{If \code{TRUE}, this function adds your token to your \code{.Renviron}
 for use in future sessions. Defaults to \code{FALSE}.}
 
+\item{type}{Default name used for environment variable where the token is
+saved.}
+
 \item{quiet}{If \code{TRUE}, suppress messages when setting token by locally
 setting the \code{cli.default_handler} option to \code{\link[=suppressMessages]{suppressMessages()}}. Defaults
 to \code{FALSE}.}

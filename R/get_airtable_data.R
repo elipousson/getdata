@@ -42,6 +42,8 @@
 #' @param token,type API token and type, token defaults to `NULL` and type to
 #'   `"AIRTABLE_TOKEN"` (same as `get_access_token(type =
 #'   "AIRTABLE_TOKEN")`).
+#' @param desc Deprecated. Sort results in descending order. Replaced by
+#'   direction parameter.
 #' @param geometry If `TRUE`, convert data into a simple feature object.
 #'   Defaults to `FALSE`.
 #' @param resp_type Response type to return, Reprecated. Previously, set resp_type
@@ -62,7 +64,8 @@ get_airtable_data <- function(base,
                               # filterByFormula = NULL, # SQL style query
                               filter = NULL,
                               sort = NULL,
-                              desc = FALSE,
+                              direction = "asc",
+                              desc = deprecated(),
                               max_records = 100,
                               per_page = NULL,
                               cell_format = "json",
@@ -102,7 +105,7 @@ get_airtable_data <- function(base,
     table = table,
     fields = fields,
     sort = sort,
-    desc = desc,
+    direction = direction,
     view = view,
     max_records = max_records,
     page_size = per_page,
@@ -116,8 +119,11 @@ get_airtable_data <- function(base,
       type = type
     ),
     type = type,
+    .name_repair = name_repair,
     ...
   )
+
+
 
   # if (label) {
   #   labels <- names(data)
@@ -128,7 +134,7 @@ get_airtable_data <- function(base,
   data <- format_data(
     data,
     fix_date = FALSE,
-    .name_repair = name_repair # ,
+    .name_repair = NULL # ,
     # label = label # ,
     # labels = labels
   )

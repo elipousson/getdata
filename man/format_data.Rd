@@ -53,7 +53,7 @@ fix_epoch_date(x, .cols = dplyr::contains("date"), tz = "")
 new variable names and the second column being the old variable names;
 defaults to \code{NULL}.}
 
-\item{xwalk}{a data frame with two columns using the first column as name and
+\item{xwalk}{A data frame with two columns using the first column as name and
 the second column as value; or a named list. The existing names of x must
 be the values and the new names must be the names.}
 

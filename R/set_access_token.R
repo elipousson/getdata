@@ -7,6 +7,8 @@
 #'   If token is not provided; type is required for [get_access_token()]. Length
 #'   1 character vector or list. If named, the name of the token is used in
 #'   place of type.
+#' @param type Default name used for environment variable where the token is
+#'   saved.
 #' @inheritParams set_r_environ_token
 #' @rdname set_access_token
 #' @aliases set_token_type

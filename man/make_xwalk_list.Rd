@@ -5,10 +5,17 @@
 \title{Make a crosswalk list for use with \code{\link[=label_with_xwalk]{label_with_xwalk()}} or
 \code{\link[=rename_with_xwalk]{rename_with_xwalk()}}}
 \usage{
-make_xwalk_list(xwalk, cols = c("label", "name"))
+make_xwalk_list(xwalk, cols = c("label", "name"), call = caller_env())
 }
 \arguments{
+\item{xwalk}{A data frame with two columns or a named list.}
+
 \item{cols}{Column names to use for crosswalk.}
+
+\item{call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \value{
 A named list

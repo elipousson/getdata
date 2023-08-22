@@ -18,6 +18,7 @@ Imports:
     cliExtras (>= 0.1.0),
     DBI,
     dplyr,
+    esri2sf (>= 0.2.0),
     glue,
     httr2,
     janitor,
@@ -33,7 +34,6 @@ Imports:
 Suggests: 
     bingmapr (>= 0.1.0),
     covr,
-    esri2sf,
     FlickrAPI (>= 0.1.0.1),
     googlesheets4,
     knitr,

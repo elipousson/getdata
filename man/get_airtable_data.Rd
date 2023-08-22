@@ -13,7 +13,8 @@ get_airtable_data(
   fields = NULL,
   filter = NULL,
   sort = NULL,
-  desc = FALSE,
+  direction = "asc",
+  desc = deprecated(),
   max_records = 100,
   per_page = NULL,
   cell_format = "json",
@@ -71,6 +72,13 @@ provided, fields are returned as a data frame. Ignored if table is \code{NULL}}
 SQL style queries to filter data. Not yet implemented.}
 
 \item{sort}{Field names to sort by. Defaults to \code{NULL}.}
+
+\item{direction}{A string ("asc" for ascending (default) or "desc" for
+descending) or character vector matching length of sort parameter. Ignored
+if sort is \code{NULL}.}
+
+\item{desc}{Deprecated. Sort results in descending order. Replaced by
+direction parameter.}
 
 \item{max_records}{Maximum number of records to return. Must be 100 or less.}
 
@@ -133,7 +141,7 @@ to \code{FALSE}.}
 
 \item{name_repair}{One of "unique" (default), "universal", "check_unique",
 "unique_quiet", or "universal_quiet" passed to \code{\link[vctrs:vec_bind]{vctrs::vec_cbind()}}. See
-\link{vctrs:vec_as_names} for the meaning of these options.}
+\code{\link[=vctrs:vec_as_names]{vctrs:vec_as_names()}} for the meaning of these options.}
 
 \item{token, type}{API token and type, token defaults to \code{NULL} and type to
 \code{"AIRTABLE_TOKEN"} (same as \code{get_access_token(type = "AIRTABLE_TOKEN")}).}
@@ -160,10 +168,7 @@ model is used to validate fields and sort parameters and to arrange columns
 to match the order of the table model.}
     \item{\code{.name_repair}}{One of "unique" (default), "universal", "check_unique",
 "unique_quiet", or "universal_quiet" passed to \code{\link[vctrs:vec_bind]{vctrs::vec_cbind()}}. See
-\link{vctrs:vec_as_names} for the meaning of these options.}
-    \item{\code{direction}}{A string ("asc" for ascending (default) or "desc" for
-descending) or character vector matching length of sort parameter. Ignored
-if sort is \code{NULL}.}
+\code{\link[=vctrs:vec_as_names]{vctrs:vec_as_names()}} for the meaning of these options.}
     \item{\code{tz,locale}}{Time zone and locale, Defaults to \code{NULL}. If cell_format is
 "string", tz defaults to \code{Sys.timezone()} and locale defaults to
 \code{Sys.getlocale("LC_TIME")}.}

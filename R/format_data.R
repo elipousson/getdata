@@ -115,7 +115,7 @@ format_data <- function(x,
 
 #' @name rename_with_xwalk
 #' @rdname format_data
-#' @param xwalk a data frame with two columns using the first column as name and
+#' @param xwalk A data frame with two columns using the first column as name and
 #'   the second column as value; or a named list. The existing names of x must
 #'   be the values and the new names must be the names.
 #' @param .strict If `TRUE` (default), require that all values from the xwalk
@@ -255,41 +255,42 @@ fix_epoch_date <- function(x, .cols = dplyr::contains("date"), tz = "") {
 #' Make a crosswalk list for use with [label_with_xwalk()] or
 #' [rename_with_xwalk()]
 #'
+#' @param xwalk A data frame with two columns or a named list.
 #' @param cols Column names to use for crosswalk.
+#' @inheritParams rlang::args_error_context
 #' @returns A named list
 #' @export
 #' @importFrom sfext is_sf
 #' @importFrom sf st_drop_geometry
 #' @importFrom rlang has_length has_name is_named
 #' @importFrom tibble deframe
-make_xwalk_list <- function(xwalk, cols = c("label", "name")) {
+make_xwalk_list <- function(xwalk, cols = c("label", "name"), call = caller_env()) {
   if (is_named(xwalk) && is.list(xwalk) && !is.data.frame(xwalk)) {
     return(xwalk)
   }
+
+  check_data_frame(xwalk, call = call)
 
   if (sfext::is_sf(xwalk)) {
     xwalk <- sf::st_drop_geometry(xwalk)
   }
 
-  cliExtras::cli_abort_ifnot(
-    c("{.arg xwalk} must be a named {.cls list} or a {.cls data.frame}
-      with two or more columns.",
-      "i" = "The provided {.arg xwalk} has class {.cls {class(xwalk)}}."
-    ),
-    condition = is.data.frame(xwalk) && ncol(xwalk) >= 2
-  )
+  xwalk_has_cols <- is_character(cols) && all(rlang::has_name(xwalk, cols))
 
-  if (!is.numeric(cols) && !all(rlang::has_name(xwalk, cols))) {
+  if (!is.numeric(cols) && !xwalk_has_cols) {
     cols <- c(1, 2)
+  } else if (is.numeric(cols)) {
+    cliExtras::cli_abort_ifnot(
+      "{.arg cols} must be a length 2 vector.",
+      condition = rlang::has_length(cols, 2)
+    )
+
+    xwalk <- xwalk[, cols]
+  } else {
+    xwalk <- dplyr::select(xwalk, dplyr::all_of(cols))
   }
 
-  cliExtras::cli_abort_ifnot(
-    "{.arg cols} must be a length 2 vector.",
-    condition = rlang::has_length(cols, 2) &&
-      (all(rlang::has_name(xwalk, cols)) || is.numeric(cols))
-  )
-
-  as.list(tibble::deframe(xwalk[, cols]))
+  as.list(tibble::deframe(xwalk))
 }
 
 #' Trim and squish across any character columns
