@@ -19,11 +19,7 @@ utils::globalVariables(
 
 # @staticimports pkg:isstatic
 # is_url is_esri_url is_gsheet_url is_gist_url is_gmap_url
-# is_unit is_all_null is_list_of
-
-
-# Placeholder to ensure lifecycle doesn't show up in check
-lifecycle::deprecate_soft
+# is_unit is_all_null is_list_all str_add_fileext
 
 #' Add default user agent to request and perform request
 #'
@@ -88,9 +84,9 @@ use_name_repair <- function(data = NULL,
 #' @param repo GitHub repository to use for the package.
 #' @noRd
 #' @importFrom rlang check_installed
-check_dev_installed <- function(pkg = NULL, repo = NULL) {
+check_dev_installed <- function(pkg = NULL, repo = NULL, call = caller_env()) {
   if (!is.null(pkg) && !rlang::is_installed(pkg = pkg)) {
-    rlang::check_installed(pkg = repo %||% pkg)
+    rlang::check_installed(pkg = repo %||% pkg, call = call)
   }
 }
 

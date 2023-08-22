@@ -3,6 +3,30 @@
 # Imported from pkg:isstatic
 # ======================================================================
 
+#' Does string contain the specified file type or any file extension?
+#'
+#' Check if string contains any filetype or the provided filetype. If string is
+#' `NULL`, returns `FALSE`.
+#'
+#' @param string String to be tested with or without filetype. Defaults to
+#'   `NULL`.
+#' @param fileext File type to test against. Optional.
+#' @param ignore.case If `FALSE`, the pattern matching is case sensitive. If
+#'   `TRUE`, case is ignored.
+#' @seealso [isstatic::is_fileext_path()]
+#' @noRd
+has_fileext <- function(string = NULL, fileext = NULL, ignore.case = FALSE) {
+  if (is.null(string)) {
+    return(FALSE)
+  }
+
+  if (is.null(fileext)) {
+    fileext <- "[a-zA-Z0-9]+"
+  }
+
+  is_fileext_path(string, fileext, ignore.case)
+}
+
 #' Do all items in a list or vector return TRUE from a predicate function?
 #'
 #' @param x A list or vector passed to X parameter of [vapply()].
@@ -32,6 +56,23 @@ is_all_null <- function(x) {
 #' @noRd
 is_esri_url <- function(x) {
   is_url(x) & grepl("/MapServer|/FeatureServer", x)
+}
+
+#' Does this text end in the provided file extension?
+#'
+#' @param x A character vector to check for matches, or an object which can be
+#'   coerced by [as.character()] to a character vector.
+#' @param fileext A file extension to compare to x. Required. If a vector of
+#'   multiple extensions are provided, returns `TRUE` for any match.
+#' @inheritParams base::grepl
+#' @seealso [isstatic::has_fileext()]
+#' @noRd
+is_fileext_path <- function(x, fileext, ignore.case = TRUE) {
+  grepl(
+    paste0("\\.", paste0(fileext, collapse = "|"), "$(?!\\.)"),
+    x,
+    ignore.case = ignore.case, perl = TRUE
+  )
 }
 
 #' - [is_gist_url()]: Is an object a URL for a GitHub Gist?
@@ -66,7 +107,7 @@ is_gsheet_url <- function(x) {
 #' @param x Object to be tested.
 #' @param what A character vector naming classes.
 #' @noRd
-is_list_of <- function(x, what = NULL) {
+is_list_all <- function(x, what = NULL) {
   is.list(x) && all(vapply(x, FUN = inherits, FUN.VALUE = TRUE, what))
 }
 
@@ -87,6 +128,165 @@ is_url <- function(x) {
     "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
     x
   )
+}
+
+#'
+#' @name str_add_fileext
+#' @rdname str_fileext
+#' @noRd
+str_add_fileext <- function(string, fileext = NULL) {
+  if (is.null(fileext) || !is.null(fileext) && all(has_fileext(string, fileext))) {
+    return(string)
+  }
+
+  if (any(has_fileext(string))) {
+    string <- str_remove_fileext(string)
+  }
+
+  str_c(string, ".", fileext)
+}
+
+#' Join multiple strings into a single string
+#'
+#' Dependency-free drop-in alternative for `stringr::str_c()`.
+#'
+#' @source Adapted from the [stringr](https://stringr.tidyverse.org/) package.
+#'
+#' @param ... One or more character vectors.
+#'   Zero length arguments are removed.
+#'   Short arguments are recycled to the length of the longest.
+#'
+#'   Like most other R functions, missing values are "infectious":
+#'   whenever a missing value is combined with another string
+#'   the result will always be missing.
+#'   Use `str_replace_na()` to convert `NA` to "NA"
+#'
+#' @param sep String to insert between input vectors.
+#'
+#' @param collapse
+#'   Optional string used to combine input vectors into single string.
+#'
+#' @return If `collapse = NULL` (the default) a character vector
+#'   with length equal to the longest input string.
+#'   If collapse is non-`NULL`, a character vector of length 1.
+#' @noRd
+str_c <- function(..., sep = "", collapse = NULL) {
+  stopifnot(
+    "`sep` must be a single string, not a character vector." = length(sep) == 1,
+    "`collapse` must be a single string or `NULL`, not a character vector." =
+      length(collapse) == 1 || is.null(collapse)
+  )
+
+  strings <- Filter(function(x) !is.null(x), list(...))
+
+  if (length(strings) == 0 || any(lengths(strings) == 0)) {
+    if (length(collapse) == 0) return(character(0))
+    return("")
+  }
+
+  max_length <- max(lengths(strings))
+
+  result <- lapply(strings, rep_len, length.out = max_length)
+  result <- do.call(cbind, result)
+  result <- apply(result, 1, paste, collapse = sep)
+  result <- paste(result, collapse = collapse)
+
+  result
+}
+
+#' Extract matching patterns from a string
+#'
+#' Dependency-free drop-in alternative for `stringr::str_extract()`.
+#'
+#' @source Adapted from the [stringr](https://stringr.tidyverse.org/) package.
+#'
+#' @param string Input vector.
+#'   Either a character vector, or something coercible to one.
+#'
+#' @param pattern Pattern to look for.
+#'
+#'   The default interpretation is a regular expression,
+#'   as described in [base::regex].
+#'   Control options with [regex()].
+#'
+#'   Match a fixed string (i.e. by comparing only bytes), using [fixed()].
+#'   This is fast, but approximate.
+#'
+#' @return A character matrix.
+#'   The first column is the complete match,
+#'   followed by one column for each capture group.
+#' @noRd
+str_extract <- function(string, pattern) {
+  if (length(string) == 0 || length(pattern) == 0) return(character(0))
+
+  is_fixed <- inherits(pattern, "stringr_fixed")
+
+  result <- Map(
+    function(string, pattern) {
+      if (is.na(string) || is.na(pattern)) return(NA_character_)
+
+      regmatches(
+        x = string,
+        m = regexpr(
+          pattern = pattern, text = string, perl = !is_fixed, fixed = is_fixed
+        )
+      )
+    },
+    string, pattern, USE.NAMES = FALSE
+  )
+
+  result[lengths(result) == 0] <- NA_character_
+  unlist(result)
+}
+
+#' @name str_extract_fileext
+#' @rdname str_fileext
+#' @noRd
+str_extract_fileext <- function(string, fileext = NULL) {
+  if (is.null(fileext)) {
+    fileext <- "[a-zA-Z0-9]+"
+  }
+
+  str_extract(string, paste0("(?<=\\.)", fileext, "$(?!\\.)"))
+}
+
+#' Remove matched patterns in a string
+#'
+#' Dependency-free drop-in alternative for `stringr::str_remove()`.
+#'
+#' @source Adapted from the [stringr](https://stringr.tidyverse.org/) package.
+#'
+#' @param string Input vector.
+#'   Either a character vector, or something coercible to one.
+#'
+#' @param pattern Pattern to look for.
+#'
+#'   The default interpretation is a regular expression,
+#'   as described in [base::regex].
+#'   Control options with [regex()].
+#'
+#'   Match a fixed string (i.e. by comparing only bytes), using [fixed()].
+#'   This is fast, but approximate.
+#'
+#' @return A character vector.
+#' @noRd
+str_remove <- function(string, pattern) {
+  if (length(string) == 0 || length(pattern) == 0) return(character(0))
+  is_fixed <- inherits(pattern, "stringr_fixed")
+  Vectorize(sub, c("pattern", "x"), USE.NAMES = FALSE)(
+    pattern, replacement = "", x = string, perl = !is_fixed, fixed = is_fixed
+  )
+}
+
+#' @name str_remove_fileext
+#' @rdname str_fileext
+#' @noRd
+str_remove_fileext <- function(string, fileext = NULL) {
+  if (is.null(fileext)) {
+    fileext <- str_extract_fileext(string)
+  }
+
+  str_remove(string, paste0("\\.", fileext, "$"))
 }
 # Generated by staticimports; do not edit by hand.
 # ======================================================================
@@ -124,13 +324,13 @@ is_url <- function(x) {
 #' @return A character vector.
 #' @noRd
 str_replace <- function(string, pattern, replacement) {
-  if (length(string) == 0 || length(pattern) == 0 || length(replacement) == 0) {
-    return(character(0))
-  }
+	if (length(string) == 0 || length(pattern) == 0 || length(replacement) == 0) {
+		return(character(0))
+	}
 
-  is_fixed <- inherits(pattern, "stringr_fixed")
+	is_fixed <- inherits(pattern, "stringr_fixed")
 
-  Vectorize(sub, c("pattern", "replacement", "x"), USE.NAMES = FALSE)(
-    pattern, replacement, x = string, perl = !is_fixed, fixed = is_fixed
-  )
+	Vectorize(sub, c("pattern", "replacement", "x"), USE.NAMES = FALSE)(
+		pattern, replacement, x = string, perl = !is_fixed, fixed = is_fixed
+	)
 }
