@@ -160,9 +160,8 @@ get_esri_layers <- function(location = NULL,
                             clean_names = TRUE,
                             quiet = FALSE,
                             .name_repair = janitor::make_clean_names,
-                            ...) {
-  check_dev_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
-
+                            ...,
+                            call = caller_env()) {
   if (!is.null(url) && is_esri_url(url)) {
     url <- sub("/$", "", url)
   }
@@ -179,7 +178,7 @@ get_esri_layers <- function(location = NULL,
   type <- unique(type)
 
   if (type == "url") {
-    meta <- get_esri_metadata(layers, token)
+    meta <- get_esri_metadata(layers, token = token, call = call)
 
     if (any(rlang::has_name(meta, c("layers", "subLayers")))) {
       layer_list <- get_layer_list(meta)
@@ -226,7 +225,15 @@ get_esri_layers <- function(location = NULL,
     nm <- nm %||%
       map_chr(
         layer_urls,
-        ~ get_esri_metadata(.x, token, meta = "name", clean_names = clean_names)
+        function(x) {
+          get_esri_metadata(
+            x,
+            token = token,
+            meta = "name",
+            clean_names = clean_names,
+            call = call
+          )
+        }
       )
   }
 
@@ -274,7 +281,10 @@ get_layer_list <- function(meta) {
   layer_list <- meta[[type]]
 
   if (rlang::has_name(layer_list, "subLayerIds")) {
-    layer_list <- dplyr::filter(layer_list, is.na(subLayerIds) | is.null(subLayerIds))
+    layer_list <- dplyr::filter(
+      layer_list,
+      is.na(subLayerIds) | is.null(subLayerIds)
+      )
   }
 
   list(
@@ -305,6 +315,7 @@ ansi_sql <- function(...,
 #' @param clean_names If `TRUE`, set .name_repair to
 #'   [janitor::make_clean_names()] Ignored when [get_esri_metadata()] is not
 #'   returning a data.frame, e.g. `meta = "id"`.
+#' @inheritParams rlang::args_error_context
 #' @export
 #' @importFrom janitor make_clean_names
 #' @importFrom rlang check_required is_character
@@ -312,11 +323,11 @@ get_esri_metadata <- function(url,
                               token = NULL,
                               meta = NULL,
                               clean_names = TRUE,
-                              .name_repair = janitor::make_clean_names) {
-  check_dev_installed(pkg = "esri2sf", repo = "elipousson/esri2sf")
-  rlang::check_required(url)
+                              .name_repair = janitor::make_clean_names,
+                              call = caller_env()) {
+  rlang::check_required(url, call = call)
 
-  metadata <- esri2sf::esrimeta(url, token)
+  metadata <- esri2sf::esrimeta(url, token, call = call)
 
   if (!is.null(meta)) {
     metadata <- metadata[[meta]]

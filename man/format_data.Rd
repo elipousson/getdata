@@ -22,7 +22,8 @@ format_data(
   remove_empty = NULL,
   remove_constant = FALSE,
   format_sf = FALSE,
-  ...
+  ...,
+  call = caller_env()
 )
 
 rename_with_xwalk(

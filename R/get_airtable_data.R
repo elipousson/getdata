@@ -91,7 +91,7 @@ get_airtable_data <- function(base,
                               type = "AIRTABLE_TOKEN",
                               resp_type = deprecated(),
                               ...) {
-  check_installed("rairtable")
+  check_dev_installed("rairtable", repo = "elipousson/rairtable@dev")
 
   if (is_url(base)) {
     ids <- rairtable::parse_airtable_url(base)

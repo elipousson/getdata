@@ -37,7 +37,8 @@ get_esri_layers(
   clean_names = TRUE,
   quiet = FALSE,
   .name_repair = janitor::make_clean_names,
-  ...
+  ...,
+  call = caller_env()
 )
 
 get_esri_metadata(
@@ -45,7 +46,8 @@ get_esri_metadata(
   token = NULL,
   meta = NULL,
   clean_names = TRUE,
-  .name_repair = janitor::make_clean_names
+  .name_repair = janitor::make_clean_names,
+  call = caller_env()
 )
 }
 \arguments{
@@ -114,6 +116,11 @@ frame. Default \code{FALSE}.}
 vector; defaults to \code{NULL}. Optional if url is a}
 
 \item{nm}{Name or vector of names to add to the layers; defaults to \code{NULL}.}
+
+\item{call}{The execution environment of a currently
+running function, e.g. \code{caller_env()}. The function will be
+mentioned in error messages as the source of the error. See the
+\code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 
 \item{meta}{Name of metadata list value to return from \link[esri2sf:esrimeta]{esri2sf::esrimeta},
 e.g. "name" to return layer name. Defaults to \code{NULL}.}

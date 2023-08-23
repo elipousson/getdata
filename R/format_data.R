@@ -62,7 +62,8 @@ format_data <- function(x,
                         remove_empty = NULL,
                         remove_constant = FALSE,
                         format_sf = FALSE,
-                        ...) {
+                        ...,
+                        call = caller_env()) {
   x <- str_trim_squish_across(x)
 
   if (!is.null(c(var_names, xwalk))) {
@@ -79,22 +80,27 @@ format_data <- function(x,
   }
 
   if (!is.null(replace_na_with)) {
-    rlang::check_installed("tidyr")
+    rlang::check_installed("tidyr", call = call)
     x <- tidyr::replace_na(x, replace = replace_na_with)
   }
 
   if (!is.null(replace_with_na)) {
-    rlang::check_installed("naniar")
+    rlang::check_installed("naniar", call = call)
     x <- naniar::replace_with_na(x, replace = replace_with_na)
   }
 
   if (replace_empty_char_with_na) {
-    rlang::check_installed("naniar")
+    rlang::check_installed("naniar", call = call)
     x <- naniar::replace_with_na_if(x, is.character, ~ .x == "")
   }
 
   if (!is.null(remove_empty)) {
-    remove_empty <- arg_match(remove_empty, c("rows", "cols"), multiple = TRUE)
+    remove_empty <- arg_match(
+      remove_empty,
+      c("rows", "cols"),
+      multiple = TRUE,
+      error_call = call
+      )
     x <- janitor::remove_empty(x, which = remove_empty)
   }
 
