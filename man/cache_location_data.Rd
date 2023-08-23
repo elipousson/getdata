@@ -34,7 +34,7 @@ bbox, conversion to a sf object will still always be attempted with
 \item{...}{
   Arguments passed on to \code{\link[=get_location_data]{get_location_data}}
   \describe{
-    \item{\code{package}}{Name of the package to search for data.}
+    \item{\code{pkg,package}}{Name of the package to search for data.}
     \item{\code{fileext,filetype}}{File extension or type to use if passing parameters
 to \code{\link[sfext:read_sf_ext]{sfext::read_sf_download()}} or \code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}} (required for
 extdata and cached data).}
@@ -115,6 +115,9 @@ date/time prefix; defaults to \code{NULL}.}
 
 \item{cache}{If \code{TRUE}, path is set to the package cache directory using
 \code{\link[filenamr:get_data_dir]{get_data_dir()}}; defaults to \code{FALSE}.}
+
+\item{pkg}{Package name passed to appname parameter of
+\code{\link[rappdirs:user_cache_dir]{rappdirs::user_cache_dir()}}}
 
 \item{create}{If \code{FALSE} and path does not exist, return path with a warning.
 If \code{TRUE} and \code{\link[rlang:is_interactive]{rlang::is_interactive()}} is \code{TRUE}, ask user if directory

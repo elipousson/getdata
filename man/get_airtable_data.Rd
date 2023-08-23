@@ -141,7 +141,7 @@ to \code{FALSE}.}
 
 \item{name_repair}{One of "unique" (default), "universal", "check_unique",
 "unique_quiet", or "universal_quiet" passed to \code{\link[vctrs:vec_bind]{vctrs::vec_cbind()}}. See
-\code{\link[=vctrs:vec_as_names]{vctrs:vec_as_names()}} for the meaning of these options.}
+\link[vctrs:vec_as_names]{vctrs::vec_as_names} for the meaning of these options.}
 
 \item{token, type}{API token and type, token defaults to \code{NULL} and type to
 \code{"AIRTABLE_TOKEN"} (same as \code{get_access_token(type = "AIRTABLE_TOKEN")}).}
@@ -168,7 +168,7 @@ model is used to validate fields and sort parameters and to arrange columns
 to match the order of the table model.}
     \item{\code{.name_repair}}{One of "unique" (default), "universal", "check_unique",
 "unique_quiet", or "universal_quiet" passed to \code{\link[vctrs:vec_bind]{vctrs::vec_cbind()}}. See
-\code{\link[=vctrs:vec_as_names]{vctrs:vec_as_names()}} for the meaning of these options.}
+\link[vctrs:vec_as_names]{vctrs::vec_as_names} for the meaning of these options.}
     \item{\code{tz,locale}}{Time zone and locale, Defaults to \code{NULL}. If cell_format is
 "string", tz defaults to \code{Sys.timezone()} and locale defaults to
 \code{Sys.getlocale("LC_TIME")}.}

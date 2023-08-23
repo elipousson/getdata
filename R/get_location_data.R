@@ -29,7 +29,7 @@
 #'   location. If data is not `NULL` and not a data.frame, url, file path, or
 #'   bbox, conversion to a sf object will still always be attempted with
 #'   [sfext::as_sf()].
-#' @param package Name of the package to search for data.
+#' @param pkg,package Name of the package to search for data.
 #' @param fileext,filetype File extension or type to use if passing parameters
 #'   to [sfext::read_sf_download()] or [sfext::read_sf_pkg()] (required for
 #'   extdata and cached data).

@@ -5,6 +5,8 @@
 #' object) or [readr::write_rds()] (if data is another class).
 #'
 #' @inheritParams filenamr::make_filename
+#' @param pkg Package name passed to appname parameter of
+#'   [rappdirs::user_cache_dir()]
 #' @inheritParams filenamr::check_file_overwrite
 #' @inheritParams get_location_data
 #' @inheritDotParams get_location_data
@@ -36,7 +38,6 @@ cache_location_data <- function(data = NULL,
     path = path,
     prefix = prefix,
     postfix = postfix,
-    pad = pad,
     cache = cache,
     pkg = pkg,
     create = create,
@@ -57,7 +58,9 @@ cache_location_data <- function(data = NULL,
     call = call
   )
 
-  cli_alert_success("Writing {.file {basename(filename)}} to {.path {dirname(filename)}}")
+  cli_alert_success(
+    "Writing {.file {basename(filename)}} to {.path {dirname(filename)}}"
+    )
 
   if (inherits(data, "sf")) {
     sf::st_write(data, filename, quiet = TRUE)

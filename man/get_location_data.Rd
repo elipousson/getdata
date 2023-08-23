@@ -83,7 +83,7 @@ location. If data is not \code{NULL} and not a data.frame, url, file path, or
 bbox, conversion to a sf object will still always be attempted with
 \code{\link[sfext:as_sf]{sfext::as_sf()}}.}
 
-\item{package}{Name of the package to search for data.}
+\item{pkg, package}{Name of the package to search for data.}
 
 \item{fileext, filetype}{File extension or type to use if passing parameters
 to \code{\link[sfext:read_sf_ext]{sfext::read_sf_download()}} or \code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}} (required for
