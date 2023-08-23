@@ -34,6 +34,7 @@ Imports:
 Suggests: 
     bingmapr (>= 0.1.0),
     covr,
+    filenamr,
     FlickrAPI (>= 0.1.0.1),
     googlesheets4,
     knitr,
@@ -43,6 +44,7 @@ Suggests:
     naniar,
     osmdata (>= 0.1.10),
     rairtable,
+    readr,
     roxygen2,
     RSocrata,
     smoothr,
@@ -57,6 +59,7 @@ Remotes:
     elipousson/bingmapr,
     elipousson/cliExtras,
     elipousson/esri2sf,
+    elipousson/filenamr,
     elipousson/rairtable@dev,
     elipousson/sfext
 Config/testthat/edition: 3

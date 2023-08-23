@@ -83,7 +83,8 @@ get_location_data <- function(location = NULL,
                               var_names = NULL,
                               clean_names = FALSE,
                               range = NULL,
-                              ...) {
+                              ...,
+                              call = caller_env()) {
   fileext <- fileext %||% filetype
   pkg <- pkg %||% package
 
@@ -94,7 +95,7 @@ get_location_data <- function(location = NULL,
     if (any(has_name(index, c("pkg", "package"))) && is.null(pkg)) {
       index[["pkg"]] <- index[["pkg"]] %||% index[["package"]]
       pkg <- unique(index[["pkg"]]) # could use data as an index
-      check_string(pkg, allow_empty = FALSE)
+      check_string(pkg, allow_empty = FALSE, call = call)
     }
 
     location <- get_index_param(index, location = location)
@@ -105,7 +106,7 @@ get_location_data <- function(location = NULL,
     if (sfext::is_geo_coords(location)) {
       location <- sfext::lonlat_to_sfc(location, range)
     } else {
-      location <- sfext::as_sf(location)
+      location <- sfext::as_sf(location, call = call)
     }
   }
 
@@ -138,15 +139,16 @@ get_location_data <- function(location = NULL,
       "pkg" = sfext::read_sf_pkg(
         data = data, bbox = bbox, pkg = pkg, fileext = fileext, ...
       ),
-      "sf" = sfext::as_sf(data, ...),
-      "df" = sfext::df_to_sf(x = data, from_crs = from_crs, ...),
+      "sf" = sfext::as_sf(data, ..., call = call),
+      "df" = sfext::df_to_sf(x = data, from_crs = from_crs, ..., call = call),
       "ext" = sfext::read_sf_ext(!!!rlang::list2(...), bbox = bbox)
     )
   }
 
   if (is_empty(data)) {
     cli_abort(
-      "{.arg data} can't be found."
+      "{.arg data} can't be found.",
+      call = call
     )
   }
   data <- sfext::st_make_valid_ext(data)
@@ -178,7 +180,7 @@ get_location_data <- function(location = NULL,
 
   data <- format_data(data, var_names = var_names, clean_names = clean_names)
 
-  sfext::as_sf_class(x = data, class = class, crs = crs, col = col)
+  sfext::as_sf_class(x = data, class = class, crs = crs, col = col, call = call)
 }
 
 #' @name map_location_data
