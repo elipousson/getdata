@@ -8,13 +8,13 @@
   "codeRepository": "https://github.com/elipousson/getdata",
   "issueTracker": "https://github.com/elipousson/getdata/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.1.0.9001",
+  "version": "0.1.0.9005",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.2.3 (2023-03-15)",
+  "runtimePlatform": "R version 4.3.0 (2023-04-21)",
   "author": [
     {
       "@type": "Person",
@@ -64,9 +64,9 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "esri2sf",
-      "name": "esri2sf",
-      "sameAs": "https://github.com/elipousson/esri2sf"
+      "identifier": "filenamr",
+      "name": "filenamr",
+      "sameAs": "https://github.com/elipousson/filenamr"
     },
     {
       "@type": "SoftwareApplication",
@@ -176,7 +176,19 @@
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://github.com/elipousson/rairtable"
+      "sameAs": "https://CRAN.R-project.org/package=rairtable"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "readr",
+      "name": "readr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=readr"
     },
     {
       "@type": "SoftwareApplication",
@@ -193,14 +205,7 @@
     {
       "@type": "SoftwareApplication",
       "identifier": "RSocrata",
-      "name": "RSocrata",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=RSocrata"
+      "name": "RSocrata"
     },
     {
       "@type": "SoftwareApplication",
@@ -312,6 +317,7 @@
       "@type": "SoftwareApplication",
       "identifier": "cli",
       "name": "cli",
+      "version": ">= 2.5.0",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -353,6 +359,13 @@
     },
     "6": {
       "@type": "SoftwareApplication",
+      "identifier": "esri2sf",
+      "name": "esri2sf",
+      "version": ">= 0.2.0",
+      "sameAs": "https://github.com/elipousson/esri2sf"
+    },
+    "7": {
+      "@type": "SoftwareApplication",
       "identifier": "glue",
       "name": "glue",
       "provider": {
@@ -363,7 +376,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=glue"
     },
-    "7": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "httr2",
       "name": "httr2",
@@ -375,7 +388,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=httr2"
     },
-    "8": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "janitor",
       "name": "janitor",
@@ -387,7 +400,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=janitor"
     },
-    "9": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "lifecycle",
       "name": "lifecycle",
@@ -399,7 +412,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=lifecycle"
     },
-    "10": {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "magrittr",
       "name": "magrittr",
@@ -411,11 +424,11 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=magrittr"
     },
-    "11": {
+    "12": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
-      "version": ">= 0.4.11",
+      "version": ">= 1.1.0",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -424,7 +437,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "12": {
+    "13": {
       "@type": "SoftwareApplication",
       "identifier": "sf",
       "name": "sf",
@@ -436,14 +449,14 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=sf"
     },
-    "13": {
+    "14": {
       "@type": "SoftwareApplication",
       "identifier": "sfext",
       "name": "sfext",
       "version": ">= 0.0.0.9001",
       "sameAs": "https://github.com/elipousson/sfext"
     },
-    "14": {
+    "15": {
       "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
@@ -455,7 +468,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tibble"
     },
-    "15": {
+    "16": {
       "@type": "SoftwareApplication",
       "identifier": "tidyselect",
       "name": "tidyselect",
@@ -467,12 +480,12 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tidyselect"
     },
-    "16": {
+    "17": {
       "@type": "SoftwareApplication",
       "identifier": "utils",
       "name": "utils"
     },
-    "17": {
+    "18": {
       "@type": "SoftwareApplication",
       "identifier": "vctrs",
       "name": "vctrs",
@@ -486,7 +499,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "346.81KB",
+  "fileSize": "397.004KB",
   "releaseNotes": "https://github.com/elipousson/getdata/blob/master/NEWS.md",
   "readme": "https://github.com/elipousson/getdata/blob/main/README.md",
   "contIntegration": "https://app.codecov.io/gh/elipousson/getdata?branch=main",
