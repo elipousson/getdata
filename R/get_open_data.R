@@ -144,7 +144,7 @@ get_open_data <- function(data = NULL,
       coords = coords
     )
 
-    rlang::check_installed("RSocrata")
+    check_dev_installed("RSocrata", repo = "Chicago/RSocrata")
     # Download data from Socrata Open Data portal
     data <- dplyr::as_tibble(
       RSocrata::read.socrata(url = url, app_token = token)
@@ -267,7 +267,7 @@ get_socrata_data <- function(data = NULL,
                              from_crs = 4326,
                              crs = NULL,
                              clean_names = TRUE) {
-  rlang::check_installed("RSocrata")
+  check_dev_installed("RSocrata", repo = "Chicago/RSocrata")
 
   get_open_data(
     data = data,
