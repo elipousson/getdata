@@ -25,6 +25,9 @@
     <loc>https://elipousson.github.io/getdata/reference/as_date_range.html</loc>
   </url>
   <url>
+    <loc>https://elipousson.github.io/getdata/reference/cache_location_data.html</loc>
+  </url>
+  <url>
     <loc>https://elipousson.github.io/getdata/reference/format_address_data.html</loc>
   </url>
   <url>
@@ -79,6 +82,9 @@
     <loc>https://elipousson.github.io/getdata/reference/make_location_grid.html</loc>
   </url>
   <url>
+    <loc>https://elipousson.github.io/getdata/reference/make_xwalk_list.html</loc>
+  </url>
+  <url>
     <loc>https://elipousson.github.io/getdata/reference/osm_building_tags.html</loc>
   </url>
   <url>
@@ -88,6 +94,9 @@
     <loc>https://elipousson.github.io/getdata/reference/pipe.html</loc>
   </url>
   <url>
+    <loc>https://elipousson.github.io/getdata/reference/reexports.html</loc>
+  </url>
+  <url>
     <loc>https://elipousson.github.io/getdata/reference/replace_with_xwalk.html</loc>
   </url>
   <url>
@@ -95,6 +104,9 @@
   </url>
   <url>
     <loc>https://elipousson.github.io/getdata/reference/set_pkg_options.html</loc>
+  </url>
+  <url>
+    <loc>https://elipousson.github.io/getdata/reference/set_r_environ_token.html</loc>
   </url>
   <url>
     <loc>https://elipousson.github.io/getdata/reference/str_trim_squish_across.html</loc>

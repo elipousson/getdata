@@ -20,7 +20,7 @@ sfext::df_to_sf() if geometry = TRUE."><meta property="og:image" content="https:
     
     <a class="navbar-brand me-2" href="../index.html">getdata</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9005</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,8 @@ optionally convert the data to a simple feature object using
 <span>  fields <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  filter <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sort <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  desc <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  direction <span class="op">=</span> <span class="st">"asc"</span>,</span>
+<span>  desc <span class="op">=</span> <span class="fu">deprecated</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  max_records <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  per_page <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cell_format <span class="op">=</span> <span class="st">"json"</span>,</span>
@@ -146,16 +147,22 @@ SQL style queries to filter data. Not yet implemented.</p></dd>
 
 
 <dt>sort</dt>
-<dd><p>Field to sort by, Default: <code>NULL</code></p></dd>
+<dd><p>Field names to sort by. Defaults to <code>NULL</code>.</p></dd>
+
+
+<dt>direction</dt>
+<dd><p>A string ("asc" for ascending (default) or "desc" for
+descending) or character vector matching length of sort parameter. Ignored
+if sort is <code>NULL</code>.</p></dd>
 
 
 <dt>desc</dt>
-<dd><p>If <code>TRUE</code>, sort in descending order, Default: <code>FALSE</code></p></dd>
+<dd><p>Deprecated. Sort results in descending order. Replaced by
+direction parameter.</p></dd>
 
 
 <dt>max_records</dt>
-<dd><p>Maximum number of records to return, Default: <code>NULL</code>. Must
-be 100 or less.</p></dd>
+<dd><p>Maximum number of records to return. Must be 100 or less.</p></dd>
 
 
 <dt>per_page</dt>
@@ -176,7 +183,8 @@ the displayed character string.</p></dd>
 
 
 <dt>fields_by_id</dt>
-<dd><p>If <code>TRUE</code>, return fields by id, Default: <code>FALSE</code></p></dd>
+<dd><p>If <code>TRUE</code>, use fields IDs for column names in returned
+records. If <code>FALSE</code> (default), use field names.</p></dd>
 
 
 <dt>offset</dt>
@@ -249,7 +257,9 @@ to <code>FALSE</code>.</p></dd>
 
 
 <dt>name_repair</dt>
-<dd><p>Defaults to "check_unique"</p></dd>
+<dd><p>One of "unique" (default), "universal", "check_unique",
+"unique_quiet", or "universal_quiet" passed to <code><a href="https://vctrs.r-lib.org/reference/vec_bind.html" class="external-link">vctrs::vec_cbind()</a></code>. See
+<a href="https://vctrs.r-lib.org/reference/vec_as_names.html" class="external-link">vctrs::vec_as_names</a> for the meaning of these options.</p></dd>
 
 
 <dt>token, type</dt>
@@ -270,13 +280,41 @@ url is supplied. For <code><a href="https://rdrr.io/pkg/rairtable/man/read_airta
 <code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">get_record()</a></code>, support the airtable, url, or a base <em>and</em> table
 parameter.</p></dd>
 
-    <dt><code>page_size</code></dt>
-<dd><p>Max records to return per page, Default: <code>NULL</code></p></dd>
+    <dt><code>airtable_id_col</code></dt>
+<dd><p>Airtable record ID column name assigned to returned
+data frame. Defaults to <code>NULL</code> which is sets record ID column name to
+<code>getOption("rairtable.id_col", "airtable_record_id")</code>. For <code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">list_records()</a></code>
+and <code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">get_record()</a></code>, airtable_id_col is not used if metadata is <code>NULL</code> or
+does not include "id". The record ID column is dropped and converted to
+rownames if id_to_col is <code>FALSE</code>.</p></dd>
+
+    <dt><code>model</code></dt>
+<dd><p>Optional. A table model from <code><a href="https://rdrr.io/pkg/rairtable/man/airtable_base.html" class="external-link">get_table_model()</a></code>. If supplied,
+model is used to validate fields and sort parameters and to arrange columns
+to match the order of the table model.</p></dd>
+
+    <dt><code>.name_repair</code></dt>
+<dd><p>One of "unique" (default), "universal", "check_unique",
+"unique_quiet", or "universal_quiet" passed to <code><a href="https://vctrs.r-lib.org/reference/vec_bind.html" class="external-link">vctrs::vec_cbind()</a></code>. See
+<a href="https://vctrs.r-lib.org/reference/vec_as_names.html" class="external-link">vctrs::vec_as_names</a> for the meaning of these options.</p></dd>
 
     <dt><code>tz,locale</code></dt>
 <dd><p>Time zone and locale, Defaults to <code>NULL</code>. If cell_format is
 "string", tz defaults to <code><a href="https://rdrr.io/r/base/timezones.html" class="external-link">Sys.timezone()</a></code> and locale defaults to
 <code>Sys.getlocale("LC_TIME")</code>.</p></dd>
+
+    <dt><code>page_size</code></dt>
+<dd><p>Maximum number of records to return per page.</p></dd>
+
+    <dt><code>metadata</code></dt>
+<dd><p>Record metadata columns to include with returned data frame.
+Options including "id", "createdTime", and "commentCount". Defaults to
+<code>c("id", "createdTime")</code>. If metadata is <code>NULL</code>, no additional fields are
+added to the returned data frame.</p></dd>
+
+    <dt><code>simplifyVector</code></dt>
+<dd><p>Passed to <code><a href="https://httr2.r-lib.org/reference/req_body.html" class="external-link">httr2::req_body_json()</a></code>. If <code>FALSE</code>,
+<code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">get_record()</a></code> and <code><a href="https://rdrr.io/pkg/rairtable/man/read_airtable.html" class="external-link">list_records()</a></code> both return named lists of records.</p></dd>
 
   
 </dl></dd>

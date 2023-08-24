@@ -28,7 +28,7 @@ documented at format_address_data().'><meta property="og:image" content="https:/
     
     <a class="navbar-brand me-2" href="../index.html">getdata</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9005</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,8 @@ documented at <code><a href="format_address_data.html">format_address_data()</a>
 <span>  remove_empty <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  remove_constant <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  format_sf <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  call <span class="op">=</span> <span class="fu">caller_env</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">rename_with_xwalk</span><span class="op">(</span></span>
@@ -127,7 +128,7 @@ defaults to <code>NULL</code>.</p></dd>
 
 
 <dt>xwalk</dt>
-<dd><p>a data frame with two columns using the first column as name and
+<dd><p>A data frame with two columns using the first column as name and
 the second column as value; or a named list. The existing names of x must
 be the values and the new names must be the names.</p></dd>
 

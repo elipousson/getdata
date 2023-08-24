@@ -12,7 +12,7 @@ package by Kyle Walker."><meta property="og:image" content="https://elipousson.g
     
     <a class="navbar-brand me-2" href="../index.html">getdata</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9005</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,21 +76,24 @@ place of type.</p></dd>
 
 
 <dt>overwrite</dt>
-<dd><p>If <code>TRUE</code>, overwrite existing token; Default: <code>FALSE</code></p></dd>
+<dd><p>If <code>TRUE</code>, overwrite any existing token in <code>.Renviron</code> using
+the same environment variable name. Defaults to <code>FALSE</code>.</p></dd>
 
 
 <dt>install</dt>
-<dd><p>If <code>TRUE</code>, install token for use in future sessions; Default:
-<code>FALSE</code></p></dd>
+<dd><p>If <code>TRUE</code>, this function adds your token to your <code>.Renviron</code>
+for use in future sessions. Defaults to <code>FALSE</code>.</p></dd>
 
 
 <dt>type</dt>
-<dd><p>Name of token; defaults to <code>NULL</code>. Optional if token is named.</p></dd>
+<dd><p>Default name used for environment variable where the token is
+saved.</p></dd>
 
 
 <dt>quiet</dt>
-<dd><p>If <code>TRUE</code>, suppress informational messages when setting access
-token. Defaults to <code>FALSE</code>.</p></dd>
+<dd><p>If <code>TRUE</code>, suppress messages when setting token by locally
+setting the <code>cli.default_handler</code> option to <code><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages()</a></code>. Defaults
+to <code>FALSE</code>.</p></dd>
 
 
 <dt>call</dt>
