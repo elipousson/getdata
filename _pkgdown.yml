@@ -26,6 +26,7 @@ reference:
   - '`street_dir_prefixes`'
   - '`street_suffixes`'
   - starts_with("str_")
+  - '`make_xwalk_list`'
 - title: Additional data access utilities
   contents:
   - '`as_date_range`'
@@ -35,4 +36,5 @@ reference:
   contents:
   - '`make_location_data_list`'
   - '`make_location_grid`'
+  - '`cache_location_data`'
 
