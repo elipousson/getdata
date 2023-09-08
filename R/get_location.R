@@ -155,6 +155,10 @@ filter_name <- function(x = NULL,
                         name_col = "name",
                         arg = rlang::caller_arg(name_col),
                         call = rlang::caller_env()) {
+  if (is_named(name)) {
+    name_col <- names(name)
+  }
+
   if (is.null(name) || is.null(name_col)) {
     return(x)
   }
