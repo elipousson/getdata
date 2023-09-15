@@ -41,6 +41,7 @@
 #'   examples of the latter option.
 #' @inheritParams format_data
 #' @inheritParams osmdata::add_osm_feature
+#' @example examples/get_osm_data.R
 #' @return A simple feature object with features using selected geometry type or
 #'   an `osmdata` object with features from all geometry types.
 #' @export
@@ -191,6 +192,7 @@ get_osm_id_type <- function(id,
                             geometry = NULL,
                             call = caller_env()) {
   if (is.null(type)) {
+    check_string(id, call = call)
     if (starts_with_osm_type(id)) {
       split_id <- strsplit(id, split = "/")
       type <- split_id[[1]][1]
@@ -469,6 +471,10 @@ get_osm_data_geometry <- function(data,
     geometry <- paste0(geometry, "s")
   }
 
+  if (grepl("^osm_", geometry, perl = TRUE)) {
+    geometry <- sub("^osm_", "", geometry)
+  }
+
   geometry <- arg_match(
     geometry,
     c(
@@ -478,14 +484,27 @@ get_osm_data_geometry <- function(data,
       "multilines",
       "multipolygons"
     ),
-    error_call = call
+    error_call = call,
+    multiple = TRUE
   )
 
   geometry <- paste0("osm_", geometry)
 
-  data <- data[[geometry]]
+  if (!has_length(geometry, 1)) {
+    data_list <- map(
+      geometry,
+      \(x) {
+        data_sf <- sf::st_as_sf(tibble::as_tibble(data[[x]]))
+        sfext::st_transform_ext(data_sf, crs)
+      }
+    )
 
-  sfext::st_transform_ext(data, crs)
+    return(data_list)
+  }
+
+  data <- tibble::as_tibble(data[[geometry]])
+  data_sf <- sf::st_as_sf(data)
+  sfext::st_transform_ext(data_sf, crs)
 }
 
 #' Get OSM value from osm_building_tags or osmdata::available_tags
