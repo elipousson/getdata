@@ -145,12 +145,13 @@ and the Mapbox token with <a href="https://rdrr.io/pkg/mapboxapi/man/mb_access_t
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>location</dt>
 <dd><p>An input location for which you would like to request tiles.
-Can be a length-4 vector representing a bounding box, or an <code>sf</code> object. If
-an input <code>sf</code> object is supplied, use the <code>buffer_dist</code> argument to control
-how much area you want to capture around the layer. While the input <code>sf</code>
-object can be in an arbitrary coordinate reference system, if a length-4
-bounding box vector is supplied instead it must represent WGS84
-longitude/latitude coordinates and be in the order <code>c(xmin, ymin, xmax, ymax)</code>.</p></dd>
+Can be a length-4 vector representing a bounding box, or an <code>sf</code> object.
+If an input <code>sf</code> object is supplied, use the <code>buffer_dist</code> argument to
+control how much area you want to capture around the layer.
+While the input <code>sf</code> object can be in an arbitrary coordinate reference system,
+if a length-4 bounding box vector is supplied instead it must represent
+WGS84 longitude/latitude coordinates and be in the order
+<code>c(xmin, ymin, xmax, ymax)</code>.</p></dd>
 
 
 <dt>dist</dt>

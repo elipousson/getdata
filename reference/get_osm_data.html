@@ -241,6 +241,48 @@ information.</p></dd>
 an <code>osmdata</code> object with features from all geometry types.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu">sfext</span><span class="fu">::</span><span class="fu"><a href="https://elipousson.github.io/sfext/reference/read_sf_ext.html" class="external-link">read_sf_path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"shape/nc.shp"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">civic_buildings</span> <span class="op">&lt;-</span> <span class="fu">get_osm_data</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  location <span class="op">=</span> <span class="va">nc</span><span class="op">[</span><span class="fl">37</span>,<span class="op">]</span>,</span></span>
+<span class="r-in"><span>  features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"building"</span> <span class="op">=</span> <span class="st">"civic"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  geometry <span class="op">=</span> <span class="st">"polygons"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> OpenStreetMap data is licensed under the Open Database License (ODbL).</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   Attribution is required if you use this data.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">•</span> Learn more about the ODbL and OSM attribution requirements at</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB; font-style: italic;">&lt;https://www.openstreetmap.org/copyright&gt;</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This message is displayed once every 8 hours.</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">civic_buildings</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 10 features and 23 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -78.89991 ymin: 35.57932 xmax: -78.59919 ymax: 36.02971</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  WGS 84</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 10 × 24</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    osm_id    name    `addr:city` `addr:housenumber` `addr:postcode` `addr:state`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 28788263  NCMLS … Durham      433                27704           NC          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 32145960  Cary S… <span style="color: #BB0000;">NA</span>          120                <span style="color: #BB0000;">NA</span>              <span style="color: #BB0000;">NA</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 47699270  Optimi… <span style="color: #BB0000;">NA</span>          <span style="color: #BB0000;">NA</span>                 <span style="color: #BB0000;">NA</span>              <span style="color: #BB0000;">NA</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 47778679  <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>          <span style="color: #BB0000;">NA</span>                 <span style="color: #BB0000;">NA</span>              <span style="color: #BB0000;">NA</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 47836108  Visito… <span style="color: #BB0000;">NA</span>          <span style="color: #BB0000;">NA</span>                 <span style="color: #BB0000;">NA</span>              <span style="color: #BB0000;">NA</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 378257128 <span style="color: #BB0000;">NA</span>      Cary        4000               27519           NC          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 378397242 Morris… <span style="color: #BB0000;">NA</span>          <span style="color: #BB0000;">NA</span>                 <span style="color: #BB0000;">NA</span>              <span style="color: #BB0000;">NA</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 438008281 Fuquay… Fuquay-Var… 301                27526           NC          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 469540465 Town A… Fuquay-Var… 405                27526           NC          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 913687471 Kiwani… <span style="color: #BB0000;">NA</span>          <span style="color: #BB0000;">NA</span>                 <span style="color: #BB0000;">NA</span>              <span style="color: #BB0000;">NA</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 18 more variables: `addr:street` &lt;chr&gt;, amenity &lt;chr&gt;, building &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   `building:levels` &lt;chr&gt;, `building:use` &lt;chr&gt;, `contact:website` &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   leisure &lt;chr&gt;, phone &lt;chr&gt;, smoking &lt;chr&gt;, social_facility &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   `social_facility:for` &lt;chr&gt;, source &lt;chr&gt;, `source:addr` &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   sport &lt;chr&gt;, tourism &lt;chr&gt;, website &lt;chr&gt;, wheelchair &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   geometry &lt;POLYGON [°]&gt;</span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
