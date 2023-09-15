@@ -100,7 +100,7 @@ format_data <- function(x,
       c("rows", "cols"),
       multiple = TRUE,
       error_call = call
-      )
+    )
     x <- janitor::remove_empty(x, which = remove_empty)
   }
 

@@ -284,7 +284,7 @@ get_layer_list <- function(meta) {
     layer_list <- dplyr::filter(
       layer_list,
       is.na(subLayerIds) | is.null(subLayerIds)
-      )
+    )
   }
 
   list(

@@ -60,7 +60,7 @@ cache_location_data <- function(data = NULL,
 
   cli_alert_success(
     "Writing {.file {basename(filename)}} to {.path {dirname(filename)}}"
-    )
+  )
 
   if (inherits(data, "sf")) {
     sf::st_write(data, filename, quiet = TRUE)
