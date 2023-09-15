@@ -75,7 +75,7 @@ nc <- sfext::read_sf_path(system.file("shape/nc.shp", package = "sf"))
 # get_location works with a type sf object and name and id values
 get_location(type = nc, name = "Warren", name_col = "NAME")
 get_location(type = nc, id = 37185, id_col = "FIPSNO")
-
+# if name is named, the name of name is used as name_col
 get_location(type = nc, name = c("NAME" = "Warren"))
 
 # type can also be a file path

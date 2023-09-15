@@ -141,3 +141,14 @@ location. For more information on key and value options, refer to the
 directly for more detailed control over queries
 \url{https://docs.ropensci.org/osmdata/}
 }
+\examples{
+nc <- sfext::read_sf_path(system.file("shape/nc.shp", package = "sf"))
+
+civic_buildings <- get_osm_data(
+  location = nc[37,],
+  features = c("building" = "civic"),
+  geometry = "polygons"
+)
+
+civic_buildings
+}
