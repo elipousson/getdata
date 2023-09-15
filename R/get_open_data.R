@@ -45,7 +45,7 @@
 #' @importFrom cliExtras cli_abort_ifnot
 #' @importFrom sfext st_bbox_ext df_to_sf
 #' @importFrom cli cli_alert_info cli_dl
-#' @importFrom dplyr as_tibble
+#' @importFrom tibble as_tibble
 get_open_data <- function(data = NULL,
                           source_url = NULL,
                           source_type = "socrata",
@@ -146,7 +146,7 @@ get_open_data <- function(data = NULL,
 
     check_dev_installed("RSocrata", repo = "Chicago/RSocrata")
     # Download data from Socrata Open Data portal
-    data <- dplyr::as_tibble(
+    data <- tibble::as_tibble(
       RSocrata::read.socrata(url = url, app_token = token)
     )
   }
@@ -309,12 +309,12 @@ get_socrata_metadata <- function(source_url = NULL,
 #' @name list_socrata_data
 #' @export
 #' @importFrom httr2 request req_perform resp_body_json
-#' @importFrom dplyr as_tibble
+#' @importFrom tibble as_tibble
 list_socrata_data <- function(source_url) {
   req <- httr2::request(paste0(source_url, "/data.json"))
   resp <- httr2::resp_body_json(req_getdata(req), simplifyVector = TRUE)
 
-  datasets <- dplyr::as_tibble(resp[["dataset"]])
+  datasets <- tibble::as_tibble(resp[["dataset"]])
   datasets[["issued"]] <- as.POSIXct(datasets[["issued"]])
   datasets[["modified"]] <- as.POSIXct(datasets[["modified"]])
 
