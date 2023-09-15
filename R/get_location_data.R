@@ -83,6 +83,7 @@ get_location_data <- function(location = NULL,
                               var_names = NULL,
                               clean_names = FALSE,
                               range = NULL,
+                              .name_repair = "check_unique",
                               ...,
                               call = caller_env()) {
   fileext <- fileext %||% filetype
@@ -178,7 +179,12 @@ get_location_data <- function(location = NULL,
 
   data <- use_fn(data = data, fn = fn)
 
-  data <- format_data(data, var_names = var_names, clean_names = clean_names)
+  data <- format_data(
+    data,
+    var_names = var_names,
+    clean_names = clean_names,
+    .name_repair = .name_repair
+  )
 
   sfext::as_sf_class(x = data, class = class, crs = crs, col = col, call = call)
 }
@@ -320,10 +326,10 @@ map_location_data <- function(location = NULL,
   data <- sfext::as_sf_class(x = data, class = class, crs = crs) # , ...)
 
   if (load && sfext::is_sf_list(data, named = TRUE)) {
-    list2env(data, envir = .GlobalEnv)
-  } else {
-    data
+    return(list2env(data, envir = .GlobalEnv))
   }
+
+  data
 }
 
 
