@@ -2,13 +2,15 @@
 #'
 #' [cache_location_data()] is a variant on [get_location_data()] that saves the
 #' returned data to a cache directory using [sf::write_sf()] (if data is a sf
-#' object) or [readr::write_rds()] (if data is another class).
+#' object) or [readr::write_rds()] (if data is another class). Additional
+#' parameters are ignored if location is `NULL`.
 #'
 #' @inheritParams filenamr::make_filename
 #' @param pkg Package name passed to appname parameter of
 #'   [rappdirs::user_cache_dir()]
 #' @inheritParams filenamr::check_file_overwrite
 #' @inheritParams get_location_data
+#' @inheritParams readr::write_rds
 #' @inheritDotParams get_location_data
 #' @returns Save data to file and invisibly return file path.
 #' @export
@@ -27,6 +29,8 @@ cache_location_data <- function(data = NULL,
                                 pkg = "getdata",
                                 create = TRUE,
                                 overwrite = FALSE,
+                                compress = c("none", "gz", "bz2", "xz"),
+                                version = 2,
                                 call = caller_env()) {
   check_dev_installed("filenamr", repo = "elipousson/filenamr", call = call)
 
@@ -44,12 +48,14 @@ cache_location_data <- function(data = NULL,
     call = call
   )
 
-  data <- get_location_data(
-    data = data,
-    location = location,
-    ...,
-    call = call
-  )
+  if (!is_null(location)) {
+    data <- get_location_data(
+      data = data,
+      location = location,
+      ...,
+      call = call
+    )
+  }
 
   filenamr::check_file_overwrite(
     filename = filename,
@@ -68,6 +74,7 @@ cache_location_data <- function(data = NULL,
   }
 
   check_installed("readr", call = call)
-  readr::write_rds(data, str_add_fileext(filename, "rds"))
+  filename <- str_add_fileext(str_remove_fileext(filename), "rds")
+  readr::write_rds(data, filename, compress = compress, version = version)
   invisible(filename)
 }

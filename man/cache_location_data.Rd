@@ -71,6 +71,8 @@ is a sf object or used to group and nest data before passing to x.}
     \item{\code{clean_names}}{If \code{TRUE}, clean names provided to nm or created based on
 value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FALSE}, use names as
 provided.}
+    \item{\code{.name_repair}}{One of "unique", "universal", or "check_unique". See
+\code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for the meaning of these options.}
     \item{\code{var_names}}{A named list following the format, \code{list("New var name" = old_var_name)}, or a two column data frame with the first column being the
 new variable names and the second column being the old variable names;
 defaults to \code{NULL}.}
