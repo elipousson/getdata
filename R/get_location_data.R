@@ -125,13 +125,16 @@ get_location_data <- function(location = NULL,
     type <- "ext"
 
     if (!is.null(data)) {
-      type <- dplyr::case_when(
-        is_url(data) ~ "url",
-        rlang::is_string(data) && file.exists(data) ~ "path",
-        !is.null(pkg) ~ "pkg",
-        is.data.frame(data) ~ "df",
-        .default = "sf"
-      )
+      if (is.data.frame(data)) {
+        type <- "df"
+      } else if (is_string(data)) {
+        type <- dplyr::case_when(
+          is_url(data) ~ "url",
+          file.exists(data) ~ "path",
+          !is.null(pkg) ~ "pkg",
+          .default = "path"
+        )
+      }
     }
 
     data <- switch(type,
@@ -152,6 +155,7 @@ get_location_data <- function(location = NULL,
       call = call
     )
   }
+
   data <- sfext::st_make_valid_ext(data)
 
   if (crop) {

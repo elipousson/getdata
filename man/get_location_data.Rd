@@ -28,6 +28,7 @@ get_location_data(
   var_names = NULL,
   clean_names = FALSE,
   range = NULL,
+  .name_repair = "check_unique",
   ...,
   call = caller_env()
 )
@@ -133,6 +134,9 @@ vector but inside the range if reversed, the coordinates are assumed to be
 in lat/lon order and are switched to lon/lat order before being converted
 to a point. Defaults to \code{c("xmin" = -180, "ymin" = -50, "xmax" = 180, "ymax" = 60)}. Note that this default setting will reverse valid
 coordinates north of Anchorage, Alaska or south of New Zealand.}
+
+\item{.name_repair}{One of "unique", "universal", or "check_unique". See
+\code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for the meaning of these options.}
 
 \item{...}{Additional parameters passed to \code{\link[sfext:read_sf_ext]{sfext::read_sf_path()}},
 \code{\link[sfext:read_sf_ext]{sfext::read_sf_url()}}, \code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}}, \code{\link[sfext:as_sf]{sfext::as_sf()}} (with
