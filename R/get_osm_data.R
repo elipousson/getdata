@@ -467,11 +467,11 @@ get_osm_data_geometry <- function(data,
     return(osmdata::unique_osmdata(data))
   }
 
-  if (!grepl("s$", geometry, perl = TRUE)) {
+  if (!all(grepl("s$", geometry, perl = TRUE))) {
     geometry <- paste0(geometry, "s")
   }
 
-  if (grepl("^osm_", geometry, perl = TRUE)) {
+  if (any(grepl("^osm_", geometry, perl = TRUE))) {
     geometry <- sub("^osm_", "", geometry)
   }
 
