@@ -64,17 +64,18 @@ cache_location_data <- function(data = NULL,
     call = call
   )
 
-  cli_alert_success(
-    "Writing {.file {basename(filename)}} to {.path {dirname(filename)}}"
-  )
+  message <- "Writing {.file {basename(filename)}} to {.path {dirname(filename)}}"
 
   if (inherits(data, "sf")) {
+    cli_alert_success(message)
     sf::st_write(data, filename, quiet = TRUE)
     return(invisible(filename))
   }
 
   check_installed("readr", call = call)
   filename <- str_add_fileext(str_remove_fileext(filename), "rds")
+  message <- "Writing {.file {basename(filename)}} to {.path {dirname(filename)}}"
+  cli_alert_success(message)
   readr::write_rds(data, filename, compress = compress, version = version)
   invisible(filename)
 }
