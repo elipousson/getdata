@@ -156,6 +156,10 @@ is a sf object or used to group and nest data before passing to x.</p></dd>
 value of col using <a href="https://sfirke.github.io/janitor/reference/clean_names.html" class="external-link">janitor::clean_names</a>. If <code>FALSE</code>, use names as
 provided.</p></dd>
 
+    <dt><code>.name_repair</code></dt>
+<dd><p>One of "unique", "universal", or "check_unique". See
+<code><a href="https://vctrs.r-lib.org/reference/vec_as_names.html" class="external-link">vctrs::vec_as_names()</a></code> for the meaning of these options.</p></dd>
+
     <dt><code>var_names</code></dt>
 <dd><p>A named list following the format, <code>list("New var name" = old_var_name)</code>, or a two column data frame with the first column being the
 new variable names and the second column being the old variable names;

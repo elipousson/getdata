@@ -89,6 +89,7 @@ an address.</p>
 <span>  var_names <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  clean_names <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  range <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  .name_repair <span class="op">=</span> <span class="st">"check_unique"</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  call <span class="op">=</span> <span class="fu">caller_env</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -235,6 +236,11 @@ vector but inside the range if reversed, the coordinates are assumed to be
 in lat/lon order and are switched to lon/lat order before being converted
 to a point. Defaults to <code>c("xmin" = -180, "ymin" = -50, "xmax" = 180, "ymax" = 60)</code>. Note that this default setting will reverse valid
 coordinates north of Anchorage, Alaska or south of New Zealand.</p></dd>
+
+
+<dt>.name_repair</dt>
+<dd><p>One of "unique", "universal", or "check_unique". See
+<code><a href="https://vctrs.r-lib.org/reference/vec_as_names.html" class="external-link">vctrs::vec_as_names()</a></code> for the meaning of these options.</p></dd>
 
 
 <dt>...</dt>
