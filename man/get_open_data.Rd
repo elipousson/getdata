@@ -133,7 +133,8 @@ provided.}
 \item{quiet}{If \code{TRUE}, suppress messages when downloading data. Defaults to
 \code{FALSE}.}
 
-\item{.name_repair}{Defaults to "check_unique"}
+\item{.name_repair}{One of "unique", "universal", or "check_unique". See
+\code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for the meaning of these options.}
 }
 \description{
 get_socrata_data is get_open_data with source_type set to "socrata" (the only
