@@ -30,7 +30,7 @@ cache_location_data <- function(data = NULL,
                                 create = TRUE,
                                 overwrite = FALSE,
                                 compress = c("none", "gz", "bz2", "xz"),
-                                version = 2,
+                                version = 3,
                                 call = caller_env()) {
   check_dev_installed("filenamr", repo = "elipousson/filenamr", call = call)
 
@@ -73,9 +73,9 @@ cache_location_data <- function(data = NULL,
   }
 
   check_installed("readr", call = call)
-  filename <- str_add_fileext(str_remove_fileext(filename), "rds")
+  file <- str_add_fileext(str_remove_fileext(filename), "rds")
   message <- "Writing {.file {basename(filename)}} to {.path {dirname(filename)}}"
   cli_alert_success(message)
-  readr::write_rds(data, filename, compress = compress, version = version)
+  readr::write_rds(data, file = file, compress = compress, version = version)
   invisible(filename)
 }
