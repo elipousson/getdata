@@ -27,7 +27,7 @@ get_flickr_photos(
 }
 \arguments{
 \item{location}{A \code{sf} or \code{bbox} object to use in creating bounding box for
-getting photos from Flickr.}
+getting photos from Flickr. Optional.}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -95,8 +95,10 @@ A data frame with photo information or \code{sf} object with geometry
 based on latitude and longitude of geocoded photos.
 }
 \description{
-Set API key using \code{\link[FlickrAPI:setFlickrAPIKey]{FlickrAPI::set_flickr_api_key()}} or pass to the api_key
-parameter.
+\code{\link[=get_flickr_photos]{get_flickr_photos()}} uses \code{\link[FlickrAPI:getPhotoSearch]{FlickrAPI::get_photo_search()}} to get a data
+frame or sf objects with photos from a specified location or matching other
+photo search parameters. Set API key using \code{\link[FlickrAPI:setFlickrAPIKey]{FlickrAPI::set_flickr_api_key()}}
+or pass to the api_key parameter.
 }
 \details{
 License id options:

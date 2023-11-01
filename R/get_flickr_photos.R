@@ -1,10 +1,12 @@
 #' Use FlickrAPI to get geotagged photos for a location
 #'
-#' Set API key using [FlickrAPI::set_flickr_api_key()] or pass to the api_key
-#' parameter.
+#' [get_flickr_photos()] uses [FlickrAPI::get_photo_search()] to get a data
+#' frame or sf objects with photos from a specified location or matching other
+#' photo search parameters. Set API key using [FlickrAPI::set_flickr_api_key()]
+#' or pass to the api_key parameter.
 #'
 #' @param location A `sf` or `bbox` object to use in creating bounding box for
-#'   getting photos from Flickr.
+#'   getting photos from Flickr. Optional.
 #' @inheritParams FlickrAPI::get_photo_search
 #' @inheritParams sfext::st_bbox_ext
 #' @param geometry If `TRUE`, convert data frame with information on photos to
@@ -110,16 +112,20 @@ get_flickr_photos <- function(location = NULL,
     )
   }
 
-  # Get adjusted bounding box if any adjustment variables provided
-  bbox <- sfext::st_bbox_ext(
-    # FIXME: Is the additional as_sf() call needed here?
-    x = sfext::as_sf(location),
-    dist = dist,
-    diag_ratio = diag_ratio,
-    unit = unit,
-    asp = asp,
-    crs = 4326
-  )
+  if (!is.null(location)) {
+    # Get adjusted bounding box if any adjustment variables provided
+    bbox <- sfext::st_bbox_ext(
+      # FIXME: Is the additional as_sf() call needed here?
+      x = sfext::as_sf(location),
+      dist = dist,
+      diag_ratio = diag_ratio,
+      unit = unit,
+      asp = asp,
+      crs = 4326
+    )
+  } else {
+    bbox <- location
+  }
 
   photos <- FlickrAPI::get_photo_search(
     api_key = key,
