@@ -19,6 +19,8 @@ cache_location_data(
   pkg = "getdata",
   create = TRUE,
   overwrite = FALSE,
+  compress = c("none", "gz", "bz2", "xz"),
+  version = 3,
   call = caller_env()
 )
 }
@@ -128,6 +130,12 @@ new directory will be created.}
 
 \item{overwrite}{If \code{TRUE}, remove a file with the same name and path}
 
+\item{compress}{Compression method to use: "none", "gz" ,"bz", or "xz".}
+
+\item{version}{Serialization format version to be used. The default value is 2
+as it's compatible for R versions prior to 3.5.0. See \code{\link[base:readRDS]{base::saveRDS()}}
+for more details.}
+
 \item{call}{The execution environment of a currently
 running function, e.g. \code{caller_env()}. The function will be
 mentioned in error messages as the source of the error. See the
@@ -139,5 +147,6 @@ Save data to file and invisibly return file path.
 \description{
 \code{\link[=cache_location_data]{cache_location_data()}} is a variant on \code{\link[=get_location_data]{get_location_data()}} that saves the
 returned data to a cache directory using \code{\link[sf:st_write]{sf::write_sf()}} (if data is a sf
-object) or \code{\link[readr:read_rds]{readr::write_rds()}} (if data is another class).
+object) or \code{\link[readr:read_rds]{readr::write_rds()}} (if data is another class). Additional
+parameters are ignored if location is \code{NULL}.
 }
