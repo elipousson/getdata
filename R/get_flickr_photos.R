@@ -84,32 +84,39 @@ get_flickr_photos <- function(location = NULL,
   rlang::check_installed("FlickrAPI")
 
   if (length(page) > 1) {
-    return(
-      vctrs::vec_rbind(
-        map(
-          page,
-          ~ get_flickr_photos(
-            location = location,
-            dist = dist,
-            diag_ratio = diag_ratio,
-            unit = unit,
-            asp = asp,
-            user_id = user_id,
-            tags = tags,
-            img_size = img_size,
-            license_id = license_id,
-            sort = sort,
-            extras = extras,
-            per_page = per_page,
-            page = .x,
-            orientation = orientation,
-            geometry = geometry,
-            crs = crs,
-            key = key
-          )
+
+    page_list <- map(
+      page,
+      \(x) {
+        get_flickr_photos(
+          location = location,
+          dist = dist,
+          diag_ratio = diag_ratio,
+          unit = unit,
+          asp = asp,
+          user_id = user_id,
+          tags = tags,
+          img_size = img_size,
+          license_id = license_id,
+          sort = sort,
+          extras = extras,
+          per_page = per_page,
+          page = x,
+          orientation = orientation,
+          geometry = geometry,
+          crs = crs,
+          key = key
         )
-      )
+      }
     )
+
+    if (geometry) {
+      photos <- sfext:::sf_list_rbind(page_list)
+    } else {
+      photos <- vctrs::vec_rbind(!!!page_list)
+    }
+
+    return(photos)
   }
 
   if (!is.null(location)) {
