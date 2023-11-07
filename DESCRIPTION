@@ -34,6 +34,7 @@ Imports:
 Suggests: 
     bingmapr (>= 0.1.0),
     covr,
+    elevatr,
     filenamr,
     FlickrAPI (>= 0.1.0.1),
     googlesheets4,
