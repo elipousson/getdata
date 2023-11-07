@@ -28,7 +28,8 @@
 #'   more of the supported orientations ("portrait", "landscape", and "square");
 #'   defaults to `NULL`.
 #' @param geometry If `TRUE`, include "geo" in extras and convert photos data
-#'   frame to `sf` object. Passed to geo parameter of [FlickrAPI::get_photo_search()]
+#'   frame to `sf` object. Passed to geo parameter of
+#'   [FlickrAPI::get_photo_search()]
 #' @param crs Coordinate reference system of `sf` object to return if geometry
 #'   is `TRUE`.
 #' @param key Flickr API key. If api_key is `NULL`, the
@@ -84,7 +85,6 @@ get_flickr_photos <- function(location = NULL,
   rlang::check_installed("FlickrAPI")
 
   if (length(page) > 1) {
-
     page_list <- map(
       page,
       \(x) {
@@ -119,20 +119,19 @@ get_flickr_photos <- function(location = NULL,
     return(photos)
   }
 
-  if (!is.null(location)) {
-    # Get adjusted bounding box if any adjustment variables provided
-    bbox <- sfext::st_bbox_ext(
-      # FIXME: Is the additional as_sf() call needed here?
-      x = sfext::as_sf(location),
-      dist = dist,
-      diag_ratio = diag_ratio,
-      unit = unit,
-      asp = asp,
-      crs = 4326
-    )
-  } else {
-    bbox <- location
+  if (!is.null(location) && !is_sf(location, ext = TRUE)) {
+    location <- sfext::as_sf(location)
   }
+
+  # Get adjusted bounding box if any adjustment variables provided
+  bbox <- sfext::st_bbox_ext(
+    x = location,
+    dist = dist,
+    diag_ratio = diag_ratio,
+    unit = unit,
+    asp = asp,
+    crs = 4326
+  )
 
   photos <- FlickrAPI::get_photo_search(
     api_key = key,
