@@ -80,7 +80,8 @@ more of the supported orientations ("portrait", "landscape", and "square");
 defaults to \code{NULL}.}
 
 \item{geometry}{If \code{TRUE}, include "geo" in extras and convert photos data
-frame to \code{sf} object. Passed to geo parameter of \code{\link[FlickrAPI:getPhotoSearch]{FlickrAPI::get_photo_search()}}}
+frame to \code{sf} object. Passed to geo parameter of
+\code{\link[FlickrAPI:getPhotoSearch]{FlickrAPI::get_photo_search()}}}
 
 \item{crs}{Coordinate reference system of \code{sf} object to return if geometry
 is \code{TRUE}.}
