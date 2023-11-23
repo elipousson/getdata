@@ -131,20 +131,24 @@ get_osm_id <- function(id,
   osm_data_attribution()
 
   if (length(id) > 1) {
-    data <- dplyr::bind_rows(
-      map(
-        id,
-        ~ get_osm_id(
-          id = .x,
+    data <- map(
+      id,
+      \(x) {
+        get_osm_id(
+          id = x,
           type = type,
           crs = crs,
           geometry = geometry,
           osmdata = FALSE
         )
-      )
+      }
     )
 
-    return(data)
+    return(sfext:::sf_list_rbind(data))
+  }
+
+  if (!all(is.character(id))) {
+    id <- vapply(id, as.character, NA_character_)
   }
 
   id_type <- get_osm_id_type(id = id, type = type, geometry = geometry)
