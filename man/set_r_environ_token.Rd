@@ -24,6 +24,7 @@ get_r_environ_token(
   message = NULL,
   pattern = NULL,
   perl = TRUE,
+  strict = TRUE,
   call = caller_env(),
   ...
 )
@@ -57,6 +58,9 @@ stored token. If pattern is supplied, the returned token must be a string.}
 
 \item{perl}{Should Perl-compatible regexps be used when checking \code{pattern}?
 Defaults to \code{TRUE}.}
+
+\item{strict}{If \code{TRUE} (default), error if no environment variable with the
+supplied name is found. If \code{FALSE}, warn instead of error.}
 }
 \value{
 \code{\link[=set_r_environ_token]{set_r_environ_token()}} invisibly returns a string supplied to

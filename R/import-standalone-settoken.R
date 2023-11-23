@@ -1,16 +1,19 @@
 # Standalone file: do not edit by hand
-# Source: <https://github.com/elipousson/settoken/blob/main/R/standalone-settoken.R>
+# Source: <https://github.com/elipousson/standaloner/blob/main/R/standalone-settoken.R>
 # ----------------------------------------------------------------------
 #
 # ---
-# repo: elipousson/settoken
+# repo: elipousson/standaloner
 # file: standalone-settoken.R
-# last-updated: 2023-08-12
+# last-updated: 2023-10-10
 # license: https://opensource.org/license/mit/
 # imports: [rlang (>= 1.0.0), cli (>= 2.5.0)]
 # ---
 #
 # ## Changelog
+#
+# 2023-10-10:
+# * Rename package from settoken to more general name: standaloner.
 #
 # 2023-08-13:
 # * Create file with `set_r_environ_token()` and `get_r_environ_token()`
@@ -152,6 +155,8 @@ set_r_environ_token <- function(token,
 #'   stored token. If pattern is supplied, the returned token must be a string.
 #' @param perl Should Perl-compatible regexps be used when checking `pattern`?
 #'   Defaults to `TRUE`.
+#' @param strict If `TRUE` (default), error if no environment variable with the
+#'   supplied name is found. If `FALSE`, warn instead of error.
 #' @returns [get_r_environ_token()] returns a string supplied to `token` or
 #'   obtained from the environment variable named with `default`.
 #'
@@ -164,6 +169,7 @@ get_r_environ_token <- function(token = NULL,
                                 message = NULL,
                                 pattern = NULL,
                                 perl = TRUE,
+                                strict = TRUE,
                                 call = caller_env(),
                                 ...) {
   settoken_check_string(default, call = call)
@@ -173,20 +179,29 @@ get_r_environ_token <- function(token = NULL,
   if (!is_empty(token) && !identical(token, "")) {
     if (is_null(pattern)) {
       return(token)
-    } else {
-      settoken_check_string(pattern, call = call)
-      settoken_check_string(token, call = call)
-
-      if (grepl(pattern, token, perl = perl)) {
-        return(token)
-      }
-
-      message <- "{.arg token} must match the supplied pattern: {.val {pattern}}"
     }
+
+    settoken_check_string(pattern, call = call)
+    settoken_check_string(token, call = call)
+
+    if (grepl(pattern, token, perl = perl)) {
+      return(token)
+    }
+
+    message <- "{.arg token} must match the supplied pattern: {.val {pattern}}"
   }
 
   message <- message %||%
     "{.arg token} is empty and {.envvar {default}} can't be found in {.file .Renviron}"
+
+  if (!strict) {
+    cli_warn(
+      message = message,
+      ...
+    )
+
+    return(invisible(NULL))
+  }
 
   cli_abort(
     message = message,
@@ -201,9 +216,9 @@ get_r_environ_token <- function(token = NULL,
 #' @importFrom rlang caller_arg caller_env is_string
 #' @importFrom cli cli_abort
 settoken_check_string <- function(x,
-                                  arg = caller_arg(x),
-                                  allow_empty = FALSE,
                                   ...,
+                                  allow_empty = FALSE,
+                                  arg = caller_arg(x),
                                   call = caller_env()) {
   if (is_string(x) && (allow_empty || !is_string(x, ""))) {
     return(invisible(NULL))
