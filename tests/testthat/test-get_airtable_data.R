@@ -6,8 +6,8 @@ test_that("get_airtable_data works", {
 
       expect_s3_class(
         get_airtable_data(
-          base = "appBo0csgMlypViJt",
-          table = "tblbKA4iIfyHc9lps",
+          base = "app1lcJCwi0mpQGqZ",
+          table = "tbl81zsVzjBxVZePB",
           type = "TEST_AIRTABLE_TOKEN",
           max_records = 10
         ),
@@ -16,7 +16,7 @@ test_that("get_airtable_data works", {
 
       expect_s3_class(
         get_airtable_metadata(
-          base = "appBo0csgMlypViJt",
+          base = "app1lcJCwi0mpQGqZ",
           type = "TEST_AIRTABLE_TOKEN"
         ),
         "tbl_df"
