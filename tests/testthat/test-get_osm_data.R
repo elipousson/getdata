@@ -1,4 +1,5 @@
 test_that("get_osm_data works", {
+  skip_on_ci()
   location <- get_location(
     system.file("shape/nc.shp", package = "sf"),
     name = "Hyde",
