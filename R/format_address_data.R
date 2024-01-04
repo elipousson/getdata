@@ -34,7 +34,6 @@ NULL
 #'   [bind_block_col()] and "address" for [bind_address_col()].
 #' @export
 #' @example examples/format_address_data.R
-#' @importFrom rlang has_name .data
 #' @importFrom dplyr all_of mutate if_else
 bind_block_col <- function(x,
                            bldg_num = "bldg_num",
@@ -148,7 +147,6 @@ bind_block_col <- function(x,
 #'   in filling missing values, e.g. state = "MD" to add a missing state column.
 #' @export
 #' @importFrom dplyr mutate any_of case_when all_of
-#' @importFrom rlang list2 has_name
 bind_address_col <- function(x, ...,
                              case = NULL,
                              .cols = NULL,
@@ -315,7 +313,6 @@ bind_location_text_col <- function(x,
 #' @export
 #' @importFrom cliExtras cli_abort_ifnot
 #' @importFrom utils modifyList
-#' @importFrom rlang set_names
 #' @importFrom cli cli_warn
 #' @importFrom dplyr mutate across all_of
 replace_with_xwalk <- function(x,

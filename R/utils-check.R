@@ -1,7 +1,6 @@
 #' Check if object is a list
 #'
 #' @noRd
-#' @importFrom rlang is_list
 check_list <- function(x,
                        allow_na = FALSE,
                        allow_null = FALSE,
@@ -26,7 +25,6 @@ check_list <- function(x,
 }
 
 #' @noRd
-#' @importFrom rlang is_null
 check_null <- function(x = NULL, arg = caller_arg(x), allow_null = FALSE, req_null = FALSE, call = caller_env(), ...) {
   if (req_null) {
     allow_null <- req_null
@@ -90,7 +88,6 @@ check_length <- function(x = NULL,
 }
 
 #' @noRd
-#' @importFrom rlang is_null
 check_grepl <- function(x = NULL, pattern = NULL, arg = caller_arg(x), allow_null = FALSE, ignore.case = FALSE, perl = FALSE, message = NULL, ...) {
   check_null(x, arg, allow_null, call = call)
 
@@ -108,7 +105,6 @@ check_grepl <- function(x = NULL, pattern = NULL, arg = caller_arg(x), allow_nul
 }
 
 #' @noRd
-#' @importFrom rlang is_null
 check_starts_with <- function(x = NULL, string = NULL, arg = caller_arg(x), allow_null = FALSE, ignore.case = FALSE, perl = FALSE, message = NULL, ...) {
   check_character(x, arg, allow_null)
 
@@ -161,7 +157,6 @@ check_df_rows <- function(x, rows = 1, arg = caller_arg(x), allow_null = FALSE, 
 }
 
 #' @noRd
-#' @importFrom rlang has_name
 check_df_paper <- function(x, cols = c("width", "height", "orientation", "units"), arg = caller_arg(x), allow_null = FALSE, ...) {
   check_null(x, arg, allow_null)
   check_df(x, arg, allow_null)

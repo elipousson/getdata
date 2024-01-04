@@ -150,7 +150,6 @@ get_esri_data <- function(url,
 #' @param nm Name or vector of names to add to the layers; defaults to `NULL`.
 #' @export
 #' @importFrom dplyr case_when
-#' @importFrom rlang has_name list2 set_names is_named
 #' @importFrom janitor make_clean_names
 get_esri_layers <- function(location = NULL,
                             layers = NULL,
@@ -294,7 +293,6 @@ get_layer_list <- function(meta) {
 }
 
 #' @noRd
-#' @importFrom rlang current_env
 query_sql <- function(var, val, op = "IN", ..., .envir = current_env()) {
   ansi_sql(var, " ", op, " ({val*})", ..., .envir = .envir)
 }
@@ -318,7 +316,6 @@ ansi_sql <- function(...,
 #' @inheritParams rlang::args_error_context
 #' @export
 #' @importFrom janitor make_clean_names
-#' @importFrom rlang check_required is_character
 get_esri_metadata <- function(url,
                               token = NULL,
                               meta = NULL,

@@ -60,7 +60,6 @@
 #' @rdname get_location_data
 #' @export
 #' @importFrom sf st_crs st_crop st_transform st_intersection st_filter
-#' @importFrom rlang is_string list2 `!!!`
 get_location_data <- function(location = NULL,
                               dist = getOption("getdata.dist"),
                               diag_ratio = getOption("getdata.diag_ratio"),
@@ -199,7 +198,6 @@ get_location_data <- function(location = NULL,
 #'   defaults `FALSE`.
 #' @export
 #' @importFrom janitor make_clean_names
-#' @importFrom rlang set_names is_named
 map_location_data <- function(location = NULL,
                               dist = NULL,
                               diag_ratio = NULL,

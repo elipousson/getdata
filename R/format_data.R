@@ -131,7 +131,6 @@ format_data <- function(x,
 #'   dropped. If `TRUE` (default), all columns are retained. If x is an `sf`
 #'   object, the geometry column will not be dropped even it is not renamed.
 #' @export
-#' @importFrom rlang has_name
 #' @importFrom sfext is_sf rename_sf_col
 #' @importFrom dplyr rename_with any_of
 rename_with_xwalk <- function(x,
@@ -190,7 +189,6 @@ rename_with_xwalk <- function(x,
 #'   columns using the original names. Defaults to `FALSE`.
 #' @rdname format_data
 #' @export
-#' @importFrom rlang arg_match
 label_with_xwalk <- function(x, xwalk = NULL, label = "var", ...) {
   rlang::check_installed("labelled")
   label <- rlang::arg_match(label, c("var", "val"))
@@ -236,7 +234,6 @@ make_variable_dictionary <- function(x,
 #' @param tz Time zone passed to [as.POSIXct()].
 #' @export
 #' @importFrom dplyr contains mutate across
-#' @importFrom rlang try_fetch
 fix_epoch_date <- function(x, .cols = dplyr::contains("date"), tz = "") {
   suppressWarnings(
     dplyr::mutate(
@@ -268,7 +265,6 @@ fix_epoch_date <- function(x, .cols = dplyr::contains("date"), tz = "") {
 #' @export
 #' @importFrom sfext is_sf
 #' @importFrom sf st_drop_geometry
-#' @importFrom rlang has_length has_name is_named
 #' @importFrom tibble deframe
 make_xwalk_list <- function(xwalk, cols = c("label", "name"), call = caller_env()) {
   if (is_named(xwalk) && is.list(xwalk) && !is.data.frame(xwalk)) {

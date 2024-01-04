@@ -38,7 +38,6 @@
 #' @rdname get_location
 #' @aliases get_location_type
 #' @export
-#' @importFrom rlang check_required
 #' @importFrom cliExtras cli_abort_ifnot
 #' @importFrom sfext is_sf st_union_ext as_sf_class
 #' @importFrom dplyr case_when mutate all_of
@@ -149,7 +148,6 @@ filter_location <- function(data = NULL,
 }
 
 #' @noRd
-#' @importFrom rlang caller_arg caller_env arg_match
 filter_name <- function(x = NULL,
                         name = NULL,
                         name_col = "name",

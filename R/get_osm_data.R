@@ -170,7 +170,6 @@ get_osm_id <- function(id,
 #' Try to fetch data using osmdata_sf and abort if it returns an error
 #'
 #' @noRd
-#' @importFrom rlang caller_env try_fetch
 try_osmdata_sf <- function(query, call = caller_env()) {
   data <- try_fetch(
     suppressMessages(osmdata::osmdata_sf(query)),
@@ -190,7 +189,6 @@ try_osmdata_sf <- function(query, call = caller_env()) {
 #' prefixed id value
 #'
 #' @noRd
-#' @importFrom rlang caller_env arg_match
 get_osm_id_type <- function(id,
                             type = NULL,
                             geometry = NULL,
@@ -407,7 +405,6 @@ get_osm_data_features <- function(location,
 
 #' @noRd
 #' @importFrom sfext sf_to_df
-#' @importFrom rlang caller_env arg_match
 get_osm_data_enclosing <- function(location,
                                    key,
                                    value,
@@ -452,7 +449,6 @@ get_osm_data_enclosing <- function(location,
 #'
 #' @noRd
 #' @importFrom sfext st_transform_ext
-#' @importFrom rlang caller_env arg_match
 get_osm_data_geometry <- function(data,
                                   geometry = NULL,
                                   crs = NULL,

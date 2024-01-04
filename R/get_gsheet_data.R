@@ -8,7 +8,6 @@
 #' @param ask If `TRUE`, ask for the name of the Google Sheet to read if ss is
 #'   not provided to [sfext::read_sf_gsheet].
 #' @export
-#' @importFrom rlang is_missing
 #' @importFrom cliExtras cli_ask
 get_gsheet_data <- function(url,
                             sheet = NULL,

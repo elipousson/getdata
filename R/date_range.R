@@ -51,7 +51,6 @@ is_date_range <- function(x,
 #' @return A length 2 list with min and max Date values.
 #' @export
 #' @importFrom glue glue
-#' @importFrom rlang current_env set_names %||%
 as_date_range <- function(x = NULL,
                           year = NULL,
                           days = 90,
@@ -108,7 +107,6 @@ date_range_query <- function(x = NULL,
 #' @rdname as_date_range
 #' @export
 #' @importFrom glue glue
-#' @importFrom rlang is_character has_name
 between_date_range <- function(x = NULL,
                                .col = "date",
                                ...,

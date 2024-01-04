@@ -51,7 +51,6 @@ use_eval_parse <- function(data, package = NULL) {
 #'
 #' @param data Data to apply function to
 #' @param fn defaults to NULL
-#' @importFrom rlang as_function
 #' @noRd
 use_fn <- function(data, fn = NULL) {
   if (is.null(fn)) {
@@ -83,7 +82,6 @@ use_name_repair <- function(data = NULL,
 #' @param pkg Name of a package.
 #' @param repo GitHub repository to use for the package.
 #' @noRd
-#' @importFrom rlang check_installed
 check_dev_installed <- function(pkg = NULL, repo = NULL, call = caller_env()) {
   if (!is.null(pkg) && !rlang::is_installed(pkg = pkg)) {
     rlang::check_installed(pkg = repo %||% pkg, call = call)
@@ -95,7 +93,6 @@ check_dev_installed <- function(pkg = NULL, repo = NULL, call = caller_env()) {
 #'
 #' @name has_same_name_col
 #' @noRd
-#' @importFrom rlang has_name
 #' @importFrom cli cli_abort cli_alert_success
 #' @importFrom cliExtras cli_yesno
 #' @importFrom dplyr rename

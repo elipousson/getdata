@@ -61,7 +61,6 @@
 #'  [FlickrAPI::getPhotoSearch()]
 #' @rdname get_flickr_photos
 #' @export
-#' @importFrom rlang has_name
 #' @importFrom dplyr mutate
 #' @importFrom tibble tibble
 get_flickr_photos <- function(location = NULL,
@@ -189,7 +188,6 @@ get_flickr_photos <- function(location = NULL,
 #' @param orientation Character vector with one or more of the orientation
 #'   options "landscape", "portrait", and "square".
 #' @noRd
-#' @importFrom rlang has_name
 #' @importFrom dplyr rename mutate case_when
 get_flickr_photos_orientation <- function(photos,
                                           orientation = NULL) {
