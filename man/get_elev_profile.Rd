@@ -35,6 +35,8 @@ match the supplied unit.}
 
 \item{sample}{numeric; a vector of numbers between 0 and 1 indicating the points to sample - if defined sample overrules n, density and type.}
 
+\item{...}{Unused at this time.}
+
 \item{drop_units}{If \code{TRUE}, return a plain numeric column for the elevation
 and distance columns. If \code{FALSE} (default) return a units class column.}
 
