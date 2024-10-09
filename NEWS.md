@@ -1,4 +1,4 @@
-# getdata (development version)
+# getdata 0.1.1 (2024-10-09)
 
 - Export `make_xwalk_list()` helper function (2023-08-14)
 - Reexport functions from `{esri2sf}` and `{sfext}` packages (2023-08-22)
