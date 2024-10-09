@@ -90,9 +90,9 @@ format_sf_data <- function(x,
 #' @importFrom sf st_is_valid st_make_valid
 erase_data <- function(x, erase_data = NULL) {
   if (is.null(erase_data) ||
-      # FIXME: This check should probably be incorporated into sfext::st_erase
-      (is_sf(erase_data) && nrow(erase_data) == 0) ||
-      (is_sfc(erase_data) && length(erase_data) == 0)) {
+    # FIXME: This check should probably be incorporated into sfext::st_erase
+    (is_sf(erase_data) && nrow(erase_data) == 0) ||
+    (is_sfc(erase_data) && length(erase_data) == 0)) {
     return(x)
   }
 
