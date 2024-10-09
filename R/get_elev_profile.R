@@ -21,6 +21,7 @@
 #' @param cumulative If `TRUE`, and dist is `TRUE` return distance as a
 #'   cumulative sum.
 #' @inheritParams sf::st_line_sample
+#' @param ... Unused at this time.
 #' @export
 get_elev_profile <- function(profile,
                              units = NULL,
@@ -62,7 +63,7 @@ get_elev_profile <- function(profile,
   }
 
   location_coords <- as.data.frame(sf::st_coordinates(locations))
-  location_coords <- setNames(location_coords, tolower(names(location_coords)))
+  location_coords <- set_names(location_coords, tolower(names(location_coords)))
   locations_crs <- sf::st_crs(locations)
 
   elev_point <- suppressMessages(
