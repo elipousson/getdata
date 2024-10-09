@@ -1,6 +1,6 @@
 #' Set or get an access token or API key to/from environment variables.
 #'
-#' Based on the [mapboxapi::mb_access_token()] function from the {mapboxapi}
+#' Based on the [mapboxapi::mb_access_token()] function from the \{mapboxapi\}
 #' package by Kyle Walker.
 #'
 #' @param token An access token or API key; required for [set_access_token()].

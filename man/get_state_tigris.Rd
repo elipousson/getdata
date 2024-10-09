@@ -74,7 +74,7 @@ downloaded tigris data. Ignored if \code{getOption("tigris_use_cache")} is not
 A simple feature object matching the type provided.
 }
 \description{
-Use the \href{https://github.com/walkerke/tigris}{{tigris}} package to download
+Use the \href{https://github.com/walkerke/tigris}{\{tigris\}} package to download
 state-level data from the U.S. Census Bureau API and optionally filter by
 name or GeoID.
 }
@@ -92,5 +92,5 @@ tigris functions that do not use a "state" parameter (e.g.
 \link[tigris:coastline]{tigris::coastline} or \link[tigris:rails]{tigris::rails})  are not supported by this
 function. Note that the default value of the cb parameter for
 \link{get_tigris_data} is \code{TRUE} and the default value of for the original
-{tigris} package is \code{FALSE}.
+\{tigris\} package is \code{FALSE}.
 }

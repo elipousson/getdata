@@ -1,6 +1,6 @@
 #' Use tigris to get state-level data from the U.S. Census Bureau
 #'
-#' Use the [{tigris}](https://github.com/walkerke/tigris) package to download
+#' Use the [\{tigris\}](https://github.com/walkerke/tigris) package to download
 #' state-level data from the U.S. Census Bureau API and optionally filter by
 #' name or GeoID.
 #'
@@ -17,7 +17,7 @@
 #'   [tigris::coastline] or [tigris::rails])  are not supported by this
 #'   function. Note that the default value of the cb parameter for
 #'   [get_tigris_data] is `TRUE` and the default value of for the original
-#'   {tigris} package is `FALSE`.
+#'   \{tigris\} package is `FALSE`.
 #'
 #' @param state State name, abbreviation, or GeoID. Required. Defaults to
 #'   getOption("getdata.state").

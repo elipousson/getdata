@@ -43,6 +43,6 @@ mentioned in error messages as the source of the error. See the
 \code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
 }
 \description{
-Based on the \code{\link[mapboxapi:mb_access_token]{mapboxapi::mb_access_token()}} function from the {mapboxapi}
+Based on the \code{\link[mapboxapi:mb_access_token]{mapboxapi::mb_access_token()}} function from the \{mapboxapi\}
 package by Kyle Walker.
 }
