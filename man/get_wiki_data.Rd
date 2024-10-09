@@ -80,7 +80,6 @@ For this function, \code{location} can be either an \code{sf}, \code{sfc}, or \c
 or the title of a Wikipedia article with a related location.
 }
 \seealso{
-\itemize{
-\item \code{\link[geonames:GNfindNearbyWikipedia]{geonames::GNfindNearbyWikipedia()}}, \code{\link[geonames:GNwikipediaBoundingBox]{geonames::GNwikipediaBoundingBox()}}
-}
+\code{GNfindNearbyWikipedia()} and \code{GNwikipediaBoundingBox()} functions
+in the \href{https://docs.ropensci.org/geonames/}{geonames} package
 }

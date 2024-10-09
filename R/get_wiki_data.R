@@ -22,8 +22,8 @@
 #' @rdname get_wiki_data
 #' @inheritParams format_data
 #' @inheritParams sfext::df_to_sf
-#' @seealso
-#'  - [geonames::GNfindNearbyWikipedia()], [geonames::GNwikipediaBoundingBox()]
+#' @seealso `GNfindNearbyWikipedia()` and `GNwikipediaBoundingBox()` functions
+#'   in the [geonames](https://docs.ropensci.org/geonames/) package
 #' @export
 #' @importFrom cliExtras cli_abort_ifnot
 #' @importFrom sfext is_sf sf_bbox_diagdist as_bbox convert_dist_units df_to_sf

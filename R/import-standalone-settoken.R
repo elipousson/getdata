@@ -6,12 +6,15 @@
 # ---
 # repo: elipousson/standaloner
 # file: standalone-settoken.R
-# last-updated: 2023-10-10
+# last-updated: 2024-10-09
 # license: https://opensource.org/license/mit/
 # imports: [rlang (>= 1.0.0), cli (>= 2.5.0)]
 # ---
 #
 # ## Changelog
+#
+# 2024-10-09:
+# * Remove link to tidycensus package from documentation.
 #
 # 2023-10-10:
 # * Rename package from settoken to more general name: standaloner.
@@ -58,8 +61,8 @@
 #' @returns [set_r_environ_token()] invisibly returns a string supplied to
 #'   `token`.
 #'
-#' @source Adapted from the [tidycensus](https://walker-data.com/tidycensus/)
-#'   function [tidycensus::census_api_key()].
+#' @source Adapted from the `census_api_key()` function in the
+#'   [tidycensus](https://walker-data.com/tidycensus/) package.
 #'
 #' @keywords internal
 #'

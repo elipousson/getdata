@@ -5,8 +5,8 @@
 \alias{get_r_environ_token}
 \title{Set or get a token from your  \code{.Renviron} file}
 \source{
-Adapted from the \href{https://walker-data.com/tidycensus/}{tidycensus}
-function \code{\link[tidycensus:census_api_key]{tidycensus::census_api_key()}}.
+Adapted from the \code{census_api_key()} function in the
+\href{https://walker-data.com/tidycensus/}{tidycensus} package.
 }
 \usage{
 set_r_environ_token(
