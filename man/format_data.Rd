@@ -29,6 +29,7 @@ format_data(
 rename_with_xwalk(
   x,
   xwalk = NULL,
+  cols = c("label", "name"),
   label = FALSE,
   .strict = TRUE,
   keep_all = TRUE,
@@ -92,6 +93,8 @@ using default parameters.}
 \code{\link[=format_sf_data]{format_sf_data()}}.}
 
 \item{...}{Additional parameters passed to \code{\link[=format_sf_data]{format_sf_data()}}}
+
+\item{cols}{Column names to use for crosswalk.}
 
 \item{.strict}{If \code{TRUE} (default), require that all values from the xwalk
 are found in the column names of the x data.frame. If \code{FALSE}, unmatched

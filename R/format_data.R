@@ -124,6 +124,7 @@ format_data <- function(x,
 #' @param xwalk A data frame with two columns using the first column as name and
 #'   the second column as value; or a named list. The existing names of x must
 #'   be the values and the new names must be the names.
+#' @inheritParams make_xwalk_list
 #' @param .strict If `TRUE` (default), require that all values from the xwalk
 #'   are found in the column names of the x data.frame. If `FALSE`, unmatched
 #'   values from the xwalk are ignored.
@@ -135,6 +136,7 @@ format_data <- function(x,
 #' @importFrom dplyr rename_with any_of
 rename_with_xwalk <- function(x,
                               xwalk = NULL,
+                              cols = c("label", "name"),
                               label = FALSE,
                               .strict = TRUE,
                               keep_all = TRUE,
@@ -142,7 +144,7 @@ rename_with_xwalk <- function(x,
                               call = caller_env()) {
   # From https://twitter.com/PipingHotData/status/1497014703473704965
   # https://stackoverflow.com/questions/20987295/rename-multiple-columns-by-names/41343022#41343022
-  xwalk <- make_xwalk_list(xwalk)
+  xwalk <- make_xwalk_list(xwalk, cols = cols)
   xwalk_in_x <- rlang::has_name(x, xwalk)
 
   # FIXME: This is not kicking back the expected error - issue may be with cli_abort_ifnot
