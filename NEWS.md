@@ -1,3 +1,8 @@
+# getdata (development version)
+
+- Add `{arcgislayers}` package to Suggests and move `{esri2sf}` package from Imports to Suggests (2024-10-28)
+- Remove re-exports for `{esri2sf}` functions (2024-10-28)
+
 # getdata 0.1.1 (2024-10-09)
 
 - Export `make_xwalk_list()` helper function (2023-08-14)
