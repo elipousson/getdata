@@ -100,7 +100,21 @@ get_esri_data <- function(url,
     where <- glue::glue_collapse(discard(where, is.na), sep = " AND ")
   }
 
-  if (table) {
+  if (is_installed("arcgislayers")) {
+    filter_geom <- NULL
+    if (!is.null(bbox)) {
+      filter_geom <- sf::st_bbox(bbox)
+    }
+
+    data <- arcgislayers::arc_read(
+      url = url,
+      token = token,
+      where = where,
+      name_repair = .name_repair,
+      filter_geom = filter_geom,
+      ...
+    )
+  } else if (table) {
     # Get Table (no geometry) with location name column
     data <- esri2sf::esri2df(
       url = url,
@@ -324,7 +338,11 @@ get_esri_metadata <- function(url,
                               call = caller_env()) {
   rlang::check_required(url, call = call)
 
-  metadata <- esri2sf::esrimeta(url, token, call = call)
+  if (is_installed("arcgislayers")) {
+    metadata <- arcgislayers::arc_open(url, token)
+  } else {
+    metadata <- esri2sf::esrimeta(url, token, call = call)
+  }
 
   if (!is.null(meta)) {
     metadata <- metadata[[meta]]
