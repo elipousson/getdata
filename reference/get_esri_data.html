@@ -71,7 +71,8 @@ httr2.</p>
 <span>  progress <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  .name_repair <span class="op">=</span> <span class="fu">janitor</span><span class="fu">::</span><span class="va"><a href="https://sfirke.github.io/janitor/reference/make_clean_names.html" class="external-link">make_clean_names</a></span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  call <span class="op">=</span> <span class="fu">caller_env</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">get_esri_layers</span><span class="op">(</span></span>
@@ -182,7 +183,7 @@ messages about the requested layer. Defaults to <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg--name-repair">.name_repair<a class="anchor" aria-label="anchor" href="#arg--name-repair"></a></dt>
-<dd><p>Defaults to "check_unique"</p></dd>
+<dd><p>Passed to <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">tibble::as_tibble()</a></code>.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -198,6 +199,13 @@ frame. Default <code>FALSE</code>.</p></dd>
 </dl></dd>
 
 
+<dt id="arg-call">call<a class="anchor" aria-label="anchor" href="#arg-call"></a></dt>
+<dd><p>The execution environment of a currently
+running function, e.g. <code>caller_env()</code>. The function will be
+mentioned in error messages as the source of the error. See the
+<code>call</code> argument of <code><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">abort()</a></code> for more information.</p></dd>
+
+
 <dt id="arg-layers">layers<a class="anchor" aria-label="anchor" href="#arg-layers"></a></dt>
 <dd><p>Either a vector with URLs, a named list of urls, or a numeric
 vector; defaults to <code>NULL</code>. Optional if url is a</p></dd>
@@ -205,13 +213,6 @@ vector; defaults to <code>NULL</code>. Optional if url is a</p></dd>
 
 <dt id="arg-nm">nm<a class="anchor" aria-label="anchor" href="#arg-nm"></a></dt>
 <dd><p>Name or vector of names to add to the layers; defaults to <code>NULL</code>.</p></dd>
-
-
-<dt id="arg-call">call<a class="anchor" aria-label="anchor" href="#arg-call"></a></dt>
-<dd><p>The execution environment of a currently
-running function, e.g. <code>caller_env()</code>. The function will be
-mentioned in error messages as the source of the error. See the
-<code>call</code> argument of <code><a href="https://rlang.r-lib.org/reference/abort.html" class="external-link">abort()</a></code> for more information.</p></dd>
 
 
 <dt id="arg-meta">meta<a class="anchor" aria-label="anchor" href="#arg-meta"></a></dt>
