@@ -44,8 +44,9 @@ get_esri_data <- function(url,
                           progress = TRUE,
                           quiet = FALSE,
                           .name_repair = janitor::make_clean_names,
-                          ...) {
-  meta <- get_esri_metadata(url, token, clean_names = FALSE)
+                          ...,
+                          call = caller_env()) {
+  meta <- get_esri_metadata(url, token, clean_names = FALSE, call = call)
 
   if (has_name(meta, "error")) {
     error <- meta[["error"]]
@@ -55,7 +56,7 @@ get_esri_data <- function(url,
       message <- c(message, as.character(error[["details"]]))
     }
 
-    cli::cli_abort(message = message)
+    cli::cli_abort(message = message, call = call)
   }
 
   # Set table to TRUE for missing geometry type
@@ -103,7 +104,7 @@ get_esri_data <- function(url,
   if (is_installed("arcgislayers")) {
     filter_geom <- NULL
     if (!is.null(bbox)) {
-      filter_geom <- sf::st_bbox(bbox)
+      filter_geom <- bbox
     }
 
     data <- arcgislayers::arc_read(
@@ -115,6 +116,8 @@ get_esri_data <- function(url,
       ...
     )
   } else if (table) {
+    check_installed("esri2sf", call = call)
+
     # Get Table (no geometry) with location name column
     data <- esri2sf::esri2df(
       url = url,
@@ -126,6 +129,8 @@ get_esri_data <- function(url,
       ...
     )
   } else {
+    check_installed("esri2sf", call = call)
+
     data <- esri2sf::esri2sf(
       url = url,
       token = token,
@@ -341,6 +346,7 @@ get_esri_metadata <- function(url,
   if (is_installed("arcgislayers")) {
     metadata <- arcgislayers::arc_open(url, token)
   } else {
+    check_installed("esri2sf", call = call)
     metadata <- esri2sf::esrimeta(url, token, call = call)
   }
 

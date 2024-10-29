@@ -25,7 +25,8 @@ get_esri_data(
   progress = TRUE,
   quiet = FALSE,
   .name_repair = janitor::make_clean_names,
-  ...
+  ...,
+  call = caller_env()
 )
 
 get_esri_layers(
@@ -101,7 +102,7 @@ Default \code{FALSE}.}
 \item{quiet}{If \code{TRUE}, use \code{\link[=suppressMessages]{suppressMessages()}} to prevent the printing of
 messages about the requested layer. Defaults to \code{FALSE}.}
 
-\item{.name_repair}{Defaults to "check_unique"}
+\item{.name_repair}{Passed to \code{\link[tibble:as_tibble]{tibble::as_tibble()}}.}
 
 \item{...}{
   Arguments passed on to \code{\link[esri2sf:esri2sf]{esri2sf::esri2sf}}
@@ -112,15 +113,15 @@ all fields.}
 frame. Default \code{FALSE}.}
   }}
 
-\item{layers}{Either a vector with URLs, a named list of urls, or a numeric
-vector; defaults to \code{NULL}. Optional if url is a}
-
-\item{nm}{Name or vector of names to add to the layers; defaults to \code{NULL}.}
-
 \item{call}{The execution environment of a currently
 running function, e.g. \code{caller_env()}. The function will be
 mentioned in error messages as the source of the error. See the
 \code{call} argument of \code{\link[rlang:abort]{abort()}} for more information.}
+
+\item{layers}{Either a vector with URLs, a named list of urls, or a numeric
+vector; defaults to \code{NULL}. Optional if url is a}
+
+\item{nm}{Name or vector of names to add to the layers; defaults to \code{NULL}.}
 
 \item{meta}{Name of metadata list value to return from \link[esri2sf:esrimeta]{esri2sf::esrimeta},
 e.g. "name" to return layer name. Defaults to \code{NULL}.}
