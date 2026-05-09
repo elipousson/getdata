@@ -49,7 +49,7 @@ is_all_null <- function(x) {
   is_all(x, is.null)
 }
 
-#' - [is_esri_url()]: Is an object an ArcGIS MapServer or FeatureServer URL?
+#' - `is_esri_url()`: Is an object an ArcGIS MapServer or FeatureServer URL?
 #'
 #' @name is_esri_url
 #' @rdname is_url
@@ -71,11 +71,12 @@ is_fileext_path <- function(x, fileext, ignore.case = TRUE) {
   grepl(
     paste0("\\.", paste0(fileext, collapse = "|"), "$(?!\\.)"),
     x,
-    ignore.case = ignore.case, perl = TRUE
+    ignore.case = ignore.case,
+    perl = TRUE
   )
 }
 
-#' - [is_gist_url()]: Is an object a URL for a GitHub Gist?
+#' - `is_gist_url()`: Is an object a URL for a GitHub Gist?
 #'
 #' @name is_gist_url
 #' @rdname is_url
@@ -84,7 +85,7 @@ is_gist_url <- function(x) {
   grepl("^https://gist.github.com/", x)
 }
 
-#' - [is_gmap_url()]: Is an object a Google Maps URL?
+#' - `is_gmap_url()`: Is an object a Google Maps URL?
 #'
 #' @name is_gmap_url
 #' @rdname is_url
@@ -93,7 +94,7 @@ is_gmap_url <- function(x) {
   grepl("^https://www.google.com/maps/", x)
 }
 
-#' - [is_gsheet_url()]: Is an object a Google Sheets URL?
+#' - `is_gsheet_url()`: Is an object a Google Sheets URL?
 #'
 #' @name is_gsheet_url
 #' @rdname is_url
@@ -135,7 +136,9 @@ is_url <- function(x) {
 #' @rdname str_fileext
 #' @noRd
 str_add_fileext <- function(string, fileext = NULL) {
-  if (is.null(fileext) || !is.null(fileext) && all(has_fileext(string, fileext))) {
+  if (
+    is.null(fileext) || !is.null(fileext) && all(has_fileext(string, fileext))
+  ) {
     return(string)
   }
 
@@ -173,14 +176,19 @@ str_add_fileext <- function(string, fileext = NULL) {
 str_c <- function(..., sep = "", collapse = NULL) {
   stopifnot(
     "`sep` must be a single string, not a character vector." = length(sep) == 1,
-    "`collapse` must be a single string or `NULL`, not a character vector." =
-      length(collapse) == 1 || is.null(collapse)
+    "`collapse` must be a single string or `NULL`, not a character vector." = length(
+      collapse
+    ) ==
+      1 ||
+      is.null(collapse)
   )
 
   strings <- Filter(function(x) !is.null(x), list(...))
 
   if (length(strings) == 0 || any(lengths(strings) == 0)) {
-    if (length(collapse) == 0) return(character(0))
+    if (length(collapse) == 0) {
+      return(character(0))
+    }
     return("")
   }
 
@@ -217,22 +225,31 @@ str_c <- function(..., sep = "", collapse = NULL) {
 #'   followed by one column for each capture group.
 #' @noRd
 str_extract <- function(string, pattern) {
-  if (length(string) == 0 || length(pattern) == 0) return(character(0))
+  if (length(string) == 0 || length(pattern) == 0) {
+    return(character(0))
+  }
 
   is_fixed <- inherits(pattern, "stringr_fixed")
 
   result <- Map(
     function(string, pattern) {
-      if (is.na(string) || is.na(pattern)) return(NA_character_)
+      if (is.na(string) || is.na(pattern)) {
+        return(NA_character_)
+      }
 
       regmatches(
         x = string,
         m = regexpr(
-          pattern = pattern, text = string, perl = !is_fixed, fixed = is_fixed
+          pattern = pattern,
+          text = string,
+          perl = !is_fixed,
+          fixed = is_fixed
         )
       )
     },
-    string, pattern, USE.NAMES = FALSE
+    string,
+    pattern,
+    USE.NAMES = FALSE
   )
 
   result[lengths(result) == 0] <- NA_character_
@@ -271,10 +288,16 @@ str_extract_fileext <- function(string, fileext = NULL) {
 #' @return A character vector.
 #' @noRd
 str_remove <- function(string, pattern) {
-  if (length(string) == 0 || length(pattern) == 0) return(character(0))
+  if (length(string) == 0 || length(pattern) == 0) {
+    return(character(0))
+  }
   is_fixed <- inherits(pattern, "stringr_fixed")
   Vectorize(sub, c("pattern", "x"), USE.NAMES = FALSE)(
-    pattern, replacement = "", x = string, perl = !is_fixed, fixed = is_fixed
+    pattern,
+    replacement = "",
+    x = string,
+    perl = !is_fixed,
+    fixed = is_fixed
   )
 }
 
