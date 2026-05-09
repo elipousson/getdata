@@ -25,25 +25,27 @@
 #' @seealso `GNfindNearbyWikipedia()` and `GNwikipediaBoundingBox()` functions
 #'   in the [geonames](https://docs.ropensci.org/geonames/) package
 #' @export
-#' @importFrom cliExtras cli_abort_ifnot
 #' @importFrom sfext is_sf sf_bbox_diagdist as_bbox convert_dist_units df_to_sf
-get_wiki_data <- function(location,
-                          radius = FALSE,
-                          primary = NULL,
-                          details = NULL,
-                          limit = 50,
-                          list = "geosearch",
-                          lang = getOption("getdata.lang", default = "en"),
-                          geometry = TRUE,
-                          dist = getOption("getdata.dist"),
-                          diag_ratio = getOption("getdata.diag_ratio"),
-                          unit = getOption("getdata.unit", "meter"),
-                          asp = getOption("getdata.asp"),
-                          crs = getOption("getdata.unit", 3857),
-                          remove_coords = TRUE,
-                          clean_names = TRUE) {
-  cliExtras::cli_abort_ifnot(
-    c("{.arg list} must be {.val geosearch} or {.val resp}.",
+get_wiki_data <- function(
+  location,
+  radius = FALSE,
+  primary = NULL,
+  details = NULL,
+  limit = 50,
+  list = "geosearch",
+  lang = getOption("getdata.lang", default = "en"),
+  geometry = TRUE,
+  dist = getOption("getdata.dist"),
+  diag_ratio = getOption("getdata.diag_ratio"),
+  unit = getOption("getdata.unit", "meter"),
+  asp = getOption("getdata.asp"),
+  crs = getOption("getdata.unit", 3857),
+  remove_coords = TRUE,
+  clean_names = TRUE
+) {
+  cli_abort_ifnot(
+    c(
+      "{.arg list} must be {.val geosearch} or {.val resp}.",
       "i" = "Support for additional options may be added in the future."
     ),
     condition = (list %in% c("geosearch", "resp"))
@@ -73,17 +75,28 @@ get_wiki_data <- function(location,
 
       # FIXME: This should be pulled out of st_buffer_ext into a separate helper function
       if (is.null(dist) && !is.null(diag_ratio)) {
-        dist <- sfext::sf_bbox_diagdist(bbox = sfext::as_bbox(x), drop = TRUE) * diag_ratio
+        dist <- sfext::sf_bbox_diagdist(bbox = sfext::as_bbox(x), drop = TRUE) *
+          diag_ratio
       }
 
-      gsradius <- as.integer(round(sfext::convert_dist_units(dist, from = unit, to = "meter")))
+      gsradius <- as.integer(round(sfext::convert_dist_units(
+        dist,
+        from = unit,
+        to = "meter"
+      )))
 
-      cliExtras::cli_abort_ifnot(
+      cli_abort_ifnot(
         "radius {.arg dist} must be greater than 1.",
         condition = (gsradius >= 1)
       )
     } else {
-      gsbbox <- st_gsbbox(location, dist = dist, diag_ratio = diag_ratio, asp = asp, unit = unit)
+      gsbbox <- st_gsbbox(
+        location,
+        dist = dist,
+        diag_ratio = diag_ratio,
+        asp = asp,
+        unit = unit
+      )
     }
   } else {
     check_character(location)
@@ -123,24 +136,25 @@ get_wiki_data <- function(location,
 #'
 #' @noRd
 #' @importFrom httr2 request req_url_query
-#' @importFrom cliExtras cli_abort_ifnot
-req_wiki_query <- function(lang = NULL,
-                           gsbbox = NULL,
-                           gscoord = NULL,
-                           gsradius = NULL,
-                           gspage = NULL,
-                           primary = NULL,
-                           list = "geosearch",
-                           details = NULL,
-                           limit = 50,
-                           format = "json",
-                           call = caller_env()) {
+req_wiki_query <- function(
+  lang = NULL,
+  gsbbox = NULL,
+  gscoord = NULL,
+  gsradius = NULL,
+  gspage = NULL,
+  primary = NULL,
+  list = "geosearch",
+  details = NULL,
+  limit = 50,
+  format = "json",
+  call = caller_env()
+) {
   # <https://www.mediawiki.org/wiki/Extension:GeoData>
   check_string(lang, call = call)
 
   req <- httr2::request(glue("https://{lang}.wikipedia.org/w/api.php"))
 
-  cliExtras::cli_abort_ifnot(
+  cli_abort_ifnot(
     condition = any(!is.null(c(gsbbox, gscoord, gspage))),
     call = call
   )
@@ -156,7 +170,11 @@ req_wiki_query <- function(lang = NULL,
   )
 
   primary <- primary %||% "primary"
-  primary <- arg_match(primary, c("primary", "all", "secondary"), error_call = call)
+  primary <- arg_match(
+    primary,
+    c("primary", "all", "secondary"),
+    error_call = call
+  )
 
   req <- httr2::req_url_query(
     req,
@@ -179,7 +197,8 @@ req_wiki_query <- function(lang = NULL,
 
   if (limit > 500) {
     cli_warn(
-      c("{.arg limit} can't be greater than {.val 500}.",
+      c(
+        "{.arg limit} can't be greater than {.val 500}.",
         "v" = "Resetting provided {.val {limit}} limit value to max."
       )
     )
@@ -198,10 +217,12 @@ req_wiki_query <- function(lang = NULL,
 #'
 #' @noRd
 #' @importFrom httr2 resp_body_json
-resp_wiki_query <- function(req,
-                            list = "geosearch",
-                            simplifyVector = TRUE,
-                            call = caller_env()) {
+resp_wiki_query <- function(
+  req,
+  list = "geosearch",
+  simplifyVector = TRUE,
+  call = caller_env()
+) {
   resp <- httr2::resp_body_json(
     resp = req_getdata(req),
     simplifyVector = simplifyVector
@@ -216,10 +237,7 @@ resp_wiki_query <- function(req,
 
   list <- arg_match(list, c("resp", "geosearch"))
 
-  switch(list,
-    "resp" = resp,
-    "geosearch" = resp[["query"]][[list]]
-  )
+  switch(list, "resp" = resp, "geosearch" = resp[["query"]][[list]])
 }
 
 #' Make geospatial coordinate query
@@ -235,7 +253,14 @@ st_gscoord <- function(location, crs = 4326) {
 #'
 #' @noRd
 #' @importFrom sfext st_bbox_ext
-st_gsbbox <- function(location, dist = NULL, diag_ratio = NULL, asp = NULL, unit = "meter", crs = 4326) {
+st_gsbbox <- function(
+  location,
+  dist = NULL,
+  diag_ratio = NULL,
+  asp = NULL,
+  unit = "meter",
+  crs = 4326
+) {
   bbox <- sfext::st_bbox_ext(
     x = location,
     dist = dist,

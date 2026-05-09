@@ -38,24 +38,25 @@
 #' @rdname get_location
 #' @aliases get_location_type
 #' @export
-#' @importFrom cliExtras cli_abort_ifnot
 #' @importFrom sfext is_sf st_union_ext as_sf_class
 #' @importFrom dplyr case_when mutate all_of
-get_location <- function(type,
-                         name = NULL,
-                         name_col = "name",
-                         id = NULL,
-                         id_col = "id",
-                         location = NULL,
-                         index = NULL,
-                         union = FALSE,
-                         crs = getOption("getdata.crs", 3857),
-                         label = NULL,
-                         class = "sf",
-                         ...) {
+get_location <- function(
+  type,
+  name = NULL,
+  name_col = "name",
+  id = NULL,
+  id_col = "id",
+  location = NULL,
+  index = NULL,
+  union = FALSE,
+  crs = getOption("getdata.crs", 3857),
+  label = NULL,
+  class = "sf",
+  ...
+) {
   if (is.null(index)) {
     rlang::check_required(type)
-    cliExtras::cli_abort_ifnot(
+    cli_abort_ifnot(
       "{.arg type} must be a {.cls sf} object or character vector,
       not {.obj_type_friendly {type}}.",
       condition = sfext::is_sf(type) || is.character(type)
@@ -93,7 +94,8 @@ get_location <- function(type,
     .default = "location"
   )
 
-  location <- switch(params,
+  location <- switch(
+    params,
     "name" = filter_name(type, name = name, name_col = name_col),
     "id" = filter_name(type, name = id, name_col = id_col),
     "location" = filter_location(type, location = location)
@@ -132,10 +134,12 @@ get_location <- function(type,
 #'
 #' @noRd
 #' @importFrom sfext is_sf as_sf st_filter_ext
-filter_location <- function(data = NULL,
-                            location = NULL,
-                            allow_null = TRUE,
-                            ...) {
+filter_location <- function(
+  data = NULL,
+  location = NULL,
+  allow_null = TRUE,
+  ...
+) {
   if (allow_null && is_null(location)) {
     return(data)
   }
@@ -148,11 +152,13 @@ filter_location <- function(data = NULL,
 }
 
 #' @noRd
-filter_name <- function(x = NULL,
-                        name = NULL,
-                        name_col = "name",
-                        arg = rlang::caller_arg(name_col),
-                        call = rlang::caller_env()) {
+filter_name <- function(
+  x = NULL,
+  name = NULL,
+  name_col = "name",
+  arg = rlang::caller_arg(name_col),
+  call = rlang::caller_env()
+) {
   if (is_named(name)) {
     name_col <- names(name)
   }

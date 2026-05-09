@@ -45,24 +45,26 @@
 #' @return A simple feature object with features using selected geometry type or
 #'   an `osmdata` object with features from all geometry types.
 #' @export
-get_osm_data <- function(location = NULL,
-                         dist = NULL,
-                         diag_ratio = NULL,
-                         unit = NULL,
-                         asp = NULL,
-                         key,
-                         value = NULL,
-                         features = NULL,
-                         id = NULL,
-                         type = NULL,
-                         crs = NULL,
-                         geometry = NULL,
-                         osmdata = FALSE,
-                         enclosing = NULL,
-                         nodes_only = FALSE,
-                         key_exact = TRUE,
-                         value_exact = TRUE,
-                         match_case = TRUE) {
+get_osm_data <- function(
+  location = NULL,
+  dist = NULL,
+  diag_ratio = NULL,
+  unit = NULL,
+  asp = NULL,
+  key,
+  value = NULL,
+  features = NULL,
+  id = NULL,
+  type = NULL,
+  crs = NULL,
+  geometry = NULL,
+  osmdata = FALSE,
+  enclosing = NULL,
+  nodes_only = FALSE,
+  key_exact = TRUE,
+  value_exact = TRUE,
+  match_case = TRUE
+) {
   osm_data_attribution()
 
   if (!is.null(id)) {
@@ -123,11 +125,13 @@ get_osm_data <- function(location = NULL,
 #' @param type Type of feature for the id; "node", "way", or "relation".
 #'   Optional if id includes a type prefix.
 #' @export
-get_osm_id <- function(id,
-                       type = NULL,
-                       crs = NULL,
-                       geometry = NULL,
-                       osmdata = FALSE) {
+get_osm_id <- function(
+  id,
+  type = NULL,
+  crs = NULL,
+  geometry = NULL,
+  osmdata = FALSE
+) {
   osm_data_attribution()
 
   if (length(id) > 1) {
@@ -189,10 +193,12 @@ try_osmdata_sf <- function(query, call = caller_env()) {
 #' prefixed id value
 #'
 #' @noRd
-get_osm_id_type <- function(id,
-                            type = NULL,
-                            geometry = NULL,
-                            call = caller_env()) {
+get_osm_id_type <- function(
+  id,
+  type = NULL,
+  geometry = NULL,
+  call = caller_env()
+) {
   if (is.null(type)) {
     check_string(id, call = call)
     if (starts_with_osm_type(id)) {
@@ -207,7 +213,8 @@ get_osm_id_type <- function(id,
   type <- arg_match(type, c("node", "way", "relation"), error_call = call)
 
   if (is.null(geometry)) {
-    geometry <- switch(type,
+    geometry <- switch(
+      type,
       "node" = "points",
       "way" = "polygons",
       "relation" = "multipolygons"
@@ -250,14 +257,15 @@ has_osm_type_name <- function(x) {
 #' @importFrom dplyr filter between
 #' @importFrom janitor clean_names
 #' @importFrom sfext transform_sf
-#' @importFrom cliExtras cli_abort_ifnot
-get_osm_boundaries <- function(location,
-                               level = NULL,
-                               lang = "en",
-                               crs = NULL,
-                               enclosing = "relation",
-                               geometry = NULL,
-                               osmdata = FALSE) {
+get_osm_boundaries <- function(
+  location,
+  level = NULL,
+  lang = "en",
+  crs = NULL,
+  enclosing = "relation",
+  geometry = NULL,
+  osmdata = FALSE
+) {
   osm_data_attribution()
 
   boundaries <- get_osm_data_enclosing(
@@ -275,7 +283,7 @@ get_osm_boundaries <- function(location,
   }
 
   if (!is.null(level)) {
-    cliExtras::cli_abort_ifnot(
+    cli_abort_ifnot(
       "{.arg level} must be {.cls numeric}." = is.numeric(level)
     )
 
@@ -313,7 +321,9 @@ get_osm_boundaries <- function(location,
     value = TRUE
   )
 
-  drop_nm_cols <- nm_cols[!(nm_cols %in% c(nm_prefix, paste(nm_prefix, lang, sep = "_")))]
+  drop_nm_cols <- nm_cols[
+    !(nm_cols %in% c(nm_prefix, paste(nm_prefix, lang, sep = "_")))
+  ]
 
   boundaries <- boundaries[, !(boundaries_nm %in% drop_nm_cols)]
 
@@ -324,23 +334,25 @@ get_osm_boundaries <- function(location,
 #' Get OSM data using a bounding box for a location
 #'
 #' @noRd
-get_osm_data_features <- function(location,
-                                  key,
-                                  value = NULL,
-                                  dist = NULL,
-                                  diag_ratio = NULL,
-                                  unit = NULL,
-                                  asp = NULL,
-                                  crs = NULL,
-                                  geometry = NULL,
-                                  nodes_only = FALSE,
-                                  features = NULL,
-                                  osmdata = FALSE,
-                                  key_exact = TRUE,
-                                  value_exact = TRUE,
-                                  match_case = TRUE,
-                                  call = .envir,
-                                  .envir = parent.frame()) {
+get_osm_data_features <- function(
+  location,
+  key,
+  value = NULL,
+  dist = NULL,
+  diag_ratio = NULL,
+  unit = NULL,
+  asp = NULL,
+  crs = NULL,
+  geometry = NULL,
+  nodes_only = FALSE,
+  features = NULL,
+  osmdata = FALSE,
+  key_exact = TRUE,
+  value_exact = TRUE,
+  match_case = TRUE,
+  call = .envir,
+  .envir = parent.frame()
+) {
   osm_crs <- 4326
 
   if (is_sf(location, ext = TRUE)) {
@@ -405,15 +417,21 @@ get_osm_data_features <- function(location,
 
 #' @noRd
 #' @importFrom sfext sf_to_df
-get_osm_data_enclosing <- function(location,
-                                   key,
-                                   value,
-                                   enclosing = NULL,
-                                   crs = NULL,
-                                   geometry = NULL,
-                                   osmdata = FALSE,
-                                   call = caller_env()) {
-  enclosing <- rlang::arg_match(enclosing, c("relation", "way"), error_call = call)
+get_osm_data_enclosing <- function(
+  location,
+  key,
+  value,
+  enclosing = NULL,
+  crs = NULL,
+  geometry = NULL,
+  osmdata = FALSE,
+  call = caller_env()
+) {
+  enclosing <- rlang::arg_match(
+    enclosing,
+    c("relation", "way"),
+    error_call = call
+  )
   coords <- sfext::sf_to_df(location, crs = 4326)
 
   query <- try(
@@ -432,10 +450,7 @@ get_osm_data_enclosing <- function(location,
   data <- try_osmdata_sf(query)
 
   geometry <- geometry %||%
-    switch(enclosing,
-      "relation" = "multipolygons",
-      "way" = "polygons"
-    )
+    switch(enclosing, "relation" = "multipolygons", "way" = "polygons")
 
   get_osm_data_geometry(
     data,
@@ -449,15 +464,18 @@ get_osm_data_enclosing <- function(location,
 #'
 #' @noRd
 #' @importFrom sfext st_transform_ext
-get_osm_data_geometry <- function(data,
-                                  geometry = NULL,
-                                  crs = NULL,
-                                  osmdata = FALSE,
-                                  call = caller_env()) {
+get_osm_data_geometry <- function(
+  data,
+  geometry = NULL,
+  crs = NULL,
+  osmdata = FALSE,
+  call = caller_env()
+) {
   if (osmdata || is.null(geometry)) {
     if (is.null(geometry) && !osmdata) {
       cli_warn(
-        c("{.arg geometry} is {.code NULL}.",
+        c(
+          "{.arg geometry} is {.code NULL}.",
           "i" = "Setting {.arg osmdata} to {.val TRUE} and returning
          a list of unique features with all geometry types."
         )
@@ -536,8 +554,10 @@ get_osm_value <- function(key = NULL, value = NULL) {
 #' Display OpenStreetMap data attribution reminder
 #'
 #' @noRd
-osm_data_attribution <- function(.frequency = "regularly",
-                                 .frequency_id = "get_osm_data_attribution") {
+osm_data_attribution <- function(
+  .frequency = "regularly",
+  .frequency_id = "get_osm_data_attribution"
+) {
   rlang::check_installed("osmdata")
   cli::cli_inform(
     c(

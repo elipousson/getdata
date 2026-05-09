@@ -8,25 +8,27 @@
 #' @param ask If `TRUE`, ask for the name of the Google Sheet to read if ss is
 #'   not provided to [sfext::read_sf_gsheet].
 #' @export
-#' @importFrom cliExtras cli_ask
-get_gsheet_data <- function(url,
-                            sheet = NULL,
-                            ss = NULL,
-                            ask = FALSE,
-                            geometry = FALSE,
-                            location = NULL,
-                            dist = getOption("getdata.dist"),
-                            diag_ratio = getOption("getdata.diag_ratio"),
-                            unit = getOption("getdata.unit", "meter"),
-                            asp = getOption("getdata.asp"),
-                            coords = getOption("getdata.coords", c("lon", "lat")),
-                            remove_coords = TRUE,
-                            address = getOption("getdata.address", "address"),
-                            geo = FALSE,
-                            from_crs = 4326,
-                            clean_names = TRUE,
-                            ...) {
+get_gsheet_data <- function(
+  url,
+  sheet = NULL,
+  ss = NULL,
+  ask = FALSE,
+  geometry = FALSE,
+  location = NULL,
+  dist = getOption("getdata.dist"),
+  diag_ratio = getOption("getdata.diag_ratio"),
+  unit = getOption("getdata.unit", "meter"),
+  asp = getOption("getdata.asp"),
+  coords = getOption("getdata.coords", c("lon", "lat")),
+  remove_coords = TRUE,
+  address = getOption("getdata.address", "address"),
+  geo = FALSE,
+  from_crs = 4326,
+  clean_names = TRUE,
+  ...
+) {
   rlang::check_installed("googlesheets4")
+  check_installed("cliExtras")
 
   if (is.null(ss) && !is_missing(url)) {
     ss <- url

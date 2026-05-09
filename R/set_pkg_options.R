@@ -28,10 +28,12 @@
 #' @param .pkg Package name to append to option name. Defaults to "getdata".
 #' @name set_pkg_options
 #' @export
-#' @importFrom cliExtras cli_ul_items
-set_pkg_options <- function(...,
-                            overwrite = FALSE,
-                            .pkg = "getdata") {
+set_pkg_options <- function(
+  ...,
+  overwrite = FALSE,
+  .pkg = "getdata"
+) {
+  check_installed("cliExtras")
   opts <- list2(...)
   pkg_nm <- .pkg
 
@@ -61,8 +63,10 @@ set_pkg_options <- function(...,
       )
       cliExtras::cli_ul_items(conflict_opts)
       cli::cli_inform(
-        c("i" = "Set {.code overwrite = TRUE} to replace these
-          {.pkg {pkg_nm}} options.")
+        c(
+          "i" = "Set {.code overwrite = TRUE} to replace these
+          {.pkg {pkg_nm}} options."
+        )
       )
 
       if (!all(conflict_nm)) {

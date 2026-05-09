@@ -42,34 +42,35 @@
 #' @example examples/get_open_data.R
 #' @export
 #' @importFrom janitor make_clean_names
-#' @importFrom cliExtras cli_abort_ifnot
 #' @importFrom sfext st_bbox_ext df_to_sf
 #' @importFrom cli cli_alert_info cli_dl
 #' @importFrom tibble as_tibble
-get_open_data <- function(data = NULL,
-                          source_url = NULL,
-                          source_type = "socrata",
-                          select = NULL,
-                          where = NULL,
-                          query = NULL,
-                          location = NULL,
-                          dist = NULL,
-                          diag_ratio = NULL,
-                          unit = NULL,
-                          asp = NULL,
-                          name_col = NULL,
-                          name = NULL,
-                          location_col = NULL,
-                          coords = c("longitude", "latitude"),
-                          geometry = FALSE,
-                          token = NULL,
-                          type = NULL,
-                          from_crs = 4326,
-                          crs = NULL,
-                          clean_names = TRUE,
-                          quiet = FALSE,
-                          .name_repair = janitor::make_clean_names) {
-  cliExtras::cli_abort_ifnot(
+get_open_data <- function(
+  data = NULL,
+  source_url = NULL,
+  source_type = "socrata",
+  select = NULL,
+  where = NULL,
+  query = NULL,
+  location = NULL,
+  dist = NULL,
+  diag_ratio = NULL,
+  unit = NULL,
+  asp = NULL,
+  name_col = NULL,
+  name = NULL,
+  location_col = NULL,
+  coords = c("longitude", "latitude"),
+  geometry = FALSE,
+  token = NULL,
+  type = NULL,
+  from_crs = 4326,
+  crs = NULL,
+  clean_names = TRUE,
+  quiet = FALSE,
+  .name_repair = janitor::make_clean_names
+) {
+  cli_abort_ifnot(
     c(
       "{.arg source_url} must be a valid URL or, if {.arg data} is a url, {.arg source_url} must be NULL."
     ),
@@ -80,8 +81,9 @@ get_open_data <- function(data = NULL,
 
   source_type <- tolower(source_type)
 
-  cliExtras::cli_abort_ifnot(
-    c("{.arg source_type} must be {.val socrata}.",
+  cli_abort_ifnot(
+    c(
+      "{.arg source_type} must be {.val socrata}.",
       "i" = "Socrata is currently the only supported open data source for this function.
       Other open data access options (e.g. CKAN, Flat Data) may be added in the future."
     ),
@@ -168,16 +170,18 @@ get_open_data <- function(data = NULL,
 
 #' @noRd
 #' @importFrom glue glue
-make_socrata_url <- function(data = NULL,
-                             source_url = NULL,
-                             select = NULL,
-                             where = NULL,
-                             query = NULL,
-                             bbox = NULL,
-                             name_col = NULL,
-                             name = NULL,
-                             location_col = NULL,
-                             coords = c("longitude", "latitude")) {
+make_socrata_url <- function(
+  data = NULL,
+  source_url = NULL,
+  select = NULL,
+  where = NULL,
+  query = NULL,
+  bbox = NULL,
+  name_col = NULL,
+  name = NULL,
+  location_col = NULL,
+  coords = c("longitude", "latitude")
+) {
   # FIXME: Rewrite this to work with httr2
   # Make parameter calls
   if (!is.null(select)) {
@@ -199,16 +203,22 @@ make_socrata_url <- function(data = NULL,
 
   if (!is.null(bbox)) {
     if (is.null(location_col)) {
-      where_bbox <- glue("({sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)})")
+      where_bbox <- glue(
+        "({sfext::sf_bbox_to_lonlat_query(bbox = bbox, coords = coords)})"
+      )
     } else {
-      where_bbox <- glue("within_box({location_col},
-             {bbox$ymax}, {bbox$xmax}, {bbox$ymin}, {bbox$xmin})")
+      where_bbox <- glue(
+        "within_box({location_col},
+             {bbox$ymax}, {bbox$xmax}, {bbox$ymin}, {bbox$xmin})"
+      )
     }
   }
 
   if (!all(sapply(c(bbox, name_col, where), is.null))) {
-    where <- glue("$where=({paste0(c(where, where_bbox, where_name),
-                  collapse = ' AND ')})")
+    where <- glue(
+      "$where=({paste0(c(where, where_bbox, where_name),
+                  collapse = ' AND ')})"
+    )
   }
 
   if (!is.null(query)) {
@@ -226,8 +236,7 @@ make_socrata_url <- function(data = NULL,
 }
 
 #' @noRd
-make_dataset_url <- function(data = NULL,
-                             source_url = NULL) {
+make_dataset_url <- function(data = NULL, source_url = NULL) {
   if (grepl("/dataset/", source_url) && is.null(data)) {
     # If data is null but source_url is for a dataset
     url <- source_url
@@ -247,26 +256,28 @@ make_dataset_url <- function(data = NULL,
 #' @rdname get_open_data
 #' @name get_socrata_data
 #' @export
-get_socrata_data <- function(data = NULL,
-                             source_url = NULL,
-                             select = NULL,
-                             where = NULL,
-                             query = NULL,
-                             location = NULL,
-                             dist = NULL,
-                             diag_ratio = NULL,
-                             unit = NULL,
-                             asp = NULL,
-                             name_col = NULL,
-                             name = NULL,
-                             location_col = NULL,
-                             coords = c("longitude", "latitude"),
-                             geometry = FALSE,
-                             token = NULL,
-                             type = NULL,
-                             from_crs = 4326,
-                             crs = NULL,
-                             clean_names = TRUE) {
+get_socrata_data <- function(
+  data = NULL,
+  source_url = NULL,
+  select = NULL,
+  where = NULL,
+  query = NULL,
+  location = NULL,
+  dist = NULL,
+  diag_ratio = NULL,
+  unit = NULL,
+  asp = NULL,
+  name_col = NULL,
+  name = NULL,
+  location_col = NULL,
+  coords = c("longitude", "latitude"),
+  geometry = FALSE,
+  token = NULL,
+  type = NULL,
+  from_crs = 4326,
+  crs = NULL,
+  clean_names = TRUE
+) {
   check_dev_installed("RSocrata", repo = "Chicago/RSocrata")
 
   get_open_data(
@@ -298,8 +309,7 @@ get_socrata_data <- function(data = NULL,
 #' @name get_socrata_data
 #' @export
 #' @importFrom httr2 request req_url_path_append req_perform resp_body_json
-get_socrata_metadata <- function(source_url = NULL,
-                                 data = NULL) {
+get_socrata_metadata <- function(source_url = NULL, data = NULL) {
   req <- httr2::request(source_url)
   req <- httr2::req_url_path_append(req, "api/views/metadata/v1", data)
   httr2::resp_body_json(req_getdata(req))

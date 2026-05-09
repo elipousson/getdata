@@ -49,21 +49,23 @@
 #' @rdname format_data
 #' @export
 #' @importFrom tibble deframe
-format_data <- function(x,
-                        var_names = NULL,
-                        xwalk = NULL,
-                        clean_names = TRUE,
-                        .name_repair = "check_unique",
-                        replace_na_with = NULL,
-                        replace_with_na = NULL,
-                        replace_empty_char_with_na = FALSE,
-                        fix_date = FALSE,
-                        label = FALSE,
-                        remove_empty = NULL,
-                        remove_constant = FALSE,
-                        format_sf = FALSE,
-                        ...,
-                        call = caller_env()) {
+format_data <- function(
+  x,
+  var_names = NULL,
+  xwalk = NULL,
+  clean_names = TRUE,
+  .name_repair = "check_unique",
+  replace_na_with = NULL,
+  replace_with_na = NULL,
+  replace_empty_char_with_na = FALSE,
+  fix_date = FALSE,
+  label = FALSE,
+  remove_empty = NULL,
+  remove_constant = FALSE,
+  format_sf = FALSE,
+  ...,
+  call = caller_env()
+) {
   x <- str_trim_squish_across(x)
 
   if (!is.null(c(var_names, xwalk))) {
@@ -134,22 +136,25 @@ format_data <- function(x,
 #' @export
 #' @importFrom sfext is_sf rename_sf_col
 #' @importFrom dplyr rename_with any_of
-rename_with_xwalk <- function(x,
-                              xwalk = NULL,
-                              cols = c("label", "name"),
-                              label = FALSE,
-                              .strict = TRUE,
-                              keep_all = TRUE,
-                              arg = caller_arg(x),
-                              call = caller_env()) {
+rename_with_xwalk <- function(
+  x,
+  xwalk = NULL,
+  cols = c("label", "name"),
+  label = FALSE,
+  .strict = TRUE,
+  keep_all = TRUE,
+  arg = caller_arg(x),
+  call = caller_env()
+) {
   # From https://twitter.com/PipingHotData/status/1497014703473704965
   # https://stackoverflow.com/questions/20987295/rename-multiple-columns-by-names/41343022#41343022
   xwalk <- make_xwalk_list(xwalk, cols = cols)
   xwalk_in_x <- rlang::has_name(x, xwalk)
 
   # FIXME: This is not kicking back the expected error - issue may be with cli_abort_ifnot
-  cliExtras::cli_abort_ifnot(
-    message = c("{.arg xwalk} values must all be column names in {.arg x}.",
+  cli_abort_ifnot(
+    message = c(
+      "{.arg xwalk} values must all be column names in {.arg x}.",
       "i" = "{.val {xwalk[!xwalk_in_x]}} can't be found in {.arg x} column names.",
       "*" = "Set {.arg .strict} to {.code FALSE} to ignore missing values."
     ),
@@ -194,8 +199,13 @@ rename_with_xwalk <- function(x,
 label_with_xwalk <- function(x, xwalk = NULL, label = "var", ...) {
   rlang::check_installed("labelled")
   label <- rlang::arg_match(label, c("var", "val"))
-  switch(label,
-    "var" = labelled::set_variable_labels(x, .labels = make_xwalk_list(xwalk), ...),
+  switch(
+    label,
+    "var" = labelled::set_variable_labels(
+      x,
+      .labels = make_xwalk_list(xwalk),
+      ...
+    ),
     "val" = labelled::set_value_labels(x, .labels = make_xwalk_list(xwalk), ...)
   )
 }
@@ -210,10 +220,12 @@ label_with_xwalk <- function(x, xwalk = NULL, label = "var", ...) {
 #' @inheritParams labelled::generate_dictionary
 #' @rdname format_data
 #' @export
-make_variable_dictionary <- function(x,
-                                     .labels = NULL,
-                                     .definitions = NULL,
-                                     details = c("basic", "none", "full")) {
+make_variable_dictionary <- function(
+  x,
+  .labels = NULL,
+  .definitions = NULL,
+  details = c("basic", "none", "full")
+) {
   rlang::check_installed("labelled")
 
   dict <- labelled::generate_dictionary(x, details = details)
@@ -268,7 +280,11 @@ fix_epoch_date <- function(x, .cols = dplyr::contains("date"), tz = "") {
 #' @importFrom sfext is_sf
 #' @importFrom sf st_drop_geometry
 #' @importFrom tibble deframe
-make_xwalk_list <- function(xwalk, cols = c("label", "name"), call = caller_env()) {
+make_xwalk_list <- function(
+  xwalk,
+  cols = c("label", "name"),
+  call = caller_env()
+) {
   if (is_named(xwalk) && is.list(xwalk) && !is.data.frame(xwalk)) {
     return(xwalk)
   }
@@ -284,7 +300,7 @@ make_xwalk_list <- function(xwalk, cols = c("label", "name"), call = caller_env(
   if (!is.numeric(cols) && !xwalk_has_cols) {
     cols <- c(1, 2)
   } else if (is.numeric(cols)) {
-    cliExtras::cli_abort_ifnot(
+    cli_abort_ifnot(
       "{.arg cols} must be a length 2 vector.",
       condition = rlang::has_length(cols, 2)
     )
@@ -326,7 +342,11 @@ str_trim_squish_across <- function(x) {
 #'
 #' @noRd
 #' @importFrom dplyr everything mutate across if_else
-str_empty_to_blank_across <- function(x, .cols = dplyr::everything(), blank = "") {
+str_empty_to_blank_across <- function(
+  x,
+  .cols = dplyr::everything(),
+  blank = ""
+) {
   dplyr::mutate(
     x,
     dplyr::across(
@@ -385,7 +405,8 @@ switch_case <- function(x, case = NULL, ...) {
     rlang::check_installed("stringr")
   }
 
-  switch(case,
+  switch(
+    case,
     "lower" = tolower(x),
     "upper" = toupper(x),
     "title" = str_capitalize(x),
@@ -398,7 +419,8 @@ switch_case <- function(x, case = NULL, ...) {
 #' @noRd
 str_capitalize <- function(string, strict = FALSE) {
   cap <- function(string) {
-    paste(toupper(substring(string, 1, 1)),
+    paste(
+      toupper(substring(string, 1, 1)),
       {
         string <- substring(string, 2)
         if (strict) tolower(string) else string
@@ -407,5 +429,9 @@ str_capitalize <- function(string, strict = FALSE) {
       collapse = " "
     )
   }
-  sapply(strsplit(string, split = " "), cap, USE.NAMES = !is.null(names(string)))
+  sapply(
+    strsplit(string, split = " "),
+    cap,
+    USE.NAMES = !is.null(names(string))
+  )
 }

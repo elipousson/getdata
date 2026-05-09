@@ -18,8 +18,12 @@
 #' @export
 #' @importFrom sfext as_sf_list
 #' @importFrom dplyr case_when
-#' @importFrom cliExtras cli_warn_ifnot
-make_location_data_list <- function(data, location, key = c("location", "data"), ...) {
+make_location_data_list <- function(
+  data,
+  location,
+  key = c("location", "data"),
+  ...
+) {
   stopifnot(
     !is.null(data) && !is.null(location)
   )
@@ -39,13 +43,15 @@ make_location_data_list <- function(data, location, key = c("location", "data"),
 
   location_data_list <- dplyr::case_when(
     (len_location == 1) && (len_data > 1) ~ list(rep(location, len_data), data),
-    (len_data == 1) && (len_location > 1) ~ list(location, rep(data, len_location)),
+    (len_data == 1) && (len_location > 1) ~
+      list(location, rep(data, len_location)),
     .default = list(location, data)
   )
 
-  cliExtras::cli_warn_ifnot(
+  cli_ifnot(
     "{.arg location} is length {location_len} and {.arg data} is {data_len}.",
-    condition = (len_location == len_data)
+    condition = (len_location == len_data),
+    .fn = cli::cli_warn
   )
 
   if (!is.null(key) && (length(key) == 2)) {
@@ -57,10 +63,12 @@ make_location_data_list <- function(data, location, key = c("location", "data"),
 
 
 #' @noRd
-get_location_data_list <- function(data = NULL,
-                                   location = NULL,
-                                   nm = NULL,
-                                   ...) {
+get_location_data_list <- function(
+  data = NULL,
+  location = NULL,
+  nm = NULL,
+  ...
+) {
   # FIXME: Should this be titled map_location_data_list?
   if (is.null(nm) && !is.null(data)) {
     nm <- names(data)

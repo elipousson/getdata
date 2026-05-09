@@ -8,11 +8,38 @@
 
 utils::globalVariables(
   c(
-    "admin_level", "bldg_num_even_odd", "block_num",
-    "crs", "name", "nm", "street", "x", "city", "county",
-    "file_name", "owner", "state", "subLayerIds"
+    "admin_level",
+    "bldg_num_even_odd",
+    "block_num",
+    "crs",
+    "name",
+    "nm",
+    "street",
+    "x",
+    "city",
+    "county",
+    "file_name",
+    "owner",
+    "state",
+    "subLayerIds"
   )
 )
+
+cli_abort_if <- function(..., x = NULL, condition = NULL) {
+  cli_if(
+    x = x %||% condition,
+    ...,
+    .default = cli::cli_abort
+  )
+}
+
+cli_abort_ifnot <- function(..., x = NULL, condition = NULL) {
+  cli_ifnot(
+    x = x %||% condition,
+    ...,
+    .default = cli::cli_abort
+  )
+}
 
 # @staticimports pkg:stringstatic
 # str_replace
@@ -25,11 +52,13 @@ utils::globalVariables(
 #'
 #' @noRd
 #' @importFrom httr2 req_user_agent
-req_getdata <- function(req,
-                        string = getOption(
-                          "getdata.useragent",
-                          default = "getdata (https://github.com/elipousson/getdata)"
-                        )) {
+req_getdata <- function(
+  req,
+  string = getOption(
+    "getdata.useragent",
+    default = "getdata (https://github.com/elipousson/getdata)"
+  )
+) {
   req <- httr2::req_user_agent(
     req = req,
     string = string
@@ -65,9 +94,11 @@ use_fn <- function(data, fn = NULL) {
 #'
 #' @noRd
 #' @importFrom vctrs vec_as_names
-use_name_repair <- function(data = NULL,
-                            .name_repair = "check_unique",
-                            repair_arg = "name_repair") {
+use_name_repair <- function(
+  data = NULL,
+  .name_repair = "check_unique",
+  repair_arg = "name_repair"
+) {
   names(data) <- vctrs::vec_as_names(
     names(data),
     repair = .name_repair,
@@ -94,14 +125,15 @@ check_dev_installed <- function(pkg = NULL, repo = NULL, call = caller_env()) {
 #' @name has_same_name_col
 #' @noRd
 #' @importFrom cli cli_abort cli_alert_success
-#' @importFrom cliExtras cli_yesno
 #' @importFrom dplyr rename
-has_same_name_col <- function(x,
-                              col = NULL,
-                              prefix = "orig",
-                              ask = FALSE,
-                              quiet = FALSE,
-                              drop = TRUE) {
+has_same_name_col <- function(
+  x,
+  col = NULL,
+  prefix = "orig",
+  ask = FALSE,
+  quiet = FALSE,
+  drop = TRUE
+) {
   if (!rlang::has_name(x, col)) {
     return(x)
   }
@@ -115,12 +147,16 @@ has_same_name_col <- function(x,
   new_col <- paste0(prefix, "_", col)
 
   if (ask && !quiet) {
-    if (!cliExtras::cli_yesno(
-      c(
-        "!" = "The provided data includes an existing column named {.val col}.",
-        " " = "Do you want to proceed and rename this column to {.val new_col}?"
+    check_installed("cliExtras")
+
+    if (
+      !cliExtras::cli_yesno(
+        c(
+          "!" = "The provided data includes an existing column named {.val col}.",
+          " " = "Do you want to proceed and rename this column to {.val new_col}?"
+        )
       )
-    )) {
+    ) {
       cli_abort("Please rename your column to use this function.")
     }
   }
