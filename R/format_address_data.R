@@ -35,21 +35,24 @@ NULL
 #' @export
 #' @example examples/format_address_data.R
 #' @importFrom dplyr all_of mutate if_else
-bind_block_col <- function(x,
-                           bldg_num = "bldg_num",
-                           street_dir_prefix = "street_dir_prefix",
-                           street_name = "street_name",
-                           street_suffix = "street_type",
-                           replace_suffix = FALSE,
-                           street_col = NULL,
-                           block_col = NULL,
-                           .after = street_suffix,
-                           case = NULL) {
+bind_block_col <- function(
+  x,
+  bldg_num = "bldg_num",
+  street_dir_prefix = "street_dir_prefix",
+  street_name = "street_name",
+  street_suffix = "street_type",
+  replace_suffix = FALSE,
+  street_col = NULL,
+  block_col = NULL,
+  .after = street_suffix,
+  case = NULL
+) {
   address_cols <- c(bldg_num, street_dir_prefix, street_name, street_suffix)
   x_missing_cols <- address_cols[!rlang::has_name(x, address_cols)]
 
-  cliExtras::cli_abort_ifnot(
-    c("{.arg x} must have columns named {.val {address_cols}}.",
+  cli_abort_ifnot(
+    c(
+      "{.arg x} must have columns named {.val {address_cols}}.",
       "i" = "{.arg x} is missing {length(x_missing_cols)} column{?s}
       {.val {x_missing_cols}}"
     ),
@@ -94,7 +97,8 @@ bind_block_col <- function(x,
           "{as.character(.data[[address_cols[1]]])} {.data[[address_cols[2]]]} {.data[[address_cols[3]]]} {.data[[address_cols[4]]]}",
           .na = ""
         ),
-        "  ", " "
+        "  ",
+        " "
       ),
       .after = dplyr::all_of(.after)
     )
@@ -106,22 +110,28 @@ bind_block_col <- function(x,
     x,
     "{block_col_labels[[1]]}" := floor(.data[[bldg_num]] / 100) * 100,
     "{block_col_labels[[2]]}" := dplyr::if_else(
-      (.data[[bldg_num]] %% 2) == 0, "Even", "Odd"
+      (.data[[bldg_num]] %% 2) == 0,
+      "Even",
+      "Odd"
     ),
     "{block_col_labels[[3]]}" := dplyr::if_else(
       !is.na(.data[[block_col_labels[[1]]]]),
       paste(
-        .data[[block_col_labels[[1]]]], block_sep,
-        .data[[street_dir_prefix]], .data[[street_name]],
+        .data[[block_col_labels[[1]]]],
+        block_sep,
+        .data[[street_dir_prefix]],
+        .data[[street_name]],
         .data[[street_suffix]]
-      ), ""
+      ),
+      ""
     ),
     "{block_col_labels[[4]]}" := dplyr::if_else(
       !is.na(.data[[block_col_labels[[1]]]]),
       paste(
         .data[[block_col_labels[[3]]]],
         paste0("(", .data[[block_col_labels[[2]]]], ")")
-      ), ""
+      ),
+      ""
     ),
     .after = dplyr::all_of(.after)
   )
@@ -147,10 +157,7 @@ bind_block_col <- function(x,
 #'   in filling missing values, e.g. state = "MD" to add a missing state column.
 #' @export
 #' @importFrom dplyr mutate any_of case_when all_of
-bind_address_col <- function(x, ...,
-                             case = NULL,
-                             .cols = NULL,
-                             .after = NULL) {
+bind_address_col <- function(x, ..., case = NULL, .cols = NULL, .after = NULL) {
   .cols <- modifyList(
     .cols %||% list(),
     list(
@@ -181,7 +188,9 @@ bind_address_col <- function(x, ...,
   if (rlang::has_name(x, .cols$city)) {
     x <- dplyr::mutate(
       x,
-      "{.cols$address}" := glue("{.data[[.cols$street]]}, {.data[[.cols$city]]} {.data[[.cols$state]]}"),
+      "{.cols$address}" := glue(
+        "{.data[[.cols$street]]}, {.data[[.cols$city]]} {.data[[.cols$state]]}"
+      ),
       .after = dplyr::all_of(.cols$state)
     )
 
@@ -191,7 +200,9 @@ bind_address_col <- function(x, ...,
   if (rlang::has_name(x, .cols$county)) {
     dplyr::mutate(
       x,
-      "{.cols$address}" := glue("{.data[[.cols$street]]}, {.data[[.cols$county]]} {.data[[.cols$state]]}"),
+      "{.cols$address}" := glue(
+        "{.data[[.cols$street]]}, {.data[[.cols$county]]} {.data[[.cols$state]]}"
+      ),
       .after = dplyr::all_of(.cols$state)
     )
   }
@@ -218,14 +229,21 @@ bind_address_col <- function(x, ...,
 #' @name bind_location_text_col
 #' @rdname format_address_data
 #' @export
-#' @importFrom cliExtras cli_abort_if
 #' @importFrom dplyr mutate all_of
-bind_location_text_col <- function(x,
-                                   text_col = "text",
-                                   address_pattern = c("Ave.", "Avenue", "St.", "Street", "Rd.", "Road"),
-                                   block_face_pattern = c("sides\\)", "side\\)", "[:space:]block", "-block", "blocks"),
-                                   street_corridor_pattern = c("between(?=.+and)", "from(?=.+to)"),
-                                   .cols = NULL) {
+bind_location_text_col <- function(
+  x,
+  text_col = "text",
+  address_pattern = c("Ave.", "Avenue", "St.", "Street", "Rd.", "Road"),
+  block_face_pattern = c(
+    "sides\\)",
+    "side\\)",
+    "[:space:]block",
+    "-block",
+    "blocks"
+  ),
+  street_corridor_pattern = c("between(?=.+and)", "from(?=.+to)"),
+  .cols = NULL
+) {
   rlang::check_installed("stringr")
 
   .cols <- modifyList(
@@ -241,13 +259,17 @@ bind_location_text_col <- function(x,
   nm <- names(.cols) %||% .cols
   x_nm <- rlang::has_name(x, nm)
 
-  cliExtras::cli_abort_if(
+  cli_abort_if(
     "{.arg x} must not have any columns named: {.val {names(x)[[x_nm]]}}.",
     condition = any(x_nm)
   )
 
   block_face_pattern <- paste0(block_face_pattern, collapse = "|")
-  address_pattern <- paste0("[:space:]", c(block_face_pattern, address_pattern), collapse = "|")
+  address_pattern <- paste0(
+    "[:space:]",
+    c(block_face_pattern, address_pattern),
+    collapse = "|"
+  )
   street_corridor_pattern <- paste0(street_corridor_pattern, collapse = "|")
 
   # block_side_replacement <- rlang::set_names(as.character(block_side_replacement), names(block_side_replacement))
@@ -264,9 +286,18 @@ bind_location_text_col <- function(x,
 
   dplyr::mutate(
     x,
-    "{.cols$is_address}" := stringr::str_detect(.data[[text_col]], address_pattern),
-    "{.cols$is_block_face}" := stringr::str_detect(.data[[text_col]], block_face_pattern),
-    "{.cols$is_street_corridor}" := stringr::str_detect(.data[[text_col]], street_corridor_pattern),
+    "{.cols$is_address}" := stringr::str_detect(
+      .data[[text_col]],
+      address_pattern
+    ),
+    "{.cols$is_block_face}" := stringr::str_detect(
+      .data[[text_col]],
+      block_face_pattern
+    ),
+    "{.cols$is_street_corridor}" := stringr::str_detect(
+      .data[[text_col]],
+      street_corridor_pattern
+    ),
     "{.cols$block_side}" := dplyr::case_when(
       # stringr::str_detect(.data[[text_col]], "\\(Even\\)") ~ "even",
       # stringr::str_detect(.data[[text_col]], "\\(Odd\\)") ~ "odd",
@@ -311,23 +342,24 @@ bind_location_text_col <- function(x,
 #' @inheritParams format_address_data
 #' @example examples/replace_with_xwalk.R
 #' @export
-#' @importFrom cliExtras cli_abort_ifnot
 #' @importFrom utils modifyList
 #' @importFrom cli cli_warn
 #' @importFrom dplyr mutate across all_of
-replace_with_xwalk <- function(x,
-                               .cols = NULL,
-                               xwalk = NULL,
-                               dict = NULL,
-                               abb = TRUE,
-                               case = NULL,
-                               .strict = TRUE,
-                               ignore_case = TRUE) {
+replace_with_xwalk <- function(
+  x,
+  .cols = NULL,
+  xwalk = NULL,
+  dict = NULL,
+  abb = TRUE,
+  case = NULL,
+  .strict = TRUE,
+  ignore_case = TRUE
+) {
   rlang::check_installed("stringr")
 
   dict <- dict %||% xwalk
 
-  cliExtras::cli_abort_ifnot(
+  cli_abort_ifnot(
     "{.arg dict} or {.arg xwalk} must be provided.",
     condition = !is.null(dict)
   )
@@ -387,11 +419,13 @@ replace_with_xwalk <- function(x,
 #' @param street_suffix Street suffix column to apply replacement function to.
 #' @export
 #' @importFrom dplyr all_of
-replace_street_suffixes <- function(x,
-                                    street_suffix = "street_type",
-                                    xwalk = NULL,
-                                    abb = TRUE,
-                                    case = NULL) {
+replace_street_suffixes <- function(
+  x,
+  street_suffix = "street_type",
+  xwalk = NULL,
+  abb = TRUE,
+  case = NULL
+) {
   replace_with_xwalk(
     x,
     .cols = dplyr::all_of(street_suffix),
@@ -408,11 +442,13 @@ replace_street_suffixes <- function(x,
 #'   function to.
 #' @export
 #' @importFrom dplyr all_of
-replace_street_dir_prefixes <- function(x,
-                                        street_dir_prefix = "street_dir_prefix",
-                                        xwalk = NULL,
-                                        abb = TRUE,
-                                        case = NULL) {
+replace_street_dir_prefixes <- function(
+  x,
+  street_dir_prefix = "street_dir_prefix",
+  xwalk = NULL,
+  abb = TRUE,
+  case = NULL
+) {
   replace_with_xwalk(
     x,
     .cols = dplyr::all_of(street_dir_prefix),
