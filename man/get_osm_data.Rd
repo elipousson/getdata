@@ -100,13 +100,8 @@ geometry is set automatically based enclosing with "relation" using
 "multipolygons" and "way" using "polygons" geometry.}
 
 \item{nodes_only}{WARNING: this parameter is equivalent to
-\code{osm_types = "node"} and will be DEPRECATED. If \code{TRUE}, query OSM nodes
-only. Some OSM structures such as \code{place = "city"} or
-\code{highway = "traffic_signals"} are represented by nodes only. Queries are
-built by default to return all nodes, ways, and relation, but this can
-be very inefficient for node-only queries. Setting this value to \code{TRUE}
-for such cases makes queries more efficient, with data returned in the
-\code{osm_points} list item.}
+\code{osm_types = "node"} and is DEPRECATED. If \code{TRUE}, query OSM nodes
+only.}
 
 \item{key_exact}{If FALSE, \code{key} is not interpreted exactly; see
 \url{https://wiki.openstreetmap.org/wiki/Overpass_API}}

@@ -70,8 +70,8 @@ Helper functions for \link{format_sf_data}:
 \item \link{erase_data}: erase intersection of x and erase_data (validity of
 erase_data checked before \link[sfext:st_erase]{sfext::st_erase} and for x after completing the
 operation.
-\item \link{rename_sf_col}: Rename \code{sf} column.
-\item \link{relocate_sf_col}: Relocate \code{sf} column after selected columns (defaults to
+\item \link[sfext:misc_sf]{sfext::rename_sf_col}: Rename \code{sf} column.
+\item \link[sfext:misc_sf]{sfext::relocate_sf_col}: Relocate \code{sf} column after selected columns (defaults to
 \code{\link[dplyr:reexports]{dplyr::everything()}}).
 }
 }

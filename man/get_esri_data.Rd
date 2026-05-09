@@ -58,7 +58,7 @@ For \code{\link[=get_esri_layers]{get_esri_layers()}}, the optional url must be 
 the base url for one or more layer urls.}
 
 \item{location}{\code{sf}, \code{sfc}, or \code{bbox} object (or other object convertible
-with \code{\link[=as_bbox]{as_bbox()}}. Optional.}
+with \code{\link[sfext:as_sf]{sfext::as_bbox()}}. Optional.}
 
 \item{dist}{buffer distance in units. Optional.}
 

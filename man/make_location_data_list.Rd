@@ -17,8 +17,8 @@ provided to location and data. Use col to set both to the same value.}
 }
 \description{
 This function converts data and location into lists of sf objects using
-\link{as_sf_list}. If location_col, data_col, or col (which sets both to the
-same value), are provided the col is passed to \link{as_sf_list} to allow the
+\link[sfext:sf_list]{sfext::as_sf_list}. If location_col, data_col, or col (which sets both to the
+same value), are provided the col is passed to \link[sfext:sf_list]{sfext::as_sf_list} to allow the
 creation of an sf list from a sf data frame using \code{\link[dplyr:group_nest]{dplyr::group_nest()}}.
 }
 \details{
