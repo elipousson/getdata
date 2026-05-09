@@ -73,7 +73,8 @@ get_esri_metadata(
 - location:
 
   `sf`, `sfc`, or `bbox` object (or other object convertible with
-  `as_bbox()`. Optional.
+  [`sfext::as_bbox()`](https://elipousson.github.io/sfext/reference/as_sf.html).
+  Optional.
 
 - dist:
 

@@ -143,14 +143,8 @@ get_osm_boundaries(
 
 - nodes_only:
 
-  WARNING: this parameter is equivalent to `osm_types = "node"` and will
-  be DEPRECATED. If `TRUE`, query OSM nodes only. Some OSM structures
-  such as `place = "city"` or `highway = "traffic_signals"` are
-  represented by nodes only. Queries are built by default to return all
-  nodes, ways, and relation, but this can be very inefficient for
-  node-only queries. Setting this value to `TRUE` for such cases makes
-  queries more efficient, with data returned in the `osm_points` list
-  item.
+  WARNING: this parameter is equivalent to `osm_types = "node"` and is
+  DEPRECATED. If `TRUE`, query OSM nodes only.
 
 - key_exact:
 

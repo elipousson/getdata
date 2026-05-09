@@ -109,10 +109,11 @@ Helper functions for format_sf_data:
   [sfext::st_erase](https://elipousson.github.io/sfext/reference/st_erase.html)
   and for x after completing the operation.
 
-- rename_sf_col: Rename `sf` column.
+- [sfext::rename_sf_col](https://elipousson.github.io/sfext/reference/misc_sf.html):
+  Rename `sf` column.
 
-- relocate_sf_col: Relocate `sf` column after selected columns (defaults
-  to
+- [sfext::relocate_sf_col](https://elipousson.github.io/sfext/reference/misc_sf.html):
+  Relocate `sf` column after selected columns (defaults to
   [`dplyr::everything()`](https://dplyr.tidyverse.org/reference/reexports.html)).
 
 ## Examples
@@ -140,7 +141,7 @@ plot(nc_county_simple, max.plot = 1)
 # Erase data
 nc_co_water <- get_tigris_data(type = "area water", state = "NC", county = nc_county$NAME)
 #> Retrieving data for the year 2024
-#>   |                                                                              |                                                                      |   0%  |                                                                              |=====                                                                 |   7%  |                                                                              |=====                                                                 |   8%  |                                                                              |==========                                                            |  14%  |                                                                              |===========                                                           |  16%  |                                                                              |=====================                                                 |  30%  |                                                                              |===========================                                           |  39%  |                                                                              |====================================                                  |  51%  |                                                                              |======================================                                |  55%  |                                                                              |===============================================                       |  67%  |                                                                              |==================================================                    |  71%  |                                                                              |====================================================                  |  75%  |                                                                              |=======================================================               |  79%  |                                                                              |=============================================================         |  87%  |                                                                              |================================================================      |  91%  |                                                                              |======================================================================| 100%
+#>   |                                                                              |                                                                      |   0%  |                                                                              |===============================================                       |  67%  |                                                                              |=======================================================               |  79%  |                                                                              |======================================================================| 100%
 nc_county_erased <- format_sf_data(nc_county, erase_data = nc_co_water)
 plot(nc_county_erased, max.plot = 1)
 

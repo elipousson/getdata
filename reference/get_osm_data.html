@@ -183,13 +183,8 @@ geometry is set automatically based enclosing with "relation" using
 
 <dt id="arg-nodes-only">nodes_only<a class="anchor" aria-label="anchor" href="#arg-nodes-only"></a></dt>
 <dd><p>WARNING: this parameter is equivalent to
-<code>osm_types = "node"</code> and will be DEPRECATED. If <code>TRUE</code>, query OSM nodes
-only. Some OSM structures such as <code>place = "city"</code> or
-<code>highway = "traffic_signals"</code> are represented by nodes only. Queries are
-built by default to return all nodes, ways, and relation, but this can
-be very inefficient for node-only queries. Setting this value to <code>TRUE</code>
-for such cases makes queries more efficient, with data returned in the
-<code>osm_points</code> list item.</p></dd>
+<code>osm_types = "node"</code> and is DEPRECATED. If <code>TRUE</code>, query OSM nodes
+only.</p></dd>
 
 
 <dt id="arg-key-exact">key_exact<a class="anchor" aria-label="anchor" href="#arg-key-exact"></a></dt>

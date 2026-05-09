@@ -1,9 +1,11 @@
 # Make a list of data and corresponding locations
 
 This function converts data and location into lists of sf objects using
-as_sf_list. If location_col, data_col, or col (which sets both to the
-same value), are provided the col is passed to as_sf_list to allow the
-creation of an sf list from a sf data frame using
+[sfext::as_sf_list](https://elipousson.github.io/sfext/reference/sf_list.html).
+If location_col, data_col, or col (which sets both to the same value),
+are provided the col is passed to
+[sfext::as_sf_list](https://elipousson.github.io/sfext/reference/sf_list.html)
+to allow the creation of an sf list from a sf data frame using
 [`dplyr::group_nest()`](https://dplyr.tidyverse.org/reference/group_nest.html).
 
 ## Usage
