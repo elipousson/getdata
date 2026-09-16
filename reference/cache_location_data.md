@@ -96,6 +96,11 @@ cache_location_data(
       feature has not be fully tested and may result in errors or
       unexpected results.
 
+  `load`
+
+  :   If `TRUE` and class is "list", load data to local environment;
+      defaults `FALSE`.
+
   `dist`
 
   :   buffer distance in units. Optional.

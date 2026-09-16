@@ -250,6 +250,12 @@ get_airtable_metadata(
       [`get_record()`](https://rdrr.io/pkg/rairtable/man/read_airtable.html),
       support the airtable, url, or a base *and* table parameter.
 
+  `id_to_col`
+
+  :   If `TRUE` (default), the airtable record IDs will be added to the
+      returned data frame as a new column. If `FALSE`, the airtable
+      record IDs are used as row names.
+
   `airtable_id_col`
 
   :   Airtable record ID column name assigned to returned data frame.
@@ -261,6 +267,10 @@ get_airtable_metadata(
       airtable_id_col is not used if metadata is `NULL` or does not
       include "id". The record ID column is dropped and converted to
       rownames if id_to_col is `FALSE`.
+
+  `max_rows`
+
+  :   Deprecated. Maximum number of rows to read.
 
   `model`
 

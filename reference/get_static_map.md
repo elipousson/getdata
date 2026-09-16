@@ -277,7 +277,9 @@ token is passed to key.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (
+  rlang::is_installed("mapboxapi") && Sys.getenv("MAPBOX_PUBLIC_TOKEN") != ""
+) {
   get_osm_static_mapbox(
     id = "way/49664223",
     dist = 0.5,
@@ -298,5 +300,5 @@ if (FALSE) { # \dontrun{
     dist = 50,
     unit = "mi"
   )
-} # }
+}
 ```

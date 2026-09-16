@@ -73,7 +73,7 @@ get_esri_metadata(
 - location:
 
   `sf`, `sfc`, or `bbox` object (or other object convertible with
-  [`sfext::as_bbox()`](https://elipousson.github.io/sfext/reference/as_sf.html).
+  [`as_bbox()`](https://elipousson.github.io/sfext/reference/as_sf.html).
   Optional.
 
 - dist:
@@ -172,6 +172,16 @@ get_esri_metadata(
 
   :   If `TRUE`, add domain information to the return data frame.
       Default `FALSE`.
+
+  `layerInfo`
+
+  :   Layer information from
+      [`esrimeta()`](https://rdrr.io/pkg/esri2sf/man/esrimeta.html).
+
+  `.fn`
+
+  :   Function used to read items from a group layer. Defaults to
+      [`esri2sf()`](https://rdrr.io/pkg/esri2sf/man/esri2sf.html).
 
 - call:
 

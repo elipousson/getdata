@@ -186,7 +186,7 @@ A simple feature object with features using selected geometry type or an
 nc <- sfext::read_sf_path(system.file("shape/nc.shp", package = "sf"))
 
 civic_buildings <- get_osm_data(
-  location = nc[37,],
+  location = nc[37, ],
   features = c("building" = "civic"),
   geometry = "polygons"
 )
@@ -213,7 +213,7 @@ civic_buildings
 #>  3 47699270   Opti… NA          NA            NA                 NA             
 #>  4 47836108   Visi… NA          NA            NA                 NA             
 #>  5 378257128  West… Cary        Wake          4000               27519;27519-93…
-#>  6 378397242  Morr… NA          NA            NA                 NA             
+#>  6 378397242  NA    NA          NA            NA                 NA             
 #>  7 438008281  Fuqu… Fuquay-Var… NA            301                27526          
 #>  8 469540465  Town… Fuquay-Var… NA            405                27526          
 #>  9 859911045  UNC … NA          NA            6715               27519          

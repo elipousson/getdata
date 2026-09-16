@@ -66,7 +66,23 @@ check_date_range(
   Arguments passed on to
   [`lubridate::as_date`](https://lubridate.tidyverse.org/reference/as_date.html)
 
-  :   
+  `tz`
+
+  :   a time zone name (default: time zone of the POSIXt object `x`).
+      See [`OlsonNames()`](https://rdrr.io/r/base/timezones.html).
+
+  `origin`
+
+  :   a Date object, or something which can be coerced by
+      `as.Date(origin, ...)` to such an object (default: the Unix epoch
+      of "1970-01-01"). Note that in this instance, `x` is assumed to
+      reflect the number of days since `origin` at `"UTC"`.
+
+  `format`
+
+  :   format argument for character methods. When supplied parsing is
+      performed by `parse_date_time(x, orders = formats, exact = TRUE)`.
+      Thus, multiple formats are supported and are tried in turn.
 
 - start_date, end_date:
 

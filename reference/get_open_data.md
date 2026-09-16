@@ -194,7 +194,7 @@ list_socrata_data(source_url)
 
 ``` r
 ## Get Q2 2020 vehicle crash data for Cecil County, Maryland
-if (FALSE) { # \dontrun{
+if (rlang::is_installed("RSocrata")) {
   get_open_data(
     source_url = "https://opendata.maryland.gov",
     data = "65du-s3qu",
@@ -203,5 +203,6 @@ if (FALSE) { # \dontrun{
     name = "Cecil",
     token = Sys.getenv("MARYLAND_OPEN_DATA_API_KEY")
   )
-} # }
+}
+#> Error in httr2::req_perform(req): HTTP 403 Forbidden.
 ```
