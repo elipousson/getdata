@@ -17,7 +17,6 @@
 #'   provided to location and data. Use col to set both to the same value.
 #' @export
 #' @importFrom sfext as_sf_list
-#' @importFrom dplyr case_when
 make_location_data_list <- function(
   data,
   location,
@@ -41,16 +40,17 @@ make_location_data_list <- function(
   len_location <- length(location)
   len_data <- length(data)
 
-  location_data_list <- dplyr::case_when(
-    (len_location == 1) && (len_data > 1) ~ list(rep(location, len_data), data),
-    (len_data == 1) && (len_location > 1) ~
-      list(location, rep(data, len_location)),
-    .default = list(location, data)
-  )
+  if (len_location == 1 && len_data > 1) {
+    location_data_list <- list(rep(location, len_data), data)
+  } else if (len_data == 1 && len_location > 1) {
+    location_data_list <- list(location, rep(data, len_location))
+  } else {
+    location_data_list <- list(location, data)
+  }
 
   cli_ifnot(
-    "{.arg location} is length {location_len} and {.arg data} is {data_len}.",
-    condition = (len_location == len_data),
+    x = (len_location == len_data) || (len_location == 1) || (len_data == 1),
+    "{.arg location} is length {len_location} and {.arg data} is length {len_data}.",
     .fn = cli::cli_warn
   )
 
