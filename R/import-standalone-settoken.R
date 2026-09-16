@@ -6,12 +6,15 @@
 # ---
 # repo: elipousson/standaloner
 # file: standalone-settoken.R
-# last-updated: 2024-10-09
+# last-updated: 2026-09-16
 # license: https://opensource.org/license/mit/
 # imports: [rlang (>= 1.0.0), cli (>= 2.5.0)]
 # ---
 #
 # ## Changelog
+#
+# 2026-09-16:
+# * Fix bug where set_envvar_token set token name literally to default.
 #
 # 2024-10-09:
 # * Remove link to tidycensus package from documentation.
@@ -70,12 +73,14 @@
 #'   caller_call call_name is_null
 #' @importFrom cli cli_bullets cli_alert_success
 #' @importFrom utils read.table write.table
-set_r_environ_token <- function(token,
-                                install = FALSE,
-                                overwrite = FALSE,
-                                default = "TOKEN",
-                                quiet = FALSE,
-                                call = caller_env()) {
+set_r_environ_token <- function(
+  token,
+  install = FALSE,
+  overwrite = FALSE,
+  default = "TOKEN",
+  quiet = FALSE,
+  call = caller_env()
+) {
   if (is_true(quiet)) {
     local_options(
       "cli.default_handler" = suppressMessages,
@@ -99,7 +104,7 @@ set_r_environ_token <- function(token,
         {.fn {caller_name}} using {.arg install = TRUE}."
       )
     )
-    Sys.setenv(default = token)
+    do.call(Sys.setenv, setNames(list(token), default))
     return(invisible(token))
   }
 
@@ -107,7 +112,8 @@ set_r_environ_token <- function(token,
   renv <- file.path(home, ".Renviron")
 
   if (file.exists(renv)) {
-    default_match <- grepl(paste0("^", default, "(?=\\=)"),
+    default_match <- grepl(
+      paste0("^", default, "(?=\\=)"),
       readLines(renv),
       perl = TRUE
     )
@@ -116,7 +122,8 @@ set_r_environ_token <- function(token,
 
     if (has_default && !overwrite) {
       cli_abort(
-        c("{.envvar {default}} already exists in your {.file .Renviron}.",
+        c(
+          "{.envvar {default}} already exists in your {.file .Renviron}.",
           "*" = "Set {.arg overwrite = TRUE} to replace this token."
         ),
         call = call
@@ -130,9 +137,12 @@ set_r_environ_token <- function(token,
       oldenv <- utils::read.table(renv, stringsAsFactors = FALSE)
       newenv <- oldenv[!default_match, ]
       utils::write.table(
-        newenv, renv,
+        newenv,
+        renv,
         quote = FALSE,
-        sep = "\n", col.names = FALSE, row.names = FALSE
+        sep = "\n",
+        col.names = FALSE,
+        row.names = FALSE
       )
     }
   } else {
@@ -168,14 +178,16 @@ set_r_environ_token <- function(token,
 #'
 #' @importFrom rlang caller_arg %||% is_empty is_null
 #' @importFrom cli cli_abort cli_warn
-get_r_environ_token <- function(token = NULL,
-                                default = "TOKEN",
-                                message = NULL,
-                                pattern = NULL,
-                                perl = TRUE,
-                                strict = TRUE,
-                                call = caller_env(),
-                                ...) {
+get_r_environ_token <- function(
+  token = NULL,
+  default = "TOKEN",
+  message = NULL,
+  pattern = NULL,
+  perl = TRUE,
+  strict = TRUE,
+  call = caller_env(),
+  ...
+) {
   settoken_check_string(default, call = call)
 
   token <- token %||% Sys.getenv(default)
@@ -219,11 +231,13 @@ get_r_environ_token <- function(token = NULL,
 #' @noRd
 #' @importFrom rlang caller_arg caller_env is_string
 #' @importFrom cli cli_abort
-settoken_check_string <- function(x,
-                                  ...,
-                                  allow_empty = FALSE,
-                                  arg = caller_arg(x),
-                                  call = caller_env()) {
+settoken_check_string <- function(
+  x,
+  ...,
+  allow_empty = FALSE,
+  arg = caller_arg(x),
+  call = caller_env()
+) {
   if (is_string(x) && (allow_empty || !is_string(x, ""))) {
     return(invisible(NULL))
   }
