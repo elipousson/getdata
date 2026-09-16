@@ -38,15 +38,15 @@ match the class of the id_col for type.}
 id is provided.}
 
 \item{location}{An address, bounding box (\code{bbox}), or simple feature (\code{sf})
-object passed to \code{\link[sf:st_join]{sf::st_filter()}}. Any valid address or addresses are
+object passed to \code{\link[sf:st_filter]{sf::st_filter()}}. Any valid address or addresses are
 geocoded with \code{\link[tidygeocoder:geo]{tidygeocoder::geo()}}, converted to a simple feature object,
 and then used as a spatial filter. \code{bbox} objects are converted using
-\code{\link[sfext:sf_bbox_misc]{sfext::sf_bbox_to_sf()}}. Multiple addresses are supported.}
+\code{\link[sfext:sf_bbox_to_sf]{sfext::sf_bbox_to_sf()}}. Multiple addresses are supported.}
 
 \item{index}{Optional list used to match type to data, Default: \code{NULL}}
 
 \item{union}{If \code{TRUE}, the location geometry is unioned with
-\code{\link[sf:geos_combine]{sf::st_union()}} and the names are combined into a single value. Default:
+\code{\link[sf:st_union]{sf::st_union()}} and the names are combined into a single value. Default:
 \code{FALSE}.}
 
 \item{crs}{Coordinate reference system to return; defaults to \code{NULL} which

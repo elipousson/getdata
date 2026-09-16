@@ -54,10 +54,10 @@ steps in transforming an \code{sf} object and preparing for mapping or analysis:
 \details{
 \itemize{
 \item Convert data to an \code{sf} object with \link[sfext:as_sf]{sfext::as_sf} if \code{sf_req} is \code{FALSE}
-\item Make data valid with \link[sf:valid]{sf::st_make_valid} if needed
+\item Make data valid with \link[sf:st_make_valid]{sf::st_make_valid} if needed
 \item Format data with \link{format_data} using the ... parameters
 \item Erase any data overlapping with \code{erase_data} (suggested for use with water or open space)
-\item Simplify geometry with \link[sf:geos_unary]{sf::st_simplify} if \code{dTolerance} is provided
+\item Simplify geometry with \link[sf:st_simplify]{sf::st_simplify} if \code{dTolerance} is provided
 \item Smooth geometry with \link[smoothr:smooth]{smoothr::smooth} if \code{smooth} is \code{TRUE}
 \item Rename the sf column to match \code{sf_col} (defaults to "geometry")
 }
@@ -70,16 +70,16 @@ Helper functions for \link{format_sf_data}:
 \item \link{erase_data}: erase intersection of x and erase_data (validity of
 erase_data checked before \link[sfext:st_erase]{sfext::st_erase} and for x after completing the
 operation.
-\item \link[sfext:misc_sf]{sfext::rename_sf_col}: Rename \code{sf} column.
-\item \link[sfext:misc_sf]{sfext::relocate_sf_col}: Relocate \code{sf} column after selected columns (defaults to
-\code{\link[dplyr:reexports]{dplyr::everything()}}).
+\item \link[sfext:rename_sf_col]{rename_sf_col}: Rename \code{sf} column.
+\item \link[sfext:relocate_sf_col]{relocate_sf_col}: Relocate \code{sf} column after selected columns (defaults to
+\code{\link[dplyr:everything]{dplyr::everything()}}).
 }
 }
 \examples{
 library(sf)
 
 nc <- read_sf(system.file("shape/nc.shp", package = "sf"))
-nc_county <- nc[2,]
+nc_county <- nc[2, ]
 
 # Transform coordinate reference system
 st_crs(nc)$epsg
@@ -91,7 +91,11 @@ nc_county_simple <- format_sf_data(nc_county, dTolerance = 5000, smooth = TRUE)
 plot(nc_county_simple, max.plot = 1)
 
 # Erase data
-nc_co_water <- get_tigris_data(type = "area water", state = "NC", county = nc_county$NAME)
+nc_co_water <- get_tigris_data(
+  type = "area water",
+  state = "NC",
+  county = nc_county$NAME
+)
 nc_county_erased <- format_sf_data(nc_county, erase_data = nc_co_water)
 plot(nc_county_erased, max.plot = 1)
 

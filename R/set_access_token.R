@@ -13,12 +13,14 @@
 #' @rdname set_access_token
 #' @aliases set_token_type
 #' @export
-set_access_token <- function(token,
-                             overwrite = FALSE,
-                             install = FALSE,
-                             type = NULL,
-                             quiet = FALSE,
-                             call = caller_env()) {
+set_access_token <- function(
+  token,
+  overwrite = FALSE,
+  install = FALSE,
+  type = NULL,
+  quiet = FALSE,
+  call = caller_env()
+) {
   set_r_environ_token(
     token = token,
     overwrite = overwrite,
@@ -33,9 +35,7 @@ set_access_token <- function(token,
 #' @rdname set_access_token
 #' @aliases get_token_type
 #' @export
-get_access_token <- function(token = NULL,
-                             type = NULL,
-                             call = caller_env()) {
+get_access_token <- function(token = NULL, type = NULL, call = caller_env()) {
   get_r_environ_token(
     token = token,
     default = type,

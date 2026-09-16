@@ -15,23 +15,25 @@
 #' @returns Save data to file and invisibly return file path.
 #' @export
 #' @importFrom sf st_write
-cache_location_data <- function(data = NULL,
-                                ...,
-                                location = NULL,
-                                name = NULL,
-                                label = NULL,
-                                fileext = "gpkg",
-                                filename = NULL,
-                                path = NULL,
-                                prefix = NULL,
-                                postfix = NULL,
-                                cache = TRUE,
-                                pkg = "getdata",
-                                create = TRUE,
-                                overwrite = FALSE,
-                                compress = c("none", "gz", "bz2", "xz"),
-                                version = 3,
-                                call = caller_env()) {
+cache_location_data <- function(
+  data = NULL,
+  ...,
+  location = NULL,
+  name = NULL,
+  label = NULL,
+  fileext = "gpkg",
+  filename = NULL,
+  path = NULL,
+  prefix = NULL,
+  postfix = NULL,
+  cache = TRUE,
+  pkg = "getdata",
+  create = TRUE,
+  overwrite = FALSE,
+  compress = c("none", "gz", "bz2", "xz"),
+  version = 3,
+  call = caller_env()
+) {
   check_dev_installed("filenamr", repo = "elipousson/filenamr", call = call)
 
   filename <- filenamr::make_filename(

@@ -58,7 +58,7 @@ map_location_data(
 }
 \arguments{
 \item{location}{sf object. If multiple areas are provided, they are unioned
-into a single sf object using \code{\link[sf:geos_combine]{sf::st_union()}}}
+into a single sf object using \code{\link[sf:st_union]{sf::st_union()}}}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -87,7 +87,7 @@ bbox, conversion to a sf object will still always be attempted with
 \item{pkg, package}{Name of the package to search for data.}
 
 \item{fileext, filetype}{File extension or type to use if passing parameters
-to \code{\link[sfext:read_sf_ext]{sfext::read_sf_download()}} or \code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}} (required for
+to \code{\link[sfext:read_sf_download]{sfext::read_sf_download()}} or \code{\link[sfext:read_sf_pkg]{sfext::read_sf_pkg()}} (required for
 extdata and cached data).}
 
 \item{fn}{Function to apply to data after filtering by location but before
@@ -138,8 +138,8 @@ coordinates north of Anchorage, Alaska or south of New Zealand.}
 \item{.name_repair}{One of "unique", "universal", or "check_unique". See
 \code{\link[vctrs:vec_as_names]{vctrs::vec_as_names()}} for the meaning of these options.}
 
-\item{...}{Additional parameters passed to \code{\link[sfext:read_sf_ext]{sfext::read_sf_path()}},
-\code{\link[sfext:read_sf_ext]{sfext::read_sf_url()}}, \code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}}, \code{\link[sfext:as_sf]{sfext::as_sf()}} (with
+\item{...}{Additional parameters passed to \code{\link[sfext:read_sf_path]{sfext::read_sf_path()}},
+\code{\link[sfext:read_sf_url]{sfext::read_sf_url()}}, \code{\link[sfext:read_sf_pkg]{sfext::read_sf_pkg()}}, \code{\link[sfext:as_sf]{sfext::as_sf()}} (with
 bbox), or \code{\link[sfext:read_sf_ext]{sfext::read_sf_ext()}} (with no other parameters).}
 
 \item{call}{The execution environment of a currently
@@ -153,8 +153,8 @@ defaults \code{FALSE}.}
 \description{
 Returns data for a selected location or a list of locations (for
 \code{\link[=map_location_data]{map_location_data()}}). If data is a character string, the parameter is
-passed to \code{\link[sfext:read_sf_ext]{sfext::read_sf_url()}}, \code{\link[sfext:read_sf_ext]{sfext::read_sf_path()}}, or
-\code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}}. This function uses \code{\link[sfext:st_filter_ext]{sfext::st_filter_ext()}} to
+passed to \code{\link[sfext:read_sf_url]{sfext::read_sf_url()}}, \code{\link[sfext:read_sf_path]{sfext::read_sf_path()}}, or
+\code{\link[sfext:read_sf_pkg]{sfext::read_sf_pkg()}}. This function uses \code{\link[sfext:st_filter_ext]{sfext::st_filter_ext()}} to
 filter, crop, or trim data to the provided location. location can also be an
 an address.
 }

@@ -55,7 +55,6 @@ test_that("get_location works", {
     "sf"
   )
 
-
   # Check if index list works
 
   expect_s3_class(

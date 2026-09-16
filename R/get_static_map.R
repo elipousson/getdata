@@ -47,20 +47,22 @@ NULL
 #' @rdname get_static_map
 #' @export
 #' @inheritParams mapboxapi::static_mapbox
-get_static_mapbox <- function(location,
-                              dist = NULL,
-                              unit = "meter",
-                              style_url = "mapbox://styles/mapbox/light-v10",
-                              overlay_location = FALSE,
-                              overlay_sf = NULL,
-                              overlay_style = NULL,
-                              zoom = NULL,
-                              width = 600,
-                              height = 400,
-                              bearing = NULL,
-                              pitch = NULL,
-                              token = NULL,
-                              ...) {
+get_static_mapbox <- function(
+  location,
+  dist = NULL,
+  unit = "meter",
+  style_url = "mapbox://styles/mapbox/light-v10",
+  overlay_location = FALSE,
+  overlay_sf = NULL,
+  overlay_style = NULL,
+  zoom = NULL,
+  width = 600,
+  height = 400,
+  bearing = NULL,
+  pitch = NULL,
+  token = NULL,
+  ...
+) {
   if (overlay_location && is.null(overlay_sf)) {
     overlay_sf <- location
   }
@@ -96,29 +98,36 @@ get_static_mapbox <- function(location,
 #' @rdname get_static_map
 #' @inheritParams get_osm_data
 #' @export
-get_osm_static_mapbox <- function(id = NULL,
-                                  key = NULL,
-                                  level = NULL,
-                                  location = NULL,
-                                  dist = NULL,
-                                  unit = "meter",
-                                  overlay_location = TRUE,
-                                  style_url = "mapbox://styles/mapbox/light-v10",
-                                  overlay_sf = NULL,
-                                  overlay_style = NULL,
-                                  zoom = NULL,
-                                  width = 600,
-                                  height = 400,
-                                  bearing = NULL,
-                                  pitch = NULL,
-                                  token = NULL,
-                                  ...) {
+get_osm_static_mapbox <- function(
+  id = NULL,
+  key = NULL,
+  level = NULL,
+  location = NULL,
+  dist = NULL,
+  unit = "meter",
+  overlay_location = TRUE,
+  style_url = "mapbox://styles/mapbox/light-v10",
+  overlay_sf = NULL,
+  overlay_style = NULL,
+  zoom = NULL,
+  width = 600,
+  height = 400,
+  bearing = NULL,
+  pitch = NULL,
+  token = NULL,
+  ...
+) {
   if (!is.null(id)) {
     location <- get_osm_id(id = id, crs = 3857, ...)
   } else if (!is.null(key)) {
     location <- get_osm_data(location = location, crs = 3857, key = key, ...)
   } else if (!is.null(level) && !is.null(location)) {
-    location <- get_osm_boundaries(location = location, crs = 3857, level = level, ...)
+    location <- get_osm_boundaries(
+      location = location,
+      crs = 3857,
+      level = level,
+      ...
+    )
   }
 
   get_static_mapbox(
@@ -142,27 +151,29 @@ get_osm_static_mapbox <- function(id = NULL,
 #' @rdname get_static_map
 #' @export
 #' @inheritParams get_location
-get_location_static_mapbox <- function(type,
-                                       dist = NULL,
-                                       unit = "meter",
-                                       name = NULL,
-                                       name_col = "name",
-                                       id = NULL,
-                                       id_col = "id",
-                                       location = NULL,
-                                       index = NULL,
-                                       union = FALSE,
-                                       overlay_location = TRUE,
-                                       style_url = "mapbox://styles/mapbox/light-v10",
-                                       overlay_sf = NULL,
-                                       overlay_style = NULL,
-                                       zoom = NULL,
-                                       width = 600,
-                                       height = 400,
-                                       bearing = NULL,
-                                       pitch = NULL,
-                                       token = NULL,
-                                       ...) {
+get_location_static_mapbox <- function(
+  type,
+  dist = NULL,
+  unit = "meter",
+  name = NULL,
+  name_col = "name",
+  id = NULL,
+  id_col = "id",
+  location = NULL,
+  index = NULL,
+  union = FALSE,
+  overlay_location = TRUE,
+  style_url = "mapbox://styles/mapbox/light-v10",
+  overlay_sf = NULL,
+  overlay_style = NULL,
+  zoom = NULL,
+  width = 600,
+  height = 400,
+  bearing = NULL,
+  pitch = NULL,
+  token = NULL,
+  ...
+) {
   location <- get_location(
     type = type,
     name = name,
@@ -198,16 +209,18 @@ get_location_static_mapbox <- function(type,
 #' @inheritParams bingmapr::get_map_image
 #' @export
 #' @importFrom sfext st_buffer_ext
-get_static_bingmap <- function(location = NULL,
-                               dist = NULL,
-                               unit = "m",
-                               imagery = "BirdsEye",
-                               zoom = NULL,
-                               width = 600,
-                               height = 400,
-                               bearing = NULL,
-                               token = NULL,
-                               ...) {
+get_static_bingmap <- function(
+  location = NULL,
+  dist = NULL,
+  unit = "m",
+  imagery = "BirdsEye",
+  zoom = NULL,
+  width = 600,
+  height = 400,
+  bearing = NULL,
+  token = NULL,
+  ...
+) {
   rlang::check_installed("bingmapr")
 
   # FIXME: If bingmapr::get_map_image only uses the centroid - does the dist

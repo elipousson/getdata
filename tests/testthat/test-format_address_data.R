@@ -18,8 +18,11 @@ test_that("format_address_data works", {
       rlang::has_name(
         address_df,
         c(
-          "block_num", "block_even_odd", "block_segment",
-          "block_face", "street_address"
+          "block_num",
+          "block_even_odd",
+          "block_segment",
+          "block_face",
+          "street_address"
         )
       )
     )

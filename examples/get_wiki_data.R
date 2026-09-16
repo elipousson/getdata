@@ -1,8 +1,8 @@
 dc <-
   get_tigris_data(
-  type = "census places",
-  state = "District of Columbia",
-)
+    type = "census places",
+    state = "District of Columbia",
+  )
 
 get_wiki_data(
   location = dc,

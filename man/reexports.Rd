@@ -13,6 +13,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{sfext}{\code{\link[sfext]{read_sf_ext}}, \code{\link[sfext]{st_bbox_ext}}, \code{\link[sfext]{st_filter_ext}}}
+  \item{sfext}{\code{\link[sfext:read_sf_ext]{read_sf_ext()}}, \code{\link[sfext:st_bbox_ext]{st_bbox_ext()}}, \code{\link[sfext:st_filter_ext]{st_filter_ext()}}}
 }}
 

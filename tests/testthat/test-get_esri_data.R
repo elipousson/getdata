@@ -1,7 +1,8 @@
 test_that("get_esri_data works", {
   location <- get_location(
     type = system.file("shape/nc.shp", package = "sf"),
-    name = "Hyde", name_col = "NAME"
+    name = "Hyde",
+    name_col = "NAME"
   )
 
   test_url <-
@@ -48,7 +49,8 @@ test_that("get_esri_data works", {
 test_that("get_esri_layers works", {
   location <- get_location(
     type = system.file("shape/nc.shp", package = "sf"),
-    name = "Hyde", name_col = "NAME"
+    name = "Hyde",
+    name_col = "NAME"
   )
 
   test_url <-

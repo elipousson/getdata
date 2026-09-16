@@ -1,5 +1,5 @@
 ## Get Q2 2020 vehicle crash data for Cecil County, Maryland
-\dontrun{
+if (rlang::is_installed("RSocrata")) {
   get_open_data(
     source_url = "https://opendata.maryland.gov",
     data = "65du-s3qu",

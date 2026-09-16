@@ -43,14 +43,16 @@
 #' @export
 #' @importFrom sfext as_sf check_sf st_transform_ext
 #' @importFrom sf st_is_valid st_make_valid st_simplify
-format_sf_data <- function(x,
-                           crs = getOption("getdata.crs", default = 3857),
-                           erase_data = NULL,
-                           dTolerance = NULL,
-                           smooth = FALSE,
-                           sf_col = NULL,
-                           sf_req = TRUE,
-                           ...) {
+format_sf_data <- function(
+  x,
+  crs = getOption("getdata.crs", default = 3857),
+  erase_data = NULL,
+  dTolerance = NULL,
+  smooth = FALSE,
+  sf_col = NULL,
+  sf_req = TRUE,
+  ...
+) {
   if (!sf_req) {
     x <- sfext::as_sf(x)
   }
@@ -89,10 +91,12 @@ format_sf_data <- function(x,
 #' @importFrom sfext check_sf st_erase
 #' @importFrom sf st_is_valid st_make_valid
 erase_data <- function(x, erase_data = NULL) {
-  if (is.null(erase_data) ||
-    # FIXME: This check should probably be incorporated into sfext::st_erase
-    (sfext::is_sf(erase_data) && nrow(erase_data) == 0) ||
-    (sfext::is_sfc(erase_data) && length(erase_data) == 0)) {
+  if (
+    is.null(erase_data) ||
+      # FIXME: This check should probably be incorporated into sfext::st_erase
+      (sfext::is_sf(erase_data) && nrow(erase_data) == 0) ||
+      (sfext::is_sfc(erase_data) && length(erase_data) == 0)
+  ) {
     return(x)
   }
 

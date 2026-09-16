@@ -63,24 +63,26 @@
 #' @export
 #' @importFrom dplyr mutate
 #' @importFrom tibble tibble
-get_flickr_photos <- function(location = NULL,
-                              dist = NULL,
-                              diag_ratio = NULL,
-                              unit = NULL,
-                              asp = NULL,
-                              user_id = NULL,
-                              tags = NULL,
-                              license_id = "cc0",
-                              sort = "date-posted",
-                              desc = FALSE,
-                              img_size = "s",
-                              extras = c("description", "date_taken", "tags", "geo"),
-                              per_page = 100,
-                              page = 1,
-                              orientation = NULL,
-                              geometry = TRUE,
-                              crs = 4326,
-                              key = NULL) {
+get_flickr_photos <- function(
+  location = NULL,
+  dist = NULL,
+  diag_ratio = NULL,
+  unit = NULL,
+  asp = NULL,
+  user_id = NULL,
+  tags = NULL,
+  license_id = "cc0",
+  sort = "date-posted",
+  desc = FALSE,
+  img_size = "s",
+  extras = c("description", "date_taken", "tags", "geo"),
+  per_page = 100,
+  page = 1,
+  orientation = NULL,
+  geometry = TRUE,
+  crs = 4326,
+  key = NULL
+) {
   rlang::check_installed("FlickrAPI")
 
   if (length(page) > 1) {
@@ -189,8 +191,7 @@ get_flickr_photos <- function(location = NULL,
 #'   options "landscape", "portrait", and "square".
 #' @noRd
 #' @importFrom dplyr rename mutate case_when
-get_flickr_photos_orientation <- function(photos,
-                                          orientation = NULL) {
+get_flickr_photos_orientation <- function(photos, orientation = NULL) {
   if (rlang::has_name(photos, "img_asp")) {
     photos <- dplyr::mutate(
       photos,

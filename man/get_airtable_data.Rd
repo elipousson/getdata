@@ -62,7 +62,7 @@ starting with "viw". Optional only if base is a url.}
 require_view is \code{FALSE}.}
 
 \item{record}{Airtable record identifier, Default: \code{NULL} Superseded by
-\code{\link[rairtable:read_airtable]{rairtable::list_records()}} function.}
+\code{\link[rairtable:list_records]{rairtable::list_records()}} function.}
 
 \item{fields}{For \code{\link[=get_airtable_metadata]{get_airtable_metadata()}}, if \code{TRUE}, return the fields
 column from the data.frame with the Airtable response. If only one table is
@@ -83,7 +83,7 @@ direction parameter.}
 \item{max_records}{Maximum number of records to return. Must be 100 or less.}
 
 \item{per_page}{Passed to page_size parameter of
-\code{\link[rairtable:read_airtable]{rairtable::list_records()}}}
+\code{\link[rairtable:list_records]{rairtable::list_records()}}}
 
 \item{cell_format}{Cell format for "Link to another record" fields. Defaults
 to "json" which returns a unique record ID. A "string" cell_format returns
@@ -102,7 +102,7 @@ records. If \code{FALSE} (default), use field names.}
 Defaults to \code{FALSE}.}
 
 \item{location}{sf object. If multiple areas are provided, they are unioned
-into a single sf object using \code{\link[sf:geos_combine]{sf::st_union()}}}
+into a single sf object using \code{\link[sf:st_union]{sf::st_union()}}}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -151,18 +151,22 @@ to "resp" to return the API response without any additional formatting or
 conversion.}
 
 \item{...}{
-  Arguments passed on to \code{\link[rairtable:read_airtable]{rairtable::list_records}}
+  Arguments passed on to \code{\link[rairtable:list_records]{rairtable::list_records}}
   \describe{
     \item{\code{airtable}}{An \code{airtable} class object. Optional for \code{\link[rairtable:read_airtable]{read_airtable()}} if
 url is supplied. For \code{\link[rairtable:list_records]{list_records()}} and
 \code{\link[rairtable:get_record]{get_record()}}, support the airtable, url, or a base \emph{and} table
 parameter.}
+    \item{\code{id_to_col}}{If \code{TRUE} (default), the airtable record IDs will be added
+to the returned data frame as a new column. If \code{FALSE}, the airtable record
+IDs are used as row names.}
     \item{\code{airtable_id_col}}{Airtable record ID column name assigned to returned
 data frame. Defaults to \code{NULL} which is sets record ID column name to
 \code{getOption("rairtable.id_col", "airtable_record_id")}. For \code{\link[rairtable:list_records]{list_records()}}
 and \code{\link[rairtable:get_record]{get_record()}}, airtable_id_col is not used if metadata is \code{NULL} or
 does not include "id". The record ID column is dropped and converted to
 rownames if id_to_col is \code{FALSE}.}
+    \item{\code{max_rows}}{Deprecated. Maximum number of rows to read.}
     \item{\code{model}}{Optional. A table model from \code{\link[rairtable:get_table_model]{get_table_model()}}. If supplied,
 model is used to validate fields and sort parameters and to arrange columns
 to match the order of the table model.}
@@ -187,7 +191,7 @@ Get data from an Airtable base using the Airtable API, a development version
 of the \href{https://github.com/elipousson/rairtable/tree/dev}{rairtable package},
 and the httr2 package. If the base includes coordinate fields/columns,
 optionally convert the data to a simple feature object using
-\code{\link[sfext:sf_to_df]{sfext::df_to_sf()}} if \code{geometry = TRUE}.
+\code{\link[sfext:df_to_sf]{sfext::df_to_sf()}} if \code{geometry = TRUE}.
 }
 \details{
 This function an Airtable personal access token which you can create at

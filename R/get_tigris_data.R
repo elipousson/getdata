@@ -44,20 +44,22 @@
 #' @return A simple feature object matching the type provided.
 #' @rdname get_state_tigris
 #' @export
-get_tigris_data <- function(type = NULL,
-                            state = getOption("getdata.state"),
-                            location = NULL,
-                            dist = getOption("getdata.dist"),
-                            diag_ratio = getOption("getdata.diag_ratio"),
-                            unit = getOption("getdata.unit", "meter"),
-                            asp = getOption("getdata.asp"),
-                            crs = getOption("getdata.crs", default = 3857),
-                            name = NULL,
-                            name_col = c("name", "namelsad", "geoid"),
-                            cb = TRUE,
-                            clean_names = TRUE,
-                            cache = TRUE,
-                            ...) {
+get_tigris_data <- function(
+  type = NULL,
+  state = getOption("getdata.state"),
+  location = NULL,
+  dist = getOption("getdata.dist"),
+  diag_ratio = getOption("getdata.diag_ratio"),
+  unit = getOption("getdata.unit", "meter"),
+  asp = getOption("getdata.asp"),
+  crs = getOption("getdata.crs", default = 3857),
+  name = NULL,
+  name_col = c("name", "namelsad", "geoid"),
+  cb = TRUE,
+  clean_names = TRUE,
+  cache = TRUE,
+  ...
+) {
   if (!is.null(type)) {
     type <- tolower(type)
   }
@@ -71,10 +73,22 @@ get_tigris_data <- function(type = NULL,
   type <- match.arg(
     type,
     c(
-      "counties", "census places", "congressional districts",
-      "legislative districts", "senate district", "voting districts",
-      "tracts", "block groups", "blocks", "pumas", "zctas",
-      "roads", "primary secondary roads", "area water", "linear water", "landmarks"
+      "counties",
+      "census places",
+      "congressional districts",
+      "legislative districts",
+      "senate district",
+      "voting districts",
+      "tracts",
+      "block groups",
+      "blocks",
+      "pumas",
+      "zctas",
+      "roads",
+      "primary secondary roads",
+      "area water",
+      "linear water",
+      "landmarks"
     )
   )
 
@@ -86,21 +100,76 @@ get_tigris_data <- function(type = NULL,
     asp = asp
   )
 
-  data <- switch(type,
-    "counties" = tigris::counties(state = state, cb = cb, filter_by = filter_by, ...),
-    "census places" = tigris::places(state = state, cb = cb, filter_by = filter_by, ...),
-    "congressional districts" = tigris::congressional_districts(state = state, cb = cb, filter_by = filter_by, ...),
-    "legislative districts" = tigris::state_legislative_districts(state = state, house = "lower", cb = cb, filter_by = filter_by, ...),
-    "senate districts" = tigris::state_legislative_districts(state = state, house = "upper", cb = cb, filter_by = filter_by, ...),
-    "county subdivisions" = tigris::county_subdivisions(state = state, cb = cb, filter_by = filter_by, ...),
-    "block groups" = tigris::block_groups(state = state, cb = cb, filter_by = filter_by, ...),
+  data <- switch(
+    type,
+    "counties" = tigris::counties(
+      state = state,
+      cb = cb,
+      filter_by = filter_by,
+      ...
+    ),
+    "census places" = tigris::places(
+      state = state,
+      cb = cb,
+      filter_by = filter_by,
+      ...
+    ),
+    "congressional districts" = tigris::congressional_districts(
+      state = state,
+      cb = cb,
+      filter_by = filter_by,
+      ...
+    ),
+    "legislative districts" = tigris::state_legislative_districts(
+      state = state,
+      house = "lower",
+      cb = cb,
+      filter_by = filter_by,
+      ...
+    ),
+    "senate districts" = tigris::state_legislative_districts(
+      state = state,
+      house = "upper",
+      cb = cb,
+      filter_by = filter_by,
+      ...
+    ),
+    "county subdivisions" = tigris::county_subdivisions(
+      state = state,
+      cb = cb,
+      filter_by = filter_by,
+      ...
+    ),
+    "block groups" = tigris::block_groups(
+      state = state,
+      cb = cb,
+      filter_by = filter_by,
+      ...
+    ),
     "blocks" = tigris::blocks(state = state, filter_by = filter_by, ...),
     "pumas" = tigris::pumas(state = state, cb = cb, filter_by = filter_by, ...),
-    "voting districts" = tigris::voting_districts(state = state, cb = cb, filter_by = filter_by, ...),
+    "voting districts" = tigris::voting_districts(
+      state = state,
+      cb = cb,
+      filter_by = filter_by,
+      ...
+    ),
     "roads" = tigris::roads(state = state, filter_by = filter_by, ...),
-    "primary secondary roads" = tigris::primary_secondary_roads(state = state, filter_by = filter_by, ...),
-    "area water" = tigris::area_water(state = state, filter_by = filter_by, ...),
-    "linear water" = tigris::linear_water(state = state, filter_by = filter_by, ...),
+    "primary secondary roads" = tigris::primary_secondary_roads(
+      state = state,
+      filter_by = filter_by,
+      ...
+    ),
+    "area water" = tigris::area_water(
+      state = state,
+      filter_by = filter_by,
+      ...
+    ),
+    "linear water" = tigris::linear_water(
+      state = state,
+      filter_by = filter_by,
+      ...
+    ),
     "landmarks" = tigris::landmarks(state = state, filter_by = filter_by, ...),
     "zctas" = tigris::zctas(state = state, filter_by = filter_by, ...)
   )
@@ -121,7 +190,11 @@ get_tigris_data <- function(type = NULL,
 #' Helper to filter rows with name values in name_cols
 #'
 #' @noRd
-lookup_tigris_name <- function(name, name_col = c("name", "namelsad", "geoid"), data = NULL) {
+lookup_tigris_name <- function(
+  name,
+  name_col = c("name", "namelsad", "geoid"),
+  data = NULL
+) {
   lookup <- FALSE
   name <- tolower(name)
   name_col <- name_col[name_col %in% names(data)]

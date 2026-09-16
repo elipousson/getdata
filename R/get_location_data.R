@@ -60,31 +60,33 @@
 #' @rdname get_location_data
 #' @export
 #' @importFrom sf st_crs st_crop st_transform st_intersection st_filter
-get_location_data <- function(location = NULL,
-                              dist = getOption("getdata.dist"),
-                              diag_ratio = getOption("getdata.diag_ratio"),
-                              unit = getOption("getdata.unit", default = "meter"),
-                              asp = getOption("getdata.asp"),
-                              data = NULL,
-                              pkg = getOption("getdata.package"),
-                              package = getOption("getdata.package"),
-                              fileext = getOption("getdata.fileext", default = "gpkg"),
-                              filetype = getOption("getdata.filetype", default = "gpkg"),
-                              fn = NULL,
-                              crop = TRUE,
-                              trim = FALSE,
-                              from_crs = getOption("getdata.from_crs"),
-                              crs = getOption("getdata.crs", 3857),
-                              class = "sf",
-                              label = NULL,
-                              index = NULL,
-                              col = NULL,
-                              var_names = NULL,
-                              clean_names = FALSE,
-                              range = NULL,
-                              .name_repair = "check_unique",
-                              ...,
-                              call = caller_env()) {
+get_location_data <- function(
+  location = NULL,
+  dist = getOption("getdata.dist"),
+  diag_ratio = getOption("getdata.diag_ratio"),
+  unit = getOption("getdata.unit", default = "meter"),
+  asp = getOption("getdata.asp"),
+  data = NULL,
+  pkg = getOption("getdata.package"),
+  package = getOption("getdata.package"),
+  fileext = getOption("getdata.fileext", default = "gpkg"),
+  filetype = getOption("getdata.filetype", default = "gpkg"),
+  fn = NULL,
+  crop = TRUE,
+  trim = FALSE,
+  from_crs = getOption("getdata.from_crs"),
+  crs = getOption("getdata.crs", 3857),
+  class = "sf",
+  label = NULL,
+  index = NULL,
+  col = NULL,
+  var_names = NULL,
+  clean_names = FALSE,
+  range = NULL,
+  .name_repair = "check_unique",
+  ...,
+  call = caller_env()
+) {
   fileext <- fileext %||% filetype
   pkg <- pkg %||% package
 
@@ -136,11 +138,16 @@ get_location_data <- function(location = NULL,
       }
     }
 
-    data <- switch(type,
+    data <- switch(
+      type,
       "url" = sfext::read_sf_url(url = data, bbox = bbox, ...),
       "path" = sfext::read_sf_path(path = data, bbox = bbox, ...),
       "pkg" = sfext::read_sf_pkg(
-        data = data, bbox = bbox, pkg = pkg, fileext = fileext, ...
+        data = data,
+        bbox = bbox,
+        pkg = pkg,
+        fileext = fileext,
+        ...
       ),
       "sf" = sfext::as_sf(data, ..., call = call),
       "df" = sfext::df_to_sf(x = data, from_crs = from_crs, ..., call = call),
@@ -198,26 +205,28 @@ get_location_data <- function(location = NULL,
 #'   defaults `FALSE`.
 #' @export
 #' @importFrom janitor make_clean_names
-map_location_data <- function(location = NULL,
-                              dist = NULL,
-                              diag_ratio = NULL,
-                              unit = NULL,
-                              asp = NULL,
-                              data = NULL,
-                              package = NULL,
-                              fileext = "gpkg",
-                              filetype = "gpkg",
-                              fn = NULL,
-                              crop = TRUE,
-                              trim = FALSE,
-                              from_crs = NULL,
-                              crs = NULL,
-                              class = "list",
-                              label = NULL,
-                              load = FALSE,
-                              index = NULL,
-                              range = NULL,
-                              ...) {
+map_location_data <- function(
+  location = NULL,
+  dist = NULL,
+  diag_ratio = NULL,
+  unit = NULL,
+  asp = NULL,
+  data = NULL,
+  package = NULL,
+  fileext = "gpkg",
+  filetype = "gpkg",
+  fn = NULL,
+  crop = TRUE,
+  trim = FALSE,
+  from_crs = NULL,
+  crs = NULL,
+  class = "list",
+  label = NULL,
+  load = FALSE,
+  index = NULL,
+  range = NULL,
+  ...
+) {
   fileext <- fileext %||% filetype
   # FIXME: This triggers an alert with lintr but it is used
   params <- list2(...)
@@ -253,8 +262,9 @@ map_location_data <- function(location = NULL,
     location <- as.list(location)
   }
 
-  if (is.list(data) && is.list(location) &&
-    (length(data) == length(location))) {
+  if (
+    is.list(data) && is.list(location) && (length(data) == length(location))
+  ) {
     data <- map2(
       location,
       data,
@@ -338,10 +348,12 @@ map_location_data <- function(location = NULL,
 #' Get value of location of data parameter from list index
 #'
 #' @noRd
-get_index_param <- function(index = NULL,
-                            location = NULL,
-                            type = NULL,
-                            data = NULL) {
+get_index_param <- function(
+  index = NULL,
+  location = NULL,
+  type = NULL,
+  data = NULL
+) {
   # Return data from index list if provided (may include bbox, sfc, or sf
   # objects)
   if (!is.null(location)) {

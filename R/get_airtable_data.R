@@ -56,41 +56,43 @@
 #' @rdname get_airtable_data
 #' @export
 #' @importFrom sfext df_to_sf
-get_airtable_data <- function(base,
-                              table = NULL,
-                              view = NULL,
-                              record = deprecated(),
-                              fields = NULL,
-                              # filterByFormula = NULL, # SQL style query
-                              filter = NULL,
-                              sort = NULL,
-                              direction = "asc",
-                              desc = deprecated(),
-                              max_records = 100,
-                              per_page = NULL,
-                              cell_format = "json",
-                              tz = NULL,
-                              locale = NULL,
-                              fields_by_id = FALSE,
-                              offset = NULL,
-                              geometry = FALSE,
-                              location = NULL,
-                              dist = getOption("getdata.dist"),
-                              diag_ratio = getOption("getdata.diag_ratio"),
-                              unit = getOption("getdata.unit", "meter"),
-                              asp = getOption("getdata.asp"),
-                              crs = getOption("getdata.crs", 3857),
-                              coords = getOption("getdata.coords", c("lon", "lat")),
-                              from_crs = getOption("getdata.from_crs", 4326),
-                              remove_coords = TRUE,
-                              address = getOption("getdata.address", "address"),
-                              geo = FALSE,
-                              name_repair = janitor::make_clean_names,
-                              # label = FALSE,
-                              token = NULL,
-                              type = "AIRTABLE_TOKEN",
-                              resp_type = deprecated(),
-                              ...) {
+get_airtable_data <- function(
+  base,
+  table = NULL,
+  view = NULL,
+  record = deprecated(),
+  fields = NULL,
+  # filterByFormula = NULL, # SQL style query
+  filter = NULL,
+  sort = NULL,
+  direction = "asc",
+  desc = deprecated(),
+  max_records = 100,
+  per_page = NULL,
+  cell_format = "json",
+  tz = NULL,
+  locale = NULL,
+  fields_by_id = FALSE,
+  offset = NULL,
+  geometry = FALSE,
+  location = NULL,
+  dist = getOption("getdata.dist"),
+  diag_ratio = getOption("getdata.diag_ratio"),
+  unit = getOption("getdata.unit", "meter"),
+  asp = getOption("getdata.asp"),
+  crs = getOption("getdata.crs", 3857),
+  coords = getOption("getdata.coords", c("lon", "lat")),
+  from_crs = getOption("getdata.from_crs", 4326),
+  remove_coords = TRUE,
+  address = getOption("getdata.address", "address"),
+  geo = FALSE,
+  name_repair = janitor::make_clean_names,
+  # label = FALSE,
+  token = NULL,
+  type = "AIRTABLE_TOKEN",
+  resp_type = deprecated(),
+  ...
+) {
   check_dev_installed("rairtable", repo = "elipousson/rairtable@dev")
 
   if (is_url(base)) {
@@ -122,8 +124,6 @@ get_airtable_data <- function(base,
     .name_repair = name_repair,
     ...
   )
-
-
 
   # if (label) {
   #   labels <- names(data)
@@ -164,19 +164,20 @@ get_airtable_data <- function(base,
 }
 
 
-
 #' @name get_airtable_metadata
 #' @rdname get_airtable_data
 #' @param fields For [get_airtable_metadata()], if `TRUE`, return the fields
 #'   column from the data.frame with the Airtable response. If only one table is
 #'   provided, fields are returned as a data frame. Ignored if table is `NULL`
 #' @export
-get_airtable_metadata <- function(base,
-                                  table = NULL,
-                                  token = NULL,
-                                  type = "AIRTABLE_TOKEN",
-                                  resp_type = "tables",
-                                  fields = FALSE) {
+get_airtable_metadata <- function(
+  base,
+  table = NULL,
+  token = NULL,
+  type = "AIRTABLE_TOKEN",
+  resp_type = "tables",
+  fields = FALSE
+) {
   base_url <- "https://api.airtable.com/v0/meta/bases/"
   req <- httr2::request(base_url)
 
@@ -184,7 +185,9 @@ get_airtable_metadata <- function(base,
   check_starts_with(base, "app")
 
   req <- httr2::req_url_path_append(
-    req, base, resp_type
+    req,
+    base,
+    resp_type
   )
 
   req <- req_auth_airtable(req, type = type)
@@ -214,11 +217,13 @@ get_airtable_metadata <- function(base,
 #' key/token
 #'
 #' @noRd
-req_auth_airtable <- function(req,
-                              token = NULL,
-                              type = "AIRTABLE_API_KEY",
-                              rate = 5 / 1,
-                              realm = NULL) {
+req_auth_airtable <- function(
+  req,
+  token = NULL,
+  type = "AIRTABLE_API_KEY",
+  rate = 5 / 1,
+  realm = NULL
+) {
   req <- httr2::req_auth_bearer_token(
     req = req,
     token = get_access_token(token = token, type = type)
@@ -237,10 +242,12 @@ req_auth_airtable <- function(req,
 #' @importFrom httr2 resp_body_json req_url_query
 #' @importFrom tibble enframe as_tibble
 #' @importFrom dplyr bind_rows
-resp_airtable <- function(req,
-                          simplifyVector = TRUE,
-                          resp_type = "records",
-                          max_records = 100) {
+resp_airtable <- function(
+  req,
+  simplifyVector = TRUE,
+  resp_type = "records",
+  max_records = 100
+) {
   resp_type <- match.arg(resp_type, c("resp", "fields", "records", "tables"))
 
   resp <- httr2::resp_body_json(
@@ -256,7 +263,8 @@ resp_airtable <- function(req,
     resp <- resp[[resp_type]]
 
     cli_abort_ifnot(
-      c("{resp_type} can't be found for this request:",
+      c(
+        "{resp_type} can't be found for this request:",
         "i" = "{.url {req$url}}"
       ),
       condition = !rlang::is_empty(resp)
@@ -264,7 +272,8 @@ resp_airtable <- function(req,
   }
 
   # Add offset checks
-  data <- switch(resp_type,
+  data <- switch(
+    resp_type,
     "resp" = resp,
     "record" = tidyr::pivot_wider(tibble::enframe(resp)),
     "records" = tibble::as_tibble(resp[["fields"]]),

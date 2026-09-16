@@ -161,7 +161,7 @@ id is provided.}
 \item{index}{Optional list used to match type to data, Default: \code{NULL}}
 
 \item{union}{If \code{TRUE}, the location geometry is unioned with
-\code{\link[sf:geos_combine]{sf::st_union()}} and the names are combined into a single value. Default:
+\code{\link[sf:st_union]{sf::st_union()}} and the names are combined into a single value. Default:
 \code{FALSE}.}
 
 \item{imagery}{String with imagery type, Default: 'BirdsEye' Supported values
@@ -183,7 +183,7 @@ details such as hill shading disabled.
 \description{
 Get a static map image using the  \href{https://www.mapbox.com/static-maps}{Mapbox Static Maps API} using \link[mapboxapi:static_mapbox]{mapboxapi::static_mapbox} or
 the \href{https://docs.microsoft.com/en-us/bingmaps/rest-services/imagery/get-a-static-map}{Bing Maps Static Map API}
-using \link[bingmapr:bing_static_map]{bingmapr::get_map_image}. An API key or access token is required for
+using \link[bingmapr:get_map_image]{bingmapr::get_map_image}. An API key or access token is required for
 both services. Set the bingmap API token using \link[bingmapr:bing_maps_api_key]{bingmapr::bing_maps_api_key}
 and the Mapbox token with \link[mapboxapi:mb_access_token]{mapboxapi::mb_access_token} or use
 \code{set_access_token} with \code{type = "BING_MAPS_API_KEY"} or \code{type = "MAPBOX_PUBLIC_TOKEN"}.
@@ -200,11 +200,13 @@ In those cases, the ... parameters are passed on the getdata functions rather
 than the static map function.
 
 For \code{\link[=get_static_bingmap]{get_static_bingmap()}}, parameter names are modified from
-\code{\link[bingmapr:bing_static_map]{bingmapr::get_map_image()}} for consistency, so the bearing parameter passed to
+\code{\link[bingmapr:get_map_image]{bingmapr::get_map_image()}} for consistency, so the bearing parameter passed to
 orientation and token is passed to key.
 }
 \examples{
-\dontrun{
+if (
+  rlang::is_installed("mapboxapi") && Sys.getenv("MAPBOX_PUBLIC_TOKEN") != ""
+) {
   get_osm_static_mapbox(
     id = "way/49664223",
     dist = 0.5,

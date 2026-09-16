@@ -1,7 +1,7 @@
 library(sf)
 
 nc <- read_sf(system.file("shape/nc.shp", package = "sf"))
-nc_county <- nc[2,]
+nc_county <- nc[2, ]
 
 # Transform coordinate reference system
 st_crs(nc)$epsg
@@ -13,7 +13,11 @@ nc_county_simple <- format_sf_data(nc_county, dTolerance = 5000, smooth = TRUE)
 plot(nc_county_simple, max.plot = 1)
 
 # Erase data
-nc_co_water <- get_tigris_data(type = "area water", state = "NC", county = nc_county$NAME)
+nc_co_water <- get_tigris_data(
+  type = "area water",
+  state = "NC",
+  county = nc_county$NAME
+)
 nc_county_erased <- format_sf_data(nc_county, erase_data = nc_co_water)
 plot(nc_county_erased, max.plot = 1)
 

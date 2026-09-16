@@ -2,7 +2,8 @@ test_that("make_location_grid works", {
   location <-
     get_location(
       type = system.file("shape/nc.shp", package = "sf"),
-      name = "Hyde", name_col = "NAME"
+      name = "Hyde",
+      name_col = "NAME"
     )
 
   expect_s3_class(

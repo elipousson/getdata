@@ -27,25 +27,27 @@
 #' @export
 #' @importFrom glue glue
 #' @importFrom janitor clean_names
-get_esri_data <- function(url,
-                          location = NULL,
-                          dist = getOption("getdata.dist"),
-                          diag_ratio = getOption("getdata.diag_ratio"),
-                          unit = getOption("getdata.unit"),
-                          asp = getOption("getdata.asp"),
-                          crs = getOption("getdata.crs", 3857),
-                          where = NULL,
-                          name = NULL,
-                          name_col = NULL,
-                          coords = NULL,
-                          from_crs = getOption("getdata.crs", 4326),
-                          clean_names = TRUE,
-                          token = NULL,
-                          progress = TRUE,
-                          quiet = FALSE,
-                          .name_repair = janitor::make_clean_names,
-                          ...,
-                          call = caller_env()) {
+get_esri_data <- function(
+  url,
+  location = NULL,
+  dist = getOption("getdata.dist"),
+  diag_ratio = getOption("getdata.diag_ratio"),
+  unit = getOption("getdata.unit"),
+  asp = getOption("getdata.asp"),
+  crs = getOption("getdata.crs", 3857),
+  where = NULL,
+  name = NULL,
+  name_col = NULL,
+  coords = NULL,
+  from_crs = getOption("getdata.crs", 4326),
+  clean_names = TRUE,
+  token = NULL,
+  progress = TRUE,
+  quiet = FALSE,
+  .name_repair = janitor::make_clean_names,
+  ...,
+  call = caller_env()
+) {
   meta <- get_esri_metadata(url, token, clean_names = FALSE, call = call)
 
   if (has_name(meta, "error")) {
@@ -60,7 +62,10 @@ get_esri_data <- function(url,
   }
 
   # Set table to TRUE for missing geometry type
-  table <- any(c(is.null(meta[["geometryType"]]), (meta[["geometryType"]] == "")))
+  table <- any(c(
+    is.null(meta[["geometryType"]]),
+    (meta[["geometryType"]] == "")
+  ))
   # Set table to FALSE for Group Layer URLs
   table <- table && meta[["type"]] != "Group Layer"
 
@@ -170,16 +175,18 @@ get_esri_data <- function(url,
 #' @export
 #' @importFrom dplyr case_when
 #' @importFrom janitor make_clean_names
-get_esri_layers <- function(location = NULL,
-                            layers = NULL,
-                            url = NULL,
-                            nm = NULL,
-                            token = NULL,
-                            clean_names = TRUE,
-                            quiet = FALSE,
-                            .name_repair = janitor::make_clean_names,
-                            ...,
-                            call = caller_env()) {
+get_esri_layers <- function(
+  location = NULL,
+  layers = NULL,
+  url = NULL,
+  nm = NULL,
+  token = NULL,
+  clean_names = TRUE,
+  quiet = FALSE,
+  .name_repair = janitor::make_clean_names,
+  ...,
+  call = caller_env()
+) {
   if (!is.null(url) && is_esri_url(url)) {
     url <- sub("/$", "", url)
   }
@@ -226,7 +233,8 @@ get_esri_layers <- function(location = NULL,
 
   layer_urls <- NULL
 
-  layer_urls <- switch(type,
+  layer_urls <- switch(
+    type,
     "id" = paste0(url, "/", layers),
     "nm_list" = as.character(layers),
     "list" = as.character(layers),
@@ -320,8 +328,7 @@ query_sql <- function(var, val, op = "IN", ..., .envir = current_env()) {
 #' @noRd
 #' @importFrom DBI ANSI
 #' @importFrom glue glue_sql
-ansi_sql <- function(...,
-                     .con = DBI::ANSI()) {
+ansi_sql <- function(..., .con = DBI::ANSI()) {
   glue_sql(..., .con = .con)
 }
 
@@ -335,12 +342,14 @@ ansi_sql <- function(...,
 #' @inheritParams rlang::args_error_context
 #' @export
 #' @importFrom janitor make_clean_names
-get_esri_metadata <- function(url,
-                              token = NULL,
-                              meta = NULL,
-                              clean_names = TRUE,
-                              .name_repair = janitor::make_clean_names,
-                              call = caller_env()) {
+get_esri_metadata <- function(
+  url,
+  token = NULL,
+  meta = NULL,
+  clean_names = TRUE,
+  .name_repair = janitor::make_clean_names,
+  call = caller_env()
+) {
   rlang::check_required(url, call = call)
 
   if (is_installed("arcgislayers")) {

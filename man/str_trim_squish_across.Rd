@@ -10,6 +10,6 @@ str_trim_squish_across(x)
 \item{x}{A data.frame with character columns.}
 }
 \description{
-Apply \code{\link[stringr:str_trim]{stringr::str_squish()}} and \code{\link[stringr:str_trim]{stringr::str_trim()}} to all character
+Apply \code{\link[stringr:str_squish]{stringr::str_squish()}} and \code{\link[stringr:str_trim]{stringr::str_trim()}} to all character
 columns in a data.frame.
 }

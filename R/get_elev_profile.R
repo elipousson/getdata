@@ -23,16 +23,18 @@
 #' @inheritParams sf::st_line_sample
 #' @param ... Unused at this time.
 #' @export
-get_elev_profile <- function(profile,
-                             units = NULL,
-                             dist = FALSE,
-                             n = NULL,
-                             density = NULL,
-                             type = "regular",
-                             sample = NULL,
-                             ...,
-                             drop_units = FALSE,
-                             cumulative = FALSE) {
+get_elev_profile <- function(
+  profile,
+  units = NULL,
+  dist = FALSE,
+  n = NULL,
+  density = NULL,
+  type = "regular",
+  sample = NULL,
+  ...,
+  drop_units = FALSE,
+  cumulative = FALSE
+) {
   check_installed("elevatr")
 
   if (!inherits(profile, "sf")) {
@@ -51,8 +53,10 @@ get_elev_profile <- function(profile,
   if (is.numeric(sample) || is.numeric(n) || is.numeric(density)) {
     profile <- sf::st_line_sample(
       profile,
-      n = n, density = density,
-      sample = sample, type = type
+      n = n,
+      density = density,
+      sample = sample,
+      type = type
     )
 
     locations <- sf::st_cast(profile, to = "POINT")
@@ -92,7 +96,8 @@ get_elev_profile <- function(profile,
     }
 
     elev_point[["distance"]] <- units::set_units(
-      dist_point, locations_crs$units_gdal,
+      dist_point,
+      locations_crs$units_gdal,
       mode = "standard"
     )
   }
@@ -115,7 +120,8 @@ get_elev_profile <- function(profile,
 
     elev_point[["elevation"]] <- units::set_units(
       elev_point[["elevation"]],
-      value = units, mode = mode
+      value = units,
+      mode = mode
     )
 
     elev_point[["elev_units"]] <- elev_units_label
@@ -123,12 +129,14 @@ get_elev_profile <- function(profile,
     if (dist) {
       elev_point[["distance"]] <- units::set_units(
         elev_point[["distance"]],
-        value = units, mode = mode
+        value = units,
+        mode = mode
       )
     }
   } else if (dist) {
     elev_point[["distance"]] <- units::set_units(
-      elev_point[["distance"]], elev_units
+      elev_point[["distance"]],
+      elev_units
     )
   }
 

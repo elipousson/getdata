@@ -62,7 +62,7 @@ Options include "lower", "upper", "title", or "sentence". Defaults to
 \item{.strict}{If \code{TRUE} (default), match whole strings by appending "^" to
 the front and "$" to the end of each pattern in the xwalk.}
 
-\item{ignore_case}{Passed to \code{\link[stringr:modifiers]{stringr::regex()}}}
+\item{ignore_case}{Passed to \code{\link[stringr:regex]{stringr::regex()}}}
 
 \item{street_suffix}{Street suffix column to apply replacement function to.}
 
@@ -70,7 +70,7 @@ the front and "$" to the end of each pattern in the xwalk.}
 function to.}
 }
 \description{
-Use \code{\link[stringr:str_replace]{stringr::str_replace_all()}} to replace values in a character vector or
+Use \code{\link[stringr:str_replace_all]{stringr::str_replace_all()}} to replace values in a character vector or
 (with \code{\link[dplyr:across]{dplyr::across()}}) in select columns from a data.frame.
 \code{\link[=replace_street_dir_prefixes]{replace_street_dir_prefixes()}} and \code{\link[=replace_street_suffixes]{replace_street_suffixes()}} pass
 reference data (\link{street_dir_prefixes} and \link{street_suffixes}) to the dict

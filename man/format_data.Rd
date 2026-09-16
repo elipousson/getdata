@@ -78,8 +78,8 @@ from FeatureServer and MapServer sources) using the \code{\link[=fix_epoch_date]
 function, Default: \code{TRUE}}
 
 \item{label}{For \code{\link[=label_with_xwalk]{label_with_xwalk()}} use \code{label = "val"} to use
-\code{\link[labelled:val_labels]{labelled::set_value_labels()}} or "var" (default) to use
-\code{\link[labelled:var_label]{labelled::set_variable_labels()}}. For \code{\link[=rename_with_xwalk]{rename_with_xwalk()}}, if label is
+\code{\link[labelled:set_value_labels]{labelled::set_value_labels()}} or "var" (default) to use
+\code{\link[labelled:set_variable_labels]{labelled::set_variable_labels()}}. For \code{\link[=rename_with_xwalk]{rename_with_xwalk()}}, if label is
 \code{TRUE}, xwalk is passed to \code{\link[=label_with_xwalk]{label_with_xwalk()}} with label = "var" to label
 columns using the original names. Defaults to \code{FALSE}.}
 
@@ -108,7 +108,7 @@ object, the geometry column will not be dropped even it is not renamed.}
 to improve error messages.}
 
 \item{.labels}{Replaces labels column created by
-\code{\link[labelled:look_for]{labelled::generate_dictionary()}} if column is all \code{NA} (no existing labels
+\code{\link[labelled:generate_dictionary]{labelled::generate_dictionary()}} if column is all \code{NA} (no existing labels
 assigned); defaults to \code{NULL}.}
 
 \item{.definitions}{Character vector of definitions appended to dictionary
@@ -131,7 +131,7 @@ functions applied.
 \description{
 This function can apply the following common data cleaning tasks:
 \itemize{
-\item Applies \link[stringr:str_trim]{stringr::str_squish} and \link[stringr:str_trim]{stringr::str_trim} to all character
+\item Applies \link[stringr:str_squish]{stringr::str_squish} and \link[stringr:str_trim]{stringr::str_trim} to all character
 columns
 \item Optionally replaces all character values of "" with \code{NA} values
 \item Optionally corrects UNIX formatted dates with 1970-01-01 origins

@@ -78,13 +78,13 @@ defaults to \code{NULL}.}
 
 \item{geometry}{If \code{TRUE}, include "geo" in extras and convert photos data
 frame to \code{sf} object. Passed to geo parameter of
-\code{\link[FlickrAPI:getPhotoSearch]{FlickrAPI::get_photo_search()}}}
+\code{\link[FlickrAPI:get_photo_search]{FlickrAPI::get_photo_search()}}}
 
 \item{crs}{Coordinate reference system of \code{sf} object to return if geometry
 is \code{TRUE}.}
 
 \item{key}{Flickr API key. If api_key is \code{NULL}, the
-\link[FlickrAPI:getPhotoSearch]{FlickrAPI::getPhotoSearch} uses \code{\link[FlickrAPI:setFlickrAPIKey]{FlickrAPI::getFlickrAPIKey()}} to use the
+\link[FlickrAPI:getPhotoSearch]{FlickrAPI::getPhotoSearch} uses \code{\link[FlickrAPI:getFlickrAPIKey]{FlickrAPI::getFlickrAPIKey()}} to use the
 environment variable "FLICKR_API_KEY" as the key. Use \code{\link[=set_access_token]{set_access_token()}}
 w/ \code{type = "FLICKR_API_KEY"} or \code{\link[FlickrAPI:setFlickrAPIKey]{FlickrAPI::setFlickrAPIKey()}}}
 }
@@ -93,9 +93,9 @@ A data frame with photo information or \code{sf} object with geometry
 based on latitude and longitude of geocoded photos.
 }
 \description{
-\code{\link[=get_flickr_photos]{get_flickr_photos()}} uses \code{\link[FlickrAPI:getPhotoSearch]{FlickrAPI::get_photo_search()}} to get a data
+\code{\link[=get_flickr_photos]{get_flickr_photos()}} uses \code{\link[FlickrAPI:get_photo_search]{FlickrAPI::get_photo_search()}} to get a data
 frame or sf objects with photos from a specified location or matching other
-photo search parameters. Set API key using \code{\link[FlickrAPI:setFlickrAPIKey]{FlickrAPI::set_flickr_api_key()}}
+photo search parameters. Set API key using \code{\link[FlickrAPI:set_flickr_api_key]{FlickrAPI::set_flickr_api_key()}}
 or pass to the api_key parameter.
 }
 \details{

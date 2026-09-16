@@ -16,15 +16,15 @@ usethis::use_data(street_suffixes, overwrite = TRUE)
 
 street_dir_prefixes <-
   tibble::tribble(
-    ~street_dir_abb, ~street_dir_en, ~street_dir_es,
-    "N", "NORTH", "NORTE",
-    "NE", "NORTHEAST", "NORESTE",
-    "NW", "NORTHWEST", "NOROESTE",
-    "S", "SOUTH", "SUR",
-    "SE", "SOUTHEAST", "SURESTE",
-    "SW", "SOUTHWEST", "SUROESTE",
-    "E", "EAST", "ESTE",
-    "W", "WEST", "OESTE"
+    ~street_dir_abb , ~street_dir_en , ~street_dir_es ,
+    "N"             , "NORTH"        , "NORTE"        ,
+    "NE"            , "NORTHEAST"    , "NORESTE"      ,
+    "NW"            , "NORTHWEST"    , "NOROESTE"     ,
+    "S"             , "SOUTH"        , "SUR"          ,
+    "SE"            , "SOUTHEAST"    , "SURESTE"      ,
+    "SW"            , "SOUTHWEST"    , "SUROESTE"     ,
+    "E"             , "EAST"         , "ESTE"         ,
+    "W"             , "WEST"         , "OESTE"
   )
 
 usethis::use_data(street_dir_prefixes, overwrite = TRUE)

@@ -10,10 +10,7 @@
 #' @inheritParams sfext::st_union_ext
 #' @inheritDotParams sfext::st_make_grid_ext
 #' @export
-make_location_grid <- function(location,
-                               name_col = "name",
-                               unit = NULL,
-                               ...) {
+make_location_grid <- function(location, name_col = "name", unit = NULL, ...) {
   grid <- sfext::st_make_grid_ext(x = location, unit = unit, ...)
 
   # FIXME: Would be nice if sfext::st_union_ext also allowed retaining columns

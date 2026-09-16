@@ -1,12 +1,10 @@
 #' @noRd
-is_named_date_range <- function(x,
-                                nm = c("start", "end")) {
+is_named_date_range <- function(x, nm = c("start", "end")) {
   is_date_range(x, length(nm)) && all(has_name(x, nm))
 }
 
 #' @noRd
-is_date_range <- function(x,
-                          n = NULL) {
+is_date_range <- function(x, n = NULL) {
   is_list_all(x, "Date") && has_length(x, n)
 }
 
@@ -51,23 +49,27 @@ is_date_range <- function(x,
 #' @return A length 2 list with min and max Date values.
 #' @export
 #' @importFrom glue glue
-as_date_range <- function(x = NULL,
-                          year = NULL,
-                          days = 90,
-                          ...,
-                          start_date = NULL,
-                          end_date = NULL,
-                          limits = NULL,
-                          nm = c("start", "end"),
-                          call = caller_env()) {
+as_date_range <- function(
+  x = NULL,
+  year = NULL,
+  days = 90,
+  ...,
+  start_date = NULL,
+  end_date = NULL,
+  limits = NULL,
+  nm = c("start", "end"),
+  call = caller_env()
+) {
   rlang::check_installed("lubridate")
 
   if (!is.null(year)) {
-    x <- x %||% vapply(
-      c("{year}-01-01", "{year}-12-31"),
-      glue, NA_character_,
-      .envir = rlang::current_env()
-    )
+    x <- x %||%
+      vapply(
+        c("{year}-01-01", "{year}-12-31"),
+        glue,
+        NA_character_,
+        .envir = rlang::current_env()
+      )
   }
 
   x <- x %||% c(start_date, end_date)
@@ -92,10 +94,12 @@ as_date_range <- function(x = NULL,
 #' @param .col Name of date column to use for query. Defaults to "date".
 #' @export
 #' @importFrom glue glue
-date_range_query <- function(x = NULL,
-                             .col = "date",
-                             ...,
-                             nm = c("start", "end")) {
+date_range_query <- function(
+  x = NULL,
+  .col = "date",
+  ...,
+  nm = c("start", "end")
+) {
   if (!is_named_date_range(x, nm)) {
     x <- as_date_range(x, ..., nm = nm)
   }
@@ -107,10 +111,12 @@ date_range_query <- function(x = NULL,
 #' @rdname as_date_range
 #' @export
 #' @importFrom glue glue
-between_date_range <- function(x = NULL,
-                               .col = "date",
-                               ...,
-                               nm = c("start", "end")) {
+between_date_range <- function(
+  x = NULL,
+  .col = "date",
+  ...,
+  nm = c("start", "end")
+) {
   if (!is_named_date_range(x, nm)) {
     x <- as_date_range(x, ..., nm = nm)
   }
@@ -122,11 +128,13 @@ between_date_range <- function(x = NULL,
 #' @inheritParams rlang::args_error_context
 #' @export
 #' @importFrom cli cli_vec
-check_date_range <- function(x = NULL,
-                             ...,
-                             limits = NULL,
-                             nm = c("start", "end"),
-                             call = caller_env()) {
+check_date_range <- function(
+  x = NULL,
+  ...,
+  limits = NULL,
+  nm = c("start", "end"),
+  call = caller_env()
+) {
   if (is.null(limits)) {
     return(invisible(NULL))
   }
@@ -167,7 +175,8 @@ check_date_range <- function(x = NULL,
     )
 
     cli_abort(
-      c("Supplied date range must fall within {.arg limits}: {.val {limits}}.",
+      c(
+        "Supplied date range must fall within {.arg limits}: {.val {limits}}.",
         "*" = below_limit,
         "*" = above_limit
       ),

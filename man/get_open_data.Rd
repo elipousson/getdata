@@ -86,7 +86,7 @@ parameter. Passed to the SODA $query parameter, see
 \url{https://dev.socrata.com/docs/queries/query.html} for more information.}
 
 \item{location}{sf object. If multiple areas are provided, they are unioned
-into a single sf object using \code{\link[sf:geos_combine]{sf::st_union()}}}
+into a single sf object using \code{\link[sf:st_union]{sf::st_union()}}}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -145,7 +145,7 @@ Details on SoQL queries are found in the Socrata API documentation
 }
 \examples{
 ## Get Q2 2020 vehicle crash data for Cecil County, Maryland
-\dontrun{
+if (rlang::is_installed("RSocrata")) {
   get_open_data(
     source_url = "https://opendata.maryland.gov",
     data = "65du-s3qu",

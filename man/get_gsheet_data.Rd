@@ -42,13 +42,13 @@ returns
 Processed through \code{\link[googlesheets4:as_sheets_id]{as_sheets_id()}}.}
 
 \item{ask}{If \code{TRUE}, ask for the name of the Google Sheet to read if ss is
-not provided to \link[sfext:read_sf_ext]{sfext::read_sf_gsheet}.}
+not provided to \link[sfext:read_sf_gsheet]{sfext::read_sf_gsheet}.}
 
 \item{geometry}{Type of geometry to include in data frame. options include
 "drop", "wkt", "centroid", "point", Default: 'centroid'.}
 
 \item{location}{sf object. If multiple areas are provided, they are unioned
-into a single sf object using \code{\link[sf:geos_combine]{sf::st_union()}}}
+into a single sf object using \code{\link[sf:st_union]{sf::st_union()}}}
 
 \item{dist}{buffer distance in units. Optional.}
 

@@ -34,11 +34,11 @@ bbox, conversion to a sf object will still always be attempted with
 \code{\link[sfext:as_sf]{sfext::as_sf()}}.}
 
 \item{...}{
-  Arguments passed on to \code{\link[=get_location_data]{get_location_data}}
+  Arguments passed on to \code{\link{get_location_data}}
   \describe{
     \item{\code{pkg,package}}{Name of the package to search for data.}
     \item{\code{fileext,filetype}}{File extension or type to use if passing parameters
-to \code{\link[sfext:read_sf_ext]{sfext::read_sf_download()}} or \code{\link[sfext:read_sf_ext]{sfext::read_sf_pkg()}} (required for
+to \code{\link[sfext:read_sf_download]{sfext::read_sf_download()}} or \code{\link[sfext:read_sf_pkg]{sfext::read_sf_pkg()}} (required for
 extdata and cached data).}
     \item{\code{fn}}{Function to apply to data after filtering by location but before
 returning from function.}
@@ -54,6 +54,8 @@ are assumed to be index values for the index list. The index parameter
 supports nested lists created by \code{\link[=make_location_data_list]{make_location_data_list()}} (using only
 the default key names of "location" and "data"). This feature has not be
 fully tested and may result in errors or unexpected results.}
+    \item{\code{load}}{If \code{TRUE} and class is "list", load data to local environment;
+defaults \code{FALSE}.}
     \item{\code{dist}}{buffer distance in units. Optional.}
     \item{\code{diag_ratio}}{ratio of diagonal distance of area's bounding box used as
 buffer distance. e.g. if the diagonal distance is 3000 meters and the
@@ -88,7 +90,7 @@ coordinates north of Anchorage, Alaska or south of New Zealand.}
   }}
 
 \item{location}{sf object. If multiple areas are provided, they are unioned
-into a single sf object using \code{\link[sf:geos_combine]{sf::st_union()}}}
+into a single sf object using \code{\link[sf:st_union]{sf::st_union()}}}
 
 \item{name}{Name to make file name converted to snake case with
 \code{\link[janitor:make_clean_names]{janitor::make_clean_names()}}, e.g. "Residential zoning map" becomes
@@ -146,7 +148,7 @@ Save data to file and invisibly return file path.
 }
 \description{
 \code{\link[=cache_location_data]{cache_location_data()}} is a variant on \code{\link[=get_location_data]{get_location_data()}} that saves the
-returned data to a cache directory using \code{\link[sf:st_write]{sf::write_sf()}} (if data is a sf
-object) or \code{\link[readr:read_rds]{readr::write_rds()}} (if data is another class). Additional
+returned data to a cache directory using \code{\link[sf:write_sf]{sf::write_sf()}} (if data is a sf
+object) or \code{\link[readr:write_rds]{readr::write_rds()}} (if data is another class). Additional
 parameters are ignored if location is \code{NULL}.
 }

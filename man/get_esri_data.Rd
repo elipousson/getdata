@@ -53,12 +53,12 @@ get_esri_metadata(
 }
 \arguments{
 \item{url}{FeatureServer or MapServer url to retrieve data from. Passed to
-\code{url} parameter of \code{\link[esri2sf:esri2sf]{esri2sf::esri2sf()}} or \code{\link[esri2sf:esri2sf]{esri2sf::esri2df()}} functions.
+\code{url} parameter of \code{\link[esri2sf:esri2sf]{esri2sf::esri2sf()}} or \code{\link[esri2sf:esri2df]{esri2sf::esri2df()}} functions.
 For \code{\link[=get_esri_layers]{get_esri_layers()}}, the optional url must be a service url which is
 the base url for one or more layer urls.}
 
 \item{location}{\code{sf}, \code{sfc}, or \code{bbox} object (or other object convertible
-with \code{\link[sfext:as_sf]{sfext::as_bbox()}}. Optional.}
+with \code{\link[sfext:as_bbox]{as_bbox()}}. Optional.}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -111,6 +111,9 @@ messages about the requested layer. Defaults to \code{FALSE}.}
 all fields.}
     \item{\code{replaceDomainInfo}}{If \code{TRUE}, add domain information to the return data
 frame. Default \code{FALSE}.}
+    \item{\code{layerInfo}}{Layer information from \code{\link[esri2sf:esrimeta]{esrimeta()}}.}
+    \item{\code{.fn}}{Function used to read items from a group layer. Defaults to
+\code{\link[esri2sf:esri2sf]{esri2sf()}}.}
   }}
 
 \item{call}{The execution environment of a currently
@@ -127,7 +130,7 @@ vector; defaults to \code{NULL}. Optional if url is a}
 e.g. "name" to return layer name. Defaults to \code{NULL}.}
 }
 \description{
-Wraps the \code{\link[esri2sf:esri2sf]{esri2sf::esri2sf()}} and \code{\link[esri2sf:esri2sf]{esri2sf::esri2df()}} functions to download
+Wraps the \code{\link[esri2sf:esri2sf]{esri2sf::esri2sf()}} and \code{\link[esri2sf:esri2df]{esri2sf::esri2df()}} functions to download
 an ArcGIS FeatureServer or MapServer. Supports spatial filtering with
 bounding box based on location and filtering by location name (if location
 name column is provided). As of fall 2022, this package suggests the
