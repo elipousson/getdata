@@ -25,7 +25,7 @@ set_access_token <- function(
     token = token,
     overwrite = overwrite,
     install = install,
-    default = type,
+    default = type %||% "TOKEN",
     quiet = quiet,
     call = call
   )
@@ -38,7 +38,7 @@ set_access_token <- function(
 get_access_token <- function(token = NULL, type = NULL, call = caller_env()) {
   get_r_environ_token(
     token = token,
-    default = type,
+    default = type %||% "TOKEN",
     call = call
   )
 }
