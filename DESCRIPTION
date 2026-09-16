@@ -2,7 +2,7 @@ Type: Package
 Package: getdata
 Title: Get Easy Access to Tabular and Spatial Data
 Version: 0.1.1.9000
-Authors@R: 
+Authors@R:
     person("Eli", "Pousson", , "eli.pousson@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-8280-1706"))
 Description: Download and format spatial and non-spatial data with simple
@@ -11,10 +11,10 @@ License: MIT + file LICENSE
 URL: https://github.com/elipousson/getdata,
     https://elipousson.github.io/getdata/
 BugReports: https://github.com/elipousson/getdata/issues
-Depends: 
-    R (>= 2.10)
-Imports: 
-    cli (>= 3.4.0),
+Depends:
+    R (>= 4.1.0)
+Imports:
+    cli (>= 2.5.0),
     cliExtras (>= 0.1.0),
     DBI,
     dplyr,
@@ -30,7 +30,7 @@ Imports:
     tidyselect,
     utils,
     vctrs
-Suggests: 
+Suggests:
     arcgislayers,
     bingmapr (>= 0.1.0),
     covr,
@@ -57,7 +57,7 @@ Suggests:
     tigris (>= 2.0),
     units,
     withr
-Remotes: 
+Remotes:
     Chicago/RSocrata,
     elipousson/bingmapr,
     elipousson/cliExtras,
