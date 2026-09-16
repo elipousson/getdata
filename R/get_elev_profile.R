@@ -97,7 +97,7 @@ get_elev_profile <- function(
 
     elev_point[["distance"]] <- units::set_units(
       dist_point,
-      locations_crs$units_gdal,
+      units(dist_add),
       mode = "standard"
     )
   }
@@ -136,7 +136,8 @@ get_elev_profile <- function(
   } else if (dist) {
     elev_point[["distance"]] <- units::set_units(
       elev_point[["distance"]],
-      elev_units
+      elev_units,
+      mode = "standard"
     )
   }
 
