@@ -104,7 +104,7 @@ set_r_environ_token <- function(
         {.fn {caller_name}} using {.arg install = TRUE}."
       )
     )
-    do.call(Sys.setenv, setNames(list(token), default))
+    do.call(Sys.setenv, set_names(list(token), default))
     return(invisible(token))
   }
 
