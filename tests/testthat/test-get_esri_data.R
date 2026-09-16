@@ -26,14 +26,14 @@ test_that("get_esri_data works", {
     get_esri_data(
       url = test_url,
       name = "Cape Lookout National Seashore",
-      name_col = "NAME"
+      name_col = "name"
     ),
     "sf"
   )
   expect_s3_class(
     get_esri_data(
       url = test_url,
-      where = "NAME like 'Cape Hatteras National Seashore'"
+      where = "name like 'Cape Hatteras National Seashore'"
     ),
     "sf"
   )

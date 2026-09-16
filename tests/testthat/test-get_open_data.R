@@ -29,6 +29,8 @@ test_that("get_open_data works", {
     }
   )
 
+  source_url <- "https://opendata.maryland.gov"
+
   expect_s3_class(
     get_socrata_data(
       data = "list",
@@ -42,5 +44,18 @@ test_that("get_open_data works", {
       source_url
     ),
     "tbl_df"
+  )
+})
+
+test_that("get_socrata_metadata works", {
+  meta <- get_socrata_metadata(
+    source_url = "https://opendata.maryland.gov",
+    data = "6jva-hr4v"
+  )
+
+  expect_type(meta, "list")
+  expect_equal(
+    meta[["name"]],
+    "BWI Passenger Data - January 2010 to July 2013"
   )
 })

@@ -23,7 +23,7 @@ Imports:
     janitor,
     lifecycle,
     magrittr,
-    rlang,
+    rlang (>= 1.0.0),
     sf,
     sfext (>= 0.0.0.9001),
     tibble,
