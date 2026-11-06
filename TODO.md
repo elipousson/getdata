@@ -95,6 +95,157 @@ number if there is one).
 - [ ] Other tests are disabled: `test-get_static_map.R` (flakey) and
   `test-get_flickr_photos.R` (flakey).
 
+## Viewshed and landmark labelling (planning)
+
+Goal: work out which landmarks are visible from a window (8th floor, 417 E
+Fayette St, Baltimore), then label them on a photo or generated illustration.
+Background, data checks and a candidate pipeline are in
+`vignettes/viewshed.Rmd`. Scripts used for the checks are in `dev/`. Status as
+of 2026-11-05: `get_wikidata()` and `get_wiki_data()` are done and committed;
+the open decision is how to build the surface model (DSM) used for occlusion.
+
+What we know (details in the vignette):
+
+- OSM heights/levels cover only 3.1% of buildings within 3 km (7.3% in the 1 km
+  core), mostly the tall towers. Overture adds almost nothing beyond OSM.
+  Wikidata heights are sparse and sometimes wrong.
+- Two 3DEP lidar projects cover downtown. `USGS_LPC_MD_PA_SandySupp_2014`
+  (acquired 2014-12-15/16, leaf-off, ~8 points/m2) captures the City Hall dome
+  (~70 m above ground).
+- `terrainr::get_tiles()` returned a keyless 1 m bare-earth DEM for a 500 m
+  window in ~4 s (11 m at City Hall; lidar ground ~10.8 m).
+- `{elevatr}` 0.99.1 sources are `aws`, `gl3`, `gl1`, `alos` and `srtm15plus`
+  (no direct 3DEP source).
+
+### Option 1: lidar DSM for the whole area (needs discussion)
+
+Build a ground surface and a surface model from the 2014 3DEP point cloud.
+
+- *Steps:*
+  1. Ground: `terrainr::get_tiles(services = "elevation", resolution = 1)`
+     (see `dev/terrainr_dem_test.R`), reproject to EPSG:26985.
+  2. Surface: pull EPT tiles for the study radius (`dev/ept_pull.py`),
+     reproject from EPSG:3857, rasterize the highest return per 1 m cell after
+     removing outliers (not by class code), and fill voids.
+  3. Patch buildings built or demolished since 2014 using OSM `height` and
+     `building:levels` (see the footprint-comparison note below).
+- *Pros:* captures domes, spires, bridges (such as the elevated highway in the northeast photo) and
+  trees; real geometry rather than modeled heights; one keyless public source.
+- *Cons:*
+  - 2014 vintage: newer buildings are missing and demolished ones remain.
+  - Leaf-off (December) versus summer photos, so trees look thinner.
+  - Download size: the 500 m test window was 22 MB and ~59 s serial. A rough
+    linear extrapolation to a 3 km radius (~28 km2) is ~2.5 GB and ~2 hours
+    serial (estimate, not tested; tile downloads can run in parallel).
+  - Class codes are not reliable (buildings mostly class 17, class 18 includes
+    ground-level points), so noise must be removed another way.
+  - EPSG:3857 stretches horizontal distance by ~1.29 here; must reproject.
+  - Currently depends on Python (`laspy`) outside the package.
+- *Docs:*
+  - USGS 3DEP lidar on AWS: <https://registry.opendata.aws/usgs-lidar/>
+  - Project index: <https://usgs.entwine.io/boundaries/resources.geojson>
+  - Index tooling: <https://github.com/hobuinc/usgs-lidar>
+  - EPT specification:
+    <https://entwine.io/en/latest/entwine-point-tile.html>
+  - laspy: <https://laspy.readthedocs.io/>
+  - terrainr: <https://docs.ropensci.org/terrainr/>
+- *Open questions:* study radius needed for the far landmarks; whether
+  `MD_Baltimore_2008` is worth using for comparison; how well a leaf-off DSM
+  matches the summer photos.
+
+### Option 2: replace the Python step with R tooling (needs discussion)
+
+Keep the lidar approach but process points with `{lidR}` or `{lasR}` (or PDAL)
+so the workflow is R-only.
+
+- *Pros:*
+  - `{lasR}` pipelines can produce DSM and DTM from a folder of point clouds
+    (README example), including outlier removal, and read local or remote LAS,
+    LAZ and COPC files.
+  - `{lidR}` is on CRAN (4.3.3) with a book-length manual.
+  - No Python or `uv` dependency for users.
+- *Cons:*
+  - Neither package lists EPT as a supported format (checked READMEs and
+    `{lidR}` NEWS only; not exhaustive). We would still fetch the EPT node
+    LAZ tiles ourselves (as `dev/ept_pull.py` does) or find LAZ/COPC sources.
+    The public `usgs-lidar-public` bucket is EPT; the raw LAZ bucket is
+    requester-pays and needs AWS credentials.
+  - `{lasR}` is not on CRAN (r-universe, version 0.21.4 on 2026-11-05), which
+    complicates Suggests/Remotes.
+  - PDAL (`readers.ept`) would read EPT directly but is a system dependency
+    (`brew install pdal`; not installed here).
+  - Not tested at all yet.
+- *Docs:*
+  - lasR: <https://r-lidar.github.io/lasR/> and
+    <https://github.com/r-lidar/lasR>
+  - lidR: <https://CRAN.R-project.org/package=lidR> and
+    <https://r-lidar.github.io/lidRbook/>
+  - PDAL EPT reader: <https://pdal.io/en/stable/stages/readers.ept.html>
+- *Open questions:* can EPT node tiles be merged and fed to `{lasR}` or
+  `{lidR}` directly; are COPC versions of these projects available.
+
+### Option 3: try gloBFPr and compare against the lidar DSM (needs discussion)
+
+Install `{gloBFPr}` into a temporary library and compare its building heights
+and fused DSM with the lidar surface and OSM-tagged heights for known buildings
+(City Hall, 100 Light Street, the tall towers).
+
+- *Pros:*
+  - One call (`search_3dglobdf()`) returns footprints and heights for every
+    building in a bounding box, so coverage is complete, with no large download.
+  - Includes a canopy height model (`"metachm"` or `"ethCHM"`) through
+    `get_fused_dsm()`; `get_3d_world()` can build 3D scenes.
+  - Actively maintained (pushed 2026-09-04); on CRAN as 2.0.0 on 2026-11-05
+    although the README still says "soon".
+- *Cons:*
+  - Heights are modeled (GlobalBuildingAtlas RMSE 1.5 to 8.9 m across
+    continents; North America not broken out in what was read).
+  - `get_fused_dsm()` gives each building one flat roof height, so the City
+    Hall dome and tower tops would be lost.
+  - The DEM comes from OpenTopography and needs an API key; 3DEP 1 m access is
+    restricted to academic accounts. `get_fused_dsm()` has no `dem` argument
+    (`get_3d_world()` does), so a `{terrainr}` DEM could not be used there.
+  - Licenses are mixed: GlobalBuildingAtlas polygons are ODbL but heights and
+    LoD1 models are CC BY-NC 4.0, which may rule out some uses.
+  - Dataset vintage versus 2026 is unknown; experimental lifecycle.
+- *Docs:*
+  - <https://github.com/billbillbilly/gloBFPr>
+  - 3D-GloBFP data: <https://zenodo.org/records/15487037>
+  - GlobalBuildingAtlas paper: <https://essd.copernicus.org/articles/17/6647/2025/>
+  - GlobalBuildingAtlas LoD1 Parquet:
+    <https://source.coop/walkthru-earth/indices/building>
+  - OpenTopography API key:
+    <https://portal.opentopography.org/requestService?service=api>
+
+### Comparison (for discussion)
+
+| | 1. Lidar DSM | 2. R tooling for lidar | 3. gloBFPr |
+|---|---|---|---|
+| Roof detail (domes, spires) | Yes | Yes | No (flat roofs) |
+| Post-2014 buildings | No (patch from OSM) | No (patch from OSM) | Depends on dataset vintage |
+| Trees | Yes, leaf-off | Yes, leaf-off | Canopy model (metaCHM) |
+| Height source | Measured | Measured | Modeled |
+| Effort and size | Large download | Large download | Small |
+| External dependency | Python | R only (`{lasR}` off CRAN) | R; OpenTopography key |
+| Tested here | Yes (500 m window) | No | No |
+
+A possible hybrid, to discuss: lidar DSM as the base, OSM heights to patch newer
+buildings, and gloBFPr as a cross-check and gap filler.
+
+### Related footprint packages (for completeness)
+
+- [`{geomorphR}`](https://github.com/MakiJota/geomorphR) (CRAN 0.2.1, updated
+  2026-10): `extract_geometric_features()` for per-footprint shape metrics and
+  `compare_footprints()`, which compares two periods by intersection-over-union
+  and returns new construction and demolitions. Could flag buildings added or
+  removed since the lidar year so only those need an OSM height patch. Needs a
+  footprint layer for the earlier period (e.g. derived from the lidar surface or
+  the old City dataset). It does not estimate heights.
+- [`{foot}`](https://wpgp.github.io/foot/) (WorldPop; GPL-3; not on CRAN; last
+  updated 2022-06): building morphology metrics (area, shape, orientation,
+  nearest-neighbor distance, clustering) for 2D footprints, plus tiled
+  reading and writing. No heights, so low relevance here.
+
 ## Fixed
 
 - [x] `get_wiki_data()` error with multi-value `details` (2026-11-05)
