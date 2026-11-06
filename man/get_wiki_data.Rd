@@ -17,7 +17,7 @@ get_wiki_data(
   diag_ratio = getOption("getdata.diag_ratio"),
   unit = getOption("getdata.unit", "meter"),
   asp = getOption("getdata.asp"),
-  crs = getOption("getdata.unit", 3857),
+  crs = getOption("getdata.crs", 3857),
   remove_coords = TRUE,
   clean_names = TRUE
 )
@@ -27,13 +27,15 @@ get_wiki_data(
 into a single sf object using \code{\link[sf:st_union]{sf::st_union()}}}
 
 \item{radius}{If \code{TRUE}, use dist as a buffer around the center of the
-location; defaults to \code{FALSE}}
+location; defaults to \code{FALSE}. If numeric, the value is used as \code{dist} and
+\code{radius} is set to \code{TRUE}.}
 
 \item{primary}{If \code{NULL}, search for primary coordinates. Set primary to "all"
 or "secondary" to search other coordinate types.}
 
-\item{details}{Additional detailed to return with results. Options include
-"type", "name", "country", "region"; defaults to \code{NULL}.}
+\item{details}{Additional details to return with results. Options include
+"name", "type", "dim", "scale", "region", "country", and "globe"; defaults
+to \code{NULL}.}
 
 \item{limit}{Number of pages to return (max 500); defaults to 50}
 
@@ -41,7 +43,7 @@ or "secondary" to search other coordinate types.}
 
 \item{lang}{Language to search on Wikipedia; defaults to "en".}
 
-\item{geometry}{If \code{TRUE}, return sf object. If \code{FALSE}, return data frame. Defaults to \code{FALSE}.}
+\item{geometry}{If \code{TRUE} (default), return sf object. If \code{FALSE}, return data frame.}
 
 \item{dist}{buffer distance in units. Optional.}
 
@@ -71,13 +73,122 @@ value of col using \link[janitor:clean_names]{janitor::clean_names}. If \code{FA
 provided.}
 }
 \description{
-Use the Wikipedia API geosearch API to get Wikipedia articles for a location.
-See \url{https://www.mediawiki.org/wiki/Extension:GeoData} for more information.
-Only returns Wikipedia articles with coordinates.
+Use the Wikipedia geosearch API to get Wikipedia articles near a location.
+Only articles with coordinates are returned. See the GeoData extension
+\url{https://www.mediawiki.org/wiki/Extension:GeoData} and the API documentation
+for the geosearch module
+\url{https://www.mediawiki.org/w/api.php?action=help&modules=query\%2Bgeosearch}
+for more information.
 }
 \details{
+This function only covers the geosearch module. It returns the page ID,
+title, coordinates, and distance from the search point for each article (plus
+optional coordinate details) but not article text, extracts, images,
+categories, or Wikidata properties such as height or construction date. It
+also only searches one language edition of Wikipedia at a time and does not
+search other Wikimedia projects (e.g. Wikidata or Wikimedia Commons).
+
 For this function, \code{location} can be either an \code{sf}, \code{sfc}, or \code{bbox} object
-or the title of a Wikipedia article with a related location.
+or the title of a Wikipedia article with a related location. If \code{location} is
+an \code{sf} object, the search is made using the bounding box of the location
+(adjusted by \code{dist}, \code{diag_ratio}, and \code{asp}) or, if \code{radius = TRUE}, a
+circle around the center of the location. The API limits the search area: a
+radius must be between 10 and 10,000 meters and a bounding box can't be much
+larger than about 25 kilometers across.
+}
+\examples{
+# Get articles within a radius of a point
+bmore_city_hall <- sf::st_sfc(
+  sf::st_point(c(-76.6122, 39.2904)),
+  crs = 4326
+)
+
+get_wiki_data(
+  location = bmore_city_hall,
+  radius = TRUE,
+  dist = 500,
+  limit = 5
+)
+
+# A numeric radius is used as dist (set unit to change the distance unit)
+get_wiki_data(
+  location = bmore_city_hall,
+  radius = 0.25,
+  unit = "mi",
+  limit = 5
+)
+
+# Search within the bounding box of a polygon or other sf object
+bmore_area <- sf::st_buffer(
+  sf::st_transform(bmore_city_hall, 26985),
+  dist = 300
+)
+
+get_wiki_data(
+  location = bmore_area,
+  limit = 5
+)
+
+# Expand the bounding box with dist or diag_ratio
+get_wiki_data(
+  location = bmore_area,
+  dist = 200,
+  unit = "meter",
+  limit = 5
+)
+
+get_wiki_data(
+  location = bmore_area,
+  radius = TRUE,
+  diag_ratio = 0.5,
+  limit = 5
+)
+
+# Return additional coordinate details for each article
+get_wiki_data(
+  location = bmore_city_hall,
+  radius = TRUE,
+  dist = 500,
+  details = c("type", "name"),
+  limit = 5
+)
+
+# Return a data frame with longitude and latitude columns instead of an sf
+# object
+get_wiki_data(
+  location = bmore_city_hall,
+  radius = TRUE,
+  dist = 500,
+  limit = 5,
+  geometry = FALSE,
+  remove_coords = FALSE
+)
+
+# Use the title of an article with coordinates as the location
+get_wiki_data(
+  location = "Baltimore City Hall",
+  limit = 5
+)
+
+# Search another language edition of Wikipedia
+get_wiki_data(
+  location = bmore_city_hall,
+  radius = TRUE,
+  dist = 500,
+  lang = "es",
+  limit = 5
+)
+
+# Return the full API response instead of a data frame
+resp <- get_wiki_data(
+  location = bmore_city_hall,
+  radius = TRUE,
+  dist = 500,
+  limit = 2,
+  list = "resp"
+)
+
+str(resp, max.level = 2)
 }
 \seealso{
 \code{GNfindNearbyWikipedia()} and \code{GNwikipediaBoundingBox()} functions

@@ -1,8 +1,15 @@
 # getdata (development version)
 
-- Fix `get_wiki_data()` errors when `details` has more than one value, when `list = "resp"`, and when `radius = TRUE` with `diag_ratio`; use the `getdata.crs` option for the default `crs` (2026-11-05)
-- Add `{arcgislayers}` package to Suggests and move `{esri2sf}` package from Imports to Suggests (2024-10-28)
-- Remove re-exports for `{esri2sf}` functions (2024-10-28)
+- The minimum supported R version is now 4.1.0.
+- `{arcgislayers}` is now in Suggests and `{esri2sf}` has moved from Imports to Suggests.
+- Removed the re-exports for `{esri2sf}` functions.
+- `get_esri_data()` now uses `{arcgislayers}` instead of `{esri2sf}` and has a new `call` argument.
+- `get_wiki_data()` no longer errors when `details` has more than one value.
+- `get_wiki_data()` now returns the API response when `list = "resp"`. Previously, the invalid value was passed on to the Wikipedia API.
+- `get_wiki_data()` now uses the `getdata.crs` option (not `getdata.unit`) for the default `crs`.
+- `get_wiki_data()` no longer fails when `radius = TRUE` is combined with `diag_ratio`. The radius is now based on the geodesic diagonal of the location bounding box.
+- `make_location_data_list()` no longer uses `dplyr::case_when()` to recycle `location` and `data` and now reports the correct lengths when they do not match.
+- `set_access_token()` no longer sets the environment variable using the literal name `default` instead of the requested name.
 
 # getdata 0.1.1 (2024-10-09)
 

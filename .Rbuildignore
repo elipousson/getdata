@@ -10,3 +10,4 @@
 ^\.github$
 ^codecov\.yml$
 ^codemeta\.json$
+^TODO\.md$
