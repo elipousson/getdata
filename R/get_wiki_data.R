@@ -39,7 +39,7 @@ get_wiki_data <- function(
   diag_ratio = getOption("getdata.diag_ratio"),
   unit = getOption("getdata.unit", "meter"),
   asp = getOption("getdata.asp"),
-  crs = getOption("getdata.unit", 3857),
+  crs = getOption("getdata.crs", 3857),
   remove_coords = TRUE,
   clean_names = TRUE
 ) {
@@ -73,10 +73,8 @@ get_wiki_data <- function(
     if (radius) {
       gscoord <- st_gscoord(location)
 
-      # FIXME: This should be pulled out of st_buffer_ext into a separate helper function
       if (is.null(dist) && !is.null(diag_ratio)) {
-        dist <- sfext::sf_bbox_diagdist(bbox = sfext::as_bbox(x), drop = TRUE) *
-          diag_ratio
+        dist <- st_diagdist_meter(location, unit = unit) * diag_ratio
       }
 
       gsradius <- as.integer(round(sfext::convert_dist_units(
@@ -155,14 +153,17 @@ req_wiki_query <- function(
   req <- httr2::request(glue("https://{lang}.wikipedia.org/w/api.php"))
 
   cli_abort_ifnot(
-    condition = any(!is.null(c(gsbbox, gscoord, gspage))),
+    "One of {.arg gsbbox}, {.arg gscoord}, or {.arg gspage} must be supplied.",
+    condition = !is.null(c(gsbbox, gscoord, gspage)),
     call = call
   )
 
+  # The API list module is always "geosearch"; list = "resp" only changes what
+  # resp_wiki_query() returns.
   req <- httr2::req_url_query(
     req,
     action = "query",
-    list = list,
+    list = "geosearch",
     gsbbox = gsbbox,
     gscoord = gscoord,
     gsradius = gsradius,
@@ -191,7 +192,8 @@ req_wiki_query <- function(
 
     req <- httr2::req_url_query(
       req,
-      gsprop = details
+      gsprop = details,
+      .multi = "pipe"
     )
   }
 
@@ -279,5 +281,31 @@ st_gsbbox <- function(
       bbox["xmax"]
     ),
     collapse = "|"
+  )
+}
+
+#' Get the diagonal distance of a location bounding box
+#'
+#' Uses geodesic distance between bounding box corners so the result is in
+#' `unit` even for lon/lat or projected input.
+#'
+#' @noRd
+st_diagdist_meter <- function(location, unit = "meter") {
+  bbox <- sf::st_bbox(
+    sf::st_transform(sf::st_as_sfc(sfext::as_bbox(location)), 4326)
+  )
+
+  corners <- sf::st_sfc(
+    sf::st_point(c(bbox[["xmin"]], bbox[["ymin"]])),
+    sf::st_point(c(bbox[["xmax"]], bbox[["ymax"]])),
+    crs = 4326
+  )
+
+  as.numeric(
+    sfext::convert_dist_units(
+      as.numeric(sf::st_distance(corners[1], corners[2])),
+      from = "meter",
+      to = unit
+    )
   )
 }

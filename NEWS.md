@@ -1,5 +1,6 @@
 # getdata (development version)
 
+- Fix `get_wiki_data()` errors when `details` has more than one value, when `list = "resp"`, and when `radius = TRUE` with `diag_ratio`; use the `getdata.crs` option for the default `crs` (2026-11-05)
 - Add `{arcgislayers}` package to Suggests and move `{esri2sf}` package from Imports to Suggests (2024-10-28)
 - Remove re-exports for `{esri2sf}` functions (2024-10-28)
 
