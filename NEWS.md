@@ -8,6 +8,7 @@
 - `get_wiki_data()` now returns the API response when `list = "resp"`. Previously, the invalid value was passed on to the Wikipedia API.
 - `get_wiki_data()` now uses the `getdata.crs` option (not `getdata.unit`) for the default `crs`.
 - `get_wiki_data()` no longer fails when `radius = TRUE` is combined with `diag_ratio`. The radius is now based on the geodesic diagonal of the location bounding box.
+- New `get_wikidata()` function gets Wikidata items with coordinates within a radius of a location using a SPARQL query to the Wikidata Query Service. Results can be filtered by class and include the item label, "instance of" labels, height (if available), and the English Wikipedia article URL.
 - `make_location_data_list()` no longer uses `dplyr::case_when()` to recycle `location` and `data` and now reports the correct lengths when they do not match.
 - `set_access_token()` no longer sets the environment variable using the literal name `default` instead of the requested name.
 

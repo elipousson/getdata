@@ -18,6 +18,7 @@ reference:
   - '`osm_building_tags`'
   - '`get_tigris_data`'
   - '`get_wiki_data`'
+  - '`get_wikidata`'
   - '`get_static_mapbox`'
   - '`get_elev_profile`'
 - title: Additional data formatting utilities and reference data
