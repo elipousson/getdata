@@ -401,6 +401,9 @@ rename_with_xwalk(
 - [`get_wiki_data()`](https://elipousson.github.io/getdata/reference/get_wiki_data.md)
   : Get Wikipedia articles for a location
 
+- [`get_wikidata()`](https://elipousson.github.io/getdata/reference/get_wikidata.md)
+  : Get Wikidata items for a location
+
 - [`get_static_mapbox()`](https://elipousson.github.io/getdata/reference/get_static_map.md)
   [`get_osm_static_mapbox()`](https://elipousson.github.io/getdata/reference/get_static_map.md)
   [`get_location_static_mapbox()`](https://elipousson.github.io/getdata/reference/get_static_map.md)

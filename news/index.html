@@ -33,8 +33,25 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="getdata-development-version">getdata (development version)<a class="anchor" aria-label="anchor" href="#getdata-development-version"></a></h2>
-<ul><li>Add <a href="https://developers.arcgis.com/r-bridge" class="external-link">arcgislayers</a> package to Suggests and move <a href="https://github.com/elipousson/esri2sf/" class="external-link">esri2sf</a> package from Imports to Suggests (2024-10-28)</li>
-<li>Remove re-exports for <a href="https://github.com/elipousson/esri2sf/" class="external-link">esri2sf</a> functions (2024-10-28)</li>
+<ul><li>The minimum supported R version is now 4.1.0.</li>
+<li>
+<a href="https://developers.arcgis.com/r-bridge" class="external-link">arcgislayers</a> is now in Suggests and <a href="https://github.com/elipousson/esri2sf/" class="external-link">esri2sf</a> has moved from Imports to Suggests.</li>
+<li>Removed the re-exports for <a href="https://github.com/elipousson/esri2sf/" class="external-link">esri2sf</a> functions.</li>
+<li>
+<code><a href="../reference/get_esri_data.html">get_esri_data()</a></code> now uses <a href="https://developers.arcgis.com/r-bridge" class="external-link">arcgislayers</a> instead of <a href="https://github.com/elipousson/esri2sf/" class="external-link">esri2sf</a> and has a new <code>call</code> argument.</li>
+<li>
+<code><a href="../reference/get_wiki_data.html">get_wiki_data()</a></code> no longer errors when <code>details</code> has more than one value.</li>
+<li>
+<code><a href="../reference/get_wiki_data.html">get_wiki_data()</a></code> now returns the API response when <code>list = "resp"</code>. Previously, the invalid value was passed on to the Wikipedia API.</li>
+<li>
+<code><a href="../reference/get_wiki_data.html">get_wiki_data()</a></code> now uses the <code>getdata.crs</code> option (not <code>getdata.unit</code>) for the default <code>crs</code>.</li>
+<li>
+<code><a href="../reference/get_wiki_data.html">get_wiki_data()</a></code> no longer fails when <code>radius = TRUE</code> is combined with <code>diag_ratio</code>. The radius is now based on the geodesic diagonal of the location bounding box.</li>
+<li>New <code><a href="../reference/get_wikidata.html">get_wikidata()</a></code> function gets Wikidata items with coordinates within a radius of a location using a SPARQL query to the Wikidata Query Service. Results can be filtered by class and include the item label, “instance of” labels, height (if available), and the English Wikipedia article URL.</li>
+<li>
+<code><a href="../reference/make_location_data_list.html">make_location_data_list()</a></code> no longer uses <code><a href="https://dplyr.tidyverse.org/reference/case-and-replace-when.html" class="external-link">dplyr::case_when()</a></code> to recycle <code>location</code> and <code>data</code> and now reports the correct lengths when they do not match.</li>
+<li>
+<code><a href="../reference/set_access_token.html">set_access_token()</a></code> no longer sets the environment variable using the literal name <code>default</code> instead of the requested name.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="getdata-011-2024-10-09">getdata 0.1.1 (2024-10-09)<a class="anchor" aria-label="anchor" href="#getdata-011-2024-10-09"></a></h2>

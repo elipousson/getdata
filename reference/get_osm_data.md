@@ -198,32 +198,10 @@ civic_buildings <- get_osm_data(
 #> Warning: 'nodes_only = TRUE' is deprecated.
 #> Use 'osm_types = "node"' instead.
 #> See help("Deprecated") and help("osmdata-deprecated").
+#> Error in get_osm_data_features(location = location, dist = dist, diag_ratio = diag_ratio,     unit = unit, asp = asp, key = key, value = value, features = features,     crs = crs, geometry = geometry, osmdata = osmdata, nodes_only = nodes_only,     key_exact = key_exact, value_exact = value_exact, match_case = match_case): `osmdata::osmdata_sf()` encountered an error.
+#> Caused by error in `httr2::req_perform()`:
+#> ! HTTP 502 Bad Gateway.
 
 civic_buildings
-#> Simple feature collection with 11 features and 36 fields
-#> Geometry type: POLYGON
-#> Dimension:     XY
-#> Bounding box:  xmin: -78.89991 ymin: 35.57932 xmax: -78.59919 ymax: 36.02971
-#> Geodetic CRS:  WGS 84
-#> # A tibble: 11 × 37
-#>    osm_id     name  `addr:city` `addr:county` `addr:housenumber` `addr:postcode`
-#>    <chr>      <chr> <chr>       <chr>         <chr>              <chr>          
-#>  1 28788263   Muse… Durham      NA            433                27704          
-#>  2 32145960   Cary… NA          NA            120                NA             
-#>  3 47699270   Opti… NA          NA            NA                 NA             
-#>  4 47836108   Visi… NA          NA            NA                 NA             
-#>  5 378257128  West… Cary        Wake          4000               27519;27519-93…
-#>  6 378397242  NA    NA          NA            NA                 NA             
-#>  7 438008281  Fuqu… Fuquay-Var… NA            301                27526          
-#>  8 469540465  Town… Fuquay-Var… NA            405                27526          
-#>  9 859911045  UNC … NA          NA            6715               27519          
-#> 10 913687471  Kiwa… NA          NA            NA                 NA             
-#> 11 1223378126 NA    NA          NA            NA                 NA             
-#> # ℹ 31 more variables: `addr:state` <chr>, `addr:street` <chr>, alt_name <chr>,
-#> #   amenity <chr>, building <chr>, `building:levels` <chr>,
-#> #   `building:material` <chr>, `building:prefabricated` <chr>,
-#> #   `contact:website` <chr>, description <chr>, healthcare <chr>,
-#> #   leisure <chr>, museum <chr>, nat_ref <chr>, note <chr>,
-#> #   opening_hours <chr>, operator <chr>, `operator:type` <chr>, phone <chr>,
-#> #   `roof:levels` <chr>, `roof:shape` <chr>, smoking <chr>, …
+#> Error: object 'civic_buildings' not found
 ```

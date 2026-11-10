@@ -2,12 +2,42 @@
 
 ## getdata (development version)
 
-- Add [arcgislayers](https://developers.arcgis.com/r-bridge) package to
-  Suggests and move [esri2sf](https://github.com/elipousson/esri2sf/)
-  package from Imports to Suggests (2024-10-28)
-- Remove re-exports for
-  [esri2sf](https://github.com/elipousson/esri2sf/) functions
-  (2024-10-28)
+- The minimum supported R version is now 4.1.0.
+- [arcgislayers](https://developers.arcgis.com/r-bridge) is now in
+  Suggests and [esri2sf](https://github.com/elipousson/esri2sf/) has
+  moved from Imports to Suggests.
+- Removed the re-exports for
+  [esri2sf](https://github.com/elipousson/esri2sf/) functions.
+- [`get_esri_data()`](https://elipousson.github.io/getdata/reference/get_esri_data.md)
+  now uses [arcgislayers](https://developers.arcgis.com/r-bridge)
+  instead of [esri2sf](https://github.com/elipousson/esri2sf/) and has a
+  new `call` argument.
+- [`get_wiki_data()`](https://elipousson.github.io/getdata/reference/get_wiki_data.md)
+  no longer errors when `details` has more than one value.
+- [`get_wiki_data()`](https://elipousson.github.io/getdata/reference/get_wiki_data.md)
+  now returns the API response when `list = "resp"`. Previously, the
+  invalid value was passed on to the Wikipedia API.
+- [`get_wiki_data()`](https://elipousson.github.io/getdata/reference/get_wiki_data.md)
+  now uses the `getdata.crs` option (not `getdata.unit`) for the default
+  `crs`.
+- [`get_wiki_data()`](https://elipousson.github.io/getdata/reference/get_wiki_data.md)
+  no longer fails when `radius = TRUE` is combined with `diag_ratio`.
+  The radius is now based on the geodesic diagonal of the location
+  bounding box.
+- New
+  [`get_wikidata()`](https://elipousson.github.io/getdata/reference/get_wikidata.md)
+  function gets Wikidata items with coordinates within a radius of a
+  location using a SPARQL query to the Wikidata Query Service. Results
+  can be filtered by class and include the item label, “instance of”
+  labels, height (if available), and the English Wikipedia article URL.
+- [`make_location_data_list()`](https://elipousson.github.io/getdata/reference/make_location_data_list.md)
+  no longer uses
+  [`dplyr::case_when()`](https://dplyr.tidyverse.org/reference/case-and-replace-when.html)
+  to recycle `location` and `data` and now reports the correct lengths
+  when they do not match.
+- [`set_access_token()`](https://elipousson.github.io/getdata/reference/set_access_token.md)
+  no longer sets the environment variable using the literal name
+  `default` instead of the requested name.
 
 ## getdata 0.1.1 (2024-10-09)
 
